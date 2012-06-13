@@ -1,0 +1,18 @@
+<plugin class="udlg" author="XZodia" version="1.0" headersize="24">
+  <revision author="XZodia" version="1.0">Completed</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <tag name="Global Dialogue Info" offset="0" visible="True" />
+  <id name="Global Dialogue Info" offset="4" visible="True" />
+  <enum32 name="Flags" offset="8" visible="True">
+    <option name="Female" value="0" />
+  </enum32>
+  <struct name="Vocalizations" offset="12" visible="True" size="16" label="Vocalization">
+    <bitmask32 name="Flags" offset="0" visible="True">
+      <option name="New Vocalization" value="0" />
+    </bitmask32>
+    <stringid name="Vocalization" offset="4" visible="True" />
+    <tag name="Sound" offset="8" visible="True" />
+    <id name="Sound" offset="12" visible="True" />
+  </struct>
+  <stringid name="Mission Dialogue Designator" offset="20" visible="True" />
+</plugin>

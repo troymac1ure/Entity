@@ -1,0 +1,42 @@
+<plugin>
+ <tag>snde</tag>
+  <struct>
+   <name>Main</name>
+   <size>0</size>
+   <value>
+    <type>float</type>
+    <offset>0x8</offset>
+    <name>Room Intensity</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0xc</offset>
+    <name>Room Intensity (hf)</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x24</offset>
+    <name>Reverb Intensity</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x28</offset>
+    <name>Reverb Delay (0 to 0.1)</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x2c</offset>
+    <name>Diffusion</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x30</offset>
+    <name>Density</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x34</offset>
+    <name>High Frequency</name>
+   </value>
+  </struct>
+</plugin>

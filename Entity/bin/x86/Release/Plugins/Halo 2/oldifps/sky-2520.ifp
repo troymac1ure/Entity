@@ -1,0 +1,89 @@
+<plugin class="sky " author="Iron_Forge" version="0.2">
+<revision author="XxSilencedDeathxX" version="0.2">Added fog values, thanks to Capta1n_Insan1ty</revision>
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<tag name="Unknown" visible="false" />
+<id name="Unknown" visible="false" />
+<tag name="Unused" visible="false" />
+<id name="Unused" visible="false" />
+<undefined name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<struct name="Unknown" visible="false">
+  <tag name="Unused" visible="false" />
+  <id name="Unused" visible="false" />
+  <float name="Unknown" visible="false" />
+</struct>
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<unused size="4" default="0" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<unused size="4" default="0" />
+<float name="Unknown" visible="false" />
+<struct name="Fog">
+  <float name="Red" />
+  <float name="Green" />
+  <float name="Blue" />
+  <float name="Alpha" />
+  <float name="Start Distance" />
+  <float name="Full Distnace" />
+</struct>
+<struct name="Unknown" visible="false">
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+</struct>
+<struct name="Unknown" visible="false">
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+</struct>
+<struct name="Fog Thickness Values"  visible="false">
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Fog Thickness"  visible="false" />
+  <float name="Fog Visibility"  visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <unused size="32" default="0" />
+  <tag name="Unknown" visible="false" />
+  <id name="Unknown" visible="false" />
+</struct>
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<struct name="Unknown" visible="false">
+  <unused size="12" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <tag name="Unknown" visible="false" />
+  <id name="Unknown" visible="false" />
+  <unused size="16" default="0" />
+  <struct name="Unknown" visible="false">
+   <undefined name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <unused size="12" default="0" />
+   <undefined name="Unknown" visible="false" />
+  </struct>
+</struct>
+<float name="Unknown" visible="false" />
+<unused size="28" default="0" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+</plugin>

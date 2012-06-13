@@ -1,0 +1,51 @@
+<plugin>
+ <tag>vehi</tag>
+  <struct>
+   <name>Main</name>
+   <size>0</size>
+   <value>
+    <type>reflexive</type>
+    <offset>0x4</offset>
+    <name>Track Position</name>
+   </value>
+  </struct>
+ <struct>
+  <name>Track Position</name>
+  <size>108</size>
+   <value>
+    <type>float</type>
+    <offset>0x0</offset>
+    <name>Position I</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x4</offset>
+    <name>Position K</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x8</offset>
+    <name>Position W</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x10</offset>
+    <name>Orientation I</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x18</offset>
+    <name>Orientation I2</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x20</offset>
+    <name>Orientation K</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x28</offset>
+    <name>Orientation W</name>
+   </value>
+  </struct>
+</plugin>

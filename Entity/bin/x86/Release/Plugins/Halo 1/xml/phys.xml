@@ -1,0 +1,118 @@
+<plugin>
+ <tag>phys</tag>
+ <struct>
+  <name>Main</name>
+  <size>0</size>
+  <value>
+   <type>float</type>
+   <offset>0x008</offset>
+   <name>Weight</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x00C</offset>
+   <name>Center of Weight X</name>
+   <info>The X coordinate for center of mass for the object</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x010</offset>
+   <name>Center of Weight Y</name>
+   <info>The Y coordinate for center of mass for the object</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x014</offset>
+   <name>Center of Weight Z</name>
+   <info>The Z coordinate for center of mass for the object</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x01C</offset>
+   <name>Gravity Multiplier</name>
+   <info>Value multiplied by level gravity to effect this vehicle. (Default is 1.0)</info>
+  </value>
+  <value>
+   <type>reflexive</type>
+   <offset>0x068</offset>
+   <name>Wheel</name>
+  </value>
+  <value>
+   <type>reflexive</type>
+   <offset>0x074</offset>
+   <name>Part</name>
+  </value>
+ </struct>
+ <struct>
+  <name>Wheel</name>
+  <size>128</size>
+  <value>
+   <type>string32</type>
+   <offset>0x00</offset>
+   <name>Name</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x24</offset>
+   <name>Hover Strength</name>
+   <info>The anti-gravity force of this wheel point</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x2C</offset>
+   <name>Hover Height</name>
+   <info>The default height this wheel point hovers</info>
+  </value>
+ </struct>
+ <struct>
+  <name>Part</name>
+  <size>128</size>
+  <value>
+   <type>string32</type>
+   <offset>0x00</offset>
+   <name>Name</name>
+  </value>
+  <value>
+   <type>short</type>
+   <offset>0x20</offset>
+   <name>Wheel</name>
+   <info>Value of the wheel which powers this part</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x22</offset>
+   <name>Wheel (?)</name>
+   <info>Something to do with the wheels</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x28</offset>
+   <name>Relative Weight</name>
+   <info>Some constant decimal portion defining this parts weight compared to the overall</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x2C</offset>
+   <name>Weight</name>
+   <info>The weight of this part</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x38</offset>
+   <name>Position X</name>
+   <info>The X coordinate for this part</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x3C</offset>
+   <name>Position Y</name>
+   <info>The Y coordinate for this part</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x40</offset>
+   <name>Position Z</name>
+   <info>The Z coordinate for this part</info>
+  </value>
+ </struct>
+</plugin>

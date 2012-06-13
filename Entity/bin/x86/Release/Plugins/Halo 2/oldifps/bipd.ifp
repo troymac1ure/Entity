@@ -1,0 +1,350 @@
+<plugin class="bipd" author="Iron_Forge" version="0.3">
+ <revision author="Iron_Forge" version="0.3">Added some known values...</revision>
+ <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+ <undefined name="Unknown" visible="false" />
+ <float name="Bounding Radius (world units)" />
+ <undefined name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <unused size="12" default="0" />
+ <stringid name="Unknown" visible="false" />
+ <tag name="Object Properties" />
+ <id name="Object Properties" />
+ <tag name="Unused" visible="false" />
+ <id name="Unused" visible="false" />
+ <tag name="Unused" visible="false" />
+ <id name="Unused" visible="false" />
+ <tag name="Unused" visible="false" />
+ <id name="Unused" visible="false" />
+ <tag name="Material Effect" />
+ <id name="Material Effect" />
+ <struct name="Unknown" visible="false">
+  <unused size="4" default="0" />
+  <stringid name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+  <undefined name="Unknown" visible="false" />
+ </struct>
+ <struct name="Unknown" visible="false">
+  <undefined name="Unknown" visible="false" />
+  <stringid name="Unknown" visible="false" />
+  <stringid name="Unknown" visible="false" />
+  <stringid name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <struct name="Unknown" visible="false">
+   <byte name="Unknown" visible="false" />
+  </struct>
+  <stringid name="Unknown" visible="false" />
+ </struct>
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <unused size="4" default="0" />
+ <struct name="Attachments">
+  <tag name="Type" />
+  <id name="Type" />
+  <stringid name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+  <stringid name="Unknown" visible="false" />
+  <stringid name="Unknown" visible="false" />
+ </struct>
+ <struct name="Widgets">
+  <tag name="Reference" />
+  <id name="Reference" />
+ </struct>
+ <unused size="8" default="0" />
+ <struct name="Unknown" visible="false">
+  <struct name="Unknown" visible="false">
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <stringid name="Unknown" visible="false" />
+  </struct>
+  <unused size="8" default="0" />
+ </struct>
+ <struct name="Predicted Resource">
+  <float name="Unknown" visible="false" />
+  <id name="Resource" />
+ </struct>
+ <bitmask name="Flags" visible="false" />
+ <enum16 name="Default Team">
+  <option value="0" name="None" />
+  <option value="1" name="Player" />
+  <option value="2" name="Human" />
+  <option value="3" name="Covenant" />
+  <option value="4" name="Flood" />
+  <option value="5" name="Sentinel" />
+  <option value="6" name="Heretic" />
+  <option value="7" name="New Covenant" />
+  <option value="8" name="" />
+  <option value="9" name="" />
+ </enum16>
+ <enum16 name="Constant Sound Volume">
+  <option value="0" name="Silent" />
+  <option value="1" name="Medium" />
+  <option value="2" name="Loud" />
+  <option value="3" name="Shout" />
+  <option value="4" name="Quiet" />
+ </enum16>
+ <tag name="Integrated Light Toggle" />
+ <id name="Integrated Light Toggle" />
+ <float name="Unknown" visible="false" />
+ <unused size="4" default="0" />
+ <stringid name="Unknown" visible="false" />
+ <unused size="16" default="0" />
+ <struct name="Camera Tracks">
+  <tag name="Track" />
+  <id name="Track" />
+ </struct>
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <unused size="8" default="0" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <tag name="Unused" visible="false" />
+ <id name="Unused" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <stringid name="Right Hand" visible="false" />
+ <stringid name="Left Hand" visible="false" />
+ <stringid name="Right Hand" visible="false" />
+ <tag name="Melee Damage" />
+ <id name="Melee Damage" />
+ <tag name="Boarding Melee Damage" />
+ <id name="Boarding Melee Damage" />
+ <tag name="Boarding Melee Response Damage" />
+ <id name="Boarding Melee Response Damage" />
+ <tag name="Unknown" visible="false" />
+ <id name="Unknown" visible="false" />
+ <tag name="Unknown" visible="false" />
+ <id name="Unknown" visible="false" />
+ <tag name="Unknown" visible="false" />
+ <id name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <struct name="Unknown" visible="false">
+  <stringid name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <unused size="8" default="0" />
+ </struct>
+ <struct name="Hud Interfaces">
+  <tag name="Unit Hud Interface" />
+  <id name="Unit Hud Interface" />
+ </struct>
+ <struct name="Unknown" visible="false">
+  <unused size="4" default="0" />
+  <unused size="8" default="0xFF" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+ </struct>
+ <float name="Grenade Velocity" />
+ <enum16 name="Grenade Type">
+  <option value="0" name="Human Fragmentation" />
+  <option value="1" name="Covenant Plasma" />
+ </enum16>
+ <ushort name="Grenade Count" />
+ <unused size="8" default="0" />
+ <struct name="Unknown" visible="false">
+  <tag name="Unknown" visible="false" />
+  <id name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+ </struct>
+ <struct name="Unknown" visible="false">
+  <undefined name="Unknown" visible="false" />
+  <stringid name="Unknown" visible="false" />
+  <stringid name="Unknown" visible="false" />
+  <stringid name="Unknown" visible="false" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+  <float name="Unknown" visible="false" />
+  <unused size="24" default="0" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <unused size="48" default="0" />
+  <tag name="Unused" visible="false" />
+  <id name="Unused" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+  <unused size="4" default="0xFF" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+ </struct>
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <unused size="8" default="0" />
+ <float name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Jump Velocity" />
+ <float name="Max Soft Landing Time" />
+ <float name="Max Hard Landing Time" />
+ <float name="Min Soft Landing Velocity" />
+ <float name="Min Hard Landing Velocity" />
+ <float name="Max Hard Landing Velocity" />
+ <unused size="4" default="0" />
+ <float name="Unknown" visible="false" />
+ <float name="Standing Camera Height" />
+ <float name="Crouching Camera Height" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <tag name="Blood" />
+ <id name="Blood" />
+ <undefined name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <stringid name="Unknown" visible="false" />
+ <stringid name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <struct name="Unknown" visible="false">
+  <unused size="4" default="0" />
+  <ushort name="Unknown" visible="false" />
+  <ushort name="Unknown" visible="false" />
+  <unused size="20" default="0" />
+  <ushort name="Unknown" visible="false" />
+  <ushort name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+  <float name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="false" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="false" />
+  <unused size="12" default="0" />
+  <float name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+ </struct>
+ <struct name="Unknown" visible="false">
+  <unused size="4" default="0" />
+  <ushort name="Unknown" visible="false" />
+  <ushort name="Unknown" visible="false" />
+  <unused size="20" default="0" />
+  <ushort name="Unknown" visible="false" />
+  <ushort name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+  <float name="Unknown" visible="false" />
+  <unused size="8" default="0" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <unused size="8" default="0" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+ </struct>
+ <struct name="Unknown" visible="false">
+  <unused size="4" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="20" default="0" />
+  <float name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+  <float name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="false" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="false" />
+  <unused size="20" default="0" />
+ </struct>
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <struct name="Contact Points">
+  <stringid name="Name" />
+ </struct>
+ <tag name="Unknown" visible="false" />
+ <id name="Unknown" visible="false" />
+ <tag name="Unknown" visible="false" />
+ <id name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+</plugin>

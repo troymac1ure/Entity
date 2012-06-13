@@ -1,0 +1,45 @@
+<plugin class="cont" author="Iron_Forge" version="0.1" headersize="240">
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<undefined name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<unused size="4"  offset="20" />
+<undefined name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<unused size="8"  offset="40" />
+<tag name="Unknown"  offset="48" visible="false" />
+<id name="Unknown"  offset="52" visible="false" />
+<undefined name="Unknown"  offset="56" visible="false" />
+<unused size="36"  offset="60" />
+<undefined name="Unknown"  offset="96" visible="false" />
+<undefined name="Unknown"  offset="100" visible="false" />
+<undefined name="Unknown"  offset="104" visible="false" />
+<unused size="28"  offset="108" />
+<tag name="Unused"  offset="136" visible="false" />
+<id name="Unused"  offset="140" visible="false" />
+<unused size="36"  offset="144" />
+<undefined name="Unknown"  offset="180" visible="false" />
+<unused size="48"  offset="184" />
+<struct name="Unknown27" offset="232" visible="false"  size="64">
+<float name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<tag name="Unknown"  offset="16" visible="false" />
+<id name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<undefined name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<float name="Unknown"  offset="40" visible="false" />
+<float name="Unknown"  offset="44" visible="false" />
+<undefined name="Unknown"  offset="48" visible="false" />
+<float name="Unknown"  offset="52" visible="false" />
+<float name="Unknown"  offset="56" visible="false" />
+<undefined name="Unknown"  offset="60" visible="false" />
+</struct>
+</plugin>

@@ -1,0 +1,372 @@
+<plugin class="char" author="Iron_Forge" version="0.1" headersize="236">
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<unused size="4"  offset="0" />
+<tag name="Unknown"  offset="4" visible="false" />
+<id name="Unknown"  offset="8" visible="false" />
+<tag name="Unknown"  offset="12" visible="false" />
+<id name="Unknown"  offset="16" visible="false" />
+<tag name="Unknown"  offset="20" visible="false" />
+<id name="Unknown"  offset="24" visible="false" />
+<tag name="Unknown"  offset="28" visible="false" />
+<id name="Unknown"  offset="32" visible="false" />
+<tag name="Unknown"  offset="36" visible="false" />
+<id name="Unknown"  offset="40" visible="false" />
+<struct name="Unknown14" offset="44" visible="false"  size="12">
+<stringid name="Unknown"  offset="0" visible="false" />
+<undefined name="Unknown"  offset="4" visible="false" />
+<stringid name="Unknown"  offset="8" visible="false" />
+</struct>
+<struct name="Unknown19" offset="52" visible="false"  size="12">
+<undefined name="Unknown"  offset="0" visible="false" />
+<undefined name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+</struct>
+<struct name="Unknown24" offset="60" visible="false"  size="112">
+<unused size="4"  offset="0" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<float name="Unknown"  offset="40" visible="false" />
+<float name="Unknown"  offset="44" visible="false" />
+<float name="Unknown"  offset="48" visible="false" />
+<float name="Unknown"  offset="52" visible="false" />
+<float name="Unknown"  offset="56" visible="false" />
+<float name="Unknown"  offset="60" visible="false" />
+<float name="Unknown"  offset="64" visible="false" />
+<float name="Unknown"  offset="68" visible="false" />
+<float name="Unknown"  offset="72" visible="false" />
+<float name="Unknown"  offset="76" visible="false" />
+<float name="Unknown"  offset="80" visible="false" />
+<float name="Unknown"  offset="84" visible="false" />
+<float name="Unknown"  offset="88" visible="false" />
+<float name="Unknown"  offset="92" visible="false" />
+<float name="Unknown"  offset="96" visible="false" />
+<unused size="4"  offset="100" />
+<float name="Unknown"  offset="104" visible="false" />
+<undefined name="Unknown"  offset="108" visible="false" />
+</struct>
+<struct name="Unknown54" offset="68" visible="false"  size="52">
+<unused size="8"  offset="0" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<float name="Unknown"  offset="40" visible="false" />
+<float name="Unknown"  offset="44" visible="false" />
+<float name="Unknown"  offset="48" visible="false" />
+</struct>
+<struct name="Unknown68" offset="76" visible="false"  size="52">
+<unused size="4"  offset="0" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<float name="Unknown"  offset="40" visible="false" />
+<float name="Unknown"  offset="44" visible="false" />
+<float name="Unknown"  offset="48" visible="false" />
+</struct>
+<struct name="Unknown83" offset="84" visible="false"  size="80">
+<float name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<float name="Unknown"  offset="40" visible="false" />
+<float name="Unknown"  offset="44" visible="false" />
+<float name="Unknown"  offset="48" visible="false" />
+<float name="Unknown"  offset="52" visible="false" />
+<float name="Unknown"  offset="56" visible="false" />
+<float name="Unknown"  offset="60" visible="false" />
+<float name="Unknown"  offset="64" visible="false" />
+<float name="Unknown"  offset="68" visible="false" />
+<float name="Unknown"  offset="72" visible="false" />
+<float name="Unknown"  offset="76" visible="false" />
+</struct>
+<struct name="Unknown105" offset="92" visible="false"  size="36">
+<undefined name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<undefined name="Unknown"  offset="16" visible="false" />
+<undefined name="Unknown"  offset="20" visible="false" />
+<undefined name="Unknown"  offset="24" visible="false" />
+<undefined name="Unknown"  offset="28" visible="false" />
+<unused size="4"  offset="32" />
+</struct>
+<struct name="Unknown116" offset="100" visible="false"  size="40">
+<undefined name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+</struct>
+<struct name="Unknown128" offset="108" visible="false"  size="8">
+<float name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+</struct>
+<struct name="Unknown132" offset="116" visible="false"  size="16">
+<undefined name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+</struct>
+<struct name="Unknown138" offset="124" visible="false"  size="64">
+<undefined name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<float name="Unknown"  offset="40" visible="false" />
+<float name="Unknown"  offset="44" visible="false" />
+<float name="Unknown"  offset="48" visible="false" />
+<float name="Unknown"  offset="52" visible="false" />
+<tag name="Unknown"  offset="56" visible="false" />
+<id name="Unknown"  offset="60" visible="false" />
+</struct>
+<struct name="Unknown156" offset="132" visible="false"  size="20">
+<float name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+</struct>
+<struct name="Unknown163" offset="140" visible="false"  size="64">
+<unused size="4"  offset="0" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<unused size="4"  offset="20" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<float name="Unknown"  offset="40" visible="false" />
+<float name="Unknown"  offset="44" visible="false" />
+<float name="Unknown"  offset="48" visible="false" />
+<float name="Unknown"  offset="52" visible="false" />
+<float name="Unknown"  offset="56" visible="false" />
+<float name="Unknown"  offset="60" visible="false" />
+</struct>
+<struct name="Unknown181" offset="148" visible="false"  size="76">
+<undefined name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<unused size="4"  offset="40" />
+<float name="Unknown"  offset="44" visible="false" />
+<float name="Unknown"  offset="48" visible="false" />
+<float name="Unknown"  offset="52" visible="false" />
+<float name="Unknown"  offset="56" visible="false" />
+<float name="Unknown"  offset="60" visible="false" />
+<float name="Unknown"  offset="64" visible="false" />
+<tag name="Unknown"  offset="68" visible="false" />
+<id name="Unknown"  offset="72" visible="false" />
+</struct>
+<struct name="Unknown202" offset="156" visible="false"  size="20">
+<undefined name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+</struct>
+<struct name="Unknown209" offset="164" visible="false"  size="36">
+<unused size="4"  offset="0" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+</struct>
+<struct name="Unknown220" offset="172" visible="false"  size="12">
+<unused size="4"  offset="0" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+</struct>
+<struct name="Unknown225" offset="180" visible="false"  size="8">
+<float name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+</struct>
+<struct name="Unknown229" offset="188" visible="false"  size="16">
+<undefined name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+</struct>
+<struct name="Unknown235" offset="196" visible="false"  size="12">
+<unused size="4"  offset="0" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+</struct>
+<struct name="Unknown240" offset="204" visible="false"  size="204">
+<undefined name="Unknown"  offset="0" visible="false" />
+<tag name="Unknown"  offset="4" visible="false" />
+<id name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<float name="Unknown"  offset="40" visible="false" />
+<float name="Unknown"  offset="44" visible="false" />
+<float name="Unknown"  offset="48" visible="false" />
+<float name="Unknown"  offset="52" visible="false" />
+<float name="Unknown"  offset="56" visible="false" />
+<float name="Unknown"  offset="60" visible="false" />
+<float name="Unknown"  offset="64" visible="false" />
+<float name="Unknown"  offset="68" visible="false" />
+<float name="Unknown"  offset="72" visible="false" />
+<float name="Unknown"  offset="76" visible="false" />
+<float name="Unknown"  offset="80" visible="false" />
+<float name="Unknown"  offset="84" visible="false" />
+<float name="Unknown"  offset="88" visible="false" />
+<float name="Unknown"  offset="92" visible="false" />
+<unused size="24"  offset="96" />
+<undefined name="Unknown"  offset="120" visible="false" />
+<float name="Unknown"  offset="124" visible="false" />
+<float name="Unknown"  offset="128" visible="false" />
+<unused size="8"  offset="132" />
+<float name="Unknown"  offset="140" visible="false" />
+<float name="Unknown"  offset="144" visible="false" />
+<undefined name="Unknown"  offset="148" visible="false" />
+<float name="Unknown"  offset="152" visible="false" />
+<float name="Unknown"  offset="156" visible="false" />
+<float name="Unknown"  offset="160" visible="false" />
+<float name="Unknown"  offset="164" visible="false" />
+<float name="Unknown"  offset="168" visible="false" />
+<float name="Unknown"  offset="172" visible="false" />
+<float name="Unknown"  offset="176" visible="false" />
+<float name="Unknown"  offset="180" visible="false" />
+<float name="Unknown"  offset="184" visible="false" />
+<unused size="8"  offset="188" />
+<tag name="Unknown"  offset="196" visible="false" />
+<id name="Unknown"  offset="200" visible="false" />
+</struct>
+<struct name="Unknown286" offset="212" visible="false"  size="16">
+<tag name="Unknown"  offset="0" visible="false" />
+<id name="Unknown"  offset="4" visible="false" />
+<struct name="Unknown289" offset="8" visible="false"  size="64">
+<float name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<undefined name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<undefined name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<float name="Unknown"  offset="40" visible="false" />
+<float name="Unknown"  offset="44" visible="false" />
+<float name="Unknown"  offset="48" visible="false" />
+<undefined name="Unknown"  offset="52" visible="false" />
+<float name="Unknown"  offset="56" visible="false" />
+<undefined name="Unknown"  offset="60" visible="false" />
+</struct>
+</struct>
+<struct name="Unknown308" offset="220" visible="false"  size="60">
+<unused size="4"  offset="0" />
+<undefined name="Unknown"  offset="4" visible="false" />
+<undefined name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<float name="Unknown"  offset="40" visible="false" />
+<float name="Unknown"  offset="44" visible="false" />
+<float name="Unknown"  offset="48" visible="false" />
+<undefined name="Unknown"  offset="52" visible="false" />
+<float name="Unknown"  offset="56" visible="false" />
+</struct>
+<struct name="Unknown325" offset="228" visible="false"  size="180">
+<tag name="Unknown"  offset="0" visible="false" />
+<id name="Unknown"  offset="4" visible="false" />
+<tag name="Unknown"  offset="8" visible="false" />
+<id name="Unknown"  offset="12" visible="false" />
+<undefined name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<float name="Unknown"  offset="40" visible="false" />
+<undefined name="Unknown"  offset="44" visible="false" />
+<float name="Unknown"  offset="48" visible="false" />
+<float name="Unknown"  offset="52" visible="false" />
+<float name="Unknown"  offset="56" visible="false" />
+<float name="Unknown"  offset="60" visible="false" />
+<float name="Unknown"  offset="64" visible="false" />
+<float name="Unknown"  offset="68" visible="false" />
+<float name="Unknown"  offset="72" visible="false" />
+<float name="Unknown"  offset="76" visible="false" />
+<float name="Unknown"  offset="80" visible="false" />
+<float name="Unknown"  offset="84" visible="false" />
+<float name="Unknown"  offset="88" visible="false" />
+<float name="Unknown"  offset="92" visible="false" />
+<float name="Unknown"  offset="96" visible="false" />
+<float name="Unknown"  offset="100" visible="false" />
+<float name="Unknown"  offset="104" visible="false" />
+<float name="Unknown"  offset="108" visible="false" />
+<undefined name="Unknown"  offset="112" visible="false" />
+<float name="Unknown"  offset="116" visible="false" />
+<float name="Unknown"  offset="120" visible="false" />
+<float name="Unknown"  offset="124" visible="false" />
+<float name="Unknown"  offset="128" visible="false" />
+<float name="Unknown"  offset="132" visible="false" />
+<float name="Unknown"  offset="136" visible="false" />
+<float name="Unknown"  offset="140" visible="false" />
+<float name="Unknown"  offset="144" visible="false" />
+<float name="Unknown"  offset="148" visible="false" />
+<float name="Unknown"  offset="152" visible="false" />
+<float name="Unknown"  offset="156" visible="false" />
+<float name="Unknown"  offset="160" visible="false" />
+<float name="Unknown"  offset="164" visible="false" />
+<float name="Unknown"  offset="168" visible="false" />
+<float name="Unknown"  offset="172" visible="false" />
+<undefined name="Unknown"  offset="176" visible="false" />
+</struct>
+</plugin>

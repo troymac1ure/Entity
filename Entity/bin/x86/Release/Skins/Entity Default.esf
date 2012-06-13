@@ -1,0 +1,21 @@
+<skin>
+  <settings>
+    <Skin_Name>Default Entity Skin</Skin_Name>
+    <Skin_Author>Pokecancer</Skin_Author>
+    <Skin_Version>1.0</Skin_Version>
+    <Skin_Panel2_Color>-12156236</Skin_Panel2_Color>
+    <Skin_Panel2_Text_Color>-16777216</Skin_Panel2_Text_Color>
+    <Skin_Panel2_Button_Color>-10185235</Skin_Panel2_Button_Color>
+    <Skin_Panel2_ButtonText_Color>-16777216</Skin_Panel2_ButtonText_Color>
+    <Skin_Panel2_DisconnectButton_Color>-47872</Skin_Panel2_DisconnectButton_Color>
+    <Skin_Panel2_DisconnectButton_TextColor>-16777216</Skin_Panel2_DisconnectButton_TextColor>
+    <Skin_Panel3_Color>-657931</Skin_Panel3_Color>
+    <Skin_Panel3_Text_Color>-16777216</Skin_Panel3_Text_Color>
+    <Skin_Panel3_Button_Color>-657931</Skin_Panel3_Button_Color>
+    <Skin_Panel3_ButtonText_Color>-16777216</Skin_Panel3_ButtonText_Color>
+    <Skin_LibraryPanel_Color>-1</Skin_LibraryPanel_Color>
+    <Skin_LibraryPanel_Text_Color>0</Skin_LibraryPanel_Text_Color>
+    <Skin_Treeview1_Background_Color>-1</Skin_Treeview1_Background_Color>
+    <Skin_Treeview1_Text_Color>-16777216</Skin_Treeview1_Text_Color>
+  </settings>
+</skin>

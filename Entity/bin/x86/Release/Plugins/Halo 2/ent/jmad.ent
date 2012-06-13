@@ -1,0 +1,211 @@
+<plugin class="jmad" author="Iron_Forge" version="0.5" headersize="188">
+  <revision author="Soldier of Light" version="0.5">Mapped most of the plugin...</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <tag name="Unknown" offset="0" visible="False" />
+  <id name="Unknown" offset="4" visible="False" />
+  <undefined name="Unknown" offset="8" visible="False" />
+  <struct name="Bones" offset="12" visible="true" size="32" label="">
+    <stringid name="Bone" offset="0" visible="False" />
+    <short name="Parent" offset="4" visible="True" />
+    <short name="Child" offset="6" visible="True" />
+    <short name="Next Sibling" offset="8" visible="True" />
+    <short name="Final Sibling?" offset="10" visible="True" />
+    <unused offset="12" size="16" />
+    <float name="Unknown" offset="28" visible="False" />
+  </struct>
+  <struct name="Sounds" offset="20" visible="true" size="12" label="">
+    <tag name="Sound" offset="0" visible="True" />
+    <id name="Sound" offset="4" visible="True" />
+    <int name="Unknown" offset="8" visible="False" />
+  </struct>
+  <struct name="Effects" offset="28" visible="true" size="12" label="">
+    <tag name="Effect" offset="0" visible="True" />
+    <id name="Effect" offset="4" visible="True" />
+    <unused offset="8" size="4" />
+  </struct>
+  <struct name="Screen Bounds" offset="36" visible="true" size="28" label="">
+    <stringid name="label" offset="0" visible="True" />
+    <float name="Right yaw per frame" offset="4" visible="True" />
+    <float name="Left yaw per frame" offset="8" visible="True" />
+    <short name="Right frame count" offset="12" visible="True" />
+    <short name="Left frame count" offset="14" visible="True" />
+    <float name="Down pitch per frame" offset="16" visible="True" />
+    <float name="Up pitch per frame" offset="20" visible="True" />
+    <short name="Down pitch frame count" offset="24" visible="True" />
+    <short name="Up pitch frame count" offset="26" visible="True" />
+  </struct>
+  <struct name="Animations" offset="44" visible="true" size="108" label="">
+    <stringid name="Name" offset="0" visible="True" />
+    <undefined name="Unknown" offset="4" visible="False" />
+    <byte name="Unknown" offset="8" visible="False" />
+    <byte name="Unknown" offset="9" visible="False" />
+    <short name="Unknown" offset="10" visible="False" />
+    <byte name="Unknown" offset="12" visible="False" />
+    <byte name="Unknown" offset="13" visible="False" />
+    <short name="Unknown" offset="14" visible="False" />
+    <short name="Unknown" offset="16" visible="False" />
+    <byte name="Unknown" offset="18" visible="False" />
+    <byte name="# of Bones" offset="19" visible="False" />
+    <short name="Max Cycle Length (milliseconds)" offset="20" visible="True" />
+    <short name="Unknown (Do not Change)" offset="22" visible="False" />
+    <short name="Transition Speed?" offset="24" visible="False" />
+    <short name="Unknown" offset="26" visible="False" />
+    <float name="Unknown" offset="28" visible="False" />
+    <unused offset="32" size="4" />
+    <int name="Raw Chunk #" offset="36" visible="False" />
+    <short name="Offset in raw" offset="40" visible="False" />
+    <short name="Unused" offset="42" visible="False" />
+    <short name="Unknown" offset="44" visible="False" />
+    <bitmask16 name="Doesn't Repeat" offset="46" visible="True">
+      <option name="Doesn't Repeat" value="8" />
+    </bitmask16>
+    <short name="Unknown" offset="48" visible="False" />
+    <short name="Unknown" offset="50" visible="False" />
+    <unused offset="52" size="8" />
+    <byte name="Unknown" offset="60" visible="False" />
+    <byte name="Unknown" offset="61" visible="False" />
+    <byte name="Unknown" offset="62" visible="False" />
+    <byte name="Unknown" offset="63" visible="False" />
+    <short name="Unknown" offset="64" visible="False" />
+    <short name="Animation Raw Something" offset="66" visible="False" />
+    <unused offset="68" size="4" />
+    <byte name="Unknown" offset="72" visible="False" />
+    <byte name="Unknown" offset="73" visible="False" />
+    <short name="Unknown" offset="74" visible="False" />
+    <struct name="Unknown" offset="76" visible="false" size="4" label="">
+      <short name="Unknown" offset="0" visible="False" />
+      <short name="Unknown" offset="2" visible="False" />
+    </struct>
+    <struct name="Sounds" offset="84" visible="true" size="8" label="">
+      <short name="Chunk #" offset="0" visible="True" />
+      <short name="Unknown" offset="2" visible="False" />
+      <stringid name="Unknown" offset="4" visible="False" />
+    </struct>
+    <struct name="Effects" offset="92" visible="false" size="4" label="">
+      <short name="Unknown" offset="0" visible="False" />
+      <short name="Unknown" offset="2" visible="False" />
+    </struct>
+    <struct name="Unknown" offset="100" visible="false" size="28" label="">
+      <short name="Unknown" offset="0" visible="False" />
+      <short name="Unknown" offset="2" visible="False" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <undefined name="Unknown" offset="8" visible="False" />
+      <float name="Unknown" offset="12" visible="False" />
+      <float name="Unknown" offset="16" visible="False" />
+      <float name="Unknown" offset="20" visible="False" />
+      <float name="Unknown" offset="24" visible="False" />
+    </struct>
+  </struct>
+  <struct name="Animation Calls" offset="52" visible="true" size="20" label="">
+    <stringid name="Postion Name" offset="0" visible="True" />
+    <struct name="Class" offset="4" visible="true" size="20" label="">
+      <stringid name="Class Name" offset="0" visible="True" />
+      <struct name="Object" offset="4" visible="true" size="52" label="">
+        <stringid name="Type" offset="0" visible="True" />
+        <struct name="Full Object Animations" offset="4" visible="true" size="8" label="">
+          <stringid name="Condition" offset="0" visible="True" />
+          <short name="Unknown" offset="4" visible="False" />
+          <short name="Animation" offset="6" reflexiveoffset="44" reflexivesize="108" itemoffset="0" itemtype="stringid" layer="root" visible="True" />
+        </struct>
+        <struct name="Half/Upper Object Animations" offset="12" visible="true" size="8" label="">
+          <stringid name="Condition" offset="0" visible="True" />
+          <short name="Unknown" offset="4" visible="False" />
+          <short name="Animation" offset="6" reflexiveoffset="44" reflexivesize="108" itemoffset="0" itemtype="stringid" layer="root" visible="True" />
+        </struct>
+        <struct name="Death/Damage" offset="20" visible="true" size="12" label="">
+          <stringid name="Condition" offset="0" visible="True" />
+          <struct name="Values" offset="4" visible="true" size="8" label="">
+            <struct name="Values" offset="0" visible="true" size="4" label="">
+              <short name="Unknown" offset="0" visible="False" />
+              <short name="Chunk #" offset="2" visible="True" />
+            </struct>
+          </struct>
+        </struct>
+        <struct name="AI" offset="28" visible="false" size="20" label="">
+          <stringid name="Currently Performing" offset="0" visible="True" />
+          <stringid name="Currently Performing" offset="4" visible="True" />
+          <float name="Unknown" offset="8" visible="False" />
+          <struct name="Options" offset="12" visible="false" size="20" label="">
+            <stringid name="Full Name" offset="0" visible="False" />
+            <stringid name="State Name" offset="4" visible="False" />
+            <stringid name="Animation Name" offset="8" visible="False" />
+            <float name="Unknown" offset="12" visible="False" />
+            <short name="Unknown" offset="16" visible="False" />
+            <short name="Chunk #" offset="18" visible="True" />
+          </struct>
+        </struct>
+        <struct name="Unknown" offset="36" visible="false" size="4" label="">
+          <int name="Unknown" offset="0" visible="False" />
+        </struct>
+        <struct name="Unknown" offset="44" visible="false" size="4" label="">
+          <int name="Unknown" offset="0" visible="False" />
+        </struct>
+      </struct>
+      <struct name="Limb Positioning" offset="12" visible="true" size="8" label="">
+        <stringid name="Local Marker" offset="0" visible="True" />
+        <stringid name="Remote Marker" offset="4" visible="True" />
+      </struct>
+    </struct>
+    <struct name="Limb Positioning" offset="12" visible="true" size="8" label="">
+      <stringid name="Local Marker" offset="0" visible="True" />
+      <stringid name="Remote Marker" offset="4" visible="True" />
+    </struct>
+  </struct>
+  <struct name="Vehicle Suspension" offset="60" visible="true" size="40" label="">
+    <stringid name="Suspension part" offset="0" visible="True" />
+    <undefined name="Unknown" offset="4" visible="False" />
+    <stringid name="Unknown" offset="8" visible="True" />
+    <float name="Unknown" offset="12" visible="False" />
+    <float name="Unknown" offset="16" visible="False" />
+    <float name="Unknown" offset="20" visible="False" />
+    <stringid name="Marker" offset="24" visible="True" />
+    <unused offset="28" size="4" />
+    <float name="Unknown" offset="32" visible="False" />
+    <float name="Unknown" offset="36" visible="False" />
+  </struct>
+  <struct name="Unknown" offset="68" visible="false" size="20" label="">
+    <stringid name="Unknown" offset="0" visible="False" />
+    <undefined name="Unknown" offset="4" visible="False" />
+    <unused offset="8" size="4" />
+    <stringid name="Unknown" offset="12" visible="False" />
+    <unused offset="16" size="4" />
+  </struct>
+  <struct name="Unknown" offset="76" visible="false" size="32" label="">
+    <tag name="Unknown" offset="0" visible="False" />
+    <id name="Unknown" offset="4" visible="False" />
+    <struct name="Unknown" offset="8" visible="false" size="2" label="">
+      <short name="Unknown" offset="0" visible="False" />
+    </struct>
+    <struct name="Unknown" offset="16" visible="false" size="4" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+    </struct>
+    <float name="Unknown" offset="24" visible="False" />
+    <undefined name="Unknown" offset="28" visible="False" />
+  </struct>
+  <struct name="Weapon Associations" offset="84" visible="true" size="8" label="">
+    <stringid name="Short" offset="0" visible="True" />
+    <stringid name="Class" offset="4" visible="True" />
+  </struct>
+  <undefined name="Unknown" offset="92" visible="False" />
+  <undefined name="Unknown" offset="96" visible="False" />
+  <unused offset="100" size="24" />
+  <undefined name="Unknown" offset="124" visible="False" />
+  <undefined name="Unknown" offset="128" visible="False" />
+  <undefined name="Unknown" offset="132" visible="False" />
+  <unused offset="136" size="36" />
+  <struct name="Unknown" offset="172" visible="false" size="20" label="">
+    <id name="Unknown" offset="0" visible="False" />
+    <undefined name="Raw Size" offset="4" visible="False" />
+    <undefined name="Raw Offset" offset="8" visible="False" />
+    <unused offset="12" size="4" />
+    <undefined name="Unknown" offset="16" visible="False" />
+  </struct>
+  <struct name="Unknown" offset="180" visible="false" size="24" label="">
+    <undefined name="Unknown" offset="0" visible="False" />
+    <undefined name="Unknown" offset="4" visible="False" />
+    <undefined name="Unknown" offset="8" visible="False" />
+    <undefined name="Unknown" offset="12" visible="False" />
+    <undefined name="Unknown" offset="16" visible="False" />
+    <undefined name="Unknown" offset="20" visible="False" />
+  </struct>
+</plugin>

@@ -1,0 +1,41 @@
+<plugin class="gldf" author="Iron_Forge" version="0.1">
+ <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+ <struct name="Unknown" visible="false">
+  <undefined name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <unused size="12" default="0" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <struct name="Unknown" visible="false">
+   <byte name="Unknown" visible="false" />
+  </struct>
+  <unused size="12" default="0" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <struct name="Unknown" visible="false">
+   <byte name="Unknown" visible="false" />
+  </struct>
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <struct name="Unknown" visible="false">
+   <byte name="Unknown" visible="false" />
+  </struct>
+  <struct name="Unknown" visible="false">
+   <byte name="Unknown" visible="false" />
+  </struct>
+ </struct>
+</plugin>

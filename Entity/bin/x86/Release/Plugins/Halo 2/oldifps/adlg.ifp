@@ -1,0 +1,54 @@
+<plugin class="adlg" author="Iron_Forge" version="0.1">
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<struct name="Death/Taunting Dialog" visible="true">
+  <stringid name="Situation" visible="true" />
+  <stringid name="Root Situation" visible="true" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="8" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <stringid name="Spoken Dialog" visible="true" />
+  <struct name="Unknown" visible="false">
+   <stringid name="Unknown" visible="false" />
+   <undefined name="Unknown" visible="false" />
+   <undefined name="Unknown" visible="false" />
+  </struct>
+  <unused size="8" default="0" />
+</struct>
+<struct name="Killing/Cautious Dialog" visible="true">
+  <undefined name="Unknown" visible="false" />
+  <stringid name="Situation" visible="true" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <stringid name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <stringid name="Unknown" visible="false" />
+  <unused size="8" default="0" />
+  <undefined name="Unknown" visible="false" />
+</struct>
+<unused size="12" default="0" />
+<struct name="Unknown" visible="false">
+  <undefined name="Unknown" visible="false" />
+</struct>
+<struct name="Unknown" visible="false">
+  <int name="Unknown" visible="false" />
+</struct>
+</plugin>

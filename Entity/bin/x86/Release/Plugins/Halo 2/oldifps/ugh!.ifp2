@@ -1,0 +1,105 @@
+<plugin class="ugh!" author="Iron_Forge" version="0.2" headersize="88">
+<revision author="Iron_Forge" version="0.2">Fixed up basic layout...</revision>
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<struct name="Unknown4" offset="0" visible="false"  size="56">
+<float name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<short name=""  offset="24" visible="false" />
+<short name=""  offset="26" visible="false" />
+<float name="Pi"  offset="28" visible="true" />
+<float name="Pi"  offset="32" visible="true" />
+<unused size="20"  offset="36" />
+</struct>
+<struct name="Unknown17" offset="8" visible="false"  size="20">
+<float name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<short name=""  offset="8" visible="false" />
+<short name=""  offset="10" visible="false" />
+<float name="One"  offset="12" visible="false" />
+<float name="One"  offset="16" visible="false" />
+</struct>
+<struct name="Sound Names25" offset="16" visible="true"  size="4">
+<stringid name="Name"  offset="0" visible="true" />
+</struct>
+<struct name="Unknown28" offset="24" visible="false"  size="10">
+<short name=""  offset="0" visible="true" />
+<short name=""  offset="2" visible="true" />
+<short name=""  offset="4" visible="true" />
+<short name=""  offset="6" visible="true" />
+<short name=""  offset="8" visible="true" />
+</struct>
+<struct name="Sound Permutations35" offset="32" visible="true"  size="12">
+<short name=""  offset="0" visible="true" />
+<short name=""  offset="2" visible="true" />
+<byte name=""  offset="4" visible="true" />
+<byte name="Chunk"  offset="5" visible="true" />
+<short name=""  offset="6" visible="true" />
+<short name="Index"  offset="8" visible="true" />
+<short name="chunkCount"  offset="10" visible="true" />
+</struct>
+<struct name="Sound Choices44" offset="40" visible="true"  size="16">
+<uint name="Name Index"  offset="0" visible="true" />
+<undefined name="Unknown"  offset="4" visible="false" />
+<undefined name="Unknown"  offset="8" visible="false" />
+<short name="Index"  offset="12" visible="true" />
+<short name="chunkCount"  offset="14" visible="true" />
+</struct>
+<struct name="Unknown51" offset="48" visible="false"  size="52">
+<unused size="20"  offset="0" />
+<struct name="Unknown53" offset="20" visible="false"  size="72">
+<undefined name="One"  offset="0" visible="false" />
+<unused size="4"  offset="4" />
+<float name="800"  offset="8" visible="false" />
+<float name="8000"  offset="12" visible="false" />
+<unused size="24"  offset="16" />
+<float name="800"  offset="40" visible="false" />
+<float name="8000"  offset="44" visible="false" />
+<unused size="24"  offset="48" />
+</struct>
+<unused size="24"  offset="28" />
+</struct>
+<struct name="Zero65" offset="56" visible="false"  size="1">
+<unused size="1"  offset="0" />
+</struct>
+<struct name="Sound Raw Data68" offset="64" visible="true"  size="12">
+<uint name="Raw Offset"  offset="0" visible="true" />
+<uint name="Size"  offset="4" visible="true" />
+<unused size="4"  offset="8" />
+</struct>
+<struct name="Unknown73" offset="72" visible="false"  size="28">
+<struct name="Unknown74" offset="0" visible="false"  size="16">
+<short name=""  offset="0" visible="true" />
+<short name=""  offset="2" visible="true" />
+<float name=""  offset="4" visible="true" />
+<undefined name=""  offset="8" visible="true" />
+<undefined name=""  offset="12" visible="true" />
+</struct>
+<struct name="Unknown81" offset="8" visible="false"  size="4">
+<unused size="4"  offset="0" />
+</struct>
+<unused size="4"  offset="16" />
+<unused size="8"  offset="20" />
+</struct>
+<struct name="Diff Model Raw Data87" offset="80" visible="false"  size="44">
+<unused size="8"  offset="0" />
+<uint name="Raw Offset"  offset="8" visible="true" />
+<uint name="Size"  offset="12" visible="true" />
+<int name="One"  offset="16" visible="true" />
+<uint name="Data Size"  offset="20" visible="true" />
+<struct name="rsrcs93" offset="24" visible="true"  size="16">
+<short name=""  offset="0" visible="true" />
+<short name=""  offset="2" visible="true" />
+<short name=""  offset="4" visible="true" />
+<short name=""  offset="6" visible="true" />
+<uint name="Size"  offset="8" visible="true" />
+<uint name="Offset"  offset="12" visible="true" />
+</struct>
+<id name="ughloneid"  offset="32" visible="true" />
+<undefined name="Constant"  offset="36" visible="true" />
+<undefined name="Constant"  offset="40" visible="true" />
+</struct>
+</plugin>

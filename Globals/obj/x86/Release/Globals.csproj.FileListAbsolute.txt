@@ -1,0 +1,21 @@
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Globals\bin\x86\Release\Globals.dll
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Globals\bin\x86\Release\Globals.pdb
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Globals\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Globals\obj\x86\Release\Globals.dll
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Globals\obj\x86\Release\Globals.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Globals\bin\x86\Release\Globals.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Globals\bin\x86\Release\Globals.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Globals\obj\x86\Release\ResolveAssemblyReference.cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Globals\obj\x86\Release\Globals.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Globals\obj\x86\Release\Globals.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Globals\obj\x86\Release\Globals.PluginSetSelector.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Globals\obj\x86\Release\Globals.csproj.GenerateResource.Cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Globals\obj\x86\Release\Globals.askForName.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Globals\bin\x86\Release\Globals.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Globals\bin\x86\Release\Globals.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Globals\obj\x86\Release\ResolveAssemblyReference.cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Globals\obj\x86\Release\Globals.askForName.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Globals\obj\x86\Release\Globals.PluginSetSelector.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Globals\obj\x86\Release\Globals.csproj.GenerateResource.Cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Globals\obj\x86\Release\Globals.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Globals\obj\x86\Release\Globals.pdb

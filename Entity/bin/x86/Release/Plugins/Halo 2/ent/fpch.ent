@@ -1,0 +1,27 @@
+<plugin class="fpch" author="XZodia" version="1.0" headersize="80">
+  <revision author="XZodia" version="1.0">Completed</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <bitmask32 name="Flags" offset="0" visible="True">
+    <option name="Separate Layer Depths" value="0" />
+    <option name="Sort Behind Transparents" value="1" />
+  </bitmask32>
+  <float name="Movement Rotation Multiplier" offset="4" visible="True" />
+  <float name="Movement Strafing Multiplier" offset="8" visible="True" />
+  <float name="Movement Zoom Multiplier" offset="12" visible="True" />
+  <float name="Noise Map Scale" offset="16" visible="True" />
+  <tag name="Noise Map" offset="20" visible="True" />
+  <id name="Noise Map" offset="24" visible="True" />
+  <float name="Noise Vertical Scale Forward" offset="28" visible="True" />
+  <float name="Noise Vertical Scale Up" offset="32" visible="True" />
+  <float name="Noise Opacity Scale Up" offset="36" visible="True" />
+  <float name="Animation Period (sec)" offset="40" visible="True" />
+  <float name="Wind Velocity" offset="44" visible="True" />
+  <float name="...To" offset="48" visible="True" />
+  <float name="Wind Period" offset="52" visible="True" />
+  <float name="...To" offset="56" visible="True" />
+  <float name="Wind Acceleration Weight" offset="60" visible="True" />
+  <float name="Wind Perpendicular Weight" offset="64" visible="True" />
+  <float name="Wind Constant Velocity X" offset="68" visible="True" />
+  <float name="Wind Constant Velocity Y" offset="72" visible="True" />
+  <float name="Wind Constant Velocity Z" offset="76" visible="True" />
+</plugin>

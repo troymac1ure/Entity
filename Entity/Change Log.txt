@@ -1,0 +1,92 @@
+ =========================================================================================
+||  _____      _   _ _           _____ _                              _                  ||
+|| |  ___|    | | (_) |         /  __ \ |                            | |  		         ||
+|| | |__ _ __ | |_ _| |_ _   _  | /  \/ |__   __ _ _ __   __ _  ___  | |     ___   __ _  ||
+|| |  __| '_ \| __| | __| | | | | |   | '_ \ / _` | '_ \ / _` |/ _ \ | |    / _ \ / _` | ||
+|| | |__| | | | |_| | |_| |_| | | \__/\ | | | (_| | | | | (_| |  __/ | |___| (_) | (_| | ||
+|| \____/_| |_|\__|_|\__|\__, |  \____/_| |_|\__,_|_| |_|\__, |\___| \_____/\___/ \__, | ||
+||                        __/ |                           __/ |                    __/ | ||
+||                       |___/                           |___/                    |___/  ||
+ =========================================================================================
+  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+<changelog>  
+ *<add version="2.1.15" section="main">Added right-click option to set active SCNR tag (after duplicating)</add> 
+ *<fix version="2.1.15" section="main">Fixed: Floodfill swap changes incorrect values after sorting</fix> 
+ *<add version="2.1.15" section="main">All panels can now be docked/undocked (References, ME1/2, Hex, Bitmap Viewer)</add> 
+ *<add version="2.1.15" section="reflexives">Added option to sort reflexives by offset</add> 
+ *<fix version="2.1.15" section="ME2">Fixed: Internal memory list not being cleared when "Hide/Unhide unused reflexives" clicked</fix> 
+ *<fix version="2.1.15" section="ME2">Fixed: Mouse out of tag tree control doesn't always close side panel</fix> 
+ *<fix version="2.1.15" section="ME2">Fixed: Doesn't use theme colors</fix> 
+ *<fix version="2.1.15" section="BSPViewer">Fixed: Collision boxes all red, now changed shader back to see-through in ParsedModel.cs (Line 2437)</fix>
+</changelog>
+
+///////////////////////////////////////////////////////////////
+////////////// Prey Changelog     /////////////////////////////
+///////////////////////////////////////////////////////////////
+
+[06.Apr.11] - Replaced all 'Maps.map[mapnumber]..' code with a single 'Map' reference in each mapForm (don't know why it wasn't done this way before, the abstraction made no logical sense and was harder to code with..)
+			- Moved map load code into a static 'Map.LoadFromFile(..', and made the Map .ctor internal.
+			- changed MainMenuEdit.cs to use Map objects not MapForms, and moved required code from MapForm into static methods.
+			- Removed 'Maps' class, placed Refresh method in 'Map'.
+			- Windows form generated code, in mapform and mainform, grouped together and placed at bottom of each code file out of the way.
+			- Lot of map load code commented
+			- Main form methods grouped together by relevance and placed in regions. Updated some menu names to reflect their usage.
+			- MetaEditor control now checks Meta Editor .xml exists before loading it to stop the mapForm designer crashing saying the file doesn't exist.
+			- Almost complete with grouping methods in MapForm into regions.
+
+[07.Apr.11] - Finished placing all mapForm methods in regions.
+			- Moved classes in Map.cs to their own files.
+            - Restructured file hierarchy in solution explorer.
+            - Removed unused files.
+			- Ran solution through NArrange tool, which has arranged every code file so they all follow the same code standard
+			- Ran solution through DeCodEx tool which moves generated windows form UI code from the main file to a partial class in a designer file.
+			- Moved HaloMap and MetaEditor Projects into same folder as Main Project.
+			- Moved solution file outside entity project folder.
+			- Replaced all Application.StartupPath uses with Global.StartupPath; A custom variable that always points to the release folder, meaning dont have to have a copy of plugins etc in the debug folder.
+			- created a Global.ShowErrorMsg function for use when a messagebox is shown in a catch statement. This function also shows the internal error for better debugging.
+
+[08.Apr.11] - Ran Resharper Code Cleanup, with StyleCop plugin, on Solution.
+			- Removed ref to map object in all meta class functions, and replaced with a single ref in the ctor, with refactoring
+			- Placed one meta scanner object in meta object, and refactored methods to use that.
+			- Replaced 'tagnumber' with 'TagIndex'
+			- Moved Metafunctions into Miscfunctions file, and removed map params from all these methods too.
+			- Made chunkAdder non-static and an object of Map, and moved into HaloMap lib.
+			- Removed most of places where map is passed as a parameter needlessly.
+	
+[09.Apr.11] - Moved a lots of files into HaloMap
+			- Started creating xml prefs file for storing all settings, instead of the registry..
+
+[10.Apr.11] - Finished xml prefs stuff.
+
+[11.Apr.10] - Removed passing around of intptr for bitmaps.
+			- Refactored namespaces
+			- Fixed most warnings
+			- Ran Ghostdoc on solution
+
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+
+
+Date: 1-03-2009
+---------------
++BSP viewer:
+  +Fixed Coordinate finder
+  +double-clicking object:
+    +takes camera to a close view instead of right on object center
+    +camera doesn't "jump" after viewpoint moved
+  +object coordinates updated in real time
+  +Added camera speed slide bar
+    -Slide bar changes when moving objects
++Added to implementation of Ent Plugin editor (reflexives,etc) - still bugs
+
+Date: 7-27-2006
+---------------
++Fixed/Added Beta User support
+
+Date: 7-22-2006
+---------------
+
++ Added Update Support
++ Added "Ctrl + V" to launch viewers
++ Added default map image

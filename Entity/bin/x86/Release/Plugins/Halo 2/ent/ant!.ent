@@ -1,0 +1,33 @@
+<plugin class="ant!" author="XZodia" version="1.0" headersize="160">
+  <revision author="XZodia" version="1.0">Completed</revision>
+  <revision author="shade45" version="0.8">Named some unknowns</revision>
+  <revision author="Iron_Forge" version="0.3">Added some known values...</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <stringid name="Attachment Marker Name" offset="0" visible="True"  label="here"/>
+  <tag name="Bitmap" offset="4" visible="True" />
+  <id name="Bitmap" offset="8" visible="True" />
+  <tag name="Physics" offset="12" visible="True" />
+  <id name="Physics" offset="16" visible="True" />
+  <unused offset="20" size="80" />
+  <float name="Spring Strength Coefficient" offset="100" visible="True" />
+  <float name="Falloff Pixels" offset="104" visible="True" />
+  <float name="Cutoff Pixels" offset="108" visible="True" />
+  <unused offset="112" size="40" />
+  <struct name="Vertices" offset="152" visible="true" size="128" label="">
+    <float name="Spring Strength Coefficient" offset="0" visible="True" />
+    <float name="Angle Yaw" offset="4" visible="True" />
+    <float name="Angle Pitch" offset="8" visible="True" />
+    <unused offset="12" size="24" />
+    <float name="Length(world units)" offset="36" visible="True" />
+    <int name="Sequence index" offset="40" visible="True" />
+    <float name="Color Alpha" offset="44" visible="True" />
+    <float name="Color Red" offset="48" visible="True" />
+    <float name="Color Green" offset="52" visible="True" />
+    <float name="Color Blue" offset="56" visible="True" />
+    <unused offset="60" size="52" />
+    <float name="Color Alpha" offset="112" visible="True" />
+    <float name="Color Red" offset="116" visible="True" />
+    <float name="Color Green" offset="120" visible="True" />
+    <float name="Color Blue" offset="124" visible="True" />
+  </struct>
+</plugin>

@@ -1,0 +1,65 @@
+<plugin class="DECR" author="shade45" version="0.5" headersize="108">
+  <revision author="shade45" version="0.5">Named alot of unkowns</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <struct name="Shaders" offset="0" visible="true" size="8" label="">
+    <tag name="shad" offset="0" visible="True" />
+    <id name="shad" offset="4" visible="True" />
+  </struct>
+  <float name="Unknown" offset="8" visible="False" />
+  <float name="Unknown" offset="12" visible="False" />
+  <struct name="Variation" offset="16" visible="true" size="20" label="">
+    <stringid name="Type" offset="0" visible="True" />
+    <undefined name="Unknown" offset="4" visible="False" />
+    <float name="Unknown" offset="8" visible="False" />
+    <struct name="Appearance" offset="12" visible="true" size="40" label="">
+      <stringid name="Style" offset="0" visible="True" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <undefined name="Unknown" offset="8" visible="False" />
+      <float name="Scale 1" offset="12" visible="True" />
+      <float name="Scale 2" offset="16" visible="True" />
+      <undefined name="Unknown" offset="20" visible="False" />
+      <undefined name="Unknown" offset="24" visible="False" />
+      <float name="Unknown" offset="28" visible="False" />
+      <float name="Unknown" offset="32" visible="False" />
+      <float name="Unknown" offset="36" visible="False" />
+    </struct>
+  </struct>
+  <struct name="Object Types" offset="24" visible="true" size="8" label="">
+    <stringid name="Name" offset="0" visible="True" />
+    <undefined name="Unknown" offset="4" visible="False" />
+  </struct>
+  <struct name="Visual Model" offset="32" visible="true" size="56" label="">
+    <float name="X" offset="0" visible="True" />
+    <float name="Y" offset="4" visible="True" />
+    <float name="Z" offset="8" visible="True" />
+    <float name="Unknown" offset="12" visible="False" />
+    <float name="Unknown" offset="16" visible="False" />
+    <float name="Unknown" offset="20" visible="False" />
+    <float name="Unknown" offset="24" visible="False" />
+    <float name="Unknown" offset="28" visible="False" />
+    <float name="Unknown" offset="32" visible="False" />
+    <float name="Unknown" offset="36" visible="False" />
+    <float name="Unknown" offset="40" visible="False" />
+    <float name="Unknown" offset="44" visible="False" />
+    <float name="U" offset="48" visible="True" />
+    <float name="V" offset="52" visible="True" />
+  </struct>
+  <struct name="Faces" offset="40" visible="true" size="2" label="">
+    <short name="Verticie Index #" offset="0" visible="True" />
+  </struct>
+  <unused offset="48" size="8" />
+  <uint name="Raw Offset" offset="56" visible="True" />
+  <uint name="Raw Size" offset="60" visible="True" />
+  <uint name="Header Size" offset="64" visible="True" />
+  <uint name="Raw Data Size" offset="68" visible="True" />
+  <struct name="Resource" offset="72" visible="true" size="16" label="">
+    <uint name="Unknown" offset="0" visible="False" />
+    <undefined name="Unknown" offset="4" visible="False" />
+    <uint name="Size" offset="8" visible="True" />
+    <uint name="Offset" offset="12" visible="True" />
+  </struct>
+  <id name="Unknown" offset="80" visible="False" />
+  <undefined name="Unknown" offset="84" visible="False" />
+  <unused offset="88" size="4" />
+  <unused offset="92" size="16" />
+</plugin>

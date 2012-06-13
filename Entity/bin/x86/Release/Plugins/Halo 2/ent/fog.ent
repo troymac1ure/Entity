@@ -1,0 +1,48 @@
+<plugin class="fog" author="XZodia" version="0.7" headersize="96">
+  <revision author="XZodia" version="1.0">Completed</revision>
+  <revision author="Shalted" version="0.7">Mapped most of the tag</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <bitmask16 name="Flags" offset="0" visible="True">
+    <option name="Render Only Submerged Geometry" value="0" />
+    <option name="Extend Infinitely While Visible" value="1" />
+    <option name="Don't Flood Fill" value="2" />
+    <option name="Aggressive Flood Fill" value="3" />
+    <option name="Do Not Render" value="4" />
+    <option name="Do Not Render Unless Submerged" value="5" />
+  </bitmask16>
+  <short name="Priority" offset="2" visible="True" />
+  <stringid name="Global Material Name" offset="4" visible="True" />
+  <unused size="4" offset="8" />
+  <float name="Maximum Density" offset="12" visible="True" />
+  <float name="Opaque Distance" offset="16" visible="True" />
+  <float name="Opaque Depth" offset="20" visible="True" />
+  <float name="Atmospheric Planar Depth Lower" offset="24" visible="True" />
+  <float name="Atmospheric Planar Depth Upper" offset="28" visible="False" />
+  <float name="Eye Offset Scale" offset="32" visible="False" />
+  <float name="Color R" offset="36" visible="True" />
+  <float name="Color G" offset="40" visible="True" />
+  <float name="Color B" offset="44" visible="True" />
+  <struct name="Patchy Fog" offset="48" visible="true" size="52" label="Fog Patch">
+    <float name="Color R" offset="0" visible="True" />
+    <float name="Color G" offset="4" visible="True" />
+    <float name="Color B" offset="8" visible="True" />
+    <unused offset="12" size="12" />
+    <float name="Density Lower" offset="24" visible="True" />
+    <float name="Density Upper" offset="28" visible="True" />
+    <float name="Distance Lower" offset="32" visible="True" />
+    <float name="Distance Upper" offset="36" visible="True" />
+    <float name="Min Depth Fraction" offset="40" visible="False" />
+    <tag name="Patchy Fog" offset="44" visible="True" />
+    <id name="Patchy Fog" offset="48" visible="True" />
+  </struct>
+  <tag name="Background Sound" offset="56" visible="False" />
+  <id name="Background Sound" offset="60" visible="False" />
+  <tag name="Sound Enviroment" offset="64" visible="False" />
+  <id name="Sound Enviroment" offset="68" visible="False" />
+  <float name="Environment Damping Factor" offset="72" visible="True" />
+  <float name="Background Sound Gain" offset="76" visible="True" />
+  <tag name="Enter Sound" offset="80" visible="False" />
+  <id name="Enter Sound" offset="84" visible="False" />
+  <tag name="Exit Sound" offset="88" visible="False" />
+  <id name="Exit Sound" offset="92" visible="False" />
+</plugin>

@@ -1,0 +1,189 @@
+<plugin class="mode" author="XZodia" version="0.55" headersize="132">
+  <revision author="XZodia" version="0.55">Updated A Load Of Stuff</revision>
+  <revision author="Doom" version="0.4.1">opened up some unknowns to try to figure out wht they do, renamed some unknows...</revision>
+  <revision author="Doom" version="0.4">Made bones and markers moveable...</revision>
+  <revision author="Iron_Forge" version="0.3">Added some unknown values...</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <stringid name="Model Name" offset="0" visible="True" />
+  <bitmask32 name="Flags" offset="4" visible="True">
+	  <option name="Blend Shared Normals" value="0" />
+	  <option name="Parts Have Local Nodes" value="1" />
+	  <option name="Ignore Skinning" value="2" />
+  </bitmask32>
+  <undefined name="Unknown" offset="8" visible="False" />
+  <unused offset="12" size="8" />
+  <struct name="Bounding Box" offset="20" visible="True" size="56" label="">
+    <float name="X (min)" offset="0" visible="True" />
+    <float name="X (max)" offset="4" visible="True" />
+    <float name="Y (min)" offset="8" visible="True" />
+    <float name="Y (max)" offset="12" visible="True" />
+    <float name="Z (min)" offset="16" visible="True" />
+    <float name="Z (max)" offset="20" visible="True" />
+    <float name="U (min)" offset="24" visible="True" />
+    <float name="U (max)" offset="28" visible="True" />
+    <float name="V (min)" offset="32" visible="True" />
+    <float name="V (max)" offset="36" visible="True" />
+    <float name="Unknown" offset="40" visible="False" />
+    <float name="Unknown" offset="44" visible="False" />
+    <float name="Unknown" offset="48" visible="False" />
+    <float name="Unknown" offset="52" visible="False" />
+  </struct>
+  <struct name="Compression Info" offset="28" visible="true" size="16" label="">
+    <stringid name="Part Name" offset="0" visible="True" />
+	<short name="Unknown" offset="4" visible="True" />
+	<short name="Unknown" offset="6" visible="True" />
+    <struct name="Permutation" offset="8" visible="true" size="16" label="">
+      <stringid name="Permutation Name" offset="0" visible="True" />
+      <short name="Lowest Piece (Index)" offset="4" visible="True" />
+      <short name="Low Piece (Index)" offset="6" visible="True" />
+      <short name="Medium-Low Piece (Index)" offset="8" visible="True" />
+      <short name="Medium-High Piece (Index)" offset="10" visible="True" />
+      <short name="High Piece (Index)" offset="12" visible="True" />
+      <short name="Highest Piece (Index)" offset="14" visible="True" />
+    </struct>
+  </struct>
+  <struct name="Sections" offset="36" visible="true" size="92" label="">
+    <uint name="Type" offset="0" visible="True" />
+    <ushort name="Vertex Count" offset="4" visible="True" />
+    <ushort name="Unknown" offset="6" visible="False" />
+    <undefined name="Unknown" offset="8" visible="False" />
+    <undefined name="Unknown" offset="12" visible="False" />
+    <undefined name="Unknown" offset="16" visible="False" />
+    <ushort name="Bone Type" offset="20" visible="True" />
+    <ushort name="Unknown" offset="22" visible="False" />
+    <undefined name="Unknown" offset="24" visible="False" />
+    <unused offset="28" size="8" />
+    <undefined name="Unknown" offset="36" visible="False" />
+    <undefined name="Unknown" offset="40" visible="False" />
+    <undefined name="Unknown" offset="44" visible="False" />
+    <unused offset="48" size="8" />
+    <uint name="Raw Offset" offset="56" visible="True" />
+    <uint name="Raw Size" offset="60" visible="True" />
+    <uint name="Raw Header Size" offset="64" visible="True" />
+    <uint name="Raw Data Size" offset="68" visible="True" />
+    <struct name="Resource" offset="72" visible="true" size="16" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <uint name="Size" offset="8" visible="True" />
+      <uint name="Offset" offset="12" visible="True" />
+    </struct>
+    <id name="Model Identifier" offset="80" visible="True" />
+    <undefined name="Unknown" offset="84" visible="False" />
+    <unused offset="88" size="4" />
+  </struct>
+  <struct name="Unused" offset="44" visible="false" size="4" label="">
+    <unused offset="0" size="4" />
+  </struct>
+  <struct name="Unknown" offset="52" visible="false" size="12" label="">
+    <undefined name="Unknown" offset="0" visible="False" />
+    <struct name="Unknown" offset="4" visible="false" size="16" label="">
+      <float name="Unknown" offset="0" visible="False" />
+      <float name="Unknown" offset="4" visible="False" />
+      <float name="Unknown" offset="8" visible="False" />
+      <unused offset="12" size="4" />
+    </struct>
+  </struct>
+  <undefined name="Unknown" offset="60" visible="False" />
+  <undefined name="Unknown" offset="64" visible="False" />
+  <unused offset="68" size="4" />
+  <struct name="Nodes" offset="72" visible="true" size="96" label="Name">
+    <stringid name="Name" offset="0" visible="True" />
+    <short name="Parent (Index)" offset="4" visible="True" />
+    <short name="First Child (Index)" offset="6" visible="True" />
+    <short name="Next Sibling (Index)" offset="8" visible="True" />
+    <short name="Unknown" offset="10" visible="False" />
+    <float name="X" offset="12" visible="True" />
+    <float name="Y" offset="16" visible="True" />
+    <float name="Z" offset="20" visible="True" />
+    <float name="i" offset="24" visible="True" />
+    <float name="j" offset="28" visible="True" />
+    <float name="k" offset="32" visible="True" />
+    <float name="w (0 stops movement)" offset="36" visible="True" />
+    <float name="Scale Factor" offset="40" visible="True" />
+    <float name="Unknown" offset="44" visible="False" />
+    <float name="Unknown" offset="48" visible="False" />
+    <float name="Unknown" offset="52" visible="False" />
+    <float name="Unknown" offset="56" visible="False" />
+    <float name="Unknown" offset="60" visible="False" />
+    <float name="Unknown" offset="64" visible="False" />
+    <float name="Unknown" offset="68" visible="False" />
+    <float name="Unknown" offset="72" visible="False" />
+    <float name="Unknown" offset="76" visible="False" />
+    <float name="X Center" offset="80" visible="True" />
+    <float name="Y Center" offset="84" visible="True" />
+    <float name="Z Center" offset="88" visible="True" />
+    <float name="Distance from Parent" offset="92" visible="True" />
+  </struct>
+  <unused offset="80" size="8" />
+  <struct name="Markers" offset="88" visible="true" size="12" label="Name">
+    <stringid name="Name" offset="0" visible="True" />
+    <struct name="Instances" offset="4" visible="True" size="36" label="">
+      <short name="Permutation index" offset="0" visible="False" />
+      <short name="Parent Node index" offset="2" visible="True" />
+      <float name="X" offset="4" visible="True" />
+      <float name="Y (when seen from back)" offset="8" visible="True" />
+      <float name="Z" offset="12" visible="True" />
+      <float name="i" offset="16" visible="True" />
+      <float name="j" offset="20" visible="True" />
+      <float name="k" offset="24" visible="True" />
+      <float name="w" offset="28" visible="True" />
+      <undefined name="Unknown" offset="32" visible="False" />
+    </struct>
+  </struct>
+  <struct name="Shader" offset="96" visible="true" size="32" label="">
+    <tag name="Unused" offset="0" visible="False" />
+    <id name="Unused" offset="4" visible="False" />
+    <tag name="Shader" offset="8" visible="True" />
+    <id name="Shader" offset="12" visible="True" />
+    <struct name="Unknown" offset="16" visible="false" size="8" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <float name="Unknown" offset="4" visible="False" />
+    </struct>
+    <unused offset="24" size="8" />
+  </struct>
+  <unused offset="104" size="8" />
+  <float name="Unknown" offset="112" visible="False" />
+  <struct name="Unknown" offset="116" visible="false" size="88" label="">
+    <undefined name="Unknown" offset="0" visible="False" />
+    <undefined name="Unknown" offset="4" visible="False" />
+    <undefined name="Unknown" offset="8" visible="False" />
+    <float name="Unknown" offset="12" visible="False" />
+    <undefined name="Unknown" offset="16" visible="False" />
+    <struct name="Unknown" offset="20" visible="false" size="12" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <struct name="Unknown" offset="4" visible="false" size="8" label="">
+        <undefined name="Unknown" offset="0" visible="False" />
+        <undefined name="Unknown" offset="4" visible="False" />
+      </struct>
+    </struct>
+    <struct name="Unknown" offset="28" visible="false" size="4" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+    </struct>
+    <unused offset="36" size="16" />
+    <undefined name="Raw Offset" offset="52" visible="True" />
+    <undefined name="Raw Size" offset="56" visible="True" />
+    <undefined name="Raw Header Size" offset="60" visible="True" />
+    <undefined name="Raw Data Size" offset="64" visible="True" />
+    <struct name="Resource" offset="68" visible="true" size="16" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <float name="Unknown" offset="4" visible="False" />
+      <uint name="Size" offset="8" visible="True" />
+      <uint name="Offset" offset="12" visible="True" />
+    </struct>
+    <id name="Model Identifier" offset="76" visible="True" />
+    <undefined name="Unknown" offset="80" visible="False" />
+    <unused offset="84" size="4" />
+  </struct>
+  <struct name="Section Block Fields" offset="124" visible="false" size="8" label="">
+    <struct name="Section Data Tag Field New" offset="0" visible="false" size="16" label="">
+      <struct name="Section Data Old" offset="0" visible="false" size="8" label="">
+        <undefined name="Unknown" offset="0" visible="False" />
+        <undefined name="Unknown" offset="4" visible="False" />
+      </struct>
+      <struct name="Section Data" offset="8" visible="false" size="8" label="">
+        <undefined name="Unknown" offset="0" visible="False" />
+        <undefined name="Unknown" offset="4" visible="False" />
+      </struct>
+    </struct>
+  </struct>
+</plugin>

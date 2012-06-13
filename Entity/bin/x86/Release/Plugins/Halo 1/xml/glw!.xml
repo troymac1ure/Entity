@@ -1,0 +1,102 @@
+<plugin>
+ <tag>glw!</tag>
+  <struct>
+   <name>Main</name>
+   <size>0</size>
+   <value>
+    <type>short</type>
+    <offset>0x20</offset>
+    <name>Number of Particles</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x54</offset>
+    <name>Particle Rotational Velocity</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x64</offset>
+    <name>Effect Rotational Velocity</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x74</offset>
+    <name>Effect Translational Velocity</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x84</offset>
+    <name>Minimum Distance</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x88</offset>
+    <name>Maximum Distance</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0xa0</offset>
+    <name>Minimum Particle Size</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0xa4</offset>
+    <name>Maximum Particle Size</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0xb8</offset>
+    <name>Color Bound A: Red</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0xbc</offset>
+    <name>Color Bound A: Green</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0xc0</offset>
+    <name>Color Bound A: Blue</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0xc8</offset>
+    <name>Color Bound B: Red</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0xcc</offset>
+    <name>Color Bound B: Green</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0xd0</offset>
+    <name>Color Bound B: Blue</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0xf4</offset>
+    <name>Color Rate of Change</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0xf8</offset>
+    <name>Fading % of Glow</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0xfc</offset>
+    <name>Particle Spawn Frequency</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x100</offset>
+    <name>Particle Life</name>
+   </value>
+   <value>
+    <type>float</type>
+    <offset>0x104</offset>
+    <name>Particle Velocity</name>
+   </value>
+  </struct>
+</plugin>

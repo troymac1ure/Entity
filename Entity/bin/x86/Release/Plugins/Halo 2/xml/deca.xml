@@ -1,0 +1,183 @@
+<plugin>
+<tag>deca</tag>
+<struct>
+<name>Main</name>
+<size>148</size>
+<value>
+<type>bitmask32</type>
+<offset>0x00</offset>
+<name>Flags</name>
+<bitmask>
+<bit>32</bit>
+<name>Geometry Inherited by Next Decal</name>
+</bitmask>
+<bitmask>
+<bit>31</bit>
+<name>Interpolate Colour in HSV</name>
+</bitmask>
+<bitmask>
+<bit>30</bit>
+<name>....More Colours</name>
+</bitmask>
+<bitmask>
+<bit>29</bit>
+<name>No Random Rotation</name>
+</bitmask>
+<bitmask>
+<bit>28</bit>
+<name>Water Effect</name>
+</bitmask>
+<bitmask>
+<bit>25</bit>
+<name>Animation Loop</name>
+</bitmask>
+<bitmask>
+<bit>24</bit>
+<name>Preserve Aspect</name>
+</bitmask>
+</value>
+
+
+
+
+<value>
+<type>id16</type>
+<offset>0x02</offset>
+<name>Type</name>
+<option>
+<value>0</value>
+<name>0</name>
+</option>
+<option>
+<value>1</value>
+<name>1</name>
+</option>
+<option>
+<value>2</value>
+<name>2</name>
+</option>
+<option>
+<value>3</value>
+<name>3</name>
+</option>
+</value>
+
+
+
+
+<value>
+<type>id16</type>
+<offset>0x06</offset>
+<name>Type</name>
+<option>
+<value>4</value>
+<name>4</name>
+</option>
+<option>
+<value>5</value>
+<name>5</name>
+</option>
+<option>
+<value>8</value>
+<name>8</name>
+</option>
+<option>
+<value>16</value>
+<name>16</name>
+</option>
+</value>
+<value>
+<type>id16</type>
+<offset>0x04</offset>
+<name>Layer</name>
+<option>
+<value>2</value>
+<name>Primary</name>
+</option>
+<option>
+<value>3</value>
+<name>Splatter</name>
+</option>
+<option>
+<value>4</value>
+<name>Secondary</name>
+</option>
+<option>
+<value>5</value>
+<name>Light</name>
+</option>
+</value>
+
+
+<value>
+<type>float</type>
+<offset>0x10</offset>
+<name>Radius</name>
+</value>
+<value>
+<type>float</type>
+<offset>0x14</offset>
+<name>Radius - To</name>
+</value>
+<value>
+<type>float</type>
+<offset>0x18</offset>
+<name>Intesity</name>
+</value>
+<value>
+<type>float</type>
+<offset>0x1c</offset>
+<name>Colour Lower Bounds - R</name>
+</value>
+<value>
+<type>float</type>
+<offset>0x20</offset>
+<name>Colour Lower Bounds - G</name>
+</value>
+<value>
+<type>float</type>
+<offset>0x24</offset>
+<name>Colour Lower Bounds - B</name>
+</value>
+<value>
+<type>float</type>
+<offset>0x28</offset>
+<name>Colour Upper Bounds - R</name>
+</value>
+<value>
+<type>float</type>
+<offset>0x2c</offset>
+<name>Colour Upper Bounds - G</name>
+</value>
+<value>
+<type>float</type>
+<offset>0x30</offset>
+<name>Colour Upper Bounds - B</name>
+</value>
+<value>
+<type>float</type>
+<offset>0x34</offset>
+<name>Lifetime</name>
+</value>
+<value>
+<type>float</type>
+<offset>0x38</offset>
+<name>Lifetime - To</name>
+</value>
+<value>
+<type>float</type>
+<offset>0x3c</offset>
+<name>Decay Time</name>
+</value>
+<value>
+<type>float</type>
+<offset>0x40</offset>
+<name>Decay Time - To</name>
+</value>
+<value>
+<type>float</type>
+<offset>0xa4</offset>
+<name>Unknown</name>
+</value>
+</struct>
+</plugin>

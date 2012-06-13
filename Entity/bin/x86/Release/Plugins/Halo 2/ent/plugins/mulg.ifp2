@@ -1,0 +1,399 @@
+<plugin class="mulg" author="Iron_Forge" version="0.3" headersize="16">
+  <revision author="Toabn" version="0.3">Named most chunks and some unknowns...</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <struct name="Unknown4" offset="0" visible="false" size="32" label="">
+    <tag name="Unknown" offset="0" visible="False" />
+    <id name="Unknown" offset="4" visible="False" />
+    <tag name="Unknown" offset="8" visible="False" />
+    <id name="Unknown" offset="12" visible="False" />
+    <struct name="Unknown9" offset="16" visible="false" size="12" label="">
+      <float name="Unknown" offset="0" visible="False" />
+      <float name="Unknown" offset="4" visible="False" />
+      <float name="Unknown" offset="8" visible="False" />
+    </struct>
+    <tag name="Unknown" offset="24" visible="False" />
+    <id name="Unknown" offset="28" visible="False" />
+  </struct>
+  <struct name="Multiplayer17" offset="8" visible="true" size="1384" label="">
+    <tag name="Unknown" offset="0" visible="False" />
+    <id name="Unknown" offset="4" visible="False" />
+    <tag name="Unknown" offset="8" visible="False" />
+    <id name="Unknown" offset="12" visible="False" />
+    <tag name="Unknown" offset="16" visible="False" />
+    <id name="Unknown" offset="20" visible="False" />
+    <unused offset="24" size="24" />
+    <tag name="Unknown" offset="48" visible="False" />
+    <id name="Unknown" offset="52" visible="False" />
+    <tag name="Unknown" offset="56" visible="False" />
+    <id name="Unknown" offset="60" visible="False" />
+    <unused offset="64" size="40" />
+    <struct name="Weapons30" offset="104" visible="true" size="8" label="">
+      <tag name="Weapon" offset="0" visible="True" />
+      <id name="Weapon" offset="4" visible="True" />
+    </struct>
+    <struct name="Vehicles34" offset="112" visible="true" size="8" label="">
+      <tag name="Vehicle" offset="0" visible="True" />
+      <id name="Vehicle" offset="4" visible="True" />
+    </struct>
+    <struct name="Grenades38" offset="120" visible="true" size="8" label="">
+      <tag name="Grenade" offset="0" visible="True" />
+      <id name="Grenade" offset="4" visible="True" />
+    </struct>
+    <struct name="Power Ups42" offset="128" visible="true" size="8" label="">
+      <tag name="Power Up" offset="0" visible="True" />
+      <id name="Power Up" offset="4" visible="True" />
+    </struct>
+    <tag name="Unknown" offset="136" visible="False" />
+    <id name="Unknown" offset="140" visible="False" />
+    <struct name="Unknown48" offset="144" visible="false" size="8" label="">
+      <tag name="Unknown" offset="0" visible="False" />
+      <id name="Unknown" offset="4" visible="False" />
+    </struct>
+    <struct name="General Anouncements52" offset="152" visible="true" size="168" label="">
+      <unused offset="0" size="4" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <unused offset="8" size="4" />
+      <stringid name="Unknown" offset="12" visible="False" />
+      <undefined name="Unknown" offset="16" visible="False" />
+      <stringid name="Unknown" offset="20" visible="False" />
+      <unused offset="24" size="40" />
+      <undefined name="Unknown" offset="64" visible="False" />
+      <tag name="English" offset="68" visible="True" />
+      <id name="English" offset="72" visible="True" />
+      <tag name="Japanese" offset="76" visible="True" />
+      <id name="Japanese" offset="80" visible="True" />
+      <tag name="German" offset="84" visible="True" />
+      <id name="German" offset="88" visible="True" />
+      <tag name="French" offset="92" visible="True" />
+      <id name="French" offset="96" visible="True" />
+      <tag name="Spanish" offset="100" visible="True" />
+      <id name="Spanish" offset="104" visible="True" />
+      <tag name="Italian" offset="108" visible="True" />
+      <id name="Italian" offset="112" visible="True" />
+      <tag name="Korean" offset="116" visible="True" />
+      <id name="Korean" offset="120" visible="True" />
+      <tag name="Chinese" offset="124" visible="True" />
+      <id name="Chinese" offset="128" visible="True" />
+      <tag name="Unused" offset="132" visible="False" />
+      <id name="Unused" offset="136" visible="False" />
+      <unused offset="140" size="28" />
+    </struct>
+    <struct name="Flavors81" offset="160" visible="true" size="168" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <unused offset="8" size="4" />
+      <stringid name="Unknown" offset="12" visible="False" />
+      <unused offset="16" size="48" />
+      <undefined name="Unknown" offset="64" visible="False" />
+      <tag name="English" offset="68" visible="True" />
+      <id name="English" offset="72" visible="True" />
+      <tag name="Japanese" offset="76" visible="True" />
+      <id name="Japanese" offset="80" visible="True" />
+      <tag name="German" offset="84" visible="True" />
+      <id name="German" offset="88" visible="True" />
+      <tag name="French" offset="92" visible="True" />
+      <id name="French" offset="96" visible="True" />
+      <tag name="Spanish" offset="100" visible="True" />
+      <id name="Spanish" offset="104" visible="True" />
+      <tag name="Italian" offset="108" visible="True" />
+      <id name="Italian" offset="112" visible="True" />
+      <tag name="Korean" offset="116" visible="True" />
+      <id name="Korean" offset="120" visible="True" />
+      <tag name="Chinese" offset="124" visible="True" />
+      <id name="Chinese" offset="128" visible="True" />
+      <tag name="Unused" offset="132" visible="False" />
+      <id name="Unused" offset="136" visible="False" />
+      <unused offset="140" size="28" />
+    </struct>
+    <struct name="Slayer108" offset="168" visible="true" size="168" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <unused offset="8" size="4" />
+      <stringid name="Unknown" offset="12" visible="False" />
+      <unused offset="16" size="48" />
+      <undefined name="Unknown" offset="64" visible="False" />
+      <tag name="Unknown" offset="68" visible="False" />
+      <id name="Unknown" offset="72" visible="False" />
+      <tag name="Unknown" offset="76" visible="False" />
+      <id name="Unknown" offset="80" visible="False" />
+      <tag name="Unknown" offset="84" visible="False" />
+      <id name="Unknown" offset="88" visible="False" />
+      <tag name="Unknown" offset="92" visible="False" />
+      <id name="Unknown" offset="96" visible="False" />
+      <tag name="Unknown" offset="100" visible="False" />
+      <id name="Unknown" offset="104" visible="False" />
+      <tag name="Unknown" offset="108" visible="False" />
+      <id name="Unknown" offset="112" visible="False" />
+      <tag name="Unknown" offset="116" visible="False" />
+      <id name="Unknown" offset="120" visible="False" />
+      <tag name="Unknown" offset="124" visible="False" />
+      <id name="Unknown" offset="128" visible="False" />
+      <tag name="Unused" offset="132" visible="False" />
+      <id name="Unused" offset="136" visible="False" />
+      <unused offset="140" size="28" />
+    </struct>
+    <struct name="CTF135" offset="176" visible="true" size="168" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <unused offset="8" size="4" />
+      <stringid name="Unknown" offset="12" visible="False" />
+      <unused offset="16" size="48" />
+      <undefined name="Unknown" offset="64" visible="False" />
+      <tag name="Unknown" offset="68" visible="False" />
+      <id name="Unknown" offset="72" visible="False" />
+      <tag name="Unknown" offset="76" visible="False" />
+      <id name="Unknown" offset="80" visible="False" />
+      <tag name="Unknown" offset="84" visible="False" />
+      <id name="Unknown" offset="88" visible="False" />
+      <tag name="Unknown" offset="92" visible="False" />
+      <id name="Unknown" offset="96" visible="False" />
+      <tag name="Unknown" offset="100" visible="False" />
+      <id name="Unknown" offset="104" visible="False" />
+      <tag name="Unknown" offset="108" visible="False" />
+      <id name="Unknown" offset="112" visible="False" />
+      <tag name="Unknown" offset="116" visible="False" />
+      <id name="Unknown" offset="120" visible="False" />
+      <tag name="Unknown" offset="124" visible="False" />
+      <id name="Unknown" offset="128" visible="False" />
+      <tag name="Unused" offset="132" visible="False" />
+      <id name="Unused" offset="136" visible="False" />
+      <unused offset="140" size="28" />
+    </struct>
+    <struct name="Oddball162" offset="184" visible="true" size="168" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <unused offset="8" size="4" />
+      <stringid name="Unknown" offset="12" visible="False" />
+      <undefined name="Unknown" offset="16" visible="False" />
+      <unused offset="20" size="44" />
+      <undefined name="Unknown" offset="64" visible="False" />
+      <tag name="Unknown" offset="68" visible="False" />
+      <id name="Unknown" offset="72" visible="False" />
+      <tag name="Unknown" offset="76" visible="False" />
+      <id name="Unknown" offset="80" visible="False" />
+      <tag name="Unknown" offset="84" visible="False" />
+      <id name="Unknown" offset="88" visible="False" />
+      <tag name="Unknown" offset="92" visible="False" />
+      <id name="Unknown" offset="96" visible="False" />
+      <tag name="Unknown" offset="100" visible="False" />
+      <id name="Unknown" offset="104" visible="False" />
+      <tag name="Unknown" offset="108" visible="False" />
+      <id name="Unknown" offset="112" visible="False" />
+      <tag name="Unknown" offset="116" visible="False" />
+      <id name="Unknown" offset="120" visible="False" />
+      <tag name="Unknown" offset="124" visible="False" />
+      <id name="Unknown" offset="128" visible="False" />
+      <tag name="Unused" offset="132" visible="False" />
+      <id name="Unused" offset="136" visible="False" />
+      <unused offset="140" size="28" />
+    </struct>
+    <unused offset="192" size="8" />
+    <struct name="King of the Hill191" offset="200" visible="true" size="168" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <unused offset="8" size="4" />
+      <stringid name="Unknown" offset="12" visible="False" />
+      <unused offset="16" size="48" />
+      <undefined name="Unknown" offset="64" visible="False" />
+      <tag name="Unknown" offset="68" visible="False" />
+      <id name="Unknown" offset="72" visible="False" />
+      <tag name="Unknown" offset="76" visible="False" />
+      <id name="Unknown" offset="80" visible="False" />
+      <tag name="Unknown" offset="84" visible="False" />
+      <id name="Unknown" offset="88" visible="False" />
+      <tag name="Unknown" offset="92" visible="False" />
+      <id name="Unknown" offset="96" visible="False" />
+      <tag name="Unknown" offset="100" visible="False" />
+      <id name="Unknown" offset="104" visible="False" />
+      <tag name="Unknown" offset="108" visible="False" />
+      <id name="Unknown" offset="112" visible="False" />
+      <tag name="Unknown" offset="116" visible="False" />
+      <id name="Unknown" offset="120" visible="False" />
+      <tag name="Unknown" offset="124" visible="False" />
+      <id name="Unknown" offset="128" visible="False" />
+      <tag name="Unused" offset="132" visible="False" />
+      <id name="Unused" offset="136" visible="False" />
+      <unused offset="140" size="28" />
+    </struct>
+    <unused offset="208" size="8" />
+    <struct name="Juggernaut219" offset="216" visible="true" size="168" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <unused offset="8" size="4" />
+      <stringid name="Unknown" offset="12" visible="False" />
+      <unused offset="16" size="48" />
+      <undefined name="Unknown" offset="64" visible="False" />
+      <tag name="Unknown" offset="68" visible="False" />
+      <id name="Unknown" offset="72" visible="False" />
+      <tag name="Unknown" offset="76" visible="False" />
+      <id name="Unknown" offset="80" visible="False" />
+      <tag name="Unknown" offset="84" visible="False" />
+      <id name="Unknown" offset="88" visible="False" />
+      <tag name="Unknown" offset="92" visible="False" />
+      <id name="Unknown" offset="96" visible="False" />
+      <tag name="Unknown" offset="100" visible="False" />
+      <id name="Unknown" offset="104" visible="False" />
+      <tag name="Unknown" offset="108" visible="False" />
+      <id name="Unknown" offset="112" visible="False" />
+      <tag name="Unknown" offset="116" visible="False" />
+      <id name="Unknown" offset="120" visible="False" />
+      <tag name="Unknown" offset="124" visible="False" />
+      <id name="Unknown" offset="128" visible="False" />
+      <tag name="Unused" offset="132" visible="False" />
+      <id name="Unused" offset="136" visible="False" />
+      <unused offset="140" size="28" />
+    </struct>
+    <struct name="Territories246" offset="224" visible="true" size="168" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <unused offset="8" size="4" />
+      <stringid name="Unknown" offset="12" visible="False" />
+      <unused offset="16" size="48" />
+      <undefined name="Unknown" offset="64" visible="False" />
+      <tag name="Unknown" offset="68" visible="False" />
+      <id name="Unknown" offset="72" visible="False" />
+      <tag name="Unknown" offset="76" visible="False" />
+      <id name="Unknown" offset="80" visible="False" />
+      <tag name="Unknown" offset="84" visible="False" />
+      <id name="Unknown" offset="88" visible="False" />
+      <tag name="Unknown" offset="92" visible="False" />
+      <id name="Unknown" offset="96" visible="False" />
+      <tag name="Unknown" offset="100" visible="False" />
+      <id name="Unknown" offset="104" visible="False" />
+      <tag name="Unknown" offset="108" visible="False" />
+      <id name="Unknown" offset="112" visible="False" />
+      <tag name="Unknown" offset="116" visible="False" />
+      <id name="Unknown" offset="120" visible="False" />
+      <tag name="Unknown" offset="124" visible="False" />
+      <id name="Unknown" offset="128" visible="False" />
+      <tag name="Unused" offset="132" visible="False" />
+      <id name="Unused" offset="136" visible="False" />
+      <unused offset="140" size="28" />
+    </struct>
+    <struct name="Specific Announcements273" offset="232" visible="true" size="168" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <unused offset="8" size="4" />
+      <stringid name="Unknown" offset="12" visible="False" />
+      <undefined name="Unknown" offset="16" visible="False" />
+      <unused offset="20" size="40" />
+      <float name="Unknown" offset="60" visible="False" />
+      <undefined name="Unknown" offset="64" visible="False" />
+      <tag name="English" offset="68" visible="True" />
+      <id name="English" offset="72" visible="True" />
+      <tag name="Japanese" offset="76" visible="True" />
+      <id name="Japanese" offset="80" visible="True" />
+      <tag name="German" offset="84" visible="True" />
+      <id name="German" offset="88" visible="True" />
+      <tag name="French" offset="92" visible="True" />
+      <id name="French" offset="96" visible="True" />
+      <tag name="Spanish" offset="100" visible="True" />
+      <id name="Spanish" offset="104" visible="True" />
+      <tag name="Italian" offset="108" visible="True" />
+      <id name="Italian" offset="112" visible="True" />
+      <tag name="Korean" offset="116" visible="True" />
+      <id name="Korean" offset="120" visible="True" />
+      <tag name="Chinese" offset="124" visible="True" />
+      <id name="Chinese" offset="128" visible="True" />
+      <tag name="Unused" offset="132" visible="False" />
+      <id name="Unused" offset="136" visible="False" />
+      <unused offset="140" size="28" />
+    </struct>
+    <unused offset="240" size="32" />
+    <unused offset="272" size="8" />
+    <tag name="Unused" offset="280" visible="False" />
+    <id name="Unused" offset="284" visible="False" />
+    <unused offset="288" size="48" />
+    <float name="Unknown" offset="336" visible="False" />
+    <float name="Unknown" offset="340" visible="False" />
+    <unused offset="344" size="40" />
+    <float name="Unknown" offset="384" visible="False" />
+    <float name="Unknown" offset="388" visible="False" />
+    <float name="Unknown" offset="392" visible="False" />
+    <unused offset="396" size="16" />
+    <float name="Unknown" offset="412" visible="False" />
+    <float name="Unknown" offset="416" visible="False" />
+    <float name="Unknown" offset="420" visible="False" />
+    <unused offset="424" size="16" />
+    <float name="Unknown" offset="440" visible="False" />
+    <float name="Unknown" offset="444" visible="False" />
+    <float name="Unknown" offset="448" visible="False" />
+    <unused offset="452" size="16" />
+    <float name="Unknown" offset="468" visible="False" />
+    <float name="Unknown" offset="472" visible="False" />
+    <float name="Unknown" offset="476" visible="False" />
+    <unused offset="480" size="44" />
+    <float name="Unknown" offset="524" visible="False" />
+    <float name="Unknown" offset="528" visible="False" />
+    <float name="Unknown" offset="532" visible="False" />
+    <unused offset="536" size="16" />
+    <float name="Unknown" offset="552" visible="False" />
+    <float name="Unknown" offset="556" visible="False" />
+    <float name="Unknown" offset="560" visible="False" />
+    <unused offset="564" size="16" />
+    <float name="Unknown" offset="580" visible="False" />
+    <float name="Unknown" offset="584" visible="False" />
+    <float name="Unknown" offset="588" visible="False" />
+    <unused offset="592" size="16" />
+    <float name="Unknown" offset="608" visible="False" />
+    <float name="Unknown" offset="612" visible="False" />
+    <float name="Unknown" offset="616" visible="False" />
+    <unused offset="620" size="16" />
+    <float name="Unknown" offset="636" visible="False" />
+    <float name="Unknown" offset="640" visible="False" />
+    <float name="Unknown" offset="644" visible="False" />
+    <unused offset="648" size="16" />
+    <float name="Unknown" offset="664" visible="False" />
+    <float name="Unknown" offset="668" visible="False" />
+    <float name="Unknown" offset="672" visible="False" />
+    <unused offset="676" size="16" />
+    <float name="Unknown" offset="692" visible="False" />
+    <float name="Unknown" offset="696" visible="False" />
+    <float name="Unknown" offset="700" visible="False" />
+    <unused offset="704" size="624" />
+    <struct name="Unknown354" offset="1328" visible="false" size="352" label="">
+      <float name="Unknown" offset="0" visible="False" />
+      <unused offset="4" size="4" />
+      <float name="Unknown" offset="8" visible="False" />
+      <float name="Unknown" offset="12" visible="False" />
+      <float name="Unknown" offset="16" visible="False" />
+      <float name="Unknown" offset="20" visible="False" />
+      <float name="Unknown" offset="24" visible="False" />
+      <float name="Unknown" offset="28" visible="False" />
+      <float name="Unknown" offset="32" visible="False" />
+      <float name="Unknown" offset="36" visible="False" />
+      <float name="Unknown" offset="40" visible="False" />
+      <unused offset="44" size="148" />
+      <tag name="Unknown" offset="192" visible="False" />
+      <id name="Unknown" offset="196" visible="False" />
+      <unused offset="200" size="16" />
+      <float name="Unknown" offset="216" visible="False" />
+      <tag name="Unknown" offset="220" visible="False" />
+      <id name="Unknown" offset="224" visible="False" />
+      <tag name="Unknown" offset="228" visible="False" />
+      <id name="Unknown" offset="232" visible="False" />
+      <unused offset="236" size="8" />
+      <stringid name="Unknown" offset="244" visible="False" />
+      <stringid name="Unknown" offset="248" visible="False" />
+      <unused offset="252" size="100" />
+    </struct>
+    <struct name="Game States380" offset="1336" visible="true" size="28" label="">
+      <unused offset="0" size="4" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <stringid name="Unknown" offset="8" visible="False" />
+      <stringid name="Unknown" offset="12" visible="False" />
+      <unused offset="16" size="8" />
+      <unused offset="24" size="4" />
+    </struct>
+    <tag name="Unknown" offset="1344" visible="False" />
+    <id name="Unknown" offset="1348" visible="False" />
+    <tag name="Unknown" offset="1352" visible="False" />
+    <id name="Unknown" offset="1356" visible="False" />
+    <tag name="Unknown" offset="1360" visible="False" />
+    <id name="Unknown" offset="1364" visible="False" />
+    <tag name="Unknown" offset="1368" visible="False" />
+    <id name="Unknown" offset="1372" visible="False" />
+    <tag name="Unknown" offset="1376" visible="False" />
+    <id name="Unknown" offset="1380" visible="False" />
+  </struct>
+</plugin>

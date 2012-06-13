@@ -1,0 +1,137 @@
+<plugin class="bitm" author="XZodia" version="0.91" headersize="76">
+  <revision author="XZodia" version="0.91">Minor Update</revision>
+  <revision author="Shalted" version="0.9">Programmer's Refrence</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <enum16 name="Type" offset="0" visible="True">
+    <option name="2D Textures" value="0" />
+    <option name="3D Textures" value="1" />
+    <option name="CubeMap" value="2" />
+    <option name="Sprite" value="3" />
+    <option name="UI Bitmap" value="4" />
+  </enum16>
+  <enum16 name="Format" offset="2" visible="True">
+    <option name="DXT1 Encoded" value="0" />
+    <option name="DXT2/3 Encoded" value="1" />
+    <option name="DXT4/5 Encoded" value="2" />
+    <option name="16-Bit Colour" value="3" />
+    <option name="32-Bit Colour" value="4" />
+    <option name="Monochrome" value="5" />
+  </enum16>
+  <enum16 name="Usage" offset="4" visible="True">
+    <option name="Alpha Blend" value="0" />
+    <option name="Default" value="1" />
+    <option name="Height Map" value="2" />
+    <option name="Light Map" value="3" />
+    <option name="Vector Map" value="4" />
+    <option name="Height Map BLUE 255" value="5" />
+    <option name="embm" value="6" />
+    <option name="Height Map A8L8" value="6" />
+    <option name="Height Map G8B8" value="7" />
+    <option name="Height Map G8B8 /w Alpha" value="8" />
+  </enum16>
+  <bitmask16 name="Format" offset="6" visible="True">
+    <option name="Enable Diffusion Dithering" value="0" />
+    <option name="Disable Height map compression" value="1" />
+    <option name="Uniform Sprite Sequnces" value="2" />
+    <option name="Filthy Sprite Bugfix" value="3" />
+    <option name="Use Sharp Bump Filter" value="4" />
+    <option name="unused" value="5" />
+    <option name="Use Clamped/Mirrored Bump Filter" value="6" />
+    <option name="Invert Detail Fade" value="7" />
+    <option name="Swap x-y Vector Components" value="8" />
+    <option name="Convert From Signed" value="9" />
+    <option name="Convert To Signed" value="10" />
+    <option name="Import Mipmap Chains" value="11" />
+    <option name="Internationally True Color" value="12" />
+  </bitmask16>
+  <float name="Detail Fade Factor" offset="8" visible="True" />
+  <float name="Sharpen Amount" offset="12" visible="True" />
+  <float name="Bump Height" offset="16" visible="True" />
+  <enum16 name="Sprite Budget Size" offset="20" visible="True">
+    <option name="32x32" value="0" />
+    <option name="64x64" value="1" />
+    <option name="128x128" value="2" />
+    <option name="256x256" value="3" />
+    <option name="512x512" value="4" />
+  </enum16>
+  <short name="Sprite Budget Count" offset="22" visible="True" />
+  <short name="Colour Plate Width" offset="24" visible="True" />
+  <short name="Colour Plate Height" offset="26" visible="True" />
+  <int name="Compressed Colour Plate Data" offset="28" visible="True" />
+  <unused offset="32" size="12" />
+  <float name="Blur Filter Size" offset="44" visible="True" />
+  <float name="Alpha Bias" offset="48" visible="True" />
+  <short name="MipMap Count" offset="52" visible="True" />
+  <enum16 name="Sprite Usage" offset="54" visible="True">
+    <option name="Blend/Add/Subtract/Max" value="0" />
+    <option name="Multiply/Min" value="1" />
+    <option name="Double Multiply" value="2" />
+  </enum16>
+  <short name="Sprite Spacing" offset="56" visible="True" />
+  <enum16 name="Face Format" offset="58" visible="True">
+    <option name="Default" value="0" />
+    <option name="Force G8B8" value="1" />
+    <option name="Force DXT1" value="2" />
+    <option name="Force DXT3" value="3" />
+    <option name="Force DXT5" value="4" />
+    <option name="Force Alpha-Luminance8" value="5" />
+    <option name="Force A4R4G4B4" value="6" />
+  </enum16>
+  <struct name="Squences" offset="60" visible="True" size="60" label="">
+    <string32 name="Name" offset="0" visible="True" />
+    <short name="First Bitmap Index" offset="32" visible="True" />
+    <short name="Bitmap Count" offset="34" visible="True" />
+    <unused offset="36" size="16" />
+    <struct name="Sprites" offset="52" visible="True" size="32" label="">
+      <int name="Bitmap Index" offset="0" visible="True" />
+      <unused offset="4" size="4" />
+      <float name="Left" offset="8" visible="True" />
+      <float name="Right" offset="12" visible="True" />
+      <float name="Top" offset="16" visible="True" />
+      <float name="Bottom" offset="20" visible="True" />
+      <float name="Reg Point X" offset="24" visible="True" />
+      <float name="Reg Point Y" offset="28" visible="True" />
+    </struct>
+  </struct>
+  <struct name="Bitmap Data" offset="68" visible="True" size="116" label="">
+    <tag name="Tag" offset="0" visible="False" />
+    <short name="Width" offset="4" visible="True" />
+    <short name="Height" offset="6" visible="True" />
+    <short name="Depth" offset="8" visible="True" />
+    <short name="Type" offset="10" visible="True" />
+    <short name="Format" offset="12" visible="True" />
+    <bitmask16 name="Flags" offset="14" visible="True">
+      <option name="^2 Dimensions" value="0" />
+      <option name="Compressed" value="1" />
+      <option name="Palettized" value="2" />
+      <option name="Swizzled" value="3" />
+      <option name="Linear" value="4" />
+      <option name="v16u16" value="5" />
+      <option name="HUD Bitmap?" value="7" />
+      <option name="Always on?" value="9" />
+      <option name="Interlaced?" value="12" />
+    </bitmask16>
+    <short name="Reg X" offset="16" visible="True" />
+    <short name="Reg Y" offset="18" visible="True" />
+    <short name="MipMap Count" offset="20" visible="True" />
+    <short name="PixelOffset" offset="22" visible="True" />
+    <int name="Zero" offset="24" visible="False" />
+    <int name="LOD1 Offset" offset="28" visible="True" />
+    <int name="LOD2 Offset" offset="32" visible="True" />
+    <int name="LOD3 Offset" offset="36" visible="True" />
+    <unused offset="40" size="12" />
+    <int name="LOD1 Size" offset="52" visible="True" />
+    <int name="LOD2 Size" offset="56" visible="True" />
+    <int name="LOD3 Size" offset="60" visible="True" />
+    <unused offset="64" size="12" />
+    <id name="ID" offset="76" visible="True" />
+    <unused offset="80" size="8" />
+    <bitmask32 name="Flags(CBZ)" offset="88" visible="False" />
+    <unused offset="92" size="4" />
+    <int name="Unknown(CBZ)" offset="96" visible="False" />
+    <int name="Unknown(CBZ)" offset="100" visible="False" />
+    <int name="Unknown(CBZ)" offset="104" visible="False" />
+    <int name="Unknown(CBZ)" offset="108" visible="False" />
+    <unused offset="112" size="4" />
+  </struct>
+</plugin>

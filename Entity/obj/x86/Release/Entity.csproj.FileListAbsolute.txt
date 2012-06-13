@@ -1,0 +1,149 @@
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\bin\x86\Release\RealTimeHalo\RthDLL.dll
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\bin\x86\Release\Entity.exe
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\bin\x86\Release\Entity.pdb
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\bin\x86\Release\Globals.dll
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\bin\x86\Release\HaloMap.dll
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\bin\x86\Release\MetaEditor.dll
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\bin\x86\Release\sanddock.dll
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\bin\x86\Release\MetaEditor.pdb
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\bin\x86\Release\HaloMap.pdb
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\bin\x86\Release\Globals.pdb
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.HexEditor.GoToDialogBox.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.HexEditor.HexView.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Main.AboutBox.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Main.Form1.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Main.MainmenuEdit.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Main.MapWizard.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Main.Settings.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Main.SkinOptions.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Main.VideoSettings.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MapForms.askForName.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MapForms.BitmapControl.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MapForms.ChunkClonerWindow.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MapForms.CustomPluginEditor.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MapForms.IdentSwapper.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MapForms.identSwapLayout.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MapForms.MapForm.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MetaEditor2.Bitmask.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MetaEditor2.DataValues.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MetaEditor2.EntStrings.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MetaEditor2.Enums.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MetaEditor2.Ident.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MetaEditor2.Indices.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MetaEditor2.WinMetaEditor.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MetaEditor2.SID.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.MetaFuncs.MEStringsSelector.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Properties.Resources.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Renderers.BSPViewer.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Renderers.ModelViewer.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Tools.Rebuilder.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Unused.Authenticate.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Unused.BetaLogin.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\entity.Unused.Download_Manager.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\Entity.csproj.GenerateResource.Cache
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\Entity.exe
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\Entity\obj\x86\Release\Entity.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\Entity.exe
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\Entity.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\ResolveAssemblyReference.cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.HexEditor.GoToDialogBox.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.HexEditor.HexView.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Main.AboutBox.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Main.Form1.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Main.MainmenuEdit.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Main.MapWizard.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Main.Settings.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Main.SkinOptions.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Main.VideoSettings.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MapForms.BitmapControl.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MapForms.ChunkClonerWindow.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MapForms.CustomPluginEditor.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MapForms.IdentSwapper.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MapForms.identSwapLayout.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MapForms.MapForm.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MetaEditor2.Bitmask.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MetaEditor2.DataValues.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MetaEditor2.EntStrings.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MetaEditor2.Enums.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MetaEditor2.Ident.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MetaEditor2.Indices.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MetaEditor2.WinMetaEditor.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MetaEditor2.SID.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MetaFuncs.MEStringsSelector.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Properties.Resources.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Renderers.BSPViewer.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Renderers.ModelViewer.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Tools.Rebuilder.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Unused.Authenticate.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Unused.BetaLogin.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.Unused.Download_Manager.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\Entity.csproj.GenerateResource.Cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MetaEditor2.MetaEditorControlPage.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\bin\x86\Release\RealTimeHalo\RthDLL.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\bin\x86\Release\Entity.exe
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\bin\x86\Release\Entity.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\bin\x86\Release\Globals.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\bin\x86\Release\HaloMap.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\bin\x86\Release\JacksonSoft.CustomTabControl.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\bin\x86\Release\MetaEditor.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\bin\x86\Release\sanddock.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\bin\x86\Release\MetaEditor.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\bin\x86\Release\HaloMap.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\bin\x86\Release\Globals.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\Entity\obj\x86\Release\entity.MapForms.BitmapInjectionForm.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\Entity.exe
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\Entity.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\RealTimeHalo\RthDLL.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\Entity.exe
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\Entity.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\Globals.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\HaloMap.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\JacksonSoft.CustomTabControl.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\MetaEditor.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\sanddock.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\XDevkit.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\MetaEditor.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\HaloMap.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\Globals.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\ResolveAssemblyReference.cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.HexEditor.GoToDialogBox.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.HexEditor.HexView.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Main.AboutBox.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Main.Form1.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Main.MainmenuEdit.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Main.MapWizard.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Main.Settings.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Main.SkinOptions.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Main.VideoSettings.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MapForms.BitmapControl.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MapForms.BitmapInjectionForm.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MapForms.ChunkClonerWindow.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MapForms.CustomPluginEditor.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MapForms.IdentSwapper.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MapForms.identSwapLayout.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MapForms.MapForm.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MetaEditor2.Bitmask.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MetaEditor2.DataValues.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MetaEditor2.EntStrings.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MetaEditor2.Enums.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MetaEditor2.Ident.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MetaEditor2.Indices.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MetaEditor2.WinMetaEditor.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MetaEditor2.MetaEditorControlPage.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MetaEditor2.SID.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MetaFuncs.MEStringsSelector.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Properties.Resources.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Renderers.BSPViewer.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Renderers.ModelViewer.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Tools.Rebuilder.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Unused.Authenticate.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Unused.BetaLogin.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.Unused.Download_Manager.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\Entity.csproj.GenerateResource.Cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\YeloDebug.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\JacksonSoft.CustomTabControl.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\YeloDebug.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Release\YeloDebug.xml
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MetaEditor2.StringBox.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Release\entity.MetaEditor2.RestoreSelection.resources

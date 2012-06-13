@@ -1,0 +1,58 @@
+<plugin class="sncl" author="XZodia" version="1.0" headersize="8">
+  <revision author="XZodia" version="1.0">Completed</revision>
+  <struct name="Sound Classes" offset="0" visible="True" size="92" label="">
+    <short name="Max Sounds Per Tag" offset="0" visible="True" />
+    <short name="Max Sounds Per Object" offset="2" visible="True" />
+    <int name="Preemption Time" offset="4" visible="True" />
+    <bitmask16 name="Internal Flags" offset="8" visible="True">
+      <option name="Valid" value="0" />
+      <option name="Is Speech" value="1" />
+      <option name="Scripted" value="2" />
+      <option name="Stops With Object" value="3" />
+      <option name="unused" value="4" />
+      <option name="Valid Doppler Factor" value="5" />
+      <option name="Valid Obstruction Factor" value="6" />
+      <option name="Multilingual" value="7" />
+    </bitmask16>
+    <bitmask16 name="Flags" offset="10" visible="True">
+      <option name="Plays During Pause" value="0" />
+      <option name="Dry Stereo Mix" value="1" />
+      <option name="No Object Obstruction" value="2" />
+      <option name="Use Center Speaker Unspatialized" value="3" />
+      <option name="Send (Mono) To LFE" value="4" />
+      <option name="Deterministic" value="5" />
+      <option name="Use Huge Transmission" value="6" />
+      <option name="Always Use Speakers" value="7" />
+      <option name="Don't Strip From Mainmenu" value="8" />
+      <option name="Ignore Stereo Headroom" value="9" />
+      <option name="Loop Fade Out Is Linear" value="10" />
+      <option name="Stop When Object Dies" value="11" />
+      <option name="Allow Cache File Editing" value="12" />
+    </bitmask16>
+    <short name="Priority" offset="12" visible="True" />
+    <enum16 name="Cache Miss Mode" offset="14" visible="True">
+    </enum16>
+    <float name="Reverb Gain dB" offset="16" visible="True" />
+    <float name="Override Speaker Gain" offset="20" visible="True" />
+    <float name="Distance Bounds Lower" offset="24" visible="True" />
+    <float name="Distance Bounds Upper" offset="28" visible="True" />
+    <float name="Gain Bounds Lower" offset="32" visible="True" />
+    <float name="Gain Bounds Upper" offset="36" visible="True" />
+    <float name="Cutscene Ducking dB" offset="40" visible="True" />
+    <float name="Cutscene Ducking Fade In Time Sec" offset="44" visible="True" />
+    <float name="Cutscene Ducking Sustain Time Sec" offset="48" visible="True" />
+    <float name="Cutscene Ducking Fade Out Time Sec" offset="52" visible="True" />
+    <float name="Scripted Dialog Ducking dB" offset="56" visible="True" />
+    <float name="Scripted Dialog Ducking Fade In Time Sec" offset="60" visible="True" />
+    <float name="Scripted Dialog Ducking Sustain Time Sec" offset="64" visible="True" />
+    <float name="Scripted Dialog Ducking Fade Out Time Sec" offset="68" visible="True" />
+    <float name="Doppler Factor" offset="72" visible="True" />
+    <enum32 name="Stereo Playback Type" offset="76" visible="True">
+      <option name="First Person" value="0" />
+      <option name="Ambient" value="1" />
+    </enum32>
+    <float name="Transmission Multiplier" offset="80" visible="True" />
+    <float name="Obstruction Max Bend" offset="84" visible="True" />
+    <float name="Occlusion Max Bend" offset="88" visible="True" />
+  </struct>
+</plugin>

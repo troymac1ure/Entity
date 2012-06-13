@@ -1,0 +1,15 @@
+<plugin class="vrtx" author="Iron_Forge" version="0.2">
+ <revision author="Iron_Forge" version="0.2">Fixed up basic layout...</revision>
+ <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+ <undefined name="Unknown" visible="false" />
+ <struct name="Unknown" visible="false">
+  <unused size="4" default="0" />
+  <struct name="Unknown" visible="false">
+   <short name="Unknown" visible="false" />
+  </struct>
+  <struct name="Unknown" visible="false">
+   <byte name="Unknown" visible="false" />
+  </struct>
+  <unused size="8" default="0" />
+ </struct>
+</plugin>

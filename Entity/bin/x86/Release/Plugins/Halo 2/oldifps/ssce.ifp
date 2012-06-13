@@ -1,0 +1,36 @@
+<plugin class="ssce" author="Iron_Forge" version="0.1">
+ <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+ <undefined name="Unknown" visible="false" />
+ <unused size="48" default="0" />
+ <tag name="Unused" visible="false" />
+ <id name="Unused" visible="false" />
+ <tag name="Unused" visible="false" />
+ <id name="Unused" visible="false" />
+ <tag name="Unused" visible="false" />
+ <id name="Unused" visible="false" />
+ <tag name="Unused" visible="false" />
+ <id name="Unused" visible="false" />
+ <tag name="Unused" visible="false" />
+ <id name="Unused" visible="false" />
+ <unused size="16" default="0" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <unused size="4" default="0" />
+ <struct name="Unknown" visible="false">
+  <tag name="Unknown" visible="false" />
+  <id name="Unknown" visible="false" />
+  <unused size="16" default="0" />
+ </struct>
+ <unused size="32" default="0" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+</plugin>

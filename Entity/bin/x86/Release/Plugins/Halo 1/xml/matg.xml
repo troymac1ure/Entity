@@ -1,0 +1,64 @@
+<plugin>
+ <tag>matg</tag>
+ <struct>
+  <name>Main</name>
+  <size>0</size>
+  <value>
+   <type>reflexive</type>
+   <offset>0x170</offset>
+   <name>Bipd</name>
+  </value>
+ </struct>
+ <struct>
+  <name>Bipd</name>
+  <size>244</size>
+  <value>
+   <type>float</type>
+   <offset>0x34</offset>
+   <name>Walking Speed Forward</name>
+   <info>Speed MC moves forward</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x38</offset>
+   <name>Walking Speed Backward</name>
+   <info>Speed MC moves backward</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x3C</offset>
+   <name>Walking Speed Sideways</name>
+   <info>Speed MC moves to the sides</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x40</offset>
+   <name>Walking Speed Acceleration</name>
+   <info>Rate MC increases in speed</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x44</offset>
+   <name>Crouching Speed Forward</name>
+   <info>Speed MC moves forward (while crouched)</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x48</offset>
+   <name>Crouching Speed Backward</name>
+   <info>Speed MC moves backward (while crouched)</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x4C</offset>
+   <name>Crouching Speed Sideways</name>
+   <info>Speed MC moves to the sides (while crouched)</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x50</offset>
+   <name>Crouching Speed Acceleration</name>
+   <info>Rate MC increases in speed (while crouched)</info>
+  </value>
+ </struct>
+</plugin>

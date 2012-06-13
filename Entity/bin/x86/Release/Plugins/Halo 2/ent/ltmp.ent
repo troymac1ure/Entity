@@ -1,0 +1,225 @@
+<plugin class="ltmp" author="XZodia" version="1.0" headersize="260">
+  <revision author="XZodia" version="1.0">Completed</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <float name="Search Distance Lower Bound" offset="0" visible="False" />
+  <float name="Search Distance Upper Bound" offset="4" visible="False" />
+  <float name="Luminels Per World Unit" offset="8" visible="False" />
+  <float name="Output White Reference" offset="12" visible="False" />
+  <float name="Output Black Reference" offset="16" visible="False" />
+  <float name="Output Schlick Reference" offset="20" visible="False" />
+  <float name="Diffuse Map Scale" offset="24" visible="False" />
+  <float name="Sun Scale" offset="28" visible="False" />
+  <float name="Sky Scale" offset="32" visible="False" />
+  <float name="Indirect Scale" offset="36" visible="False" />
+  <float name="Prt Scale" offset="40" visible="False" />
+  <float name="Surface Light Scale" offset="44" visible="False" />
+  <float name="Scenario Light Scale" offset="48" visible="False" />
+  <float name="Lightprobe Interpolation Override" offset="52" visible="False" />
+  <unused offset="56" size="72" />
+  <struct name="Lightmap Groups" offset="128" visible="True" size="104" label="">
+    <enum16 name="Type" offset="0" visible="False">
+      <option name="Normal" value="0" />
+    </enum16>
+    <bitmask16 name="Flags" offset="2" visible="True">
+      <option name="Unused" value="0" />
+    </bitmask16>
+    <int name="Structure Checksum" offset="4" visible="False" />
+    <struct name="Section Palette" offset="8" visible="True" size="1024" label="First Palette Color">
+      <int name="First Palette Color" offset="0" visible="False" />
+      <unused size="1020" offset="4" />
+    </struct>
+    <struct name="Writable Palettes" offset="16" visible="True" size="1024" label="First Palette Color">
+      <int name="First Palette Color" offset="0" visible="False" />
+      <unused size="1020" offset="4" />
+    </struct>
+    <tag name="Bitmap Group" offset="24" visible="False" />
+    <id name="Bitmap Group" offset="28" visible="False" />
+    <struct name="Clusters" offset="32" visible="True" size="84" label="">
+      <short name="Total Vertex Count" offset="0" visible="False" />
+      <short name="Total Triangle Count" offset="2" visible="False" />
+      <short name="Total Part Count" offset="4" visible="False" />
+      <short name="Shadow-Casting Triangle Count" offset="6" visible="False" />
+      <short name="Shadow-Casting Part Count" offset="8" visible="False" />
+      <short name="Opaque Point Count" offset="10" visible="False" />
+      <short name="Opaque Vertex Count" offset="12" visible="False" />
+      <short name="Opaque Part Count" offset="14" visible="False" />
+      <short name="Opague Max Nodes/Vertex" offset="16" visible="False" />
+      <short name="Transparent Max Nodes/Vertex" offset="18" visible="False" />
+      <short name="Shadow-Casting Rigid Triangle" offset="20" visible="False" />
+      <enum32 name="Geometry Classification" offset="22" visible="False">
+        <option name="World Space" value="0" />
+      </enum32>
+      <bitmask16 name="Geometry Compression Flags" offset="26" visible="True">
+        <option name="Compressed Position" value="0" />
+        <option name="Compressed Texcoord" value="1" />
+        <option name="Compressed Secondary Texcoord" value="2" />
+      </bitmask16>
+      <short name="Hardware Node Count" offset="28" visible="True" />
+      <short name="Node Map Size" offset="30" visible="True" />
+      <short name="Software Plane Count" offset="32" visible="True" />
+      <short name="Total Subpart Count" offset="34" visible="True" />
+      <bitmask32 name="Section Lighting Flags" offset="36" visible="False">
+        <option name="Has LM Texcoords" value="0" />
+        <option name="Has LM Inc. Rad." value="1" />
+        <option name="Has LM Colors" value="2" />
+        <option name="Has LM Prt" value="3" />
+      </bitmask32>
+      <int name="Block Offset" offset="40" visible="False" />
+      <int name="Block Size" offset="44" visible="False" />
+      <int name="Section Data Size" offset="48" visible="False" />
+      <int name="Resource Data Size" offset="52" visible="False" />
+      <unused offset="56" size="12" />
+      <int name="Owner Tag Section Offset" offset="68" visible="True" />
+      <unused offset="72" size="12" />
+    </struct>
+    <struct name="Cluster Render Info" offset="40" visible="True" size="4" label="">
+      <short name="Bitmap Index" offset="0" visible="False" />
+      <short name="Palette Index" offset="2" visible="False" />
+    </struct>
+    <struct name="Poop Definitions" offset="48" visible="True" size="84" label="">
+      <short name="Total Vertex Count" offset="0" visible="False" />
+      <short name="Total Triangle Count" offset="2" visible="False" />
+      <short name="Total Part Count" offset="4" visible="False" />
+      <short name="Shadow-Casting Triangle Count" offset="6" visible="False" />
+      <short name="Shadow-Casting Part Count" offset="8" visible="False" />
+      <short name="Opaque Point Count" offset="10" visible="False" />
+      <short name="Opaque Vertex Count" offset="12" visible="False" />
+      <short name="Opaque Part Count" offset="14" visible="False" />
+      <short name="Opague Max Nodes/Vertex" offset="16" visible="False" />
+      <short name="Transparent Max Nodes/Vertex" offset="18" visible="False" />
+      <short name="Shadow-Casting Rigid Triangle" offset="20" visible="False" />
+      <enum32 name="Geometry Classification" offset="22" visible="False">
+        <option name="World Space" value="0" />
+      </enum32>
+      <bitmask16 name="Geometry Compression Flags" offset="26" visible="True">
+        <option name="Compressed Position" value="0" />
+        <option name="Compressed Texcoord" value="1" />
+        <option name="Compressed Secondary Texcoord" value="2" />
+      </bitmask16>
+      <short name="Hardware Node Count" offset="28" visible="True" />
+      <short name="Node Map Size" offset="30" visible="True" />
+      <short name="Software Plane Count" offset="32" visible="True" />
+      <short name="Total Subpart Count" offset="34" visible="True" />
+      <bitmask32 name="Section Lighting Flags" offset="36" visible="False">
+        <option name="Has LM Texcoords" value="0" />
+        <option name="Has LM Inc. Rad." value="1" />
+        <option name="Has LM Colors" value="2" />
+        <option name="Has LM Prt" value="3" />
+      </bitmask32>
+      <int name="Block Offset" offset="40" visible="False" />
+      <int name="Block Size" offset="44" visible="False" />
+      <int name="Section Data Size" offset="48" visible="False" />
+      <int name="Resource Data Size" offset="52" visible="False" />
+      <unused offset="56" size="12" />
+      <int name="Owner Tag Section Offset" offset="68" visible="True" />
+      <unused offset="72" size="12" />
+    </struct>
+    <struct name="Lighting Environments" offset="56" visible="True" size="220" label="">
+      <float name="Sample Point X" offset="0" visible="False" />
+      <float name="Sample Point Y" offset="4" visible="False" />
+      <float name="Sample Point Z" offset="8" visible="False" />
+      <float name="Red Coefficient" offset="12" visible="False" />
+      <float name="Red Coefficient" offset="16" visible="False" />
+      <float name="Red Coefficient" offset="20" visible="False" />
+      <float name="Red Coefficient" offset="24" visible="False" />
+      <float name="Red Coefficient" offset="28" visible="False" />
+      <float name="Red Coefficient" offset="32" visible="False" />
+      <float name="Red Coefficient" offset="36" visible="False" />
+      <float name="Red Coefficient" offset="40" visible="False" />
+      <float name="Red Coefficient" offset="44" visible="False" />
+      <float name="Green Coefficient" offset="48" visible="False" />
+      <float name="Green Coefficient" offset="52" visible="False" />
+      <float name="Green Coefficient" offset="56" visible="False" />
+      <float name="Green Coefficient" offset="60" visible="False" />
+      <float name="Green Coefficient" offset="64" visible="False" />
+      <float name="Green Coefficient" offset="68" visible="False" />
+      <float name="Green Coefficient" offset="72" visible="False" />
+      <float name="Green Coefficient" offset="76" visible="False" />
+      <float name="Green Coefficient" offset="80" visible="False" />
+      <float name="Green Coefficient" offset="84" visible="False" />
+      <float name="Blue Coefficient" offset="88" visible="False" />
+      <float name="Blue Coefficient" offset="92" visible="False" />
+      <float name="Blue Coefficient" offset="96" visible="False" />
+      <float name="Blue Coefficient" offset="100" visible="False" />
+      <float name="Blue Coefficient" offset="104" visible="False" />
+      <float name="Blue Coefficient" offset="108" visible="False" />
+      <float name="Blue Coefficient" offset="112" visible="False" />
+      <float name="Blue Coefficient" offset="116" visible="False" />
+      <float name="Blue Coefficient" offset="120" visible="False" />
+      <float name="Mean Incoming Light Direction i" offset="124" visible="False" />
+      <float name="Mean Incoming Light Direction j" offset="128" visible="False" />
+      <float name="Mean Incoming Light Direction k" offset="132" visible="False" />
+      <float name="Incoming Light Intensity X" offset="136" visible="False" />
+      <float name="Incoming Light Intensity Y" offset="140" visible="False" />
+      <float name="Incoming Light Intensity Z" offset="144" visible="False" />
+      <int name="Specular Bitmap Index" offset="148" visible="False" />
+      <float name="Rotation Axis i" offset="152" visible="False" />
+      <float name="Rotation Axis j" offset="156" visible="False" />
+      <float name="Rotation Axis k" offset="160" visible="False" />
+      <float name="Rotation Speed" offset="164" visible="False" />
+      <float name="Bump Direction i" offset="168" visible="False" />
+      <float name="Bump Direction j" offset="172" visible="False" />
+      <float name="Bump Direction k" offset="176" visible="False" />
+      <float name="Color Tint" offset="180" visible="False" />
+      <enum32 name="Procedural Overide" offset="184" visible="False">
+      </enum32>
+      <bitmask32 name="Flags" offset="188" visible="False">
+        <option name="Leave Me Alone Please" value="0" />
+      </bitmask32>
+      <float name="Procedural Param0 i" offset="192" visible="False" />
+      <float name="Procedural Param0 j" offset="196" visible="False" />
+      <float name="Procedural Param0 k" offset="200" visible="False" />
+      <float name="Procedural Param1.XYZ i" offset="204" visible="False" />
+      <float name="Procedural Param1.XYZ j" offset="208" visible="False" />
+      <float name="Procedural Param1.XYZ k" offset="212" visible="False" />
+      <float name="Procedural Param1.w" offset="216" visible="False" />
+    </struct>
+    <struct name="Geometry Buckets" offset="64" visible="True" size="56" label="">
+      <bitmask32 name="Flags" offset="0" visible="False">
+        <option name="Incident Direction" value="0" />
+        <option name="Color" value="1" />
+      </bitmask32>
+      <unused offset="4" size="8" />
+      <undefined name="Raw Offset" offset="12" visible="False" />
+      <undefined name="Raw Size" offset="16" visible="False" />
+      <undefined name="Section Data Size" offset="20" visible="False" />
+      <undefined name="Resource Data Size" offset="24" visible="False" />
+      <struct name="Resources" offset="28" visible="True" size="16" label="">
+        <enum32 name="Type" offset="0" visible="False">
+        </enum32>
+        <short name="Primary Locator" offset="4" visible="False" />
+        <short name="Secondary Locator" offset="6" visible="False" />
+        <int name="Resource Data Size" offset="8" visible="False" />
+        <int name="Resource Data Offset" offset="12" visible="False" />
+      </struct>
+      <int name="Owner Tag Section Offset" offset="36" visible="False" />
+      <unused size="16" offset="40" />
+    </struct>
+    <struct name="Instance Render Info" offset="72" visible="True" size="4" label="">
+      <short name="Bitmap Index" offset="0" visible="False" />
+      <short name="Palette Index" offset="0" visible="False" />
+    </struct>
+    <struct name="Instance Bucket Refs" offset="80" visible="True" size="12" label="">
+      <short name="Flags" offset="0" visible="False" />
+      <short name="Bucket Index" offset="2" visible="False" />
+      <struct name="Section Offsets" offset="4" visible="True" size="4" label="">
+        <int name="Section Offset" offset="0" visible="False" />
+      </struct>
+    </struct>
+    <struct name="Scenary Object Info" offset="88" visible="True" size="12" label="">
+      <int name="Unique ID" offset="0" visible="False" />
+      <short name="Origin BSP Index" offset="4" visible="False" />
+      <byte name="Type" offset="6" visible="False" />
+      <byte name="Source" offset="7" visible="False" />
+      <int name="Render Model Checksum" offset="8" visible="False" />
+    </struct>
+    <struct name="Scenary Object Bucket Refs" offset="96" visible="True" size="12" label="">
+      <short name="Flags" offset="0" visible="False" />
+      <short name="Bucket Index" offset="2" visible="False" />
+      <struct name="Section Offsets" offset="4" visible="True" size="4" label="">
+        <int name="Section Offset" offset="0" visible="False" />
+      </struct>
+    </struct>
+  </struct>
+  <unused offset="136" size="124" />
+</plugin>

@@ -1,0 +1,52 @@
+<plugin>
+ <tag>fog</tag>
+ <struct>
+  <name>Main</name>
+  <size>0</size>
+		
+
+		<value>
+			<type>float</type>
+			<offset>0x00c</offset>
+			<name>Maximum Density</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x10</offset>
+			<name>Opaque Distance</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x014</offset>
+			<name>Opaque Depth</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x018</offset>
+			<name>Distance to Water Plane</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x01c</offset>
+			<name>Brightness?</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x024</offset>
+			<name>Primary Red</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x028</offset>
+			<name>Primary Green</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x02c</offset>
+			<name>Primary Blue</name>
+		</value>
+		
+
+
+</struct>
+</plugin>

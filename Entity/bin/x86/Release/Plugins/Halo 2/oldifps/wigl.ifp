@@ -1,0 +1,149 @@
+<plugin class="wigl" author="XZodia" version="0.25">
+<revision author="XZodia" version="0.1">Named Dialog Tree, Aesthetics and Main Dependenices</revision>
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<unused size="68" default="0" />
+<float name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<unused size="4" default="0" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<unused size="12" default="0" />
+<struct name="Dialogs" visible="True">
+  <stringid name="Dialog Group" visible="True" />
+  <undefined name="Unknown" visible="false" />
+  <tag name="Unic Text" visible="True" />
+  <id name="Unic Text" visible="True" />
+  <stringid name="Default Header" visible="True" />
+  <stringid name="Default Content" visible="True" />
+  <stringid name="Option 1" visible="True" />
+  <stringid name="Option 2" visible="True" />
+  <struct name="Variations" visible="True">
+   <undefined visible="True" />
+   <undefined visible="True" />
+   <stringid name="Header" visible="True" />
+   <stringid name="Content" visible="True" />
+   <stringid name="Option 1" visible="True" />
+   <stringid name="Option 2" visible="True" />
+  </struct>
+</struct>
+<tag name="Selection Change Sound 1" visible="True" />
+<id name="Selection Change Sound 1" visible="True" />
+<tag name="Forward Sound 1" visible="True" />
+<id name="Forward Sound 1" visible="True" />
+<tag name="Unknown" visible="False" />
+<id name="Unknown" visible="False" />
+<tag name="Advance Sound" visible="True" />
+<id name="Advance Sound" visible="True" />
+<tag name="Back Sound" visible="True" />
+<id name="Back Sound" visible="True" />
+<tag name="Shortcut Sound" visible="True" />
+<id name="Shortcut Sound" visible="True" />
+<tag name="Selection Change Sound 2" visible="True" />
+<id name="Selection Change Sound 2" visible="True" />
+<tag name="Keyboard Click Sound" visible="True" />
+<id name="Keyboard Click Sound" visible="True" />
+<tag name="Message Recieved Sound" visible="True" />
+<id name="Message Recieved Sound" visible="True" />
+<tag name="Forward Sound 2" visible="True" />
+<id name="Forward Sound 2" visible="True" />
+<tag name="Countdown Sound" visible="True" />
+<id name="Countdown Sound" visible="True" />
+<unused size="8" default="0xFF" />
+<tag name="Pickup Health Sound" visible="True" />
+<id name="Pickup Health Sound" visible="True" />
+<tag name="Unused" visible="False" />
+<id name="Unused" visible="False" />
+<tag name="Unused" visible="False" />
+<id name="Unused" visible="False" />
+<tag name="Unused" visible="False" />
+<id name="Unused" visible="False" />
+<tag name="Global Bitmaps" visible="True" />
+<id name="Global Bitmaps" visible="True" />
+<tag name="Global Unic" visible="True" />
+<id name="Global Unic" visible="True" />
+<struct name="Unknown" visible="False">
+  <unused size="4" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <struct name="Unknown" visible="false">
+   <unused size="4" default="0" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+  </struct>
+  <undefined name="Unknown" visible="false" />
+  <struct name="Unknown" visible="false">
+   <unused size="4" default="0" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+  </struct>
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <struct name="Unknown" visible="false">
+   <unused size="4" default="0" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <unused size="4" default="0" />
+  </struct>
+</struct>
+<unused size="8" default="0" />
+<struct name="Unknown" visible="false">
+  <unused size="4" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <struct name="Unknown" visible="false">
+   <undefined name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <unused size="8" default="0" />
+   <float name="Unknown" visible="false" />
+  </struct>
+</struct>
+<struct name="Aesthetics" visible="True">
+  <tag name="Skin" visible="True" />
+  <id name="Skin" visible="True" />
+</struct>
+<tag name="Global Buttons" visible="True" />
+<id name="Global Buttons" visible="True" />
+<tag name="Built-in Gametype Names" visible="True" />
+<id name="Built-in Gametype Names" visible="True" />
+<unused size="8" default="0xFF" />
+<struct name="Unknown" visible="false">
+  <undefined name="Unknown" visible="false" />
+</struct>
+<undefined name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<float name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<tag name="Music" visible="True" />
+<id name="Music" visible="True" />
+<undefined name="Unknown" visible="false" />
+</plugin>

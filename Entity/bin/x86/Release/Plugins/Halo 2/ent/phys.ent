@@ -1,0 +1,87 @@
+<plugin class="phys" author="Iron_Forge" version="0.1" headersize="116">
+  <revision author="Shalted" version="1.0">Completed Layout</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <float name="Radius" offset="0" visible="True" />
+  <float name="Moment Scale" offset="4" visible="True" />
+  <float name="Mass" offset="8" visible="True" />
+  <float name="Center of mass x" offset="12" visible="True" />
+  <float name="Center of mass y" offset="16" visible="True" />
+  <float name="Center of mass z" offset="20" visible="True" />
+  <float name="Density" offset="24" visible="True" />
+  <float name="Gravity scale" offset="28" visible="True" />
+  <float name="Ground friction" offset="32" visible="True" />
+  <float name="Ground Depth" offset="36" visible="True" />
+  <float name="Ground damp function" offset="40" visible="True" />
+  <float name="Normal K1" offset="44" visible="True" />
+  <float name="Normal K0" offset="48" visible="True" />
+  <unused offset="52" size="4" />
+  <float name="Water Friction" offset="56" visible="True" />
+  <float name="Water Depth" offset="60" visible="True" />
+  <float name="Water Density" offset="64" visible="True" />
+  <unused offset="68" size="4" />
+  <float name="Air friction" offset="72" visible="True" />
+  <unused offset="76" size="4" />
+  <float name="xx movement" offset="80" visible="True" />
+  <float name="yy movement" offset="84" visible="True" />
+  <float name="zz movement" offset="88" visible="True" />
+  <struct name="Internal Matrix" offset="92" visible="true" size="36" label="">
+    <float name="yy+zz" offset="0" visible="True" />
+    <float name="-xy" offset="4" visible="True" />
+    <float name="-zx" offset="8" visible="True" />
+    <float name="-xy" offset="12" visible="True" />
+    <float name="zz+xx" offset="16" visible="True" />
+    <float name="-yz" offset="20" visible="True" />
+    <float name="-zx" offset="24" visible="True" />
+    <float name="-yz" offset="28" visible="True" />
+    <float name="xx+yy" offset="32" visible="True" />
+  </struct>
+  <struct name="Mass Points" offset="100" visible="true" size="60" label="Name">
+    <string32 name="Name" offset="0" visible="True" />
+    <bitmask32 name="flags" offset="32" visible="True">
+      <option name="ground friction" value="0" />
+      <option name="water friction" value="1" />
+      <option name="air friction" value="2" />
+      <option name="water lift" value="3" />
+      <option name="air lift" value="4" />
+      <option name="thrust" value="5" />
+      <option name="antigrav" value="6" />
+    </bitmask32>
+    <float name="strength" offset="36" visible="True" />
+    <float name="offset    real" offset="40" visible="True" />
+    <float name="height    real" offset="44" visible="True" />
+    <float name="damp fraction" offset="48" visible="True" />
+    <float name="normal k1" offset="52" visible="True" />
+    <float name="normal k0" offset="56" visible="True" />
+  </struct>
+  <struct name="Mass Points" offset="108" visible="true" size="128" label="Name">
+    <string32 name="Name" offset="0" visible="True" />
+    <short name="Model Node" offset="32" visible="True" />
+    <short name="Powered Mass Point" offset="34" visible="True" />
+    <bitmask32 name="flags" offset="36" visible="True">
+      <option name="Metallic" value="0" />
+    </bitmask32>
+    <float name="Relative Mass" offset="40" visible="True" />
+    <float name="Mass" offset="44" visible="True" />
+    <float name="Relative Density" offset="48" visible="True" />
+    <float name="Density" offset="52" visible="True" />
+    <float name="Pos X" offset="56" visible="True" />
+    <float name="Pos Y" offset="60" visible="True" />
+    <float name="Pos Z" offset="64" visible="True" />
+    <float name="Forward i" offset="68" visible="True" />
+    <float name="Forward j" offset="72" visible="True" />
+    <float name="Forward k" offset="76" visible="True" />
+    <float name="Up i" offset="80" visible="True" />
+    <float name="Up j" offset="84" visible="True" />
+    <float name="Up k" offset="88" visible="True" />
+    <enum32 name="friction type" offset="92" visible="True">
+      <option name="point" value="0" />
+      <option name="forward" value="1" />
+      <option name="left" value="2" />
+      <option name="up" value="3" />
+    </enum32>
+    <float name="friction parallel scale" offset="96" visible="True" />
+    <float name="friction perependicular scale" offset="100" visible="True" />
+    <float name="radius" offset="104" visible="True" />
+    <unused offset="108" size="20" />
+  </struct>
+</plugin>

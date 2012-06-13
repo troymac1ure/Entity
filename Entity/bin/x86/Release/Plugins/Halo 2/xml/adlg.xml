@@ -1,0 +1,16 @@
+<plugin>
+	<tag>adlg</tag>
+	<struct>
+		<name>Main</name>
+		<size>0</size>
+		<value>
+			<type>reflexive</type>
+			<offset>0x0</offset>
+			<name>Dialogs</name>
+		</value>
+	</struct>
+	<struct>
+		<name>Dialogs</name>
+		<size>96</size>
+	</struct>
+</plugin>

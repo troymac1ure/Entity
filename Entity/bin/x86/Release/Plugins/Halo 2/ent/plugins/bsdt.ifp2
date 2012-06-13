@@ -1,0 +1,119 @@
+<plugin class="bsdt" author="Iron_Forge" version="0.1" headersize="32">
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <float name="Unknown" offset="0" visible="False" />
+  <tag name="Unused" offset="4" visible="False" />
+  <id name="Unused" offset="8" visible="False" />
+  <tag name="Unknown" offset="12" visible="False" />
+  <id name="Unknown" offset="16" visible="False" />
+  <struct name="Unknown8" offset="20" visible="false" size="56" label="">
+    <tag name="Unknown" offset="0" visible="False" />
+    <id name="Unknown" offset="4" visible="False" />
+    <unused offset="8" size="4" />
+    <unused offset="12" size="12" />
+    <float name="Unknown" offset="24" visible="False" />
+    <float name="Unknown" offset="28" visible="False" />
+    <float name="Unknown" offset="32" visible="False" />
+    <float name="Unknown" offset="36" visible="False" />
+    <float name="Unknown" offset="40" visible="False" />
+    <float name="Unknown" offset="44" visible="False" />
+    <struct name="Unknown19" offset="48" visible="false" size="364" label="">
+      <tag name="Unknown" offset="0" visible="False" />
+      <id name="Unknown" offset="4" visible="False" />
+      <undefined name="Unknown" offset="8" visible="False" />
+      <unused offset="12" size="4" />
+      <struct name="Unknown36" offset="16" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <undefined name="Unknown" offset="24" visible="False" />
+      <unused offset="28" size="4" />
+      <struct name="Unknown36" offset="32" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <undefined name="Unknown" offset="40" visible="False" />
+      <unused offset="44" size="4" />
+      <struct name="Unknown36" offset="48" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <undefined name="Unknown" offset="56" visible="False" />
+      <unused offset="60" size="4" />
+      <struct name="Unknown36" offset="64" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <undefined name="Unknown" offset="72" visible="False" />
+      <unused offset="76" size="4" />
+      <struct name="Unknown41" offset="80" visible="false" size="10" label="">
+        <short name="Unknown" offset="0" visible="False" />
+        <short name="Unknown" offset="2" visible="False" />
+        <short name="Unknown" offset="4" visible="False" />
+        <short name="Unknown" offset="6" visible="False" />
+        <short name="Unknown" offset="8" visible="False" />
+      </struct>
+      <undefined name="Unknown" offset="88" visible="False" />
+      <unused offset="92" size="4" />
+      <struct name="Unknown36" offset="96" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <undefined name="Unknown" offset="104" visible="False" />
+      <unused offset="108" size="4" />
+       <struct name="Unknown36" offset="112" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <unused offset="120" size="4" />
+      <undefined name="Unknown" offset="124" visible="False" />
+      <unused offset="128" size="4" />
+        <struct name="Unknown36" offset="132" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <undefined name="Unknown" offset="140" visible="False" />
+      <unused offset="144" size="4" />
+       <struct name="Unknown36" offset="148" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <unused offset="156" size="20" />
+      <undefined name="Unknown" offset="176" visible="False" />
+      <undefined name="Unknown" offset="180" visible="False" />
+      <undefined name="Unknown" offset="184" visible="False" />
+      <unused offset="188" size="4" />
+      <float name="Unknown" offset="192" visible="False" />
+      <unused offset="196" size="12" />
+      <float name="Unknown" offset="208" visible="False" />
+      <float name="Unknown" offset="212" visible="False" />
+      <float name="Unknown" offset="216" visible="False" />
+      <float name="Unknown" offset="220" visible="False" />
+      <float name="Unknown" offset="224" visible="False" />
+      <float name="Unknown" offset="228" visible="False" />
+      <unused offset="232" size="4" />
+      <float name="Unknown" offset="236" visible="False" />
+      <unused offset="240" size="4" />
+      <float name="Unknown" offset="244" visible="False" />
+      <float name="Unknown" offset="248" visible="False" />
+      <float name="Unknown" offset="252" visible="False" />
+      <float name="Unknown" offset="256" visible="False" />
+      <float name="Unknown" offset="260" visible="False" />
+      <float name="Unknown" offset="264" visible="False" />
+      <float name="Unknown" offset="268" visible="False" />
+      <unused offset="272" size="8" />
+      <float name="Unknown" offset="280" visible="False" />
+      <unused offset="284" size="4" />
+      <float name="Unknown" offset="288" visible="False" />
+      <float name="Unknown" offset="292" visible="False" />
+      <float name="Unknown" offset="296" visible="False" />
+      <float name="Unknown" offset="300" visible="False" />
+      <float name="Unknown" offset="304" visible="False" />
+      <float name="Unknown" offset="308" visible="False" />
+      <unused offset="312" size="4" />
+      <float name="Unknown" offset="316" visible="False" />
+      <unused offset="320" size="4" />
+      <float name="Unknown" offset="324" visible="False" />
+      <float name="Unknown" offset="328" visible="False" />
+      <float name="Unknown" offset="332" visible="False" />
+      <float name="Unknown" offset="336" visible="False" />
+      <float name="Unknown" offset="340" visible="False" />
+      <float name="Unknown" offset="344" visible="False" />
+      <float name="Unknown" offset="348" visible="False" />
+      <unused offset="352" size="8" />
+      <float name="Unknown" offset="360" visible="False" />
+    </struct>
+  </struct>
+  <unused offset="28" size="4" />
+</plugin>

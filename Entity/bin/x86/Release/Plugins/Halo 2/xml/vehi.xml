@@ -1,0 +1,412 @@
+<plugin>
+	<tag>vehi</tag>
+	<struct>
+		<name>Main</name>
+		<size>0</size>
+		<value>
+			<type>float</type>
+			<offset>0x4</offset>
+			<name>Bounding Radius</name>
+		</value>
+<value>
+			<type>id32</type>
+			<offset>0x1F0</offset>
+			<name>Vehicle ID</name>
+			<option>
+				<value>0</value>
+				<name>Scorpion</name>
+			</option>
+			<option>
+				<value>1</value>
+				<name>Warthog</name>
+			</option>
+			<option>
+				<value>3</value>
+				<name>Drop Ship / Pelican</name>
+			</option>
+			<option>
+				<value>4</value>
+				<name>Ghost / Wraith / Spectra</name>
+			</option>
+			<option>
+				<value>5</value>
+				<name>Banshee</name>
+			</option>
+			<option>
+				<value>6</value>
+				<name>Turret</name>
+			</option>
+		</value>
+		<value>
+			<type>id32</type>
+			<offset>0x47C</offset>
+			<name>Warthog Headlights (effect on ground/walls)</name>
+			<option>
+				<value>0</value>
+				<name>Always On</name>
+			</option>
+			<option>
+				<value>285214107</value>
+				<name>On With Driver</name>
+			</option>
+			<option>
+				<value>167775632</value>
+				<name>Off</name>
+			</option>
+		</value>
+		<value>
+			<type>id32</type>
+			<offset>0x464</offset>
+			<name>Warthog Headlights (effect from actual lights)</name>
+			<option>
+				<value>0</value>
+				<name>Always On</name>
+			</option>
+			<option>
+				<value>285214107</value>
+				<name>On With Driver</name>
+			</option>
+			<option>
+				<value>251658459</value>
+				<name>Adds additional weapon (R/L trigger)</name>
+			</option>
+			<option>
+				<value>167775632</value>
+				<name>Off</name>
+			</option>
+		</value>
+		<value>
+			<type>bitmask32</type>
+			<offset>0x1ee</offset>
+			<name>Physics</name>
+			<bitmask>
+				<bit>14</bit>
+				<name>Flying</name>
+			</bitmask>
+			<bitmask>
+				<bit>15</bit>
+				<name>F-in crazy hog</name>
+			</bitmask>
+			<bitmask>
+				<bit>16</bit>
+				<name>Weird hog/banshee physics</name>
+			</bitmask>
+			<bitmask>
+				<bit>28</bit>
+				<name>Is a vehicle</name>
+			</bitmask>
+			<bitmask>
+				<bit>29</bit>
+				<name>Banshee/phantom/scorion physics???</name>
+			</bitmask>
+			<bitmask>
+				<bit>30</bit>
+				<name>SP Vehicle???</name>
+			</bitmask>
+			<bitmask>
+				<bit>31</bit>
+				<name>Handbrake</name>
+			</bitmask>
+		</value>
+		<value>
+			<type>bitmask32</type>
+			<offset>0xBE</offset>
+			<name>Boost</name>
+			<bitmask>
+				<bit>20</bit>
+				<name>Has boost</name>
+			</bitmask>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x14</offset>
+			<name>Force</name>
+			<info>Force given to vehicle from weapons</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x1F8</offset>
+			<name>Reverse Speed?</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x1FC</offset>
+			<name>Reverse Speed Accel?</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2C0</offset>
+			<name>Traction</name>
+			<info>halo 2 traction, lower the float the more</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0xF4</offset>
+			<name>Crazyness</name>
+			<info>halo 2 high value makes warthog go crazy</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2B0</offset>
+			<name>Human Vehi Handling</name>
+			<info>Halo 2 makes warthog very sensitive</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2B4</offset>
+			<name>Human Vehi Height From Ground</name>
+			<info>Halo 2 warthog from ground</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2BC</offset>
+			<name>Human Vehi Top Speed</name>
+			<info>halo 2 high value makes warthog go crazy</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x264</offset>
+			<name>Human Overall Speed</name>
+			<info>halo 2 high value makes warthog go crazy</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x260</offset>
+			<name>Human Horsepower/Weight/Grip</name>
+			<info>Low value makes hog go slow</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2B8</offset>
+			<name>Human Bounce/Gravity/Weight/accel/deccel</name>
+			<info>Low value makes hog have hydraulics</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x1D0</offset>
+			<name>Covie Vehi Boost Speed?</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x1D4</offset>
+			<name>Covie Vehi Boost Accel?</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x1DC</offset>
+			<name>Covie Vehi Boost Time</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x1E0</offset>
+			<name>Covie Vehi Max Speed?</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x1F4</offset>
+			<name>Covie Vehi Speed Accel?</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x200</offset>
+			<name>Covie Vehi Strafe Speed1</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x204</offset>
+			<name>Covie Vehi Strafe Speed Left</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x208</offset>
+			<name>Covie Vehi Strafe Speed Right</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x22C</offset>
+			<name>Covie Vehi Strafe Speed4</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x230</offset>
+			<name>Covie Vehi Strafe Speed5</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x234</offset>
+			<name>Covie Vehi Strafe Speed6</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x238</offset>
+			<name>Covie Vehi Strafe Speed7</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x23C</offset>
+			<name>Covie Vehi Strafe Speed8</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2D8</offset>
+			<name>Covie Vehi Turn Angle (Flippy)</name>
+			<info>again</info>
+		</value>
+		<value>
+			<type>reflexive</type>
+			<offset>0x1C8</offset>
+			<name>Seats</name>
+		</value>
+		<struct>
+			<name>Seats</name>
+			<size>176</size>
+			<value>
+				<type>id16</type>
+				<offset>0x3c</offset>
+				<name>Seat type</name>
+				<option>
+					<value>0</value>
+					<name>Boarding seat</name>
+				</option>
+				<option>
+					<value>1</value>
+					<name>Passenger</name>
+				</option>
+				<option>
+					<value>2</value>
+					<name>Gunner</name>
+				</option>
+				<option>
+					<value>3</value>
+					<name>Unknown 1</name>
+				</option>
+				<option>
+					<value>4</value>
+					<name>Unknown 2</name>
+				</option>
+				<option>
+					<value>5</value>
+					<name>Driver</name>
+				</option>
+			</value>
+		</struct>
+		<value>
+			<type>reflexive</type>
+			<offset>0x1C8</offset>
+			<name>Seats </name>
+		</value>
+	</struct>
+	<struct>
+		<name>Seats </name>
+		<size>176</size>
+		<value>
+			<type>bitmask32</type>
+			<offset>0x00</offset>
+			<name>Flags</name>
+			<bitmask>
+				<bit>0</bit>
+				<name>Disable Driving???</name>
+				<info>makes the vehicle undrivable</info>
+			</bitmask>
+			<bitmask>
+				<bit>14</bit>
+				<name>Fire Weapon (H) </name>
+				<info>this seat shoots weapon directly linked to the vehicle</info>
+			</bitmask>
+			<bitmask>
+				<bit>16</bit>
+				<name>Disable Seat? </name>
+				<info>Makes this seat driveable</info>
+			</bitmask>
+			<bitmask>
+				<bit>17</bit>
+				<name>Close Door (T) </name>
+				<info>Makes this seat driveable</info>
+			</bitmask>
+			<bitmask>
+				<bit>18</bit>
+				<name>Unknown (bit 18)</name>
+				<info>Unknown</info>
+			</bitmask>
+			<bitmask>
+				<bit>19</bit>
+				<name>Take a Drive (G) </name>
+				<info>Makes this seat driveable</info>
+			</bitmask>
+			<bitmask>
+				<bit>20</bit>
+				<name>Unknown</name>
+				<info>Unknown</info>
+			</bitmask>
+			<bitmask>
+				<bit>21</bit>
+				<name>Hide Boarding Seat </name>
+				<info></info>
+			</bitmask>
+			<bitmask>
+				<bit>22</bit>
+				<name>Unknown</name>
+				<info>Unknown</info>
+			</bitmask>
+			<bitmask>
+				<bit>23</bit>
+				<name>Driver Req In (w/DF) </name>
+				<info>Makes this seat driveable</info>
+			</bitmask>
+			<bitmask>
+				<bit>24</bit>
+				<name>Unknown</name>
+				<info>Unknown</info>
+			</bitmask>
+			<bitmask>
+				<bit>25</bit>
+				<name>Turret Seat </name>
+				<info>disable/enable fire turret</info>
+			</bitmask>
+			<bitmask>
+				<bit>26</bit>
+				<name>Unknown</name>
+				<info>Unknown</info>
+			</bitmask>
+			<bitmask>
+				<bit>27</bit>
+				<name>Enable HUD</name>
+				<info>Makes this seat driveable</info>
+			</bitmask>
+			<bitmask>
+				<bit>28</bit>
+				<name>3rd Person View</name>
+				<info>Makes this seat driveable</info>
+			</bitmask>
+			<bitmask>
+				<bit>29</bit>
+				<name>Turret Fire (HW) </name>
+				<info>Stand UP!</info>
+			</bitmask>
+			<bitmask>
+				<bit>30</bit>
+				<name>Driver Seat</name>
+				<info>you can drive the car in this seat</info>
+			</bitmask>
+			<bitmask>
+				<bit>31</bit>
+				<name>Unknown</name>
+				<info>Unknown</info>
+			</bitmask>
+		</value>
+	</struct>
+</plugin>

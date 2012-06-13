@@ -1,0 +1,214 @@
+<plugin class="wgit" author="Iron_Forge" version="0.1" headersize="104">
+  <revision author="neodos" version="0.3">Changed almost all layout(fixed chunk clonning) Found/Named values, placement coords, transitions bitmaps,variation values,font type,scen/models...</revision>
+  <revision author="Turk645" version="0.26">Options Buttons value found</revision>
+  <revision author="MT" version="0.25">Found some unknowns...</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+
+  <short name="Back ground blur (blur=0 noblur=37)" offset="0" visible="True" />
+  <short name="Unused" offset="2" visible="False" />
+  <short name="Menu ID" offset="4" visible="True" />
+  <bitmask16 name="Visibles X-A-B Options Buttons" offset="6" visible="True">
+    <option name="A Select B Cancel" value="0" />
+    <option name="A Select B Cancel" value="1" />
+    <option name="X Party Privacy A Select B Cancel" value="2" />
+    <option name="X Options" value="3" />
+    <option name="A Select B Back" value="4" />
+  </bitmask16>
+  <float name="Unknown" offset="8" visible="True" />
+  <float name="Unknown" offset="12" visible="True" />
+  <float name="Unknown" offset="16" visible="True" />
+  <float name="Unknown" offset="20" visible="True" />
+  <tag name="Unic" offset="24" visible="True" />
+  <id name="Unic Tag" offset="28" visible="True" />
+
+  <struct name="Menu Content" offset="32" visible="true" size="76" label="">
+    <short name="Unused" offset="0" visible="False" />
+    <short name="Transition Type" offset="2" visible="True" />
+
+    <struct name="Buttons 1" offset="4" visible="True" size="60" label="">
+      <short name="Unused" offset="0" visible="False" />
+      <short name="Unused" offset="2" visible="False" />
+      <short name="Button Transition type (bitmask)" offset="4" visible="True" />
+      <short name="Unused" offset="6" visible="False" />
+      <short name="Unused" offset="8" visible="False" />
+      <short name="Font Type" offset="10" visible="True" />
+      <float name="Unused" offset="12" visible="False" />
+      <float name="Text Color Red" offset="16" visible="True" />
+      <float name="Text Color Green" offset="20" visible="True" />
+      <float name="Text Color Blue" offset="24" visible="True" />
+      <short name="Bitmap Placement Positive Coord Y" offset="28" visible="True" />
+      <short name="Bitmap Placement Positive Coord X" offset="30" visible="True" />
+      <short name="Text Placement Negative Coord Y" offset="32" visible="True" />
+      <short name="Text Placement Negative Coord X" offset="34" visible="True" />
+      <tag name="Bitm" offset="36" visible="True" />
+      <id name="Button Bitmap" offset="40" visible="True" />
+      <byte name="coord" offset="44" visible="True" />
+      <byte name="coord" offset="45" visible="True" />
+      <byte name="coord" offset="46" visible="True" />
+      <byte name="coord" offset="47" visible="True" />
+      <byte name="Something count" offset="48" visible="True" />
+      <byte name="Bitmap Transiton type (bitmask)" offset="49" visible="True" />
+      <byte name="Unused" offset="50" visible="False" />
+      <byte name="brightness something?" offset="51" visible="True" />
+      <short name="Unknown" offset="52" visible="True" />
+      <short name="Unused" offset="54" visible="False" />
+      <short name="Unknown" offset="56" visible="True" />
+      <short name="Unused" offset="58" visible="False" />
+    </struct>
+
+
+    <struct name="Buttons 2" offset="12" visible="True" size="24" label="">
+      <enum16 name="Buttons loop" offset="8" visible="True">
+        <option name="Yes" value="1" />
+        <option name="No" value="0" />
+      </enum16>
+      <short name="Unused" offset="4" visible="False" />
+      <short name="Button Type (Palette [skin])" offset="8" visible="True" />
+      <short name="Number of visibles buttons" offset="12" visible="True" />
+      <short name="Buttons Placement Coord X" offset="16" visible="True" />
+      <short name="Buttons Placement Coord Y" offset="18" visible="True" />
+      <short name="Transition Type? (bitmask)" offset="20" visible="False" />
+      <short name="Variation?" offset="22" visible="False" />
+    </struct>
+
+    <float name="Unused" offset="20" visible="False" />
+    <float name="Unused" offset="24" visible="False" />
+
+    <struct name="Text strings" offset="28" visible="true" size="44" label="">
+      <bitmask32 name="Text options" offset="0" visible="True">
+        <option name="1" value="0" />
+        <option name="2" value="1" />
+        <option name="Pulsing" value="2" />
+        <option name="Auto Typing text" value="3" />
+        <option name="5" value="4" />
+      </bitmask32>
+      <short name="Transtion type (bitmask)" offset="4" visible="True" />
+      <short name="Variation?" offset="6" visible="True" />
+      <short name="Unused" offset="8" visible="False" />
+      <short name="Font Type" offset="10" visible="True" />
+      <float name="Alpha" offset="12" visible="True" />
+      <float name="Color Red" offset="16" visible="True" />
+      <float name="Color Green" offset="20" visible="True" />
+      <float name="Color Blue" offset="24" visible="True" />
+      <short name="Text Placement coord Y from Top" offset="28" visible="True" />
+      <short name="Text Placement coord X from Right" offset="30" visible="True" />
+      <short name="Text Placement coord Y from Bottom" offset="32" visible="Fasle" />
+      <short name="Text Placement coord X from Left" offset="34" visible="Fasle" />
+      <stringid name="String name" offset="36" visible="True" />
+      <uint name="Unknown" offset="40" visible="True" />
+    </struct>
+
+    <struct name="UI bitmaps" offset="36" visible="true" size="56" label="">
+      <short name="unknown" offset="0" visible="True" />
+      <short name="Unused" offset="2" visible="False" />
+      <short name="Transition type (bitmask)" offset="4" visible="True" />
+      <short name="Variation?" offset="6" visible="True" />
+      <enum16 name="Alpha transparence" offset="8" visible="True">
+        <option name="Normal" value="0" />
+        <option name="Inverted" value="1" />
+      </enum16>
+      <short name="Xbox live bitmap setting" offset="10" visible="True" />
+      <short name="Bitmap Placement coord X" offset="12" visible="True" />
+      <short name="Bitmap Placement coord Y" offset="14" visible="True" />
+      <float name="Horizontal bitmap scrolling speed" offset="16" visible="True" />
+      <float name="Unused" offset="20" visible="False" />
+      <tag name="bitm" offset="24" visible="True" />
+      <id name="Bitmap" offset="28" visible="True" />
+      <short name="Bitmap Layer Level" offset="32" visible="True" />
+      <short name="Unused" offset="34" visible="False" />
+      <float name="Unused" offset="36" visible="False" />
+      <short name="Coord X for ?" offset="40" visible="True" />
+      <short name="Coord Y for ?" offset="42" visible="True" />
+      <float name="Unused" offset="44" visible="False" />
+      <float name="Unused" offset="48" visible="False" />
+      <float name="Unused" offset="52" visible="False" />
+    </struct>
+
+    <struct name="ModelsScript Objects: Scenery/Bipeds...)" offset="44" visible="true" size="76" label="">
+      <short name="Unused" offset="0" visible="False" />
+      <short name="Unused" offset="2" visible="False" />
+      <short name="Transition type (bitmask)" offset="4" visible="True" />
+      <short name="Variation?" offset="6" visible="True" />
+      <short name="Unknown" offset="8" visible="True" />
+      <short name="Unused" offset="10" visible="False" />
+
+      <struct name="Script Object" offset="12" visible="true" size="32" label="">
+        <string32 name="Script Object name" offset="0" visible="True" />
+      </struct>
+
+      <struct name="Unknown" offset="20" visible="true" size="32" label="">
+        <string32 name="Unknown" offset="0" visible="True" />
+      </struct>
+
+      <float name="Unknown" offset="28" visible="True" />
+      <float name="Unknown" offset="32" visible="True" />
+      <float name="Unknown" offset="36" visible="True" />
+      <float name="Unknown" offset="40" visible="True" />
+      <float name="Unknown" offset="44" visible="True" />
+      <float name="Unknown" offset="48" visible="True" />
+      <byte name="relatives: coord, size, palcement" offset="52" visible="True" />
+      <byte name="relatives: coord, size, palcement" offset="53" visible="True" />
+      <byte name="relatives: coord, size, palcement" offset="54" visible="True" />
+      <byte name="relatives: coord, size, palcement" offset="55" visible="True" />
+      <byte name="relatives: coord, size, palcement" offset="56" visible="True" />
+      <byte name="relatives: coord, size, palcement" offset="57" visible="True" />
+      <byte name="relatives: coord, size, palcement" offset="58" visible="True" />
+      <byte name="relatives: coord, size, palcement" offset="59" visible="True" />
+      <byte name="relatives: coord, size, palcement" offset="60" visible="True" />
+      <byte name="relatives: coord, size, palcement" offset="61" visible="True" />
+      <byte name="relatives: coord, size, palcement" offset="62" visible="True" />
+      <byte name="relatives: coord, size, palcement" offset="63" visible="True" />
+      <float name="Unused" offset="64" visible="False" />
+      <float name="Unused" offset="68" visible="False" />
+      <float name="Unused" offset="72" visible="False" />
+    </struct>
+
+    <float name="Unused" offset="52" visible="False" />
+    <float name="Unused" offset="56" visible="False" />
+    <float name="Unused" offset="60" visible="False" />
+    <float name="Unused" offset="64" visible="False" />
+
+    <struct name="Variable Buttons" offset="68" visible="True" size="24" label="">
+      <float name="Unused" offset="72" visible="False" />
+      <tag name="Skin" offset="4" visible="True" />
+      <id name="Skin tag" offset="8" visible="True" />
+
+      <short name="Coord X" offset="12" visible="True" />
+      <short name="Coord Y" offset="14" visible="True" />
+      <byte name="unknown" offset="16" visible="True" />
+      <byte name="Max Visible Buttons" offset="17" visible="True" />
+      <byte name="Unknown" offset="18" visible="True" />
+      <byte name="Unknown" offset="19" visible="True" />
+      <short name="Coord X" offset="20" visible="True" />
+      <short name="Coord Y" offset="22" visible="True" />
+
+    </struct>
+  </struct>
+
+  <short name="Font Type" offset="40" visible="True" />
+  <short name="Unused" offset="42" visible="False" />
+  <stringid name="Header Title Text String" offset="44" visible="True" />
+  <struct name="Descriptions/Help Text" offset="48" visible="True" size="12" label="">
+    <stringid name="Text Strings" offset="0" visible="True" />
+    <struct name="Notification messages" offset="4" visible="True" size="4" label="">
+      <stringid name="Text Strings" offset="0" visible="True" />
+    </struct>
+  </struct>
+
+  <struct name="Prededicated Resources: Bitmap tags" offset="56" visible="true" size="8" label="">
+    <tag name="Bitm" offset="0" visible="True" />
+    <id name="Bitmap" offset="4" visible="True" />
+  </struct>
+
+  <float name="SP Loading screen effects settings" offset="64" visible="True" />
+  <float name="SP Loading screen effects settings" offset="68" visible="True" />
+  <float name="SP Loading screen effects settings" offset="72" visible="True" />
+  <float name="SP Loading screen effects settings" offset="76" visible="True" />
+  <float name="SP Loading screen effects settings" offset="80" visible="True" />
+  <float name="SP Loading screen effects settings" offset="84" visible="True" />
+  <float name="SP Loading screen effects settings" offset="88" visible="True" />
+  <float name="SP Loading screen effects settings" offset="92" visible="True" />
+  <float name="SP Loading screen effects settings" offset="96" visible="True" />
+  <float name="SP Loading screen effects settings" offset="100" visible="True" />
+
+</plugin>

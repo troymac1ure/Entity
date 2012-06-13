@@ -1,0 +1,47 @@
+<plugin class="cont" author="Iron_Forge" version="0.8">
+  <revision author="Shalted" version="0.8">Added Xbox7887's known values</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <bitmask name="Contrail Type?"/>
+  <float name="Point Generation Rate"/>
+  <float name="Min Point Velocity"/>
+  <float name="Max Point Velocity"/>
+  <float name="Point Velocity Cone Angle"/>
+  <float name="Inherited Velocity Fraction"/>
+  <undefined name="Render Type (enum)" visible="false" />
+  <float name="Texture Repeats U"/>
+  <float name="Texture Repeats V"/>
+  <float name="Texture Animation U" />
+  <float name="Texture Animation V" />
+  <float name="Texture Animation Rate" />
+  <tag name="Contrail Bitmap" />
+  <id name="Contrail Bitmap"  />
+  <undefined name="Unknown" visible="false" />
+  <unused size="36" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="28" default="0" />
+  <tag name="Secondary Map"/>
+  <id name="Secondary Map"/>
+  <unused size="36" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="48" default="0" />
+  <struct name="Point States">
+    <float name="Duration From" />
+    <float name="Duration To" />
+    <float name="Transition from" />
+    <float name="Transition to" />
+    <tag name="Contrail Smoke Physics"  />
+    <id name="Contrail Smoke Physics" />
+    <float name="Trail Width" />
+    <float name="Lower Alpha" />
+    <float name="Lower Red" />
+    <float name="Lower Green" />
+    <float name="Lower Blue" />
+    <float name="Upper Alpha" />
+    <float name="Upper Red" />
+    <float name="Upper Green" />
+    <float name="Upper Blue" />
+    <bitmask name="Scale" visible="false"/>
+  </struct>
+</plugin>

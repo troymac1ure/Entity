@@ -1,0 +1,530 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3678046C-55D1-4D24-B45F-0942F861FB3A}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>entity</RootNamespace>
+    <AssemblyName>Entity</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StartupObject>entity.Program</StartupObject>
+    <ApplicationIcon>entity2.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Be.Windows.Forms.HexBox, Version=1.4.7.22564, Culture=neutral, PublicKeyToken=e0e5adf0ebc99863, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\beHexEditor\bin\Debug\Be.Windows.Forms.HexBox.dll</HintPath>
+    </Reference>
+    <Reference Include="JacksonSoft.CustomTabControl, Version=1.0.1.7, Culture=neutral, PublicKeyToken=53c237210c7e462d, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CustomTabControl\bin\Debug\JacksonSoft.CustomTabControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="sanddock, Version=1.0.6.0, Culture=neutral, PublicKeyToken=75b7ec17dd7c14c3">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\sanddock.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HexEditor\GoToDialogBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HexEditor\GoToDialogBox.Designer.cs">
+      <DependentUpon>GoToDialogBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HexEditor\HexRichTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="HexEditor\HexView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="HexEditor\HexView.Designer.cs">
+      <DependentUpon>HexView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\Main.Debug.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\MainMenuEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\MainMenuEdit.Designer.cs">
+      <DependentUpon>MainMenuEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\MapWizard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\MapWizard.designer.cs">
+      <DependentUpon>MapWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\Settings.Designer.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\SkinOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\SkinOptions.Designer.cs">
+      <DependentUpon>SkinOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\VideoSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\VideoSettings.Designer.cs">
+      <DependentUpon>VideoSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapForms\BitmapControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MapForms\BitmapControl.Designer.cs">
+      <DependentUpon>BitmapControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapForms\BitmapInjectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapForms\BitmapInjectionForm.Designer.cs">
+      <DependentUpon>BitmapInjectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapForms\ChunkClonerWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapForms\ChunkClonerWindow.Designer.cs">
+      <DependentUpon>ChunkClonerWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapForms\CustomPluginEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapForms\CustomPluginEditor.Designer.cs">
+      <DependentUpon>CustomPluginEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapForms\GetNameDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapForms\GetNameDialog.Designer.cs">
+      <DependentUpon>GetNameDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapForms\IdentSwapper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapForms\IdentSwapper.Designer.cs">
+      <DependentUpon>IdentSwapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapForms\IdentSwapperLayout.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MapForms\IdentSwapperLayout.Designer.cs">
+      <DependentUpon>IdentSwapperLayout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MapForms\MapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MapForms\MapForm.Designer.cs">
+      <DependentUpon>MapForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\BaseField.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\BaseField.Designer.cs">
+      <DependentUpon>BaseField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\Bitmask.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\Bitmask.Designer.cs">
+      <DependentUpon>Bitmask.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\RestoreSelections.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\RestoreSelections.Designer.cs">
+      <DependentUpon>RestoreSelections.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\StringBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\StringBox.designer.cs">
+      <DependentUpon>StringBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\DataValues.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\DataValues.Designer.cs">
+      <DependentUpon>DataValues.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\EntStrings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\EntStrings.Designer.cs">
+      <DependentUpon>EntStrings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\Enums.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\Enums.Designer.cs">
+      <DependentUpon>Enums.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\Ident.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\Ident.designer.cs">
+      <DependentUpon>Ident.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\Indices.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\Indices.Designer.cs">
+      <DependentUpon>Indices.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\MetaEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\MetaEditor.Designer.cs">
+      <DependentUpon>MetaEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\MetaEditorControlPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\MetaEditorControlPage.Designer.cs">
+      <DependentUpon>MetaEditorControlPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\SID.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\SID.designer.cs">
+      <DependentUpon>SID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\TagTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MetaFuncs\MEStringsSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MetaFuncs\MEStringsSelector.Designer.cs">
+      <DependentUpon>MEStringsSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="MetaFuncs\MetaEditor.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="MetaFuncs\MetaItemComparer.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="MetaFuncs\MetaOverWriter.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Renderers\BSPTreeViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Renderers\BSPTreeViewer.Designer.cs">
+      <DependentUpon>BSPTreeViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Renderers\BSPViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Renderers\BSPViewer.Designer.cs">
+      <DependentUpon>BSPViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Renderers\BSPViewer.SpwanLoads.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Renderers\CollisionViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Renderers\CollisionViewer.Designer.cs">
+      <DependentUpon>CollisionViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Renderers\LightmapViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Renderers\LightmapViewer.Designer.cs">
+      <DependentUpon>LightmapViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Renderers\ModelViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Renderers\ModelViewer.Designer.cs">
+      <DependentUpon>ModelViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Renderers\PortalViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Renderers\PortalViewer.Designer.cs">
+      <DependentUpon>PortalViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\PortalInfo.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Program.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <EmbeddedResource Include="HexEditor\GoToDialogBox.resx">
+      <DependentUpon>GoToDialogBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HexEditor\HexView.resx">
+      <DependentUpon>HexView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\MainMenuEdit.resx">
+      <DependentUpon>MainMenuEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\MapWizard.resx">
+      <DependentUpon>MapWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\Settings.resx">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\SkinOptions.resx">
+      <DependentUpon>SkinOptions.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\VideoSettings.resx">
+      <DependentUpon>VideoSettings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapForms\BitmapControl.resx">
+      <DependentUpon>BitmapControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapForms\BitmapInjectionForm.resx">
+      <DependentUpon>BitmapInjectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapForms\ChunkClonerWindow.resx">
+      <DependentUpon>ChunkClonerWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapForms\CustomPluginEditor.resx">
+      <DependentUpon>CustomPluginEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapForms\IdentSwapper.resx">
+      <DependentUpon>IdentSwapper.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapForms\IdentSwapperLayout.resx">
+      <DependentUpon>IdentSwapperLayout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MapForms\MapForm.resx">
+      <DependentUpon>MapForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\Bitmask.resx">
+      <DependentUpon>Bitmask.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\RestoreSelections.resx">
+      <DependentUpon>RestoreSelections.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\StringBox.resx">
+      <DependentUpon>StringBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\DataValues.resx">
+      <DependentUpon>DataValues.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\EntStrings.resx">
+      <DependentUpon>EntStrings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\Enums.resx">
+      <DependentUpon>Enums.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\Ident.resx">
+      <DependentUpon>Ident.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\Indices.resx">
+      <DependentUpon>Indices.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\MetaEditor.resx">
+      <DependentUpon>MetaEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\MetaEditorControlPage.resx">
+      <DependentUpon>MetaEditorControlPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\SID.resx">
+      <DependentUpon>SID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaFuncs\MEStringsSelector.resx">
+      <DependentUpon>MEStringsSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Renderers\BSPViewer.resx">
+      <DependentUpon>BSPViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Renderers\ModelViewer.resx">
+      <DependentUpon>ModelViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\Rebuilder.resx">
+      <DependentUpon>Rebuilder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Unused\Authenticate.resx">
+      <DependentUpon>Authenticate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Unused\BetaLogin.resx">
+      <DependentUpon>BetaLogin.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Unused\Download Manager.resx">
+      <DependentUpon>Download Manager.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Renderers\Gizmo.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Tools\Rebuilder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\Rebuilder.Designer.cs">
+      <DependentUpon>Rebuilder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\Scripts.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Tools\Builder.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Tools\MapAnalyzer.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Unused\Authenticate.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Unused\BetaLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Unused\BetaLogin.Designer.cs">
+      <DependentUpon>BetaLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Unused\Download Manager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Unused\Download Manager.Designer.cs">
+      <DependentUpon>Download Manager.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Change Log.txt" />
+    <Content Include="entity2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Globals\Globals.csproj">
+      <Project>{B69CBB19-F523-4B56-B97A-696BCA045ADA}</Project>
+      <Name>Globals</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HaloMap\HaloMap.csproj">
+      <Project>{32FC9CF1-7BD8-4541-81A3-4C6B9B94AFF4}</Project>
+      <Name>HaloMap</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MetaEditor\MetaEditor.csproj">
+      <Project>{6423865E-C775-4F86-AC8D-5BE425761567}</Project>
+      <Name>MetaEditor</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

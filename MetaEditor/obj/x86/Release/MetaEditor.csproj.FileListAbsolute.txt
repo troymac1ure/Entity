@@ -1,0 +1,94 @@
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\bin\x86\Release\RealTimeHalo\RthDLL.dll
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\bin\x86\Release\MetaEditor.dll
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\bin\x86\Release\MetaEditor.pdb
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\bin\x86\Release\Globals.dll
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\bin\x86\Release\HaloMap.dll
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\bin\x86\Release\Globals.pdb
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\bin\x86\Release\HaloMap.pdb
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.ColorShifting.ColorShifting.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Bitmask.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.ColorWheel.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.DataValues.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.EntStrings.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Enums.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Float.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Ident.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Indices.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.ReflexiveControl.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.SID.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.TagBlock.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.ControlSwapper.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.ItemsToShow.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.ListEntItems.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.MEStringsSelector.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.CustomTreeNode.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.MetaEditor.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.METoolBar.resources
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.csproj.GenerateResource.Cache
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.dll
+C:\Users\Alex Lynch\Documents\HAlo\Entity 2.1.10 Source\MetaEditor\obj\x86\Release\MetaEditor.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\bin\x86\Release\RealTimeHalo\RthDLL.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\bin\x86\Release\MetaEditor.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\bin\x86\Release\MetaEditor.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\bin\x86\Release\Globals.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\bin\x86\Release\HaloMap.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\bin\x86\Release\Globals.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\bin\x86\Release\HaloMap.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\ResolveAssemblyReference.cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.ColorShifting.ColorShifting.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Bitmask.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Components.ColorWheel.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Components.DataValues.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Components.EntStrings.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Enums.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Float.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Ident.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Indices.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Components.ReflexiveControl.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Components.SID.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Components.TagBlock.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.ControlSwapper.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.ItemsToShow.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.ListEntItems.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.MEStringsSelector.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.CustomTreeNode.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.MetaEditor.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.METoolBar.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.csproj.GenerateResource.Cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1.11P Source\MetaEditor\obj\x86\Release\MetaEditor.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\bin\x86\Release\RealTimeHalo\RthDLL.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\bin\x86\Release\MetaEditor.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\bin\x86\Release\MetaEditor.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\bin\x86\Release\Globals.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\bin\x86\Release\HaloMap.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\bin\x86\Release\XDevkit.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\bin\x86\Release\Globals.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\bin\x86\Release\HaloMap.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\ResolveAssemblyReference.cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.ColorShifting.ColorShifting.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Bitmask.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.ColorWheel.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.DataValues.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.EntStrings.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Enums.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Float.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Ident.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.Indices.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.ReflexiveControl.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.SID.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Components.TagBlock.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.ControlSwapper.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.ItemsToShow.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.ListEntItems.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.MEStringsSelector.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.Forms.CustomTreeNode.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.MetaEditor.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.METoolBar.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.csproj.GenerateResource.Cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\obj\x86\Release\MetaEditor.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\bin\x86\Release\YeloDebug.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\bin\x86\Release\YeloDebug.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\MetaEditor\bin\x86\Release\YeloDebug.xml

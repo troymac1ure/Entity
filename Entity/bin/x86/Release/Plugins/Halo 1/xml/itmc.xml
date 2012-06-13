@@ -1,0 +1,12 @@
+<plugin>
+ <tag>itmc</tag>
+  <struct>
+   <name>Main</name>
+   <size>0</size>
+   <value>
+    <type>short</type>
+    <offset>0xc</offset>
+    <name>Respawn Time in seconds</name>
+   </value>
+  </struct>
+</plugin>

@@ -1,0 +1,37 @@
+<plugin> 
+ <tag>rain</tag>
+ <struct>
+  <name>Main</name>
+  <size>0</size>
+  <value>
+   <type>float</type>
+   <offset>0xd4</offset>
+   <name>Minimum Particles (1)</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0xd8</offset>
+   <name>Maximum Particles (1)</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x330</offset>
+   <name>Minimum Particles (2)</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x334</offset>
+   <name>Maximum Particles (2)</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x58c</offset>
+   <name>Minimum Particles (3)</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x590</offset>
+   <name>Maximum Particles (3)</name>
+  </value>
+ </struct>
+</plugin>

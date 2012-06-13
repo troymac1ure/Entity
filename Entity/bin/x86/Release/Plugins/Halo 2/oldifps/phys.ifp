@@ -1,0 +1,58 @@
+<plugin class="phys" author="Iron_Forge" version="0.1">
+ <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <unused size="4" default="0" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <unused size="4" default="0" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <unused size="4" default="0" />
+ <float name="Unknown" visible="false" />
+ <unused size="4" default="0" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <float name="Unknown" visible="false" />
+ <struct name="Unknown" visible="false">
+  <float name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+ </struct>
+ <unused size="8" default="0" />
+ <struct name="Unknown" visible="false">
+  <string32 name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <unused size="20" default="0" />
+ </struct>
+</plugin>

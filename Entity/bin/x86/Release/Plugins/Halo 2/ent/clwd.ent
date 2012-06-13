@@ -1,0 +1,44 @@
+<plugin class="clwd" author="XZodia" version="1.0" headersize="108">
+  <revision author="XZodia" version="1.0">Completed</revision>
+  <revision author="DiscoBob" version="0.4">Mapped a bit of the plugin...</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <bitmask32 name="Flags" offset="0" visible="True">
+    <option name="Doesn't Use Wind" value="0" />
+    <option name="Uses Grid Attach Top" value="1" />
+  </bitmask32>
+  <stringid name="Marker Attachment Name" offset="4" visible="True" />
+  <tag name="Shader" offset="8" visible="True" />
+  <id name="Shader" offset="12" visible="True" />
+  <short name="Grid X Dimension" offset="16" visible="True" />
+  <short name="Grid Y Dimension" offset="18" visible="True" />
+  <float name="Grid Spacing X" offset="20" visible="True" />
+  <float name="Grid Spacing Y" offset="24" visible="True" />
+  <enum16 name="Integration Type" offset="28" visible="True" />
+  <short name="Number Iterations" offset="28" visible="True" />
+  <float name="Weight" offset="32" visible="True" />
+  <float name="Drag" offset="36" visible="True" />
+  <float name="Wind Scale" offset="40" visible="True" />
+  <float name="Wind Flappiness Scale" offset="44" visible="True" />
+  <float name="Longest Rod" offset="48" visible="True" />
+  <unused offset="52" size="24" />
+  <struct name="Vertices" offset="76" visible="True" size="20" label="">
+    <float name="Initial Position X" offset="0" visible="True" />
+    <float name="Initial Position Y" offset="4" visible="True" />
+    <float name="Initial Position Z" offset="8" visible="True" />
+    <float name="UV i" offset="12" visible="True" />
+    <float name="UV j" offset="16" visible="True" />
+  </struct>
+  <struct name="Indices" offset="84" visible="True" size="2" label="">
+    <short name="Index" offset="0" visible="True" />
+  </struct>
+  <struct name="Strip Indices" offset="92" visible="True" size="2" label="">
+    <short name="Index" offset="0" visible="True" />
+  </struct>
+  <struct name="Links" offset="100" visible="True" size="16" label="">
+    <float name="Attachment Bits" offset="0" visible="True" />
+    <short name="Index 1" offset="4" visible="True" />
+    <short name="Index 2" offset="6" visible="True" />
+    <float name="Default Distance" offset="8" visible="True" />
+    <float name="Damping Multiplier" offset="12" visible="True" />
+  </struct>
+</plugin>

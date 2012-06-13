@@ -1,0 +1,13 @@
+<plugin class="wgtz" author="Iron_Forge" version="0.1">
+ <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+ <tag name="Unknown" visible="false" />
+ <id name="Unknown" visible="false" />
+ <struct name="Unknown" visible="false">
+  <tag name="Unknown" visible="false" />
+  <id name="Unknown" visible="false" />
+ </struct>
+ <tag name="Unknown" visible="false" />
+ <id name="Unknown" visible="false" />
+ <tag name="Unknown" visible="false" />
+ <id name="Unknown" visible="false" />
+</plugin>

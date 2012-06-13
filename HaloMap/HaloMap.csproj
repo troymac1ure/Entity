@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{32FC9CF1-7BD8-4541-81A3-4C6B9B94AFF4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HaloMap</RootNamespace>
+    <AssemblyName>HaloMap</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="XDevkit, Version=2.0.20675.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\XDevkit.dll</HintPath>
+    </Reference>
+    <Reference Include="YeloDebug, Version=1.0.7887.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\YeloDebug\bin\Debug\YeloDebug.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ChunkCloning\ChunkAdder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ChunkCloning\MetaBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ChunkCloning\MetaSplitter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="H1MetaContainers\H1BSPConvert.cs" />
+    <Compile Include="Libraries\EntityPlugin.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Libraries\EntityPlugin.Designer.cs">
+      <DependentUpon>EntityPlugin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Libraries\LibraryManager.cs" />
+    <Compile Include="RawData\BSPModel.cs" />
+    <Compile Include="Render\Optimization.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Render\SpawnInfo.cs" />
+    <Compile Include="Render\Camera2.cs" />
+    <Compile Include="DDSFunctions\DDS.cs" />
+    <Compile Include="DDSFunctions\DDS_Convert.cs" />
+    <Compile Include="DDSFunctions\DecodeDXT.cs" />
+    <Compile Include="RawData\ParsedBitmap.cs" />
+    <Compile Include="DDSFunctions\Swizzler.cs" />
+    <Compile Include="Render\FrameHierarchy.cs" />
+    <Compile Include="H1MetaContainers\sbsp.cs" />
+    <Compile Include="H2MetaContainers\coll.cs" />
+    <Compile Include="H2MetaContainers\hlmt.cs" />
+    <Compile Include="H2MetaContainers\ligh.cs" />
+    <Compile Include="H2MetaContainers\sbsp.cs" />
+    <Compile Include="H2MetaContainers\shad.cs" />
+    <Compile Include="H2MetaContainers\sky.cs" />
+    <Compile Include="Plugins\IFPHashMap.cs" />
+    <Compile Include="Plugins\IFPIO.cs" />
+    <Compile Include="Plugins\MakeIFP.cs" />
+    <Compile Include="Map\BitmapLibraryLayout.cs" />
+    <Compile Include="Map\BSPContainer.cs" />
+    <Compile Include="Map\BSPInfo.cs" />
+    <Compile Include="Map\FileNamesInfo.cs" />
+    <Compile Include="Map\IndexHeaderInfo.cs" />
+    <Compile Include="Map\Map.cs" />
+    <Compile Include="Map\MapHeaderInfo.cs" />
+    <Compile Include="Map\ObjectIndexInfo.cs" />
+    <Compile Include="Map\StringsInfo.cs" />
+    <Compile Include="Meta\Meta.cs" />
+    <Compile Include="Meta\MetaScanner.cs" />
+    <Compile Include="Meta\TagInterface.cs" />
+    <Compile Include="Map\MiscFunctions.cs" />
+    <Compile Include="RawData\ParsedModel.cs" />
+    <Compile Include="RawData\PRTMModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RawData\RawData.cs" />
+    <Compile Include="RealTimeHalo\RTH.cs" />
+    <Compile Include="Render\Renderer.cs" />
+    <Compile Include="H2MetaContainers\ugh!.cs" />
+    <Compile Include="Map\UnicodeTableReader.cs" />
+    <Compile Include="Render\SpawnLoads.cs" />
+    <Compile Include="Render\VertexFormats.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Libraries\EntityPlugin.resx">
+      <DependentUpon>EntityPlugin.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RealTimeHalo\RthDLL.dll">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Globals\Globals.csproj">
+      <Project>{B69CBB19-F523-4B56-B97A-696BCA045ADA}</Project>
+      <Name>Globals</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="RawData\obj_spec.pdf" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

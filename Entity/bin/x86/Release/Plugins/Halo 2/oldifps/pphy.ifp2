@@ -1,0 +1,12 @@
+<plugin class="pphy" author="Iron_Forge" version="0.1" headersize="64">
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<undefined name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<unused size="16"  offset="16" />
+<float name="Unknown"  offset="32" visible="false" />
+<float name="Unknown"  offset="36" visible="false" />
+<float name="Unknown"  offset="40" visible="false" />
+<unused size="20"  offset="44" />
+</plugin>

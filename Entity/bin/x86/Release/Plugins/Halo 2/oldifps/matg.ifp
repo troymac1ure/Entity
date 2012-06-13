@@ -1,0 +1,649 @@
+<plugin class="matg" author="km00" version="0.3" headersize="644">
+<unused offset="0" size="176" />
+<struct name="Unknown Effects" offset="176" visible="false" size="8" label="">
+<tag name="Effect" offset="0" visible="False" />
+<id name="Effect" offset="4" visible="False" />
+</struct>
+<struct name="Damage Effects" offset="184" visible="false" size="72" label="">
+<tag name="Reference" offset="0" visible="False" />
+<id name="Reference" offset="4" visible="False" />
+<float name="Unknown Lower" offset="8" visible="False" />
+<float name="Unknown Upper" offset="12" visible="False" />
+<float name="Unknown Lower" offset="16" visible="False" />
+<float name="Unknown Upper" offset="20" visible="False" />
+<float name="Unknown Lower" offset="24" visible="False" />
+<float name="Unknown Upper" offset="28" visible="False" />
+<float name="Unknown Lower" offset="32" visible="False" />
+<float name="Unknown Upper" offset="36" visible="False" />
+<unused offset="40" size="32" />
+</struct>
+<struct name="Sound" offset="192" visible="true" size="36" label="">
+<tag name="Classes" offset="0" visible="True" />
+<id name="Classes" offset="4" visible="True" />
+<tag name="Effects" offset="8" visible="True" />
+<id name="Effects" offset="12" visible="True" />
+<tag name="Mix" offset="16" visible="True" />
+<id name="Mix" offset="20" visible="True" />
+<tag name="Dialog Constants" offset="24" visible="True" />
+<id name="Dialog Constants" offset="28" visible="True" />
+<id name="Resource Hack" offset="32" visible="True" />
+</struct>
+<struct name="Ai Information" offset="200" visible="true" size="360" label="">
+<float name="Unknown" offset="0" visible="False" />
+<unused offset="4" size="4" />
+<float name="Unknown" offset="8" visible="False" />
+<unused offset="12" size="4" />
+<float name="Unknown" offset="16" visible="False" />
+<unused offset="20" size="4" />
+<float name="Unknown" offset="24" visible="False" />
+<unused offset="28" size="4" />
+<float name="Unknown" offset="32" visible="False" />
+<float name="Unknown" offset="36" visible="False" />
+<float name="Unknown" offset="40" visible="False" />
+<float name="Unknown" offset="44" visible="False" />
+<unused offset="48" size="48" />
+<tag name="AI Dialog" offset="96" visible="True" />
+<id name="AI Dialog" offset="100" visible="True" />
+<unused offset="104" size="24" />
+<float name="Unknown" offset="128" visible="False" />
+<float name="Unknown" offset="132" visible="False" />
+<float name="Unknown" offset="136" visible="False" />
+<float name="Unknown" offset="140" visible="False" />
+<float name="Unknown" offset="144" visible="False" />
+<float name="Unknown" offset="148" visible="False" />
+<float name="Unknown" offset="152" visible="False" />
+<float name="Unknown" offset="156" visible="False" />
+<float name="Unknown" offset="160" visible="False" />
+<float name="Unknown" offset="164" visible="False" />
+<float name="Unknown" offset="168" visible="False" />
+<float name="Unknown" offset="172" visible="False" />
+<float name="Unknown" offset="176" visible="False" />
+<float name="Unknown" offset="180" visible="False" />
+<float name="Unknown" offset="184" visible="False" />
+<float name="Unknown" offset="188" visible="False" />
+<float name="Unknown" offset="192" visible="False" />
+<float name="Unknown" offset="196" visible="False" />
+<unused offset="200" size="24" />
+<float name="Unknown" offset="224" visible="False" />
+<float name="Unknown" offset="228" visible="False" />
+<float name="Unknown" offset="232" visible="False" />
+<float name="Unknown" offset="236" visible="False" />
+<unused offset="240" size="48" />
+<struct name="Colors?" offset="288" visible="false" size="12" label="">
+<float name="R" offset="0" visible="False" />
+<float name="G" offset="4" visible="False" />
+<float name="B" offset="8" visible="False" />
+</struct>
+<unused offset="296" size="48" />
+<float name="Unknown" offset="344" visible="False" />
+<float name="Unknown" offset="348" visible="False" />
+<float name="Unknown" offset="352" visible="False" />
+<float name="Unknown" offset="356" visible="False" />
+</struct>
+<struct name="Materials Collisions" offset="208" visible="false" size="8" label="">
+<struct name="Materials" offset="0" visible="false" size="12" label="">
+<stringid name="Name" offset="0" visible="False" />
+<struct name="Vs Materials" offset="4" visible="false" size="8" label="">
+<stringid name="Name" offset="0" visible="False" />
+<float name="Value" offset="4" visible="False" />
+</struct>
+</struct>
+</struct>
+<unused offset="216" size="8" />
+<struct name="Unknown95" offset="224" visible="false" size="8" label="">
+<tag name="Unknown" offset="0" visible="True" />
+<id name="Unknown" offset="4" visible="True" />
+</struct>
+<struct name="Camera" offset="232" visible="true" size="20" label="">
+<tag name="Default Unit Camera Track" offset="0" visible="True" />
+<id name="Default Unit Camera Track" offset="4" visible="True" />
+<float name="Unknown" offset="8" visible="False" />
+<float name="Unknown" offset="12" visible="False" />
+<float name="Unknown" offset="16" visible="False" />
+</struct>
+<struct name="Player Control" offset="240" visible="true" size="128" label="">
+<float name="Magnetism Friction" offset="0" visible="true" />
+<float name="Magnetism Adhesion" offset="4" visible="true" />
+<float name="Magnetism Inconsequential Target Scale" offset="8" visible="true" />
+<unused offset="12" size="16" />
+<float name="Unknown" offset="28" visible="False" />
+<float name="Unknown" offset="32" visible="False" />
+<float name="Unknown" offset="36" visible="False" />
+<float name="Unknown" offset="40" visible="False" />
+<float name="Unknown" offset="44" visible="False" />
+<float name="Unknown" offset="48" visible="False" />
+<float name="Unknown" offset="52" visible="False" />
+<unused offset="56" size="8" />
+<float name="Look Default Pitch Rate" offset="64" visible="true" />
+<float name="Look Default Yaw Rate" offset="68" visible="true" />
+<float name="Look Peg Threshold" offset="72" visible="true" />
+<float name="Look Unknown Lower" offset="76" visible="true" />
+<float name="Look Unknown Upper" offset="80" visible="true" />
+<float name="Look Unknown Lower" offset="84" visible="true" />
+<float name="Look Unknown Upper" offset="88" visible="true" />
+<float name="Look Auto-leveling Scale" offset="92" visible="true" />
+<unused offset="96" size="12" />
+<short name="Min Weapon Swap Ticks" offset="108" visible="true" />
+<short name="Min Autoleveling Ticks" offset="110" visible="true" />
+<float name="Unknown" offset="112" visible="False" />
+<struct name="Look Function" offset="116" visible="true" size="4" label="">
+<float name="Scale" offset="0" visible="true" />
+</struct>
+<float name="Unknown" offset="124" visible="False" />
+</struct>
+<struct name="Difficulty" offset="248" visible="false" size="644" label="">
+<float name="Unknown" offset="0" visible="False" />
+<float name="Unknown" offset="4" visible="False" />
+<float name="Unknown" offset="8" visible="False" />
+<float name="Unknown" offset="12" visible="False" />
+<float name="Unknown" offset="16" visible="False" />
+<float name="Unknown" offset="20" visible="False" />
+<float name="Unknown" offset="24" visible="False" />
+<float name="Unknown" offset="28" visible="False" />
+<float name="Unknown" offset="32" visible="False" />
+<float name="Unknown" offset="36" visible="False" />
+<float name="Unknown" offset="40" visible="False" />
+<float name="Unknown" offset="44" visible="False" />
+<float name="Unknown" offset="48" visible="False" />
+<float name="Unknown" offset="52" visible="False" />
+<float name="Unknown" offset="56" visible="False" />
+<float name="Unknown" offset="60" visible="False" />
+<unused offset="64" size="4" />
+<float name="Unknown" offset="68" visible="False" />
+<float name="Unknown" offset="72" visible="False" />
+<float name="Unknown" offset="76" visible="False" />
+<float name="Unknown" offset="80" visible="False" />
+<float name="Unknown" offset="84" visible="False" />
+<float name="Unknown" offset="88" visible="False" />
+<float name="Unknown" offset="92" visible="False" />
+<float name="Unknown" offset="96" visible="False" />
+<float name="Unknown" offset="100" visible="False" />
+<float name="Unknown" offset="104" visible="False" />
+<float name="Unknown" offset="108" visible="False" />
+<float name="Unknown" offset="112" visible="False" />
+<float name="Unknown" offset="116" visible="False" />
+<float name="Unknown" offset="120" visible="False" />
+<float name="Unknown" offset="124" visible="False" />
+<unused offset="128" size="8" />
+<float name="Unknown" offset="136" visible="False" />
+<float name="Unknown" offset="140" visible="False" />
+<unused offset="144" size="16" />
+<float name="Unknown" offset="160" visible="False" />
+<float name="Unknown" offset="164" visible="False" />
+<float name="Unknown" offset="168" visible="False" />
+<float name="Unknown" offset="172" visible="False" />
+<float name="Unknown" offset="176" visible="False" />
+<float name="Unknown" offset="180" visible="False" />
+<float name="Unknown" offset="184" visible="False" />
+<float name="Unknown" offset="188" visible="False" />
+<float name="Unknown" offset="192" visible="False" />
+<float name="Unknown" offset="196" visible="False" />
+<float name="Unknown" offset="200" visible="False" />
+<float name="Unknown" offset="204" visible="False" />
+<float name="Unknown" offset="208" visible="False" />
+<float name="Unknown" offset="212" visible="False" />
+<float name="Unknown" offset="216" visible="False" />
+<float name="Unknown" offset="220" visible="False" />
+<float name="Unknown" offset="224" visible="False" />
+<float name="Unknown" offset="228" visible="False" />
+<float name="Unknown" offset="232" visible="False" />
+<float name="Unknown" offset="236" visible="False" />
+<unused offset="240" size="16" />
+<float name="Unknown" offset="256" visible="False" />
+<float name="Unknown" offset="260" visible="False" />
+<float name="Unknown" offset="264" visible="False" />
+<float name="Unknown" offset="268" visible="False" />
+<unused offset="272" size="4" />
+<float name="Unknown" offset="276" visible="False" />
+<float name="Unknown" offset="280" visible="False" />
+<float name="Unknown" offset="284" visible="False" />
+<float name="Unknown" offset="288" visible="False" />
+<float name="Unknown" offset="292" visible="False" />
+<float name="Unknown" offset="296" visible="False" />
+<float name="Unknown" offset="300" visible="False" />
+<float name="Unknown" offset="304" visible="False" />
+<float name="Unknown" offset="308" visible="False" />
+<float name="Unknown" offset="312" visible="False" />
+<float name="Unknown" offset="316" visible="False" />
+<float name="Unknown" offset="320" visible="False" />
+<float name="Unknown" offset="324" visible="False" />
+<float name="Unknown" offset="328" visible="False" />
+<float name="Unknown" offset="332" visible="False" />
+<float name="Unknown" offset="336" visible="False" />
+<float name="Unknown" offset="340" visible="False" />
+<float name="Unknown" offset="344" visible="False" />
+<float name="Unknown" offset="348" visible="False" />
+<unused offset="352" size="20" />
+<float name="Unknown" offset="372" visible="False" />
+<float name="Unknown" offset="376" visible="False" />
+<float name="Unknown" offset="380" visible="False" />
+<float name="Unknown" offset="384" visible="False" />
+<float name="Unknown" offset="388" visible="False" />
+<float name="Unknown" offset="392" visible="False" />
+<float name="Unknown" offset="396" visible="False" />
+<unused offset="400" size="52" />
+<float name="Unknown" offset="452" visible="False" />
+<float name="Unknown" offset="456" visible="False" />
+<float name="Unknown" offset="460" visible="False" />
+<unused offset="464" size="8" />
+<float name="Unknown" offset="472" visible="False" />
+<float name="Unknown" offset="476" visible="False" />
+<unused offset="480" size="4" />
+<float name="Unknown" offset="484" visible="False" />
+<float name="Unknown" offset="488" visible="False" />
+<float name="Unknown" offset="492" visible="False" />
+<unused offset="496" size="4" />
+<float name="Unknown" offset="500" visible="False" />
+<float name="Unknown" offset="504" visible="False" />
+<float name="Unknown" offset="508" visible="False" />
+<unused offset="512" size="132" />
+</struct>
+<struct name="Grenades" offset="256" visible="false" size="44" label="">
+<short name="Max Count" offset="0" visible="False" />
+<unused offset="2" size="2" />
+<tag name="Throwing Effect" offset="4" visible="False" />
+<id name="Throwing Effect" offset="8" visible="False" />
+<unused offset="12" size="16" /> <!--2 depricated tag references-->
+<tag name="Equipment" offset="28" visible="False" />
+<id name="Equipment" offset="32" visible="False" />
+<tag name="Projectile" offset="36" visible="False" />
+<id name="Projectile" offset="40" visible="False" />
+</struct>
+<struct name="Rasterizer Data" offset="264" visible="true" size="264" label="">
+<tag name="Distance Attenuation" offset="0" visible="True" />
+<id name="Distance Attenuation" offset="4" visible="True" />
+<tag name="Vector Normalization" offset="8" visible="True" />
+<id name="Vector Normalization" offset="12" visible="True" />
+<tag name="Gradients" offset="16" visible="True" />
+<id name="Gradients" offset="20" visible="True" />
+<tag name="Loading Screen Background" offset="24" visible="True" />
+<id name="Loading Screen Background" offset="28" visible="True" />
+<tag name="Loading Screen Sweep" offset="32" visible="True" />
+<id name="Loading Screen Sweep" offset="36" visible="True" />
+<tag name="Loading Screen Spinner" offset="40" visible="True" />
+<id name="Loading Screen Spinner" offset="44" visible="True" />
+<tag name="Glow" offset="48" visible="True" />
+<id name="Glow" offset="52" visible="True" />
+<tag name="Loading Screen Logos" offset="56" visible="True" />
+<id name="Loading Screen Logos" offset="60" visible="True" />
+<tag name="Loading Screen Tickers" offset="64" visible="True" />
+<id name="Loading Screen Tickers" offset="68" visible="True" />
+<unused offset="72" size="16" />
+<struct name="Vertex Shaders" offset="88" visible="true" size="8" label="">
+<tag name="Vertex Shader" offset="0" visible="True" />
+<id name="Vertex Shader" offset="4" visible="True" />
+</struct>
+<tag name="Default 2D" offset="96" visible="True" />
+<id name="Default 2D" offset="100" visible="True" />
+<tag name="Default 3D" offset="104" visible="True" />
+<id name="Default 3D" offset="108" visible="True" />
+<tag name="Default Cube Map" offset="112" visible="True" />
+<id name="Default Cube Map" offset="116" visible="True" />
+<tag name="Test 0" offset="120" visible="True" />
+<id name="Test 0" offset="124" visible="True" />
+<tag name="Test 1" offset="128" visible="True" />
+<id name="Test 1" offset="132" visible="True" />
+<tag name="Test 2" offset="136" visible="True" />
+<id name="Test 2" offset="140" visible="True" />
+<tag name="Test 3" offset="144" visible="True" />
+<id name="Test 3" offset="148" visible="True" />
+<tag name="Video Effect Scanline Map" offset="152" visible="True" />
+<id name="Video Effect Scanline Map" offset="156" visible="True" />
+<tag name="Video Effect Noise Map" offset="160" visible="True" />
+<id name="Video Effect Noise Map" offset="164" visible="True" />
+<unused offset="168" size="36" />
+<tag name="Render Layer" offset="204" visible="True" />
+<id name="Render Layer" offset="208" visible="True" />
+<undefined name="Flags" offset="212" visible="True" />
+<float name="Active Camo Refraction Amount" offset="216" visible="True" />
+<float name="Active Camo Distance Falloff" offset="220" visible="True" />
+<float name="Active Camo Tint Color R" offset="224" visible="True" />
+<float name="Active Camo Tint Color G" offset="228" visible="True" />
+<float name="Active Camo Tint Color B" offset="232" visible="True" />
+<float name="Active Camo Hyper Stealth Refraction" offset="236" visible="True" />
+<float name="Active Camo Hyper Stealth Distance Falloff" offset="240" visible="True" />
+<float name="Active Camo ? R" offset="244" visible="True" />
+<float name="Active Camo ? G" offset="248" visible="True" />
+<float name="Active Camo ? B" offset="252" visible="True" />
+<tag name="Distance Attenuation 2D" offset="256" visible="True" />
+<id name="Distance Attenuation 2D" offset="260" visible="True" />
+</struct>
+<struct name="Interface Tag Refernces" offset="272" visible="true" size="152" label="">
+<tag name="Font System" offset="0" visible="False" />
+<id name="Font System" offset="4" visible="False" />
+<tag name="Font Terminal" offset="8" visible="False" />
+<id name="Font Terminal" offset="12" visible="False" />
+<tag name="Screen Color Table" offset="16" visible="True" />
+<id name="Screen Color Table" offset="20" visible="True" />
+<tag name="Hud Color Table" offset="24" visible="True" />
+<id name="Hud Color Table" offset="28" visible="True" />
+<tag name="Editor Color Table" offset="32" visible="True" />
+<id name="Editor Color Table" offset="36" visible="True" />
+<tag name="Dialog Color Table" offset="40" visible="True" />
+<id name="Dialog Color Table" offset="44" visible="True" />
+<tag name="Hud Globals" offset="48" visible="True" />
+<id name="Hud Globals" offset="52" visible="True" />
+<tag name="Motion Sensor Sweep" offset="56" visible="True" />
+<id name="Motion Sensor Sweep" offset="60" visible="True" />
+<tag name="Motion Sensor Sweep Mask" offset="64" visible="True" />
+<id name="Motion Sensor Sweep Mask" offset="68" visible="True" />
+<tag name="Multiplayer Hud Bitmap" offset="72" visible="True" />
+<id name="Multiplayer Hud Bitmap" offset="76" visible="True" />
+<unused offset="80" size="8" />
+<tag name="Hud Digits Definition" offset="88" visible="False" />
+<id name="Hud Digits Definition" offset="92" visible="False" />
+<tag name="Motion Sensor Blip" offset="96" visible="True" />
+<id name="Motion Sensor Blip" offset="100" visible="True" />
+<tag name="Motion Sensor Blip Custom" offset="104" visible="True" />
+<id name="Motion Sensor Blip Custom" offset="108" visible="True" />
+<tag name="Rasterizer Invalid" offset="112" visible="True" />
+<id name="Rasterizer Invalid" offset="116" visible="True" />
+<tag name="Rasterizer Plasma Noise" offset="120" visible="True" />
+<id name="Rasterizer Plasma Noise" offset="124" visible="True" />
+<tag name="Widget Collection - Mainmenu" offset="128" visible="True" />
+<id name="Widget Collection - Mainmenu" offset="132" visible="True" />
+<tag name="Widget Collection - Singleplayer" offset="136" visible="True" />
+<id name="Widget Collection - Singleplayer" offset="140" visible="True" />
+<tag name="Widget Collection - Multiplayer" offset="144" visible="True" />
+<id name="Widget Collection - Multiplayer" offset="148" visible="True" />
+</struct>
+<unused offset="280" size="16" /> <!--cheat weapons, powerups-->
+<struct name="Multiplayer Information (depricated)" offset="296" visible="false" size="152" label="">
+<tag name="Flag" offset="0" visible="True" />
+<id name="Flag" offset="4" visible="True" />
+<tag name="Unit" offset="8" visible="True" />
+<id name="Unit" offset="12" visible="True" />
+<unused offset="16" size="8" /> <!--vehicle references block-->
+<tag name="Hill Shader" offset="24" visible="True" />
+<id name="Hill Shader" offset="28" visible="True" />
+<tag name="Flag Shader" offset="32" visible="True" />
+<id name="Flag Shader" offset="36" visible="True" />
+<tag name="Ball" offset="40" visible="True" />
+<id name="Ball" offset="44" visible="True" />
+<unused offset="48" size="8" /> <!--sound references block-->
+<unused offset="56" size="8" /> <!--unused reference-->
+<unused offset="64" size="88" />
+</struct>
+<struct name="Player Information" offset="304" visible="true" size="284" label="">
+<tag name="Unit" offset="0" visible="True" />
+<id name="Unit" offset="4" visible="True" />
+<unused offset="8" size="28" />
+<float name="Walking Speed" offset="36" visible="True" />
+<float name="Double Speed Multiplayer" offset="40" visible="True" />
+<float name="Run Forward" offset="44" visible="True" />
+<float name="Run Backward" offset="48" visible="True" />
+<float name="Run Sideways" offset="52" visible="True" />
+<float name="Run Acceleration" offset="56" visible="True" />
+<float name="Sneak Forward" offset="60" visible="True" />
+<float name="Sneak Backward" offset="64" visible="True" />
+<float name="Sneak Sideways" offset="68" visible="True" />
+<float name="Sneak Acceleration" offset="72" visible="True" />
+<float name="Airborne Acceleration" offset="76" visible="True" />
+<unused offset="80" size="16" />
+<float name="Grenade Origin X" offset="96" visible="True" />
+<float name="Grenade Origin Y" offset="100" visible="True" />
+<float name="Grenade Origin Z" offset="104" visible="True" />
+<unused offset="104" size="12" />
+<float name="Stun Penalty Movement" offset="120" visible="True" />
+<float name="Stun Penalty Turning" offset="124" visible="True" />
+<float name="Stun Penalty Jumping" offset="128" visible="True" />
+<float name="Stun Penalty Min Time" offset="132" visible="True" />
+<float name="Stun Penalty Max Time" offset="136" visible="True" />
+<unused offset="140" size="8" />
+<float name="Fp Idle Time Lower" offset="148" visible="True" />
+<float name="Fp Idle Time Upper" offset="152" visible="True" />
+<float name="Fp Skip" offset="156" visible="True" />
+<unused offset="160" size="16" />
+<tag name="Coop Respawn Effect" offset="176" visible="True" />
+<id name="Coop Respawn Effect" offset="180" visible="True" />
+<undefined name="Unknown" offset="184" visible="True" />
+<float name="Unknown" offset="188" visible="True" />
+<float name="Unknown" offset="192" visible="True" />
+<tag name="Unused" offset="196" visible="false" />
+<id name="Unused" offset="200" visible="false" />
+<tag name="Unused" offset="204" visible="False" />
+<id name="Unused" offset="208" visible="False" />
+<unused offset="212" size="16" />
+<tag name="Active Camo On" offset="228" visible="True" />
+<id name="Active Camo On" offset="232" visible="True" />
+<tag name="Active Camo Off" offset="236" visible="True" />
+<id name="Active Camo Off" offset="240" visible="True" />
+<tag name="Active Camo Error" offset="244" visible="True" />
+<id name="Active Camo Error" offset="248" visible="True" />
+<tag name="Active Camo Ready" offset="252" visible="True" />
+<id name="Active Camo Ready" offset="256" visible="True" />
+<tag name="Flashlight On" offset="260" visible="True" />
+<id name="Flashlight On" offset="264" visible="True" />
+<tag name="Flashlight Off" offset="268" visible="True" />
+<id name="Flashlight Off" offset="272" visible="True" />
+<tag name="Flashlight Error" offset="276" visible="True" />
+<id name="Flashlight Error" offset="280" visible="True" />
+</struct>
+<struct name="Fp Interface" offset="312" visible="false" size="188" label="">
+<tag name="Hands" offset="0" visible="True" />
+<id name="Hands" offset="4" visible="True" />
+<tag name="Body" offset="8" visible="True" />
+<id name="Body" offset="12" visible="True" />
+<unused offset="16" size="160" />
+<tag name="Unit" offset="176" visible="True" />
+<id name="Unit" offset="180" visible="True" />
+<unused offset="184" size="4" />
+</struct>
+<struct name="Falling Damage" offset="320" visible="true" size="104" label="">
+<unused offset="0" size="8" />
+<float name="Harmful Falling Distance Lower" offset="8" visible="True" />
+<float name="Harmful Falling Distance Upper" offset="12" visible="True" />
+<tag name="Falling Damage" offset="16" visible="True" />
+<id name="Falling Damage" offset="20" visible="True" />
+<unused offset="24" size="8" />
+<float name="Maximum Falling Distance" offset="32" visible="True" />
+<tag name="Distance Damage" offset="36" visible="True" />
+<id name="Distance Damage" offset="40" visible="True" />
+<tag name="Vehicle Environment Collision Damage" offset="44" visible="True" />
+<id name="Vehicle Environment Collision Damage" offset="48" visible="True" />
+<tag name="Vehicle Killed Unit Damage" offset="52" visible="True" />
+<id name="Vehicle Killed Unit Damage" offset="56" visible="True" />
+<tag name="Vehicle Collision Damage" offset="60" visible="True" />
+<id name="Vehicle Collision Damage" offset="64" visible="True" />
+<tag name="Flaming Death Damage" offset="68" visible="True" />
+<id name="Flaming Death Damage" offset="72" visible="True" />
+<unused offset="76" size="16" />
+<float name="Unknown I" offset="92" visible="True" />
+<float name="Unknown J" offset="96" visible="True" />
+<float name="Unknown K" offset="100" visible="True" />
+</struct>
+<struct name="Materials" offset="328" visible="true" size="36" label="">
+<stringid name="Material" offset="0" visible="True" />
+<stringid name="Material Type" offset="4" visible="True" />
+<float name="Ground Friction Scale" offset="8" visible="True" />
+<float name="Ground Friction Normal K0" offset="12" visible="True" />
+<float name="Ground Friction Normal K1" offset="16" visible="True" />
+<float name="Ground Depth Scale" offset="20" visible="True" />
+<float name="Ground Damp Fraction Scale" offset="24" visible="True" />
+<tag name="Unused" offset="28" visible="False" />
+<id name="Unused" offset="32" visible="False" />
+</struct>
+<struct name="Something Materials441" offset="336" visible="false" size="180" label="">
+<stringid name="Unknown" offset="0" visible="False" />
+<stringid name="Unknown" offset="4" visible="False" />
+<undefined name="Unknown" offset="8" visible="False" />
+<undefined name="Unknown" offset="12" visible="False" />
+<stringid name="Unknown" offset="16" visible="False" />
+<stringid name="Unknown" offset="20" visible="False" />
+<unused offset="24" size="4" />
+<float name="Unknown" offset="28" visible="False" />
+<float name="Unknown" offset="32" visible="False" />
+<float name="Unknown" offset="36" visible="False" />
+<tag name="Unused" offset="40" visible="False" />
+<id name="Unused" offset="44" visible="False" />
+<tag name="Unknown" offset="48" visible="False" />
+<id name="Unknown" offset="52" visible="False" />
+<tag name="Unknown" offset="56" visible="False" />
+<id name="Unknown" offset="60" visible="False" />
+<tag name="Unknown" offset="64" visible="False" />
+<id name="Unknown" offset="68" visible="False" />
+<tag name="Unknown" offset="72" visible="False" />
+<id name="Unknown" offset="76" visible="False" />
+<tag name="Unknown" offset="80" visible="False" />
+<id name="Unknown" offset="84" visible="False" />
+<tag name="Unused" offset="88" visible="False" />
+<id name="Unused" offset="92" visible="False" />
+<tag name="Unknown" offset="96" visible="False" />
+<id name="Unknown" offset="100" visible="False" />
+<unused offset="104" size="8" />
+<tag name="Unused" offset="112" visible="False" />
+<id name="Unused" offset="116" visible="False" />
+<tag name="Unused" offset="120" visible="False" />
+<id name="Unused" offset="124" visible="False" />
+<tag name="Unused" offset="128" visible="False" />
+<id name="Unused" offset="132" visible="False" />
+<tag name="Unused" offset="136" visible="False" />
+<id name="Unused" offset="140" visible="False" />
+<tag name="Unused" offset="144" visible="False" />
+<id name="Unused" offset="148" visible="False" />
+<tag name="Unused" offset="152" visible="False" />
+<id name="Unused" offset="156" visible="False" />
+<unused offset="160" size="8" />
+<unused offset="168" size="4" />
+<tag name="Unknown" offset="172" visible="False" />
+<id name="Unknown" offset="176" visible="False" />
+</struct>
+<struct name="Unknown486" offset="344" visible="false" size="32" label="">
+<unused offset="0" size="8" />
+<unused offset="8" size="16" />
+<unused offset="24" size="8" />
+</struct>
+<struct name="Unknown491" offset="352" visible="false" size="12" label="">
+<float name="Unknown" offset="0" visible="False" />
+<float name="Unknown" offset="4" visible="False" />
+<float name="Unknown" offset="8" visible="False" />
+</struct>
+<tag name="Multiplayer Globals" offset="360" visible="False" />
+<id name="Multiplayer Globals" offset="364" visible="False" />
+<struct name="Scenarios" offset="368" visible="true" size="8" label="">
+<struct name="Scenario" offset="0" visible="true" size="264" label="">
+<undefined name="block index" offset="0" visible="False" />
+<int name="Cache ID" offset="4" visible="True" />
+<string256 name="Scenario Path" offset="8" visible="True" />
+</struct>
+</struct>
+<struct name="Scenario Descriptions" offset="376" visible="true" size="24" label="">
+<struct name="Unknown506" offset="0" visible="false" size="2884" label="">
+<undefined name="Unknown" offset="0" visible="False" />
+<unused offset="4" size="2880" />
+</struct>
+<struct name="Single Player" offset="8" visible="true" size="2896" label="">
+<undefined name="Flags" offset="0" visible="False" />
+<int name="Cache ID" offset="4" visible="True" />
+<tag name="Preview Image" offset="8" visible="True" />
+<id name="Preview Image" offset="12" visible="True" />
+<unicode64 name="English Name" offset="16" visible="True" />
+<unicode64 name="Japanese Name" offset="80" visible="True" />
+<unicode64 name="Dutch Name" offset="144" visible="True" />
+<unicode64 name="French Name" offset="208" visible="True" />
+<unicode64 name="Spanish Name" offset="272" visible="True" />
+<unicode64 name="Italian Name" offset="336" visible="True" />
+<unicode64 name="Korean Name" offset="400" visible="True" />
+<unicode64 name="Chinese Name" offset="464" visible="True" />
+<unicode64 name="Portuguese Name" offset="528" visible="True" />
+<unicode256 name="English Description" offset="592" visible="True" />
+<unicode256 name="Japanese Description" offset="848" visible="True" />
+<unicode256 name="Dutch Description" offset="1104" visible="True" />
+<unicode256 name="French Description" offset="1360" visible="True" />
+<unicode256 name="Spanish Description" offset="1616" visible="True" />
+<unicode256 name="Italian Description" offset="1872" visible="True" />
+<unicode256 name="Korean Description" offset="2128" visible="True" />
+<unicode256 name="Chinese Description" offset="2384" visible="True" />
+<unicode256 name="Portuguese Description" offset="2640" visible="True" />
+</struct>
+<struct name="Multiplayer" offset="16" visible="true" size="3172" label="">
+<int name="Cache ID" offset="0" visible="True" />
+<tag name="Preview Image" offset="4" visible="True" />
+<id name="Preview Image" offset="8" visible="True" />
+<unicode64 name="English Name" offset="12" visible="True" />
+<unicode64 name="Japanese Name" offset="76" visible="True" />
+<unicode64 name="Dutch Name" offset="140" visible="True" />
+<unicode64 name="French Name" offset="204" visible="True" />
+<unicode64 name="Spanish Name" offset="268" visible="True" />
+<unicode64 name="Italian Name" offset="332" visible="True" />
+<unicode64 name="Korean Name" offset="396" visible="True" />
+<unicode64 name="Chinese Name" offset="460" visible="True" />
+<unicode64 name="Portuguese Name" offset="524" visible="True" />
+<unicode256 name="English Description" offset="588" visible="True" />
+<unicode256 name="Japanese Description" offset="844" visible="True" />
+<unicode256 name="Dutch Description" offset="1100" visible="True" />
+<unicode256 name="French Description" offset="1356" visible="True" />
+<unicode256 name="Spanish Description" offset="1612" visible="True" />
+<unicode256 name="Italian Description" offset="1868" visible="True" />
+<unicode256 name="Korean Description" offset="2124" visible="True" />
+<unicode256 name="Chinese Description" offset="2380" visible="True" />
+<unicode256 name="Portuguese Description" offset="2636" visible="True" />
+<string256 name="Scenario Path" offset="2892" visible="True" />
+<int name="Next Map ID" offset="3148" visible="True" />
+<enum name="Locked" offset="3152" visible="True">
+<option name="Off" value="0" />
+<option name="On" value="1" />
+</enum>
+<undefined name="Team Options" offset="3156" visible="False" />
+<undefined name="Unknown" offset="3160" visible="False" />
+<undefined name="Unknown" offset="3164" visible="False" />
+<unused offset="3168" size="4" />
+</struct>
+</struct>
+<tag name="Lighting Globals" offset="384" visible="True" />
+<id name="Lighting Globals" offset="388" visible="True" />
+<unused offset="392" size="8" />
+<int name="English String Count" offset="400" visible="True" />
+<int name="English String Table Size" offset="404" visible="True" />
+<int name="English String Index Offset" offset="408" visible="True" />
+<int name="English String Table Offset" offset="412" visible="True" />
+<undefined name="Unknown" offset="416" visible="False" />
+<unused offset="420" size="8" />
+<int name="Japanese String Count" offset="428" visible="True" />
+<int name="Japanese String Table Size" offset="432" visible="True" />
+<int name="Japanese String Index Offset" offset="436" visible="True" />
+<int name="Japanese String Table Offset" offset="440" visible="True" />
+<undefined name="Unknown" offset="444" visible="False" />
+<unused offset="448" size="8" />
+<int name="Dutch String Count" offset="456" visible="True" />
+<int name="Dutch String Table Size" offset="460" visible="True" />
+<int name="Dutch String Index Offset" offset="464" visible="True" />
+<int name="Dutch String Table Offset" offset="468" visible="True" />
+<undefined name="Unknown" offset="472" visible="False" />
+<unused offset="476" size="8" />
+<int name="French String Count" offset="484" visible="True" />
+<int name="French String Table Size" offset="488" visible="True" />
+<int name="French String Index Offset" offset="492" visible="True" />
+<int name="French String Table Offset" offset="496" visible="True" />
+<undefined name="Unknown" offset="500" visible="False" />
+<unused offset="504" size="8" />
+<int name="Spanish String Count" offset="512" visible="True" />
+<int name="Spanish String Table Size" offset="516" visible="True" />
+<int name="Spanish String Index Offset" offset="520" visible="True" />
+<int name="Spanish String Table Offset" offset="524" visible="True" />
+<undefined name="Unknown" offset="528" visible="False" />
+<unused offset="532" size="8" />
+<int name="Italian String Count" offset="540" visible="True" />
+<int name="Italian String Table Size" offset="544" visible="True" />
+<int name="Italian String Index Offset" offset="548" visible="True" />
+<int name="Italian String Table Offset" offset="552" visible="True" />
+<undefined name="Unknown" offset="556" visible="False" />
+<unused offset="560" size="8" />
+<int name="Korean String Count" offset="568" visible="True" />
+<int name="Korean String Table Size" offset="572" visible="True" />
+<int name="Korean String Index Offset" offset="576" visible="True" />
+<int name="Korean String Table Offset" offset="580" visible="True" />
+<undefined name="Unknown" offset="584" visible="False" />
+<unused offset="588" size="8" />
+<int name="Chinese String Count" offset="596" visible="True" />
+<int name="Chinese String Table Size" offset="600" visible="True" />
+<int name="Chinese String Index Offset" offset="604" visible="True" />
+<int name="Chinese String Table Offset" offset="608" visible="True" />
+<undefined name="Unknown" offset="612" visible="False" />
+<unused offset="616" size="8" />
+<int name="Portuguese String Count" offset="624" visible="True" />
+<int name="Portuguese String Table Size" offset="628" visible="True" />
+<int name="Portuguese String Index Offset" offset="632" visible="True" />
+<int name="Portuguese String Table Offset" offset="636" visible="True" />
+<undefined name="Unknown" offset="640" visible="False" />
+</plugin>

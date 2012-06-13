@@ -1,0 +1,29 @@
+<plugin>
+	<tag>ligh</tag>
+	<struct>
+		<name>Main</name>
+		<size>0</size>
+
+		<value>
+			<type>short</type>
+			<offset>0x14</offset>
+			<name>Type?</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x3c</offset>
+			<name>Saturation</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x44</offset>
+			<name>Shine</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x48</offset>
+			<name>Brightness</name>
+		</value>
+		
+	</struct>
+</plugin>

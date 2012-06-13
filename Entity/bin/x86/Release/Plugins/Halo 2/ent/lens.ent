@@ -1,0 +1,98 @@
+<plugin class="lens" author="XZodia" version="1.0" headersize="100">
+  <revision author="XZodia" version="1.0">Completed</revision>
+  <revision author="turk645" version="0.3">Added flare properties</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <unused size="8" offset="0" />
+  <float name="Falloff Angle (Degrees)" offset="8" visible="True" />
+  <float name="Cuttoff Angle (Degrees)" offset="12" visible="True" />
+  <float name="Occlusion Radius" offset="16" visible="True" />
+  <enum16 name="Occlusion Offset Direction" offset="20" visible="True">
+    <option name="Toward Viewer" value="0" />
+    <option name="Marker Forward" value="1" />
+    <option name="None" value="2" />
+  </enum16>
+  <enum16 name="Occlusion Inner Radius Scale" offset="22" visible="True">
+    <option name="None" value="0" />
+    <option name="1/2" value="1" />
+    <option name="1/4" value="2" />
+    <option name="1/8" value="3" />
+    <option name="1/16" value="4" />
+    <option name="1/32" value="5" />
+    <option name="1/64" value="6" />
+  </enum16>
+  <float name="Near Fade Distance" offset="24" visible="True" />
+  <float name="Far Fade Distance" offset="28" visible="True" />
+  <tag name="Bitmap" offset="32" visible="True" />
+  <id name="Bitmap" offset="36" visible="True" />
+  <bitmask32 name="Flags" offset="40" visible="True">
+    <option name="Sun" value="0" />
+    <option name="No Occlusion Test" value="1" />
+    <option name="Only Render In 1st Person" value="2" />
+    <option name="Only Render In 3rd Person" value="3" />
+    <option name="Fade In More Quickly" value="4" />
+    <option name="Scale By Marker" value="5" />
+  </bitmask32>
+  <enum32 name="Rotation Function" offset="44" visible="True">
+    <option name="None" value="0" />
+    <option name="Rotation A" value="1" />
+    <option name="Rotation B" value="3" />
+    <option name="Rotation Translation" value="4" />
+    <option name="Translation" value="5" />
+  </enum32>
+  <float name="Rotation Function Scale" offset="48" visible="True" />
+  <float name="Corona Scale i" offset="52" visible="True" />
+  <float name="Corona Scale j" offset="56" visible="True" />
+  <enum32 name="Falloff Function" offset="60" visible="True">
+    <option name="Linear" value="0" />
+    <option name="Late" value="1" />
+    <option name="Very Late" value="2" />
+    <option name="Early" value="3" />
+    <option name="Very Early" value="4" />
+    <option name="Cosine" value="5" />
+    <option name="Zero" value="6" />
+    <option name="One" value="7" />
+  </enum32>
+  <struct name="Reflections" offset="64" visible="True" size="48" label="Bitmap Index">
+    <bitmask16 name="Flags" offset="0" visible="True">
+      <option name="Align Rotation With Screen Center" value="0" />
+      <option name="Radius Not Scaled By Distance" value="1" />
+      <option name="Radius Scaled By Occlusion Factor" value="2" />
+      <option name="Occluded By Solid Objects" value="3" />
+      <option name="Ignore Light Color" value="4" />
+      <option name="Not Affected By Inner Occlusion" value="5" />
+    </bitmask16>
+    <short name="Bitmap Index" offset="2" visible="True" />
+    <unused size="4" offset="4" />
+    <float name="Position Along Flare Axis" offset="8" visible="True" />
+    <float name="Rotation Offset" offset="12" visible="True" />
+    <float name="Radius" offset="16" visible="True" />
+    <float name="...To" offset="20" visible="True" />
+    <float name="Brightness" offset="24" visible="True" />
+    <float name="...To" offset="28" visible="True" />
+    <float name="Modulation Factor" offset="32" visible="True" />
+    <float name="Color R" offset="36" visible="True" />
+    <float name="Color G" offset="40" visible="True" />
+    <float name="Color B" offset="44" visible="True" />
+  </struct>
+  <bitmask32 name="Flags" offset="72" visible="True">
+    <option name="Synchronized" value="0" />
+  </bitmask32>
+  <struct name="Brightness" offset="76" visible="True" size="188" label="">
+    <struct name="Function" offset="0" visible="True" size="1" label="">
+      <byte name="Data" offset="0" visible="True" />
+    </struct>
+    <unused offset="8" size="180" />
+  </struct>
+  <struct name="Color" offset="84" visible="True" size="188" label="">
+    <struct name="Function" offset="0" visible="True" size="1" label="">
+      <byte name="Data" offset="0" visible="True" />
+    </struct>
+    <unused offset="8" size="180" />
+  </struct>
+  <struct name="Rotation" offset="92" visible="True" size="188" label="">
+    <struct name="Function" offset="0" visible="True" size="1" label="">
+      <byte name="Data" offset="0" visible="True" />
+    </struct>
+    <unused offset="8" size="180" />
+  </struct>
+</plugin>

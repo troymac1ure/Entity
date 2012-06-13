@@ -1,0 +1,11 @@
+<plugin class="colo" author="Iron_Forge" version="0.2" headersize="8">
+  <revision author="Toabn" version="0.2">Filled in Unknowns...</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <struct name="Color Variables4" offset="0" visible="true" size="48" label="">
+    <string32 name="Name" offset="0" visible="True" />
+    <float name="Alpha" offset="32" visible="True" />
+    <float name="Red" offset="36" visible="True" />
+    <float name="Green" offset="40" visible="True" />
+    <float name="Blue" offset="44" visible="True" />
+  </struct>
+</plugin>

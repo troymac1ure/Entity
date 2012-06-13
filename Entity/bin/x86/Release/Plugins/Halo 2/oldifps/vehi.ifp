@@ -1,0 +1,453 @@
+<plugin class="vehi" author="Shalted" version="0.6" headersize="768">
+  <revision author="Shalted" version="0.6">Added Kornman's standard header</revision>
+  <revision author="Turk" version="0.56">fixed some values from the xml</revision>
+  <revision author="Shalted" version="0.5">Added Standard header, fixed some values and plugin errors, added some AI info</revision>
+  <revision author="XZodia" version="0.4">Lots of string ids and some unknowns named</revision>
+  <revision author="Toabn" version="0.3">Weapon located and Seat values found...</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+      <bitmask32 name="Flags" offset="0" visible="True">
+         <option name="does not cast shadow" value="0" />
+         <option name="search cardinal direction lightmaps" value="1" />
+         <option name="unused" value="2" />
+         <option name="not a pathfinding obstacle" value="3" />
+         <option name="extension of parent" value="4" />
+         <option name="does not cause collision damage" value="5" />
+         <option name="early mover" value="6" />
+         <option name="early mover localized physics" value="7" />
+         <option name="use static massive lightmap sample" value="8" />
+         <option name="object scales attachments" value="9" />
+         <option name="inherits player's appearance" value="10" />
+         <option name="dead bipeds can't localize" value="11" />
+         <option name="attach to clusters by dynamic sphere" value="12" />
+         <option name="effects created by this object do not blah" value="13" />
+    </bitmask32>
+    <float name="Bounding Radius" offset="4" visible="True" />
+    <undefined name="Bounding Offset X" offset="8" visible="True" />
+    <undefined name="Bounding Offset Y" offset="12" visible="True" />
+    <undefined name="Bounding Offset Z" offset="16" visible="True" />
+    <float name="Acceleration Scale" offset="20" visible="True" />
+    <undefined name="Lightmap Shadow Mode" offset="24" visible="True" />
+    <undefined name="Sweetener Size" offset="28" visible="True" />
+    <float name="Dynamic Light Sphere Radius" offset="32" visible="True" />
+    <undefined name="Dynamic Light Sphere Offset X" offset="36" visible="True" />
+    <undefined name="Dynamic Light Sphere Offset Y" offset="40" visible="True" />
+    <undefined name="Dynamic Light Sphere Offset Z" offset="44" visible="True" />
+    <stringid name="Default Model Variant" offset="48" visible="True" />
+    <tag name="Model" offset="52" visible="True" />
+    <id name="Model" offset="56" visible="True" />
+    <tag name="Crate Object" offset="60" visible="False" />
+    <id name="Crate Object" offset="64" visible="False" />
+    <tag name="Modifier Shader" offset="68" visible="False" />
+    <id name="Modifier Shader" offset="72" visible="False" />
+    <tag name="Creation Effect" offset="76" visible="False" />
+    <id name="Creation Effect" offset="80" visible="False" />
+    <tag name="Material Effects" offset="84" visible="True" />
+    <id name="Material Effects" offset="88" visible="True" />
+    <struct name="Ai Properties" offset="92" visible="True" size="16" label="">
+        <undefined name="Flags" offset="0" visible="True" />
+        <stringid name="Type Name" offset="4" visible="True" />
+        <undefined name="Size" offset="8" visible="True" />
+        <undefined name="Leap Jump Speed" offset="12" visible="True" />
+    </struct>
+    <struct name="Functions" offset="100" visible="True" size="32" label="">
+        <undefined name="Flags" offset="0" visible="True" />
+        <stringid name="Function" offset="4" visible="True" />
+        <stringid name="Scale Function By" offset="8" visible="True" />
+        <stringid name="Wobble Function" offset="12" visible="True" />
+        <float name="Wobble Period" offset="16" visible="True" />
+        <struct name="Inputs (real numbers)" offset="20" visible="True" size="1" label="">
+            <byte name="Data" offset="0" visible="True" />
+        </struct>
+        <stringid name="Turn Off With" offset="28" visible="True" />
+    </struct>
+    <float name="Render Bounding Radius" offset="108" visible="True" />
+    <float name="Lower 1" offset="112" visible="True" />
+    <float name="Upper 1" offset="116" visible="True" />
+    <float name="Lower 2" offset="120" visible="True" />
+    <float name="Upper 2" offset="124" visible="True" />
+    <float name="Lower 3" offset="128" visible="True" />
+    <float name="Upper 3" offset="132" visible="True" />
+    <float name="Lower 4" offset="136" visible="True" />
+    <float name="Upper 4" offset="140" visible="True" />
+    <short name="Hud Text Message Index" offset="144" visible="True" />
+    <short name="Forced Shader Permutation Index" offset="146" visible="True" />
+    <struct name="Attachments" offset="148" visible="true" size="24" label="">
+        <tag name="Type" offset="0" visible="True" />
+        <id name="Type" offset="4" visible="True" />
+        <stringid name="Marker" offset="8" visible="True" />
+        <stringid name="Change Color" offset="12" visible="True" />
+        <stringid name="Primary Scale" offset="16" visible="True" />
+        <stringid name="Secondary Scale" offset="20" visible="True" />
+    </struct>
+    <struct name="Widgets" offset="156" visible="true" size="8" label="">
+        <tag name="Reference" offset="0" visible="True" />
+        <id name="Reference" offset="4" visible="True" />
+    </struct>
+    <unused offset="164" size="8" />
+    <struct name="Change Colors" offset="172" visible="True" size="16" label="">
+        <struct name="Permutations" offset="0" visible="True" size="32" label="">
+            <float name="Weight" offset="0" visible="False" />
+            <float name="Color Lower Bound R" offset="4" visible="True" />
+            <float name="Color Lower Bound G" offset="8" visible="True" />
+            <float name="Color Lower Bound B" offset="12" visible="True" />
+            <float name="Color Upper Bound R" offset="16" visible="True" />
+            <float name="Color Upper Bound G" offset="20" visible="True" />
+            <float name="Color Upper Bound B" offset="24" visible="True" />
+            <stringid name="Name" offset="28" visible="True" />
+        </struct>
+        <unused offset="8" size="8" />
+    </struct>
+    <struct name="Predicted Resource" offset="180" visible="true" size="8" label="">
+        <short name="Type" offset="0" visible="True" />
+        <short name="Resource Index" offset="2" visible="True" />
+        <id name="Tag Index" offset="4" visible="True" />
+    </struct>
+  <short name="Unknown" offset="188" visible="False" />
+  <bitmask32 name="flags" offset="190" visible="True">
+    <option name="Has boost" value="4096" />
+  </bitmask32>
+  <short name="Unknown" offset="194" visible="False" />
+  <tag name="Unused" offset="196" visible="True" />
+  <id name="Unused" offset="200" visible="True" />
+  <float name="Unknown" offset="204" visible="False" />
+  <unused offset="208" size="4" />
+  <stringid name="Unknown" offset="212" visible="False" />
+  <unused offset="216" size="8" />
+  <undefined name="Unknown" offset="224" visible="False" />
+  <float name="Unknown" offset="228" visible="False" />
+  <struct name="Cameras?" offset="232" visible="false" size="8" label="">
+    <tag name="Camera?" offset="0" visible="False" />
+    <id name="Camera?" offset="4" visible="False" />
+  </struct>
+  <undefined name="Unknown" offset="240" visible="False" />
+  <undefined name="Unknown" offset="244" visible="False" />
+  <undefined name="Unknown" offset="248" visible="False" />
+  <unused offset="252" size="8" />
+  <float name="Soft Ping Threshold" offset="260" visible="True" />
+  <float name="Soft Ping Interrupt Time" offset="264" visible="True" />
+  <float name="Hard Ping Threshold" offset="268" visible="True" />
+  <float name="Hard Ping Interrupt Time" offset="272" visible="True" />
+  <float name="Hard Ping Death Threshold" offset="276" visible="True" />
+  <float name="Feign Death Threshold" offset="280" visible="True" />
+  <float name="Feign Death Time" offset="284" visible="True" />
+  <float name="Dist Of Evade Anim" offset="288" visible="True" />
+  <float name="Dist of Dive Anim" offset="292" visible="True" />
+  <float name="Stunned Movement Threshold" offset="296" visible="True" />
+  <float name="Feign Death Chance" offset="300" visible="True" />
+  <float name="Feign Repeat Chance" offset="304" visible="True" />
+  <tag name="Spawned Actor" offset="308" visible="True" />
+  <id name="Spawned Actor" offset="312" visible="True" />
+  <short name="Spawned Actor Count Lower" offset="316" visible="True" />
+  <short name="Spawned Actor Count Upper" offset="318" visible="True" />
+  <float name="Spawned Velocity" offset="320" visible="True" />
+  <float name="Aiming Velocity Max" offset="324" visible="True" />
+  <float name="Aiming Accel Max" offset="328" visible="True" />
+  <float name="Casual Aiming Modifier" offset="332" visible="True" />
+  <float name="Looking Velocity Max" offset="336" visible="True" />
+  <float name="Looking Accel Max" offset="340" visible="True" />
+  <stringid name="Right Hand" offset="344" visible="False" />
+  <stringid name="Left Hand" offset="348" visible="False" />
+  <stringid name="Right Hand" offset="352" visible="False" />
+  <tag name="Melee Damage" offset="356" visible="True" />
+  <id name="Melee Damage" offset="360" visible="True" />
+  <tag name="Boarding Melee Damage" offset="364" visible="True" />
+  <id name="Boarding Melee Damage" offset="368" visible="True" />
+  <tag name="Boarding Melee Response Damage" offset="372" visible="True" />
+  <id name="Boarding Melee Response Damage" offset="376" visible="True" />
+  <tag name="Unused" offset="380" visible="True" />
+  <id name="Unused" offset="384" visible="True" />
+  <tag name="Unused" offset="388" visible="True" />
+  <id name="Unused" offset="392" visible="True" />
+  <tag name="Unused" offset="396" visible="True" />
+  <id name="Unused" offset="400" visible="True" />
+  <undefined name="Unknown" offset="404" visible="False" />
+  <unused offset="408" size="8" />
+  <struct name="Unknown" offset="416" visible="false" size="8" label="">
+    <tag name="Unused" offset="0" visible="True" />
+    <id name="Unused" offset="4" visible="True" />
+  </struct>
+  <unused offset="424" size="16" />
+  <struct name="Unknown" offset="440" visible="false" size="8" label="">
+    <float name="Unknown" offset="0" visible="False" />
+    <float name="Unknown" offset="4" visible="False" />
+  </struct>
+  <struct name="Weapons" offset="448" visible="true" size="8" label="">
+    <tag name="Weapon" offset="0" visible="True" />
+    <id name="Weapon" offset="4" visible="True" />
+  </struct>
+  <struct name="Seats" offset="456" visible="true" size="176" label="">
+    <bitmask32 name="Flags" offset="0" visible="True">
+      <option name="Fire Weapon" value="262144" />
+      <option name="Disable Seat" value="65536" />
+      <option name="Close Door" value="32768" />
+      <option name="Take a Drive (G)" value="8192" />
+      <option name="Hide Boarding Seat" value="2048" />
+      <option name="Driver Req In (w/DF)" value="512" />
+      <option name="Turret Seat" value="128" />
+      <option name="Enable HUD" value="32" />
+      <option name="3rd Person View" value="16" />
+      <option name="Turret Fire (HW)" value="8" />
+      <option name="Driver Seat" value="4" />
+      <option name="Vehicle weapon enabled" value="2" />
+      <option name="Drive system enabled" value="1" />
+    </bitmask32>
+    <stringid name="Label" offset="4" visible="True" />
+    <stringid name="Marker Name" offset="8" visible="True" />
+    <stringid name="Reserved" offset="12" visible="True" />
+    <stringid name="Unknown" offset="16" visible="False" />
+    <stringid name="Unknown" offset="20" visible="False" />
+    <stringid name="Unknown" offset="24" visible="False" />
+    <float name="Unknown" offset="28" visible="False" />
+    <float name="Unknown" offset="32" visible="False" />
+    <float name="Accel Scale I" offset="36" visible="True" />
+    <float name="Accel Scale J" offset="40" visible="True" />
+    <float name="Accel Scale K" offset="44" visible="True" />
+    <float name="Yaw Rate" offset="48" visible="True" />
+    <float name="Pitch Rate" offset="52" visible="True" />
+    <short name="Unknown" offset="56" visible="True" />
+    <short name="Unknown" offset="58" visible="True" />
+    <undefined name="Unknown" offset="60" visible="False" />
+    <float name="Unknown" offset="64" visible="False" />
+    <float name="Unknown" offset="68" visible="False" />
+    <float name="Unknown" offset="72" visible="False" />
+    <float name="Unknown" offset="76" visible="False" />
+    <float name="Unknown" offset="80" visible="False" />
+    <float name="Unknown" offset="84" visible="False" />
+    <float name="Unknown" offset="88" visible="True" />
+    <float name="Unknown" offset="92" visible="True" />
+    <stringid name="Camera Marker Name" offset="96" visible="True" />
+    <stringid name="Camera Submerged Marker name" offset="100" visible="True" />
+    <float name="Pitch Auto-level" offset="104" visible="True" />
+    <float name="Pitch Range Lower" offset="108" visible="True" />
+    <float name="Pitch Range Upper" offset="112" visible="True" />
+    <struct name="Camera Tracks" offset="116" visible="true" size="8" label="">
+        <tag name="Camera" offset="0" visible="True" />
+        <id name="Camera" offset="4" visible="True" />
+    </struct>
+    <struct name="Unit Hud Interface" offset="124" visible="false" size="8" label="">
+        <tag name="Hud" offset="0" visible="False" />
+        <id name="Hud" offset="4" visible="False" />
+    </struct>
+    <stringid name="Hud text Message Index" offset="132" visible="True" />
+    <float name="Yaw Min" offset="136" visible="True" />
+        <float name="Yaw Max" offset="140" visible="True" />
+        <tag name="Built-in Gunner" offset="144" visible="True" />
+        <id name="Built-in Gunner" offset="148" visible="True" />
+    <float name="Seat Enter Radius" offset="152" visible="True" />
+     <float name="Some Angle" offset="156" visible="True" />
+    <float name="Seat Enter Angle" offset="160" visible="True" />
+    <float name="Unknown" offset="164" visible="False" />
+    <stringid name="Unknown" offset="168" visible="False" />
+    <id name="Unknown" offset="172" visible="False" />
+  </struct>
+  <float name="Covie Vehi Boost Speed Multiplier" offset="464" visible="True" />
+  <float name="Time till next boost" offset="468" visible="True" />
+  <float name="Boost Length" offset="472" visible="true" />
+  <float name="Covie Vehi Boost Time" offset="476" visible="True" />
+  <float name="Covie vehi Boost Accel" offset="480" visible="True" />
+  <unused offset="484" size="8" />
+  <short name="Unknown" offset="492" visible="False" />
+  <bitmask32 name="flags" offset="494" visible="True">
+    <option name="Flying" value="262144" />
+    <option name="F-in crazy hog" value="131072" />
+    <option name="Weird hog/banshee physics" value="65536" />
+    <option name="Is a vehicle" value="16" />
+    <option name="Handbrake" value="2" />
+  </bitmask32>
+  <short name="Unknown" offset="498" visible="False" />
+  <float name="Covie Vehi Forward Speed" offset="500" visible="True" />
+  <float name="Reverse Speed" offset="504" visible="True" />
+  <float name="Covie Normal Accel" offset="508" visible="True" />
+  <float name="Unknown" offset="512" visible="False" />
+  <float name="Unknown" offset="516" visible="False" />
+  <float name="Unknown" offset="520" visible="False" />
+  <float name="Unknown" offset="524" visible="False" />
+  <float name="Unknown" offset="528" visible="False" />
+  <float name="Unknown" offset="532" visible="False" />
+  <undefined name="Unknown" offset="536" visible="False" />
+  <stringid name="Flip message" offset="540" visible="True" />
+  <float name="Unknown" offset="544" visible="False" />
+  <float name="Unknown" offset="548" visible="False" />
+  <float name="Unknown" offset="552" visible="False" />
+  <float name="Covie Vehi Strafe Speed L" offset="556" visible="True" />
+  <float name="Covie Vehi Strafe Speed R" offset="560" visible="True" />
+  <float name="Covie Vehi Strafe Accel" offset="564" visible="true" />
+  <float name="Unknown" offset="568" visible="False" />
+  <float name="Unknown" offset="572" visible="False" />
+  <float name="Unknown" offset="576" visible="False" />
+  <undefined name="Unknown" offset="580" visible="False" />
+  <unused offset="584" size="4" />
+  <float name="Unknown" offset="588" visible="False" />
+  <float name="Unknown" offset="592" visible="False" />
+  <float name="Unknown" offset="596" visible="False" />
+  <float name="Unknown" offset="600" visible="False" />
+  <float name="Unknown" offset="604" visible="False" />
+  <float name="Human Horsepower/Weight/Grip" offset="608" visible="True" />
+  <float name="Human overall speed" offset="612" visible="True" />
+  <struct name="Unknown" offset="616" visible="false" size="68" label="">
+    <float name="Unknown" offset="0" visible="False" />
+    <float name="Unknown" offset="4" visible="False" />
+    <float name="Unknown" offset="8" visible="False" />
+    <float name="Unknown" offset="12" visible="False" />
+    <float name="Unknown" offset="16" visible="False" />
+    <float name="Unknown" offset="20" visible="False" />
+    <unused offset="24" size="4" />
+    <float name="Unknown" offset="28" visible="False" />
+    <float name="Unknown" offset="32" visible="False" />
+    <float name="Unknown" offset="36" visible="False" />
+    <float name="Unknown" offset="40" visible="False" />
+    <float name="Unknown" offset="44" visible="False" />
+    <float name="Unknown" offset="48" visible="False" />
+    <float name="Unknown" offset="52" visible="False" />
+    <float name="Unknown" offset="56" visible="False" />
+    <float name="Unknown" offset="60" visible="False" />
+    <float name="Unknown" offset="64" visible="False" />
+  </struct>
+  <float name="Unknown" offset="624" visible="False" />
+  <float name="Unknown" offset="628" visible="False" />
+  <float name="Unknown" offset="632" visible="False" />
+  <float name="Unknown" offset="636" visible="False" />
+  <float name="Unknown" offset="640" visible="False" />
+  <tag name="Unused" offset="644" visible="True" />
+  <id name="Unused" offset="648" visible="True" />
+  <tag name="Unknown" offset="652" visible="False" />
+  <id name="Unknown" offset="656" visible="False" />
+  <tag name="Unused" offset="660" visible="True" />
+  <id name="Unused" offset="664" visible="True" />
+  <tag name="Unknown" offset="668" visible="False" />
+  <id name="Unknown" offset="672" visible="False" />
+  <tag name="Unknown" offset="676" visible="False" />
+  <id name="Unknown" offset="680" visible="False" />
+  <unused offset="684" size="4" />
+  <float name="Human vehi handling" offset="688" visible="True" />
+  <float name="Human vehi hight from ground" offset="692" visible="True" />
+  <float name="Human vehi Bounce/Gravity/Weight/accel/deccel" offset="696" visible="True" />
+  <float name="Human vehi top speed" offset="700" visible="True" />
+  <float name="Traction" offset="704" visible="True" />
+  <float name="Unknown" offset="708" visible="False" />
+  <unused offset="712" size="16" />
+  <float name="Covie Vehi turn angle(flipy)" offset="728" visible="True" />
+  <float name="Unknown" offset="732" visible="False" />
+  <float name="Unknown" offset="736" visible="False" />
+  <float name="Unknown" offset="740" visible="False" />
+  <struct name="Unknown" offset="744" visible="false" size="76" label="">
+    <undefined name="Unknown" offset="0" visible="False" />
+    <undefined name="Unknown" offset="4" visible="False" />
+    <float name="Unknown" offset="8" visible="False" />
+    <float name="Unknown" offset="12" visible="False" />
+    <float name="Unknown" offset="16" visible="False" />
+    <float name="Unknown" offset="20" visible="False" />
+    <float name="Unknown" offset="24" visible="False" />
+    <float name="Unknown" offset="28" visible="False" />
+    <float name="Unknown" offset="32" visible="False" />
+    <unused offset="36" size="4" />
+    <undefined name="Unknown" offset="40" visible="False" />
+    <undefined name="Unknown" offset="44" visible="False" />
+    <undefined name="Unknown" offset="48" visible="False" />
+    <stringid name="Unknown" offset="52" visible="False" />
+    <float name="Unknown" offset="56" visible="False" />
+    <float name="Unknown" offset="60" visible="False" />
+    <float name="Unknown" offset="64" visible="False" />
+    <float name="Unknown" offset="68" visible="False" />
+    <float name="Unknown" offset="72" visible="False" />
+  </struct>
+  <struct name="Human Shocks" offset="752" visible="true" size="76" label="">
+    <stringid name="Full Marker Name" offset="0" visible="True" />
+    <undefined name="Unknown" offset="4" visible="False" />
+    <float name="Unknown" offset="8" visible="False" />
+    <float name="Traction" offset="12" visible="True" />
+    <float name="Unknown" offset="16" visible="False" />
+    <undefined name="Unknown" offset="20" visible="False" />
+    <float name="Weight" offset="24" visible="False" />
+    <float name="Unknown" offset="28" visible="False" />
+    <float name="Unknown" offset="32" visible="False" />
+    <float name="Unknown" offset="36" visible="False" />
+    <unused offset="40" size="20" />
+    <stringid name="Material Type" offset="60" visible="True" />
+    <undefined name="Unknown" offset="64" visible="False" />
+    <stringid name="Shortened Marker Name" offset="68" visible="True" />
+    <undefined name="Unknown" offset="72" visible="False" />
+  </struct>
+  <struct name="Unknown" offset="760" visible="false" size="672" label="">
+    <undefined name="Unknown" offset="0" visible="False" />
+    <undefined name="Unknown" offset="4" visible="False" />
+    <unused offset="8" size="4" />
+    <undefined name="Unknown" offset="12" visible="False" />
+    <undefined name="Unknown" offset="16" visible="False" />
+    <undefined name="Unknown" offset="20" visible="False" />
+    <undefined name="Unknown" offset="24" visible="False" />
+    <unused offset="28" size="4" />
+    <undefined name="Unknown" offset="32" visible="False" />
+    <unused offset="36" size="4" />
+    <float name="Unknown" offset="40" visible="False" />
+    <unused offset="44" size="4" />
+    <float name="Unknown" offset="48" visible="False" />
+    <unused offset="52" size="4" />
+    <undefined name="Unknown" offset="56" visible="False" />
+    <undefined name="Unknown" offset="60" visible="False" />
+    <unused offset="64" size="8" />
+    <float name="Unknown" offset="72" visible="False" />
+    <float name="Unknown" offset="76" visible="False" />
+    <float name="Unknown" offset="80" visible="False" />
+    <float name="Unknown" offset="84" visible="False" />
+    <undefined name="Unknown" offset="88" visible="False" />
+    <float name="Unknown" offset="92" visible="False" />
+    <undefined name="Unknown" offset="96" visible="False" />
+    <undefined name="Unknown" offset="100" visible="False" />
+    <undefined name="Unknown" offset="104" visible="False" />
+    <undefined name="Unknown" offset="108" visible="False" />
+    <undefined name="Unknown" offset="112" visible="False" />
+    <float name="Unknown" offset="116" visible="False" />
+    <float name="Unknown" offset="120" visible="False" />
+    <float name="Unknown" offset="124" visible="False" />
+    <undefined name="Unknown" offset="128" visible="False" />
+    <float name="Unknown" offset="132" visible="False" />
+    <float name="Unknown" offset="136" visible="False" />
+    <float name="Unknown" offset="140" visible="False" />
+    <float name="Unknown" offset="144" visible="False" />
+    <float name="Unknown" offset="148" visible="False" />
+    <float name="Unknown" offset="152" visible="False" />
+    <float name="Unknown" offset="156" visible="False" />
+    <float name="Unknown" offset="160" visible="False" />
+    <float name="Unknown" offset="164" visible="False" />
+    <float name="Unknown" offset="168" visible="False" />
+    <float name="Unknown" offset="172" visible="False" />
+    <float name="Unknown" offset="176" visible="False" />
+    <float name="Unknown" offset="180" visible="False" />
+    <float name="Unknown" offset="184" visible="False" />
+    <float name="Unknown" offset="188" visible="False" />
+    <float name="Unknown" offset="192" visible="False" />
+    <float name="Unknown" offset="196" visible="False" />
+    <float name="Unknown" offset="200" visible="False" />
+    <float name="Unknown" offset="204" visible="False" />
+    <float name="Unknown" offset="208" visible="False" />
+    <float name="Unknown" offset="212" visible="False" />
+    <float name="Unknown" offset="216" visible="False" />
+    <float name="Unknown" offset="220" visible="False" />
+    <float name="Unknown" offset="224" visible="False" />
+    <float name="Unknown" offset="228" visible="False" />
+    <float name="Unknown" offset="232" visible="False" />
+    <float name="Unknown" offset="236" visible="False" />
+    <undefined name="Unknown" offset="240" visible="False" />
+    <undefined name="Unknown" offset="244" visible="False" />
+    <undefined name="Unknown" offset="248" visible="False" />
+    <undefined name="Unknown" offset="252" visible="False" />
+    <float name="Unknown" offset="256" visible="False" />
+    <undefined name="Unknown" offset="260" visible="False" />
+    <float name="Unknown" offset="264" visible="False" />
+    <float name="Unknown" offset="268" visible="False" />
+    <float name="Unknown" offset="272" visible="False" />
+    <undefined name="Unknown" offset="276" visible="False" />
+    <float name="Unknown" offset="280" visible="False" />
+    <float name="Unknown" offset="284" visible="False" />
+    <float name="Unknown" offset="288" visible="False" />
+    <undefined name="Unknown" offset="292" visible="False" />
+    <float name="Unknown" offset="296" visible="False" />
+    <float name="Unknown" offset="300" visible="False" />
+    <float name="Unknown" offset="304" visible="False" />
+    <undefined name="Unknown" offset="308" visible="False" />
+    <float name="Unknown" offset="312" visible="False" />
+    <float name="Unknown" offset="316" visible="False" />
+    <unused offset="320" size="352" />
+  </struct>
+</plugin>

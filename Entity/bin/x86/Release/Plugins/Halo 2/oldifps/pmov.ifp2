@@ -1,0 +1,19 @@
+<plugin class="pmov" author="Iron_Forge" version="0.1" headersize="20">
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<tag name="Particle Physics"  offset="0" visible="true" />
+<id name="Particle Physics"  offset="4" visible="true" />
+<undefined name="Unknown"  offset="8" visible="false" />
+<struct name="Unknown6" offset="12" visible="false"  size="20">
+<undefined name="Unknown"  offset="0" visible="false" />
+<struct name="Unknown8" offset="4" visible="false"  size="20">
+<undefined name="Unknown"  offset="0" visible="false" />
+<undefined name="Unknown"  offset="4" visible="false" />
+<undefined name="Unknown"  offset="8" visible="false" />
+<struct name="Unknown12" offset="12" visible="false"  size="1">
+<byte name="Floats"  offset="0" visible="false" />
+</struct>
+</struct>
+<undefined name="Unknown"  offset="12" visible="false" />
+<undefined name="Unknown"  offset="16" visible="false" />
+</struct>
+</plugin>

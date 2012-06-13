@@ -1,0 +1,14 @@
+<plugin class="wgtz" author="Iron_Forge" version="1.0" headersize="32">
+  <revision author="shade45" version="1.0">Completed</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <tag name="Globals" offset="0" visible="True" />
+  <id name="Globals" offset="4" visible="True" />
+  <struct name="Collection" offset="8" visible="true" size="8" label="">
+    <tag name="Game Shell" offset="0" visible="True" />
+    <id name="Game Shell" offset="4" visible="True" />
+  </struct>
+  <tag name="Gametype Collection" offset="16" visible="True" />
+  <id name="Gametype Collection" offset="20" visible="True" />
+  <tag name="Unicode Strings" offset="24" visible="True" />
+  <id name="Unicode Strings" offset="28" visible="True" />
+</plugin>

@@ -1,0 +1,13 @@
+<plugin class="trak" author="Iron_Forge" version="0.1" headersize="12">
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<unused size="4"  offset="0" />
+<struct name="Unknown4" offset="4" visible="false"  size="28">
+<undefined name="Unknown"  offset="0" visible="false" />
+<undefined name="Unknown"  offset="4" visible="false" />
+<undefined name="Unknown"  offset="8" visible="false" />
+<undefined name="Unknown"  offset="12" visible="false" />
+<undefined name="Unknown"  offset="16" visible="false" />
+<undefined name="Unknown"  offset="20" visible="false" />
+<undefined name="Unknown"  offset="24" visible="false" />
+</struct>
+</plugin>

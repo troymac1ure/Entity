@@ -1,0 +1,400 @@
+<plugin class="mulg" author="XZodia" version="0.7">
+<revision author="XZodia" version="0.71">Named Team Stuff</revision>
+<revision author="XZodia" version="0.7">Name a lot of Unknowns</revision>
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<struct name="Team Settings" visible="true">
+  <tag name="Player names" visible="true" />
+  <id name="Player names" visible="true" />
+  <tag name="Team names" visible="true" />
+  <id name="Team names" visible="true" />
+  <struct name="Team colors" visible="true">
+   <float name="Color Red" visible="true" />
+   <float name="Color Green" visible="true" />
+   <float name="Color Blue" visible="true" />
+  </struct>
+  <tag name="Messages" visible="true" />
+  <id name="Messages" visible="true" />
+</struct>
+<struct name="GameType Settings" visible="True">
+  <tag name="CTF Object" visible="True" />
+  <id name="CTF Object" visible="True" />
+  <tag name="Oddball Object" visible="True" />
+  <id name="Oddball Object" visible="True" />
+  <tag name="Default Biped?" visible="True" />
+  <id name="Default Biped?" visible="True" />
+  <unused size="24" default="0xFF" />
+  <tag name="Juggernaut Powers" visible="True" />
+  <id name="Juggernaut Powers" visible="True" />
+  <tag name="Assault Object" visible="True" />
+  <id name="Assault Object" visible="True" />
+  <unused size="40" default="0xFF" />
+  <struct name="Weapon Palette" visible="True">
+   <tag name="Weapon" visible="True" />
+   <id name="Weapon" visible="True" />
+  </struct>
+  <struct name="Vehi Palette" visible="True">
+   <tag name="Vehi" visible="True" />
+   <id name="Vehi" visible="True" />
+  </struct>
+  <struct name="Grenade Palette" visible="True">
+   <tag name="Grenade" visible="True" />
+   <id name="Grenade" visible="True" />
+  </struct>
+  <struct name="Powerup Palette" visible="True">
+   <tag name="Powerup" visible="True" />
+   <id name="Powerup" visible="True" />
+  </struct>
+  <tag name="Multiplayer Messages" visible="True" />
+  <id name="Multiplayer Messages" visible="True" />
+  <struct name="Sounds" visible="True">
+   <tag name="Sound" visible="True" />
+   <id name="Sound" visible="True" />
+  </struct>
+  <struct name="Generic Messages" visible="True">
+   <unused size="4" default="0" />
+   <undefined name="Unknown" visible="False" />
+   <unused size="4" default="0" />
+   <stringid name="Caused By" visible="True" />
+   <undefined name="Unknown" visible="False" />
+   <stringid name="Unknown" visible="False" />
+   <unused size="40" default="0" />
+   <undefined name="Unknown" visible="False" />
+   <tag name="English" visible="True" />
+   <id name="English" visible="True" />
+   <tag name="Japanese" visible="True" />
+   <id name="Japanese" visible="True" />
+   <tag name="German" visible="True" />
+   <id name="German" visible="True" />
+   <tag name="French" visible="True" />
+   <id name="French" visible="True" />
+   <tag name="Spainish" visible="True" />
+   <id name="Spainish" visible="True" />
+   <tag name="Italinan" visible="True" />
+   <id name="Italinan" visible="True" />
+   <tag name="Korean" visible="True" />
+   <id name="Korean" visible="True" />
+   <tag name="Chinese" visible="True" />
+   <id name="Chinese" visible="True" />
+   <tag name="Unused" visible="True" />
+   <id name="Unused" visible="True" />
+   <unused size="28" default="0" />
+  </struct>
+  <struct name="Killing Spree Messages" visible="True">
+   <undefined name="Unknown" visible="False" />
+   <undefined name="Unknown" visible="False" />
+   <unused size="4" default="0" />
+   <stringid name="Caused By" visible="True" />
+   <unused size="48" default="0" />
+   <undefined name="Unknown" visible="False" />
+   <tag name="English" visible="True" />
+   <id name="English" visible="True" />
+   <tag name="Japanese" visible="True" />
+   <id name="Japanese" visible="True" />
+   <tag name="German" visible="True" />
+   <id name="German" visible="True" />
+   <tag name="French" visible="True" />
+   <id name="French" visible="True" />
+   <tag name="Spainish" visible="True" />
+   <id name="Spainish" visible="True" />
+   <tag name="Italinan" visible="True" />
+   <id name="Italinan" visible="True" />
+   <tag name="Korean" visible="True" />
+   <id name="Korean" visible="True" />
+   <tag name="Chinese" visible="True" />
+   <id name="Chinese" visible="True" />
+   <tag name="Unused" visible="True" />
+   <id name="Unused" visible="True" />
+   <unused size="28" default="0" />
+  </struct>
+  <struct name="Slayer Messages" visible="True">
+   <undefined name="Unknown" visible="False" />
+   <undefined name="Unknown" visible="False" />
+   <unused size="4" default="0" />
+   <stringid name="Caused By" visible="True" />
+   <unused size="48" default="0" />
+   <undefined name="Unknown" visible="False" />
+   <tag name="English" visible="True" />
+   <id name="English" visible="True" />
+   <tag name="Japanese" visible="True" />
+   <id name="Japanese" visible="True" />
+   <tag name="German" visible="True" />
+   <id name="German" visible="True" />
+   <tag name="French" visible="True" />
+   <id name="French" visible="True" />
+   <tag name="Spainish" visible="True" />
+   <id name="Spainish" visible="True" />
+   <tag name="Italinan" visible="True" />
+   <id name="Italinan" visible="True" />
+   <tag name="Korean" visible="True" />
+   <id name="Korean" visible="True" />
+   <tag name="Chinese" visible="True" />
+   <id name="Chinese" visible="True" />
+   <tag name="Unused" visible="True" />
+   <id name="Unused" visible="True" />
+   <unused size="28" default="0" />
+  </struct>
+  <struct name="CTF Messages" visible="True">
+   <undefined name="Unknown" visible="False" />
+   <undefined name="Unknown" visible="False" />
+   <unused size="4" default="0" />
+   <stringid name="Caused By" visible="True" />
+   <unused size="48" default="0" />
+   <undefined name="Unknown" visible="False" />
+   <tag name="English" visible="True" />
+   <id name="English" visible="True" />
+   <tag name="Japanese" visible="True" />
+   <id name="Japanese" visible="True" />
+   <tag name="German" visible="True" />
+   <id name="German" visible="True" />
+   <tag name="French" visible="True" />
+   <id name="French" visible="True" />
+   <tag name="Spainish" visible="True" />
+   <id name="Spainish" visible="True" />
+   <tag name="Italinan" visible="True" />
+   <id name="Italinan" visible="True" />
+   <tag name="Korean" visible="True" />
+   <id name="Korean" visible="True" />
+   <tag name="Chinese" visible="True" />
+   <id name="Chinese" visible="True" />
+   <tag name="Unused" visible="True" />
+   <id name="Unused" visible="True" />
+   <unused size="28" default="0" />
+  </struct>
+  <struct name="Oddball Messages" visible="True">
+   <undefined name="Unknown" visible="False" />
+   <undefined name="Unknown" visible="False" />
+   <unused size="4" default="0" />
+   <stringid name="Caused By" visible="True" />
+   <undefined name="Unknown" visible="False" />
+   <unused size="44" default="0" />
+   <undefined name="Unknown" visible="False" />
+   <tag name="English" visible="True" />
+   <id name="English" visible="True" />
+   <tag name="Japanese" visible="True" />
+   <id name="Japanese" visible="True" />
+   <tag name="German" visible="True" />
+   <id name="German" visible="True" />
+   <tag name="French" visible="True" />
+   <id name="French" visible="True" />
+   <tag name="Spainish" visible="True" />
+   <id name="Spainish" visible="True" />
+   <tag name="Italinan" visible="True" />
+   <id name="Italinan" visible="True" />
+   <tag name="Korean" visible="True" />
+   <id name="Korean" visible="True" />
+   <tag name="Chinese" visible="True" />
+   <id name="Chinese" visible="True" />
+   <tag name="Unused" visible="True" />
+   <id name="Unused" visible="True" />
+   <unused size="28" default="0" />
+  </struct>
+  <unused size="8" default="0" />
+  <struct name="KOTH Messages" visible="True">
+   <undefined name="Unknown" visible="False" />
+   <undefined name="Unknown" visible="False" />
+   <unused size="4" default="0" />
+   <stringid name="Unknown" visible="False" />
+   <unused size="48" default="0" />
+   <undefined name="Unknown" visible="False" />
+   <tag name="English" visible="True" />
+   <id name="English" visible="True" />
+   <tag name="Japanese" visible="True" />
+   <id name="Japanese" visible="True" />
+   <tag name="German" visible="True" />
+   <id name="German" visible="True" />
+   <tag name="French" visible="True" />
+   <id name="French" visible="True" />
+   <tag name="Spainish" visible="True" />
+   <id name="Spainish" visible="True" />
+   <tag name="Italinan" visible="True" />
+   <id name="Italinan" visible="True" />
+   <tag name="Korean" visible="True" />
+   <id name="Korean" visible="True" />
+   <tag name="Chinese" visible="True" />
+   <id name="Chinese" visible="True" />
+   <tag name="Unused" visible="True" />
+   <id name="Unused" visible="True" />
+   <unused size="28" default="0" />
+  </struct>
+  <unused size="8" default="0" />
+  <struct name="Juggernaut Messages" visible="True">
+   <undefined name="Unknown" visible="False" />
+   <undefined name="Unknown" visible="False" />
+   <unused size="4" default="0" />
+   <stringid name="Caused By" visible="True" />
+   <unused size="48" default="0" />
+   <undefined name="Unknown" visible="False" />
+   <tag name="English" visible="True" />
+   <id name="English" visible="True" />
+   <tag name="Japanese" visible="True" />
+   <id name="Japanese" visible="True" />
+   <tag name="German" visible="True" />
+   <id name="German" visible="True" />
+   <tag name="French" visible="True" />
+   <id name="French" visible="True" />
+   <tag name="Spainish" visible="True" />
+   <id name="Spainish" visible="True" />
+   <tag name="Italinan" visible="True" />
+   <id name="Italinan" visible="True" />
+   <tag name="Korean" visible="True" />
+   <id name="Korean" visible="True" />
+   <tag name="Chinese" visible="True" />
+   <id name="Chinese" visible="True" />
+   <tag name="Unused" visible="True" />
+   <id name="Unused" visible="True" />
+   <unused size="28" default="0" />
+  </struct>
+  <struct name="Territorys Messages" visible="True">
+   <undefined name="Unknown" visible="False" />
+   <undefined name="Unknown" visible="False" />
+   <unused size="4" default="0" />
+   <stringid name="Caused By" visible="True" />
+   <unused size="48" default="0" />
+   <undefined name="Unknown" visible="False" />
+   <tag name="English" visible="True" />
+   <id name="English" visible="True" />
+   <tag name="Japanese" visible="True" />
+   <id name="Japanese" visible="True" />
+   <tag name="German" visible="True" />
+   <id name="German" visible="True" />
+   <tag name="French" visible="True" />
+   <id name="French" visible="True" />
+   <tag name="Spainish" visible="True" />
+   <id name="Spainish" visible="True" />
+   <tag name="Italinan" visible="True" />
+   <id name="Italinan" visible="True" />
+   <tag name="Korean" visible="True" />
+   <id name="Korean" visible="True" />
+   <tag name="Chinese" visible="True" />
+   <id name="Chinese" visible="True" />
+   <tag name="Unused" visible="True" />
+   <id name="Unused" visible="True" />
+   <unused size="28" default="0" />
+  </struct>
+  <struct name="Assualt Messages" visible="True">
+   <undefined name="Unknown" visible="False" />
+   <undefined name="Unknown" visible="False" />
+   <unused size="4" default="0" />
+   <stringid name="Caused By" visible="True" />
+   <undefined name="Unknown" visible="False" />
+   <unused size="40" default="0" />
+   <float name="Unknown" visible="False" />
+   <undefined name="Unknown" visible="False" />
+   <tag name="English" visible="True" />
+   <id name="English" visible="True" />
+   <tag name="Japanese" visible="True" />
+   <id name="Japanese" visible="True" />
+   <tag name="German" visible="True" />
+   <id name="German" visible="True" />
+   <tag name="French" visible="True" />
+   <id name="French" visible="True" />
+   <tag name="Spainish" visible="True" />
+   <id name="Spainish" visible="True" />
+   <tag name="Italinan" visible="True" />
+   <id name="Italinan" visible="True" />
+   <tag name="Korean" visible="True" />
+   <id name="Korean" visible="True" />
+   <tag name="Chinese" visible="True" />
+   <id name="Chinese" visible="True" />
+   <tag name="Unused" visible="True" />
+   <id name="Unused" visible="True" />
+   <unused size="28" default="0" />
+  </struct>
+  <unused size="32" default="0" />
+  <unused size="8" default="0xFF" />
+  <tag name="Unused" visible="True" />
+  <id name="Unused" visible="True" />
+  <unused size="48" default="0" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <unused size="40" default="0" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <unused size="44" default="0" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <unused size="16" default="0" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <float name="Unknown" visible="False" />
+  <unused size="624" default="0" />
+  <struct name="NP Killer Effects" visible="True">
+   <float name="Unknown" visible="False" />
+   <unused size="4" default="0" />
+   <float name="Unknown" visible="False" />
+   <float name="Unknown" visible="False" />
+   <float name="Unknown" visible="False" />
+   <float name="Unknown" visible="False" />
+   <float name="Unknown" visible="False" />
+   <float name="Unknown" visible="False" />
+   <float name="Unknown" visible="False" />
+   <float name="Unknown" visible="False" />
+   <float name="Unknown" visible="False" />
+   <unused size="148" default="0" />
+   <tag name="Shader" visible="True" />
+   <id name="Shader" visible="True" />
+   <unused size="16" default="0" />
+   <float name="Unknown" visible="False" />
+   <tag name="Effect" visible="True" />
+   <id name="Effect" visible="True" />
+   <tag name="Damage Effect" visible="True" />
+   <id name="Damage Effect" visible="True" />
+   <unused size="8" default="0xFF" />
+   <stringid name="Death By (1)" visible="True" />
+   <stringid name="Death By (2)" visible="True" />
+   <unused size="100" default="0" />
+  </struct>
+  <struct name="Players States" visible="True">
+   <unused size="4" default="0" />
+   <undefined name="Unknown" visible="False" />
+   <stringid name="Primary State" visible="True" />
+   <stringid name="Secondary State" visible="True" />
+   <unused size="8" default="0xFF" />
+   <unused size="4" default="0" />
+  </struct>
+  <tag name="HUD ScoreBoard" visible="True" />
+  <id name="HUD ScoreBoard" visible="True" />
+  <tag name="Waypoint" visible="True" />
+  <id name="Waypoint" visible="True" />
+  <tag name="Emblem" visible="True" />
+  <id name="Emblem" visible="True" />
+  <tag name="Waypoint Meter" visible="True" />
+  <id name="Waypoint Meter" visible="True" />
+  <tag name="Dead Team-Mate Arrow" visible="True" />
+  <id name="Dead Team-Mate Arrow" visible="True" />
+</struct>
+</plugin>

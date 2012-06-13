@@ -1,0 +1,24 @@
+<plugin class="egor" author="Iron_Forge" version="0.1">
+ <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+ <unused size="64" default="0" />
+ <tag name="Unknown" visible="false" />
+ <id name="Unknown" visible="false" />
+ <unused size="64" default="0" />
+ <struct name="Unknown" visible="false">
+  <unused size="8" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="68" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="12" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="64" default="0" />
+  <struct name="Unknown" visible="false">
+   <unused size="68" default="0" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <unused size="8" default="0" />
+   <float name="Unknown" visible="false" />
+  </struct>
+ </struct>
+</plugin>

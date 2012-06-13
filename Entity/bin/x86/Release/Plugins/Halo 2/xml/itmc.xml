@@ -1,0 +1,22 @@
+<plugin>
+	<tag>itmc</tag>
+	<struct>
+		<name>Main</name>
+		<size>0</size>
+		<value>
+			<type>float</type>
+			<offset>0x00c</offset>
+			<name>Respawn time (sec)?</name>
+		</value>
+		<value>
+			<type>short</type>
+			<offset>0x000</offset>
+			<name># respawned maybe?</name>
+		</value>
+		<value>
+			<type>short</type>
+			<offset>0x008</offset>
+			<name>0x008 (short)</name>
+		</value>
+	</struct>
+</plugin>

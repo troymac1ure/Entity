@@ -1,0 +1,128 @@
+<plugin class="weat" author="Shalted" version="0.4" headersize="176">
+  <revision author="Shalted" version="0.4">Added some values</revision>
+  <revision author="Shalted" version="0.2">Added some values</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <struct name="Particle" offset="0" size="140" label="">
+    <tag name="Particle Bitmap" offset="0"/>
+    <id name="Particle Bitmap" offset="4"/>
+    <float name="Spawn Spread L/R" offset="8"/>
+    <float name="Spawn Spread U/D" offset="12" />
+    <float name="Spawn Distance Max" offset="16"/>
+    <float name="Spawn Distance Min" offset="20"/>
+    <float name="Speed" offset="24"/>
+    <float name="Friction?" offset="28" visible="False" />
+    <float name="Unknown" offset="32" visible="False" />
+    <float name="Primary Particle Size\Scale" offset="36"/>
+    <float name="Secondary Particle Size\Scale" offset="40"/>
+    <undefined name="Unknown" offset="44" visible="False" />
+    <unused offset="48" size="16" />
+    <uint name="Raw Offset" offset="64" visible="True" />
+    <uint name="Raw Size" offset="68" visible="True" />
+    <uint name="Raw Header Size" offset="72" visible="True" />
+    <uint name="Raw Data Size" offset="76" visible="True" />
+    <struct name="Resource21" offset="80" visible="true" size="16" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <uint name="Size" offset="8" visible="True" />
+      <uint name="Offset" offset="12" visible="True" />
+    </struct>
+    <id name="Unknown" offset="88" visible="False" />
+    <undefined name="Unknown" offset="92" visible="False" />
+    <unused offset="96" size="4" />
+    <unused offset="100" size="8" />
+    <undefined name="Unknown" offset="108" visible="False" />
+    <float name="Unknown" offset="112" visible="False" />
+    <float name="Unknown" offset="116" visible="False" />
+    <float name="Unknown" offset="120" visible="False" />
+    <float name="Unknown" offset="124" visible="False" />
+    <unused offset="128" size="4" />
+    <undefined name="Unknown" offset="132" visible="False" />
+    <float name="Unknown" offset="136" visible="False" />
+  </struct>
+  <struct name="Fog Layer/Plane" offset="8" visible="false" size="936" label="">
+    <tag name="First Layer Map" offset="0"/>
+    <id name="First Layer Map" offset="4"/>
+    <tag name="Second Layer Map" offset="8"/>
+    <id name="Second Layer Map" offset="12"/>
+    <tag name="Third Layer Map" offset="16"/>
+    <id name="Third Layer Map" offset="20"/>
+    <float name="Unknown" offset="24" visible="False" />
+    <float name="Unknown" offset="28" visible="False" />
+    <float name="Unknown" offset="32" visible="False" />
+    <float name="Layer 1 Left\Right Movement" offset="36"/>
+    <float name="Layer 1 Diagonal Movement" offset="40"/>
+    <float name="Layer 1 Up\Down Movement" offset="44"/>
+    <float name="Layer 2 Left\Right Movement" offset="48"/>
+    <float name="Layer 2 Diagonal Movement" offset="52"/>
+    <float name="Layer 2 Up\Down Movement" offset="56"/>
+    <float name="Layer 3 Left\Right Movement" offset="60"/>
+    <float name="Layer 3 Diagonal Movement" offset="64"/>
+    <float name="Layer 3 Up\Down Movement" offset="68"/>
+    <float name="Layer 1 Scale" offset="72"/>
+    <float name="Layer 2 Scale" offset="76"/>
+    <float name="Layer 3 Scale" offset="80" visible="False" />
+    <float name="Layer 1 ?" offset="84" visible="False" />
+    <float name="Layer 1 ?" offset="88" visible="False" />
+    <unused offset="92" size="4" />
+    <float name="Layer 2 ?" offset="96" visible="False" />
+    <float name="Layer 2 ?" offset="100" visible="False" />
+    <unused offset="104" size="4" />
+    <float name="Layer 3 ?" offset="108" visible="False" />
+    <float name="Layer 3 ?" offset="112" visible="False" />
+    <unused offset="116" size="4" />
+    <float name="Total Size Something1" offset="120" visible="False" />
+    <float name="Total Size Something2" offset="124" visible="False" />
+    <float name="Min?" offset="128" visible="False" />
+    <float name="Max?" offset="132" visible="False" />
+    <float name="First Layer Density\Transparency" offset="136" visible="False" />
+    <float name="Second Layer Density\Transparency" offset="140" visible="False" />
+    <float name="Third Layer Density\Transparency" offset="144" visible="False" />
+    <undefined name="Unknown" offset="148" visible="False" />
+    <float name="Total R" offset="152"/>
+    <float name="Total G" offset="156"/>
+    <float name="Total B" offset="160"/>
+    <float name="Unknown" offset="164" visible="False" />
+    <float name="Unknown" offset="168" visible="False" />
+    <float name="Unknown" offset="172" visible="False" />
+    <float name="Unknown" offset="176" visible="False" />
+    <float name="Unknown" offset="180" visible="False" />
+    <float name="Unknown" offset="184" visible="False" />
+    <float name="Unknown" offset="188" visible="False" />
+    <float name="Unknown" offset="192" visible="False" />
+    <float name="Unknown" offset="196" visible="False" />
+    <unused offset="200" size="736" />
+  </struct>
+  <float name="Unknown" offset="16" visible="False" />
+  <undefined name="Global Fog Speed?" offset="20" visible="False" />
+  <undefined name="Unknown" offset="24" visible="False" />
+  <undefined name="Unknown" offset="28" visible="False" />
+  <float name="Unknown" offset="32" visible="False" />
+  <float name="Unknown" offset="36" visible="False" />
+  <float name="Unknown" offset="40" visible="False" />
+  <undefined name="Unknown" offset="44" visible="False" />
+  <unused offset="48" size="12" />
+  <undefined name="Unknown" offset="60" visible="False" />
+  <undefined name="Unknown" offset="64" visible="False" />
+  <undefined name="Unknown" offset="68" visible="False" />
+  <float name="Unknown" offset="72" visible="False" />
+  <float name="Unknown" offset="76" visible="False" />
+  <float name="Unknown" offset="80" visible="False" />
+  <float name="Unknown" offset="84" visible="False" />
+  <float name="Unknown" offset="88" visible="False" />
+  <undefined name="Unknown" offset="92" visible="False" />
+  <undefined name="Unknown" offset="96" visible="False" />
+  <undefined name="Unknown" offset="100" visible="False" />
+  <undefined name="Unknown" offset="104" visible="False" />
+  <undefined name="Unknown" offset="108" visible="False" />
+  <float name="Unknown" offset="112" visible="False" />
+  <undefined name="Unknown" offset="116" visible="False" />
+  <undefined name="Unknown" offset="120" visible="False" />
+  <unused offset="124" size="16" />
+  <float name="BG Inital gravity" offset="140" visible="False" />
+  <float name="Front/Back Studder"  offset="144"/>
+  <float name="Left/Right Studder" offset="148"/>
+  <float name="Up Darft Force" offset="152"/>
+  <float name="Down Darft Force" offset="156"/>
+  <unused offset="160" size="12" />
+  <float name="Unknown" offset="172"/>
+</plugin>

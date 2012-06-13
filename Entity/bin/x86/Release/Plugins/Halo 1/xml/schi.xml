@@ -1,0 +1,47 @@
+<plugin> 
+ <tag>schi</tag>
+ <struct>
+  <name>Main</name>
+  <size>0</size>
+  <value>
+   <type>float</type>
+   <offset>0x4</offset>
+   <name>Light Power</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x8</offset>
+   <name>Light: Red</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0xc</offset>
+   <name>Light: Green</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x10</offset>
+   <name>Light: Blue</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x14</offset>
+   <name>Tint: Red</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x18</offset>
+   <name>Tint: Green</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x1c</offset>
+   <name>Tint: Blue</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x34</offset>
+   <name>Lens Flare Spacing</name>
+  </value>
+ </struct>
+</plugin>

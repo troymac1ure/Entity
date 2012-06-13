@@ -1,0 +1,21 @@
+<plugin>
+	<tag>phmo</tag>
+	<struct>
+		<name>Main</name>
+		<size>0</size>
+		<value>
+			<type>bitmask32</type>
+			<offset>0x08</offset>
+			<name>Flags</name>
+			<bitmask>
+				<bit>2</bit>
+				<name>Alive</name>
+			</bitmask>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x04</offset>
+			<name>Object weight</name>
+		</value>
+	</struct>
+</plugin>

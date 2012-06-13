@@ -1,0 +1,12 @@
+<plugin class="goof" author="shade45" version="1">
+ <revision author="shade45" version="1">A easy system link fix by shade45</revision>
+  <struct name="Resources old">
+  <id name="Resource" />
+ </struct>
+  <struct name="Resources new">
+  <id name="Resource" />
+ </struct>
+  <struct name="Chunk count">
+  <short name="Number Of Chunks" visible="true" />
+ </struct>
+</plugin>

@@ -1,0 +1,176 @@
+<plugin class="proj" author="Iron_Forge" version="0.3" headersize="420">
+<revision author="Iron_Forge" version="0.3">Added some known values...</revision>
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<bitmask32 name="Flags"  offset="0" visible="true" >
+<option value="1" name="Does not cast shadow" />
+<option value="2" name="Transparent self-occlusion" />
+<option value="4" name="Brighter than it should be" />
+<option value="8" name="Not a pathfinding obstacle" />
+</bitmask32>
+<float name="Bounding Radius (world units)"  offset="4" visible="true" />
+<unused size="12"  offset="8" />
+<float name="Unknown"  offset="20" visible="false" />
+<unused size="4"  offset="24" />
+<undefined name="Unknown"  offset="28" visible="false" />
+<unused size="16"  offset="32" />
+<stringid name="Unknown"  offset="48" visible="false" />
+<tag name="Object Properties"  offset="52" visible="true" />
+<id name="Object Properties"  offset="56" visible="true" />
+<tag name="Unused"  offset="60" visible="false" />
+<id name="Unused"  offset="64" visible="false" />
+<unused size="8"  offset="68" />
+<tag name="Unused"  offset="76" visible="false" />
+<id name="Unused"  offset="80" visible="false" />
+<tag name="Material Effect"  offset="84" visible="true" />
+<id name="Material Effect"  offset="88" visible="true" />
+<unused size="8"  offset="92" />
+<struct name="Unknown27" offset="100" visible="false"  size="32">
+<unused size="4"  offset="0" />
+<stringid name="Unknown"  offset="4" visible="false" />
+<stringid name="Unknown"  offset="8" visible="false" />
+<unused size="8"  offset="12" />
+<undefined name="Unknown"  offset="20" visible="false" />
+<undefined name="Unknown"  offset="24" visible="false" />
+<unused size="4"  offset="28" />
+</struct>
+<float name="Unknown"  offset="108" visible="false" />
+<float name="Unknown"  offset="112" visible="false" />
+<float name="Unknown"  offset="116" visible="false" />
+<float name="Unknown"  offset="120" visible="false" />
+<float name="Unknown"  offset="124" visible="false" />
+<float name="Unknown"  offset="128" visible="false" />
+<float name="Unknown"  offset="132" visible="false" />
+<float name="Unknown"  offset="136" visible="false" />
+<float name="Unknown"  offset="140" visible="false" />
+<unused size="4"  offset="144" />
+<struct name="Attachments46" offset="148" visible="true"  size="24">
+<tag name="Type"  offset="0" visible="true" />
+<id name="Type"  offset="4" visible="true" />
+<stringid name="Marker"  offset="8" visible="true" />
+<unused size="4"  offset="12" />
+<stringid name="Unknown"  offset="16" visible="false" />
+<unused size="4"  offset="20" />
+</struct>
+<struct name="Widgets54" offset="156" visible="true"  size="8">
+<tag name="Reference"  offset="0" visible="true" />
+<id name="Reference"  offset="4" visible="true" />
+</struct>
+<unused size="8"  offset="164" />
+<struct name="Unknown59" offset="172" visible="false"  size="16">
+<unused size="8"  offset="0" />
+<struct name="Unknown61" offset="8" visible="false"  size="40">
+<unused size="8"  offset="0" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<float name="Unknown"  offset="28" visible="false" />
+<unused size="4"  offset="32" />
+<stringid name="Unknown"  offset="36" visible="false" />
+</struct>
+</struct>
+<struct name="Predicted Resource73" offset="180" visible="true"  size="8">
+<float name="Unknown"  offset="0" visible="false" />
+<id name="Resource"  offset="4" visible="true" />
+</struct>
+<bitmask32 name="Flags"  offset="188" visible="false" />
+<enum16 name="Detonation Timer Starts"  offset="192" visible="true" >
+<option value="0" name="Immediately" />
+<option value="1" name="After first bounce" />
+<option value="2" name="When at rest" />
+</enum16>
+<enum16 name="Impact Noise"  offset="194" visible="true" >
+<option value="0" name="Silent" />
+<option value="1" name="Medium" />
+<option value="2" name="Loud" />
+<option value="3" name="Shout" />
+<option value="4" name="Quiet" />
+</enum16>
+<float name="Unknown"  offset="196" visible="false" />
+<float name="Unknown"  offset="200" visible="false" />
+<float name="Unknown"  offset="204" visible="false" />
+<float name="Unknown"  offset="208" visible="false" />
+<float name="Unknown"  offset="212" visible="false" />
+<float name="Unknown"  offset="216" visible="false" />
+<float name="Unknown"  offset="220" visible="false" />
+<float name="Unknown"  offset="224" visible="false" />
+<undefined name="Unknown"  offset="228" visible="false" />
+<tag name="Detonation Start"  offset="232" visible="true" />
+<id name="Detonation Start"  offset="236" visible="true" />
+<tag name="Airborne Detonation"  offset="240" visible="true" />
+<id name="Airborne Detonation"  offset="244" visible="true" />
+<tag name="Standard Detonation"  offset="248" visible="true" />
+<id name="Standard Detonation"  offset="252" visible="true" />
+<tag name="Explosion Damage"  offset="256" visible="true" />
+<id name="Explosion Damage"  offset="260" visible="true" />
+<tag name="Attached Explosion Damage"  offset="264" visible="true" />
+<id name="Attached Explosion Damage"  offset="268" visible="true" />
+<tag name="Super Detonation"  offset="272" visible="true" />
+<id name="Super Detonation"  offset="276" visible="true" />
+<tag name="Super Detonation Damage"  offset="280" visible="true" />
+<id name="Super Detonation Damage"  offset="284" visible="true" />
+<tag name="Round Explode"  offset="288" visible="true" />
+<id name="Round Explode"  offset="292" visible="true" />
+<undefined name="Unknown"  offset="296" visible="false" />
+<tag name="Attached Super Detonation Damage"  offset="300" visible="true" />
+<id name="Attached Super Detonation Damage"  offset="304" visible="true" />
+<float name="Unknown"  offset="308" visible="false" />
+<tag name="Fly By"  offset="312" visible="true" />
+<id name="Fly By"  offset="316" visible="true" />
+<tag name="Impact Effect"  offset="320" visible="true" />
+<id name="Impact Effect"  offset="324" visible="true" />
+<tag name="Impact Damage"  offset="328" visible="true" />
+<id name="Impact Damage"  offset="332" visible="true" />
+<float name="Unknown"  offset="336" visible="false" />
+<tag name="Boarding Damage"  offset="340" visible="true" />
+<id name="Boarding Damage"  offset="344" visible="true" />
+<tag name="Boarding Damage"  offset="348" visible="true" />
+<id name="Boarding Damage"  offset="352" visible="true" />
+<float name="Air Gravity Scale"  offset="356" visible="true" />
+<float name="Air Damage Range (min)"  offset="360" visible="true" />
+<float name="Air Damage Range (max)"  offset="364" visible="true" />
+<float name="Water Gravity Scale"  offset="368" visible="true" />
+<float name="Water Damage Range (min)"  offset="372" visible="true" />
+<float name="Water Damage Range (max)"  offset="376" visible="true" />
+<float name="Initial Velocity"  offset="380" visible="true" />
+<float name="Final Velocity"  offset="384" visible="true" />
+<undefined name="Unknown"  offset="388" visible="false" />
+<float name="Unknown"  offset="392" visible="false" />
+<float name="Unknown"  offset="396" visible="false" />
+<float name="Unknown"  offset="400" visible="false" />
+<undefined name="Unknown"  offset="404" visible="false" />
+<float name="Unknown"  offset="408" visible="false" />
+<struct name="Material Responses144" offset="412" visible="false"  size="88">
+<bitmask16 name="Unknown"  offset="0" visible="false" />
+<enum16 name="Default Response"  offset="2" visible="true" >
+<option value="0" name="Disappear" />
+<option value="1" name="Detonate" />
+<option value="2" name="Reflect" />
+<option value="3" name="Overpenetrate" />
+<option value="4" name="Attach" />
+</enum16>
+<tag name="Default Effect"  offset="4" visible="true" />
+<id name="Default Effect"  offset="8" visible="true" />
+<stringid name="Surface Type"  offset="12" visible="true" />
+<bitmask32 name="Unknown"  offset="16" visible="false" />
+<enum16 name="Unknown"  offset="20" visible="false" />
+<enum16 name="Unknown"  offset="22" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<unused size="4"  offset="28" />
+<float name="Unknown"  offset="32" visible="false" />
+<unused size="4"  offset="36" />
+<float name="Unknown"  offset="40" visible="false" />
+<tag name="Unused"  offset="44" visible="false" />
+<id name="Unused"  offset="48" visible="false" />
+<unused size="4"  offset="52" />
+<undefined name="Unknown"  offset="56" visible="false" />
+<unused size="4"  offset="60" />
+<tag name="Unused"  offset="64" visible="false" />
+<id name="Unused"  offset="68" visible="false" />
+<float name="Unknown"  offset="72" visible="false" />
+<float name="Unknown"  offset="76" visible="false" />
+<float name="Unknown"  offset="80" visible="false" />
+<float name="Unknown"  offset="84" visible="false" />
+</struct>
+</plugin>

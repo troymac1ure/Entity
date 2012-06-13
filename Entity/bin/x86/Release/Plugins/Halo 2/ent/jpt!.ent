@@ -1,0 +1,174 @@
+<plugin class="jpt!" author="XZodia" version="1.0" headersize="200">
+  <revision author="XZodia" version="1.0">Completed</revision>
+  <revision author="WastingBody" version="0.15">Added xml values...</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <float name="Radius" offset="0" visible="True" />
+  <float name="...To" offset="4" visible="True" />
+  <float name="Cutoff Scale" offset="8" visible="True" />
+  <bitmask32 name="Flags" offset="12" visible="True">
+    <option name="Don't Scale Damage By Distance" value="0" />
+    <option name="Area Damage Players Only" value="1" />
+  </bitmask32>
+  <enum16 name="Side Effect" offset="16" visible="True">
+    <option name="None" value="0" />
+    <option name="Harmless" value="1" />
+    <option name="Lethal To The Unsuspecting" value="2" />
+    <option name="Emp" value="3" />
+  </enum16>
+  <enum16 name="Category" offset="18" visible="True">
+    <option name="None" value="0" />
+    <option name="Falling" value="1" />
+    <option name="Bullet" value="2" />
+    <option name="Grenade" value="3" />
+    <option name="High Explosive" value="4" />
+    <option name="Sniper" value="5" />
+    <option name="Melee" value="6" />
+    <option name="Flame" value="7" />
+    <option name="Mounted Weapon" value="8" />
+    <option name="Vehicle" value="9" />
+    <option name="Plasma" value="10" />
+    <option name="Needle" value="11" />
+    <option name="Shotgun" value="12" />
+  </enum16>
+  <bitmask32 name="Flags" offset="20" visible="True">
+    <option name="Does Not Hurt Owner" value="0" />
+    <option name="Can Cause Headshots" value="1" />
+    <option name="Pings Resistant Units" value="2" />
+    <option name="Does Not Hurt Friends" value="3" />
+    <option name="Does Not Ping Units" value="4" />
+    <option name="Detonates Explosives" value="5" />
+    <option name="Only Hurts Sheilds" value="6" />
+    <option name="Causes Flaming Death" value="7" />
+    <option name="Damage Indicators Always Point Down" value="8" />
+    <option name="Skips Sheilds" value="9" />
+    <option name="Only Hurts One Infection Form" value="11" />
+    <option name="Unused" value="12" />
+    <option name="Infection Form Pop" value="13" />
+    <option name="Ignore Seat Scale For Direct Damage" value="14" />
+    <option name="Forces Hard Ping" value="15" />
+    <option name="Does Not Hurt Players" value="16" />
+  </bitmask32>
+  <float name="AOE Core Radius" offset="24" visible="True" />
+  <float name="Damage Lower Bound" offset="28" visible="True" />
+  <float name="Damge Upper Bound" offset="32" visible="True" />
+  <float name="...To" offset="36" visible="True" />
+  <float name="Damage Inner Cone Angle" offset="40" visible="True" />
+  <float name="Damage Outter Cone Angle" offset="44" visible="True" />
+  <float name="Active Camoflage Damage" offset="48" visible="True" />
+  <float name="Stun" offset="52" visible="True" />
+  <float name="Max Stun" offset="56" visible="True" />
+  <float name="Stun Time" offset="60" visible="True" />
+  <float name="Instantaneous Acceleration (Force)" offset="64" visible="True" />
+  <float name="Rider Direct Damage Scale" offset="68" visible="True" />
+  <float name="Rider Max Transfer Damage" offset="72" visible="True" />
+  <float name="Rider Min Transfer Damage" offset="76" visible="True" />
+  <stringid name="General Damage" offset="80" visible="True" />
+  <stringid name="Specific Damage" offset="84" visible="True" />
+  <float name="AI Stun Radius" offset="88" visible="True" />
+  <float name="AI Stun Bounds" offset="92" visible="True" />
+  <float name="...To" offset="96" visible="True" />
+  <float name="Shake Radius" offset="100" visible="True" />
+  <float name="Emp Radius" offset="104" visible="True" />
+  <struct name="Player Responses" offset="108" visible="true" size="76" label="">
+    <enum16 name="Response Type" offset="0" visible="True">
+      <option name="Sheilded" value="0" />
+      <option name="UnSheiled" value="1" />
+      <option name="All" value="2" />
+    </enum16>
+    <enum32 name="Screen Flash Type" offset="2" visible="True">
+      <option name="None" value="0" />
+      <option name="Lighten" value="1" />
+      <option name="Darken" value="2" />
+      <option name="Max" value="3" />
+      <option name="Min" value="4" />
+      <option name="Invert" value="5" />
+      <option name="Tint" value="6" />
+    </enum32>
+    <enum16 name="Screen Flash Priority" offset="6" visible="True">
+      <option name="Low" value="0" />
+      <option name="Medium" value="1" />
+      <option name="High" value="2" />
+    </enum16>
+    <float name="Screen Flash Duration" offset="8" visible="True" />
+    <enum32 name="Screen Flash Fade Function" offset="12" visible="True">
+      <option name="Linear" value="0" />
+      <option name="Late" value="1" />
+      <option name="Very Late" value="2" />
+      <option name="Early" value="3" />
+      <option name="Very Early" value="4" />
+      <option name="Cosine" value="5" />
+      <option name="Zero" value="6" />
+      <option name="One" value="7" />
+    </enum32>
+    <float name="Screen Flash Max Intensity" offset="16" visible="True" />
+    <float name="Screen Flash Color A" offset="20" visible="True" />
+    <float name="Screen Flash Color R" offset="24" visible="True" />
+    <float name="Screen Flash Color G" offset="28" visible="True" />
+    <float name="Screen Flash Color B" offset="32" visible="True" />
+    <float name="Low Frequency Vibration Duration" offset="36" visible="True" />
+    <struct name="Low Frequency Vibration" offset="40" visible="true" size="1" label="">
+      <byte name="Data" offset="0" visible="True" />
+    </struct>
+    <float name="High Frequency Vibration Duration" offset="48" visible="True" />
+    <struct name="High Frequency Vibration" offset="52" visible="true" size="1" label="">
+      <byte name="Data" offset="0" visible="True" />
+    </struct>
+    <stringid name="Sound Effect Name" offset="60" visible="True" />
+    <float name="Sound Effect Duration" offset="64" visible="True" />
+    <struct name="Sound Effect" offset="68" visible="true" size="12" label="">
+      <unused offset="0" size="12" />
+    </struct>
+  </struct>
+  <float name="Temporary Camera Impulse Duration" offset="116" visible="True" />
+  <enum32 name="Temporary Camera Impulse Fade Function" offset="120" visible="True">
+    <option name="Linear" value="0" />
+    <option name="Late" value="1" />
+    <option name="Very Late" value="2" />
+    <option name="Early" value="3" />
+    <option name="Very Early" value="4" />
+    <option name="Cosine" value="5" />
+    <option name="Zero" value="6" />
+    <option name="One" value="7" />
+  </enum32>
+  <float name="Temporary Camera Impulse Rotation" offset="124" visible="True" />
+  <float name="Temporary Camera Impulse Pushback" offset="128" visible="True" />
+  <float name="Temporary Camera Impulse Jitter" offset="132" visible="True" />
+  <float name="...To" offset="136" visible="True" />
+  <float name="Camera Shaking Duration" offset="140" visible="True" />
+  <enum32 name="Camera Shaking Falloff Function" offset="144" visible="True">
+    <option name="Linear" value="0" />
+    <option name="Late" value="1" />
+    <option name="Very Late" value="2" />
+    <option name="Early" value="3" />
+    <option name="Very Early" value="4" />
+    <option name="Cosine" value="5" />
+    <option name="Zero" value="6" />
+    <option name="One" value="7" />
+  </enum32>
+  <float name="Camera Shaking Random Translation" offset="148" visible="True" />
+  <float name="Camera Shaking Random Rotation" offset="152" visible="True" />
+  <enum32 name="Camera Shaking Wobble Function" offset="156" visible="True">
+    <option name="One" value="0" />
+    <option name="Zero" value="1" />
+    <option name="Cosine" value="2" />
+    <option name="Cosine (Variable Period)" value="3" />
+    <option name="Diagonal Wave" value="4" />
+    <option name="Diagonal Wave (Variable Period)" value="5" />
+    <option name="Slide" value="6" />
+    <option name="Slide (Variable Period)" value="7" />
+    <option name="Noise" value="8" />
+    <option name="Jitter" value="9" />
+    <option name="Wander" value="10" />
+    <option name="Spark" value="11" />
+  </enum32>
+  <float name="Camera Shaking Wobble Function Period" offset="160" visible="True" />
+  <float name="Camera Shaking Wobble Weight" offset="164" visible="True" />
+  <tag name="Sound" offset="168" visible="True" />
+  <id name="Sound" offset="172" visible="True" />
+  <float name="Breaking Effect Forward Velocity" offset="176" visible="True" />
+  <float name="Breaking Effect Forward Radius" offset="180" visible="True" />
+  <float name="Breaking Effect Forward Exponent" offset="184" visible="True" />
+  <float name="Breaking Effect Outward Velocity" offset="188" visible="True" />
+  <float name="Breaking Effect Outward Radius" offset="192" visible="True" />
+  <float name="Breaking Effect Outward Exponent" offset="196" visible="True" />
+</plugin>

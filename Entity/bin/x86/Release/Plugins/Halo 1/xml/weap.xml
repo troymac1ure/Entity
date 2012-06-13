@@ -1,0 +1,211 @@
+<plugin>
+ <tag>weap</tag>
+ <struct>
+  <name>Main</name>
+  <size>0</size>
+  <value>
+   <type>short</type>
+   <offset>0x30C</offset>
+   <name>Weapon/User Ability #</name>
+  </value>
+  <value>
+   <type>id16</type>
+   <offset>0x30C</offset>
+   <name>Weapon/User Ability</name>
+   <option>
+    <value>29281</value>
+    <name>Sentinal/Gravity Rifle/AR</name>
+   </option>
+   <option>
+    <value>25190</value>
+    <name>Energy Sword</name>
+   </option>
+   <option>
+    <value>29798</value>
+    <name>Flamethrower</name>
+   </option>
+   <option>
+    <value>29286</value>
+    <name>Hunter/Fuel Rod</name>
+   </option>
+   <option>
+    <value>25966</value>
+    <name>Needler</name>
+   </option>
+   <option>
+    <value>28776</value>
+    <name>Pistol</name>
+   </option>
+   <option>
+    <value>28784</value>
+    <name>Plasma Pistol</name>
+   </option>
+   <option>
+    <value>29296</value>
+    <name>Plasma Rifle</name>
+   </option>
+   <option>
+    <value>25456</value>
+    <name>Plasma Cannon</name>
+   </option>
+   <option>
+    <value>27762</value>
+    <name>Rocket Launcher</name>
+   </option>
+   <option>
+    <value>26483</value>
+    <name>Shotgun</name>
+   </option>
+   <option>
+    <value>29299</value>
+    <name>Sniper Rifle</name>
+   </option>
+  </value>
+  <value>
+   <type>reflexive</type>
+   <offset>0x4F0</offset>
+   <name>Clip</name>
+  </value>
+  <value>
+   <type>reflexive</type>
+   <offset>0x4FC</offset>
+   <name>Projectile</name>
+  </value>
+  <value>
+   <type>short</type>
+   <offset>0x3DA</offset>
+   <name>Zoom Levels</name>
+   <info>Number of zoom settings</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x3DC</offset>
+   <name>Minimum Zoom</name>
+   <info>Lowest Zoom Setting</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x3E0</offset>
+   <name>Maximum Zoom</name>
+   <info>Highest Zoom Setting</info>
+  </value>
+ </struct>
+ <struct>
+  <name>Clip</name>
+  <size>112</size>
+  <value>
+   <type>short</type>
+   <offset>0x006</offset>
+   <name>Starting Ammo</name>
+   <info>Ammo the weapon will start with</info>
+  </value>
+  <value>
+   <type>short</type>
+   <offset>0x008</offset>
+   <name>Maximum Ammo</name>
+   <info>Maximum ammo the weapon can hold</info>
+  </value>
+  <value>
+   <type>short</type>
+   <offset>0x00A</offset>
+   <name>Clip Size</name>
+   <info>Amount of ammo in each clip</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x014</offset>
+   <name>Reload Time</name>
+   <info>Time taken to reload a clip</info>
+  </value>
+  <value>
+   <type>short</type>
+   <offset>0x018</offset>
+   <name>Shots Reloaded</name>
+   <info>Ammo added with each reload (should equal clip size)</info>
+  </value>
+ </struct>
+ <struct>
+  <name>Projectile</name>
+  <size>276</size>
+  <value>
+   <type>bitmask32</type>
+   <offset>0x00</offset>
+   <name>Flags</name>
+   <bitmask>
+    <bit>26</bit>
+    <name>Drop Trigger Lock</name>
+    <info>Weapon will continue firing when dropped</info>
+   </bitmask>
+   <bitmask>
+    <bit>28</bit>
+    <name>Trigger Lock</name>
+    <info>Trigger is pressed once to start firing, and pressed again to stop</info>
+   </bitmask>
+   <bitmask>
+    <bit>29</bit>
+    <name>Single Fire</name>
+    <info>Trigger needs to be pressed again for each shot</info>
+   </bitmask>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x04</offset>
+   <name>Minimum ROF</name>
+   <info>Minimum projectiles per second fired</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x08</offset>
+   <name>Maximum ROF</name>
+   <info>Maximum projectiles per second fired</info>
+  </value>
+  <value>
+   <type>short</type>
+   <offset>0x22</offset>
+   <name>Ammo per Shot</name>
+   <info>Ammo lost with each shot</info>
+  </value>
+  <value>
+   <type>short</type>
+   <offset>0x26</offset>
+   <name>Tracers</name>
+   <info>Projectiles fired between each tracer</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x48</offset>
+   <name>Charge Time</name>
+   <info>Time required to achieve full charge</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x48</offset>
+   <name>Overload time</name>
+   <info>If charge is held this long, weapon will overload</info>
+  </value>
+  <value>
+   <type>short</type>
+   <offset>0x6E</offset>
+   <name>Projectiles Fired</name>
+   <info>Number of projectiles launched with each shot</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x7C</offset>
+   <name>Minimum Spread</name>
+   <info>Minimum distance from the center projectiles will travel</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x80</offset>
+   <name>Maximum Spread</name>
+   <info>Maximum distance from the center projectiles will travel</info>
+  </value>
+  <value>
+   <type>reference</type>
+   <offset>0x94</offset>
+   <name>Projectile</name>
+   <info>Projectile fired by this weapon</info>
+  </value>
+ </struct>
+</plugin>

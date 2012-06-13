@@ -1,0 +1,76 @@
+<plugin class="bloc" author="Iron_Forge" version="0.1" headersize="192">
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<undefined name="Unknown"  offset="0" visible="false" />
+<undefined name="Unknown"  offset="4" visible="false" />
+<undefined name="Unknown"  offset="8" visible="false" />
+<undefined name="Unknown"  offset="12" visible="false" />
+<undefined name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<undefined name="Unknown"  offset="24" visible="false" />
+<undefined name="Unknown"  offset="28" visible="false" />
+<float name="Unknown"  offset="32" visible="false" />
+<unused size="12"  offset="36" />
+<stringid name="Unknown"  offset="48" visible="false" />
+<tag name="Unknown"  offset="52" visible="false" />
+<id name="Unknown"  offset="56" visible="false" />
+<tag name="Unknown"  offset="60" visible="false" />
+<id name="Unknown"  offset="64" visible="false" />
+<tag name="Unused"  offset="68" visible="false" />
+<id name="Unused"  offset="72" visible="false" />
+<tag name="Unused"  offset="76" visible="false" />
+<id name="Unused"  offset="80" visible="false" />
+<tag name="Unknown"  offset="84" visible="false" />
+<id name="Unknown"  offset="88" visible="false" />
+<struct name="Unknown24" offset="92" visible="false"  size="16">
+<undefined name="Unknown"  offset="0" visible="false" />
+<unused size="8"  offset="4" />
+<undefined name="Unknown"  offset="12" visible="false" />
+</struct>
+<struct name="Unknown29" offset="100" visible="false"  size="32">
+<undefined name="Unknown"  offset="0" visible="false" />
+<stringid name="Unknown"  offset="4" visible="false" />
+<stringid name="Unknown"  offset="8" visible="false" />
+<unused size="8"  offset="12" />
+<struct name="Unknown34" offset="20" visible="false"  size="1">
+<byte name="Unknown"  offset="0" visible="false" />
+</struct>
+<unused size="4"  offset="28" />
+</struct>
+<float name="Unknown"  offset="108" visible="false" />
+<float name="Unknown"  offset="112" visible="false" />
+<float name="Unknown"  offset="116" visible="false" />
+<float name="Unknown"  offset="120" visible="false" />
+<float name="Unknown"  offset="124" visible="false" />
+<float name="Unknown"  offset="128" visible="false" />
+<float name="Unknown"  offset="132" visible="false" />
+<float name="Unknown"  offset="136" visible="false" />
+<float name="Unknown"  offset="140" visible="false" />
+<unused size="4"  offset="144" />
+<struct name="Unknown49" offset="148" visible="false"  size="24">
+<tag name="Unknown"  offset="0" visible="false" />
+<id name="Unknown"  offset="4" visible="false" />
+<stringid name="Unknown"  offset="8" visible="false" />
+<unused size="4"  offset="12" />
+<stringid name="Unknown"  offset="16" visible="false" />
+<unused size="4"  offset="20" />
+</struct>
+<unused size="16"  offset="156" />
+<struct name="Unknown58" offset="172" visible="false"  size="16">
+<struct name="Unknown59" offset="0" visible="false"  size="32">
+<float name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<float name="Unknown"  offset="8" visible="false" />
+<float name="Unknown"  offset="12" visible="false" />
+<float name="Unknown"  offset="16" visible="false" />
+<float name="Unknown"  offset="20" visible="false" />
+<float name="Unknown"  offset="24" visible="false" />
+<unused size="4"  offset="28" />
+</struct>
+<unused size="8"  offset="8" />
+</struct>
+<struct name="Unknown71" offset="180" visible="false"  size="8">
+<undefined name="Unknown"  offset="0" visible="false" />
+<id name="Unknown"  offset="4" visible="false" />
+</struct>
+<unused size="4"  offset="188" />
+</plugin>

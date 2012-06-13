@@ -1,0 +1,8 @@
+<plugin class="spk!" author="Iron_Forge" version="0.1" headersize="40">
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <float name="Unknown" offset="0" visible="False" />
+  <float name="Unknown" offset="4" visible="False" />
+  <float name="Unknown" offset="8" visible="False" />
+  <float name="Unknown" offset="12" visible="False" />
+  <unused offset="16" size="24" />
+</plugin>

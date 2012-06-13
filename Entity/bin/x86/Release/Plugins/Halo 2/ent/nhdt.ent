@@ -1,0 +1,1384 @@
+<plugin class="nhdt" author="XZodia" version="1.0" headersize="40">
+  <revision author="XZodia" version="1.0">Completed</revision>
+  <revision author="Soldier of  Light" version="0.4">Added some values...</revision>
+  <revision author="Shalted" version="0.3">Added some values</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <tag name="DO NOT USE" offset="0" visible="True" />
+  <id name="DO NOT USE" offset="4" visible="True" />
+  <struct name="Bitmap Widgets" offset="8" visible="True" size="100" label="Name">
+    <stringid name="Name" offset="0" visible="True" />
+    <enum8 name="Input 1" offset="4" visible="True">
+      <option name="BASIC Zero" value="0" />
+      <option name="BASIC One" value="1" />
+      <option name="BASIC Time" value="2" />
+      <option name="BASIC Global HUD Fade" value="3" />
+      <option name="..." value="4" />
+      <option name="..." value="5" />
+      <option name="..." value="6" />
+      <option name="..." value="7" />
+      <option name="..." value="8" />
+      <option name="..." value="9" />
+      <option name="..." value="10" />
+      <option name="..." value="11" />
+      <option name="..." value="12" />
+      <option name="..." value="13" />
+      <option name="..." value="14" />
+      <option name="..." value="15" />
+      <option name="UNIT Sheild" value="16" />
+      <option name="UNIT Body" value="17" />
+      <option name="UNIT AutoAimed" value="18" />
+      <option name="UNIT Has No Grenades" value="19" />
+      <option name="UNIT Frag Grenade Count" value="20" />
+      <option name="UNIT Plasma Grenade Count" value="21" />
+      <option name="UNIT Time On DPL Sheild" value="22" />
+      <option name="UNIT Zoom Fraction" value="23" />
+      <option name="UNIT Camo Value" value="24" />
+      <option name="..." value="25" />
+      <option name="..." value="26" />
+      <option name="..." value="27" />
+      <option name="..." value="28" />
+      <option name="..." value="29" />
+      <option name="..." value="30" />
+      <option name="..." value="31" />
+      <option name="..." value="32" />
+      <option name="PARENT Sheild" value="33" />
+      <option name="PARENT Body" value="34" />
+      <option name="..." value="35" />
+      <option name="..." value="36" />
+      <option name="..." value="37" />
+      <option name="..." value="38" />
+      <option name="..." value="39" />
+      <option name="..." value="40" />
+      <option name="..." value="41" />
+      <option name="..." value="42" />
+      <option name="..." value="43" />
+      <option name="..." value="44" />
+      <option name="..." value="45" />
+      <option name="..." value="46" />
+      <option name="..." value="47" />
+      <option name="..." value="48" />
+      <option name="WEAPON Clip Ammo" value="49" />
+      <option name="WEAPON Heat" value="40" />
+      <option name="WEAPON Battery" value="51" />
+      <option name="WEAPON Total Ammo" value="52" />
+      <option name="WEAPON Barrel Spin" value="53" />
+      <option name="WEAPON Overheated" value="54" />
+      <option name="WEAPON Clip Ammo Fraction" value="55" />
+      <option name="WEAPON Time On Overheat" value="56" />
+      <option name="WEAPON Battery Fraction" value="57" />
+      <option name="WEAPON Locking Fraction" value="58" />
+      <option name="..." value="59" />
+      <option name="..." value="60" />
+      <option name="..." value="61" />
+      <option name="..." value="62" />
+      <option name="..." value="63" />
+      <option name="..." value="64" />
+      <option name="..." value="65" />
+      <option name="User Score Fraction" value="66" />
+      <option name="Other User Score Fraction" value="67" />
+      <option name="User Winning" value="68" />
+      <option name="Bomb Arming Amount" value="69" />
+    </enum8>
+    <enum8 name="Input 2" offset="5" visible="True">
+      <option name="BASIC Zero" value="0" />
+      <option name="BASIC One" value="1" />
+      <option name="BASIC Time" value="2" />
+      <option name="BASIC Global HUD Fade" value="3" />
+      <option name="..." value="4" />
+      <option name="..." value="5" />
+      <option name="..." value="6" />
+      <option name="..." value="7" />
+      <option name="..." value="8" />
+      <option name="..." value="9" />
+      <option name="..." value="10" />
+      <option name="..." value="11" />
+      <option name="..." value="12" />
+      <option name="..." value="13" />
+      <option name="..." value="14" />
+      <option name="..." value="15" />
+      <option name="UNIT Sheild" value="16" />
+      <option name="UNIT Body" value="17" />
+      <option name="UNIT AutoAimed" value="18" />
+      <option name="UNIT Has No Grenades" value="19" />
+      <option name="UNIT Frag Grenade Count" value="20" />
+      <option name="UNIT Plasma Grenade Count" value="21" />
+      <option name="UNIT Time On DPL Sheild" value="22" />
+      <option name="UNIT Zoom Fraction" value="23" />
+      <option name="UNIT Camo Value" value="24" />
+      <option name="..." value="25" />
+      <option name="..." value="26" />
+      <option name="..." value="27" />
+      <option name="..." value="28" />
+      <option name="..." value="29" />
+      <option name="..." value="30" />
+      <option name="..." value="31" />
+      <option name="..." value="32" />
+      <option name="PARENT Sheild" value="33" />
+      <option name="PARENT Body" value="34" />
+      <option name="..." value="35" />
+      <option name="..." value="36" />
+      <option name="..." value="37" />
+      <option name="..." value="38" />
+      <option name="..." value="39" />
+      <option name="..." value="40" />
+      <option name="..." value="41" />
+      <option name="..." value="42" />
+      <option name="..." value="43" />
+      <option name="..." value="44" />
+      <option name="..." value="45" />
+      <option name="..." value="46" />
+      <option name="..." value="47" />
+      <option name="..." value="48" />
+      <option name="WEAPON Clip Ammo" value="49" />
+      <option name="WEAPON Heat" value="40" />
+      <option name="WEAPON Battery" value="51" />
+      <option name="WEAPON Total Ammo" value="52" />
+      <option name="WEAPON Barrel Spin" value="53" />
+      <option name="WEAPON Overheated" value="54" />
+      <option name="WEAPON Clip Ammo Fraction" value="55" />
+      <option name="WEAPON Time On Overheat" value="56" />
+      <option name="WEAPON Battery Fraction" value="57" />
+      <option name="WEAPON Locking Fraction" value="58" />
+      <option name="..." value="59" />
+      <option name="..." value="60" />
+      <option name="..." value="61" />
+      <option name="..." value="62" />
+      <option name="..." value="63" />
+      <option name="..." value="64" />
+      <option name="..." value="65" />
+      <option name="User Score Fraction" value="66" />
+      <option name="Other User Score Fraction" value="67" />
+      <option name="User Winning" value="68" />
+      <option name="Bomb Arming Amount" value="69" />
+    </enum8>
+    <enum8 name="Input 3" offset="6" visible="True">
+      <option name="BASIC Zero" value="0" />
+      <option name="BASIC One" value="1" />
+      <option name="BASIC Time" value="2" />
+      <option name="BASIC Global HUD Fade" value="3" />
+      <option name="..." value="4" />
+      <option name="..." value="5" />
+      <option name="..." value="6" />
+      <option name="..." value="7" />
+      <option name="..." value="8" />
+      <option name="..." value="9" />
+      <option name="..." value="10" />
+      <option name="..." value="11" />
+      <option name="..." value="12" />
+      <option name="..." value="13" />
+      <option name="..." value="14" />
+      <option name="..." value="15" />
+      <option name="UNIT Sheild" value="16" />
+      <option name="UNIT Body" value="17" />
+      <option name="UNIT AutoAimed" value="18" />
+      <option name="UNIT Has No Grenades" value="19" />
+      <option name="UNIT Frag Grenade Count" value="20" />
+      <option name="UNIT Plasma Grenade Count" value="21" />
+      <option name="UNIT Time On DPL Sheild" value="22" />
+      <option name="UNIT Zoom Fraction" value="23" />
+      <option name="UNIT Camo Value" value="24" />
+      <option name="..." value="25" />
+      <option name="..." value="26" />
+      <option name="..." value="27" />
+      <option name="..." value="28" />
+      <option name="..." value="29" />
+      <option name="..." value="30" />
+      <option name="..." value="31" />
+      <option name="..." value="32" />
+      <option name="PARENT Sheild" value="33" />
+      <option name="PARENT Body" value="34" />
+      <option name="..." value="35" />
+      <option name="..." value="36" />
+      <option name="..." value="37" />
+      <option name="..." value="38" />
+      <option name="..." value="39" />
+      <option name="..." value="40" />
+      <option name="..." value="41" />
+      <option name="..." value="42" />
+      <option name="..." value="43" />
+      <option name="..." value="44" />
+      <option name="..." value="45" />
+      <option name="..." value="46" />
+      <option name="..." value="47" />
+      <option name="..." value="48" />
+      <option name="WEAPON Clip Ammo" value="49" />
+      <option name="WEAPON Heat" value="40" />
+      <option name="WEAPON Battery" value="51" />
+      <option name="WEAPON Total Ammo" value="52" />
+      <option name="WEAPON Barrel Spin" value="53" />
+      <option name="WEAPON Overheated" value="54" />
+      <option name="WEAPON Clip Ammo Fraction" value="55" />
+      <option name="WEAPON Time On Overheat" value="56" />
+      <option name="WEAPON Battery Fraction" value="57" />
+      <option name="WEAPON Locking Fraction" value="58" />
+      <option name="..." value="59" />
+      <option name="..." value="60" />
+      <option name="..." value="61" />
+      <option name="..." value="62" />
+      <option name="..." value="63" />
+      <option name="..." value="64" />
+      <option name="..." value="65" />
+      <option name="User Score Fraction" value="66" />
+      <option name="Other User Score Fraction" value="67" />
+      <option name="User Winning" value="68" />
+      <option name="Bomb Arming Amount" value="69" />
+    </enum8>
+    <enum8 name="Input 4" offset="7" visible="True">
+      <option name="BASIC Zero" value="0" />
+      <option name="BASIC One" value="1" />
+      <option name="BASIC Time" value="2" />
+      <option name="BASIC Global HUD Fade" value="3" />
+      <option name="..." value="4" />
+      <option name="..." value="5" />
+      <option name="..." value="6" />
+      <option name="..." value="7" />
+      <option name="..." value="8" />
+      <option name="..." value="9" />
+      <option name="..." value="10" />
+      <option name="..." value="11" />
+      <option name="..." value="12" />
+      <option name="..." value="13" />
+      <option name="..." value="14" />
+      <option name="..." value="15" />
+      <option name="UNIT Sheild" value="16" />
+      <option name="UNIT Body" value="17" />
+      <option name="UNIT AutoAimed" value="18" />
+      <option name="UNIT Has No Grenades" value="19" />
+      <option name="UNIT Frag Grenade Count" value="20" />
+      <option name="UNIT Plasma Grenade Count" value="21" />
+      <option name="UNIT Time On DPL Sheild" value="22" />
+      <option name="UNIT Zoom Fraction" value="23" />
+      <option name="UNIT Camo Value" value="24" />
+      <option name="..." value="25" />
+      <option name="..." value="26" />
+      <option name="..." value="27" />
+      <option name="..." value="28" />
+      <option name="..." value="29" />
+      <option name="..." value="30" />
+      <option name="..." value="31" />
+      <option name="..." value="32" />
+      <option name="PARENT Sheild" value="33" />
+      <option name="PARENT Body" value="34" />
+      <option name="..." value="35" />
+      <option name="..." value="36" />
+      <option name="..." value="37" />
+      <option name="..." value="38" />
+      <option name="..." value="39" />
+      <option name="..." value="40" />
+      <option name="..." value="41" />
+      <option name="..." value="42" />
+      <option name="..." value="43" />
+      <option name="..." value="44" />
+      <option name="..." value="45" />
+      <option name="..." value="46" />
+      <option name="..." value="47" />
+      <option name="..." value="48" />
+      <option name="WEAPON Clip Ammo" value="49" />
+      <option name="WEAPON Heat" value="40" />
+      <option name="WEAPON Battery" value="51" />
+      <option name="WEAPON Total Ammo" value="52" />
+      <option name="WEAPON Barrel Spin" value="53" />
+      <option name="WEAPON Overheated" value="54" />
+      <option name="WEAPON Clip Ammo Fraction" value="55" />
+      <option name="WEAPON Time On Overheat" value="56" />
+      <option name="WEAPON Battery Fraction" value="57" />
+      <option name="WEAPON Locking Fraction" value="58" />
+      <option name="..." value="59" />
+      <option name="..." value="60" />
+      <option name="..." value="61" />
+      <option name="..." value="62" />
+      <option name="..." value="63" />
+      <option name="..." value="64" />
+      <option name="..." value="65" />
+      <option name="User Score Fraction" value="66" />
+      <option name="Other User Score Fraction" value="67" />
+      <option name="User Winning" value="68" />
+      <option name="Bomb Arming Amount" value="69" />
+    </enum8>
+    <bitmask16 name="[Do Draw If] Unit Flags" offset="8" visible="True">
+      <option name="Default" value="0" />
+      <option name="Grenade Type Is NONE" value="1" />
+      <option name="Grenade Type Is Frag" value="2" />
+      <option name="Grenade Type Is Plasma" value="3" />
+      <option name="Unit Is Single Wielding" value="4" />
+      <option name="Unit Is Dual Wielding" value="5" />
+      <option name="Unit Is Unzoomed" value="6" />
+      <option name="Unit Is Zoomed (Level 1)" value="7" />
+      <option name="Unit Is Zoomed (Level 2)" value="8" />
+      <option name="Grenades Disabled" value="9" />
+      <option name="Binoculars Enabled" value="10" />
+      <option name="Motion Sensor Enabled" value="11" />
+      <option name="Sheild Enabled" value="12" />
+      <option name="Dervish" value="13" />
+    </bitmask16>
+    <bitmask8 name="[Do Draw If] Extra Flags" offset="10" visible="True">
+      <option name="AutoAim - Friendly" value="0" />
+      <option name="AutoAim - Plasma" value="1" />
+      <option name="AutoAim - Headshot" value="2" />
+      <option name="AutoAim - Vulnerable" value="3" />
+      <option name="AutoAim - Invincible" value="4" />
+    </bitmask8>
+    <bitmask16 name="[Do Draw If] Weapon Flags" offset="11" visible="True">
+      <option name="Primary Weapon" value="0" />
+      <option name="Secondary Weapon" value="1" />
+      <option name="Backpack Weapon" value="2" />
+      <option name="Age Below Cutoff" value="3" />
+      <option name="Clip Below Cutoff" value="4" />
+      <option name="Total Below Cutoff" value="5" />
+      <option name="Overheated" value="6" />
+      <option name="Out Of Ammo" value="7" />
+      <option name="Lock Target Available" value="8" />
+      <option name="Locking" value="9" />
+      <option name="Locked" value="10" />
+    </bitmask16>
+    <bitmask16 name="[Do Draw If] Game Engine State Flags" offset="13" visible="True">
+      <option name="Campaign Solo" value="0" />
+      <option name="Campaign Coop" value="1" />
+      <option name="Free For All" value="2" />
+      <option name="Team Game" value="3" />
+      <option name="User Leading" value="4" />
+      <option name="User Not Leading" value="5" />
+      <option name="Timed Game" value="6" />
+      <option name="Untimed Game" value="7" />
+      <option name="Other Score Valid" value="8" />
+      <option name="Other Score Invalid" value="9" />
+      <option name="Player Is Arming Bomb" value="10" />
+      <option name="Player Talking" value="11" />
+    </bitmask16>
+    <bitmask16 name="[Don't Draw If] Unit Flags" offset="15" visible="True">
+      <option name="Default" value="0" />
+      <option name="Grenade Type Is NONE" value="1" />
+      <option name="Grenade Type Is Frag" value="2" />
+      <option name="Grenade Type Is Plasma" value="3" />
+      <option name="Unit Is Single Wielding" value="4" />
+      <option name="Unit Is Dual Wielding" value="5" />
+      <option name="Unit Is Unzoomed" value="6" />
+      <option name="Unit Is Zoomed (Level 1)" value="7" />
+      <option name="Unit Is Zoomed (Level 2)" value="8" />
+      <option name="Grenades Disabled" value="9" />
+      <option name="Binoculars Enabled" value="10" />
+      <option name="Motion Sensor Enabled" value="11" />
+      <option name="Sheild Enabled" value="12" />
+      <option name="Dervish" value="13" />
+    </bitmask16>
+    <bitmask8 name="[Don't Draw If] Extra Flags" offset="17" visible="True">
+      <option name="AutoAim - Friendly" value="0" />
+      <option name="AutoAim - Plasma" value="1" />
+      <option name="AutoAim - Headshot" value="2" />
+      <option name="AutoAim - Vulnerable" value="3" />
+      <option name="AutoAim - Invincible" value="4" />
+    </bitmask8>
+    <bitmask16 name="[Don't Draw If] Weapon Flags" offset="18" visible="True">
+      <option name="Primary Weapon" value="0" />
+      <option name="Secondary Weapon" value="1" />
+      <option name="Backpack Weapon" value="2" />
+      <option name="Age Below Cutoff" value="3" />
+      <option name="Clip Below Cutoff" value="4" />
+      <option name="Total Below Cutoff" value="5" />
+      <option name="Overheated" value="6" />
+      <option name="Out Of Ammo" value="7" />
+      <option name="Lock Target Available" value="8" />
+      <option name="Locking" value="9" />
+      <option name="Locked" value="10" />
+    </bitmask16>
+    <bitmask16 name="[Don't Draw If] Game Engine State Flags" offset="20" visible="True">
+      <option name="Campaign Solo" value="0" />
+      <option name="Campaign Coop" value="1" />
+      <option name="Free For All" value="2" />
+      <option name="Team Game" value="3" />
+      <option name="User Leading" value="4" />
+      <option name="User Not Leading" value="5" />
+      <option name="Timed Game" value="6" />
+      <option name="Untimed Game" value="7" />
+      <option name="Other Score Valid" value="8" />
+      <option name="Other Score Invalid" value="9" />
+      <option name="Player Is Arming Bomb" value="10" />
+      <option name="Player Talking" value="11" />
+    </bitmask16>
+    <short name="Age Cutoff" offset="22" visible="True" />
+    <short name="Clip Cutoff" offset="24" visible="True" />
+    <short name="Total Cutoff" offset="26" visible="True" />
+    <enum16 name="Anchor" offset="28" visible="True">
+      <option name="Health And Sheild" value="0" />
+      <option name="Weapon HUD" value="1" />
+      <option name="Motion Sensor" value="2" />
+      <option name="Scoreboard" value="3" />
+      <option name="Crosshair" value="4" />
+      <option name="Lock-on Target" value="5" />
+    </enum16>
+    <bitmask16 name="Flags" offset="30" visible="True">
+      <option name="Flip Horizontally" value="0" />
+      <option name="Flip Vertically" value="1" />
+      <option name="(Scope) Mirror Horizontally" value="2" />
+      <option name="(Scope) Mirror Vertically" value="3" />
+      <option name="(Scope) Stretch" value="4" />
+    </bitmask16>
+    <tag name="Bitmap" offset="32" visible="True" />
+    <id name="Bitmap" offset="36" visible="True" />
+    <tag name="Shader" offset="40" visible="True" />
+    <id name="Shader" offset="44" visible="True" />
+    <byte name="Fullscreen Sequence Index" offset="48" visible="True" />
+    <byte name="Halfscreen Sequence Index" offset="49" visible="True" />
+    <byte name="Quarterscreen Sequence Index" offset="50" visible="True" />
+    <unused size="1" offset="51" />
+    <short name="Fullscreen Offset X" offset="52" visible="True" />
+    <short name="Fullscreen Offset Y" offset="54" visible="True" />
+    <short name="Halfscreen Offset X" offset="56" visible="True" />
+    <short name="Halfscreen Offset Y" offset="58" visible="True" />
+    <short name="Quarterscreen Offset X" offset="60" visible="True" />
+    <short name="Quarterscreen Offset Y" offset="62" visible="True" />
+    <float name="Fullscreen Registration Point X" offset="64" visible="True" />
+    <float name="Fullscreen Registration Point Y" offset="68" visible="True" />
+    <float name="Halfscreen Registration Point X" offset="72" visible="True" />
+    <float name="Halfscreen Registration Point Y" offset="76" visible="True" />
+    <float name="Quarterscreen Registration Point X" offset="80" visible="True" />
+    <float name="Quarterscreen Registration Point Y" offset="84" visible="True" />
+    <struct name="Effect" offset="88" visible="True" size="104" label="">
+      <bitmask32 name="Flags" offset="0" visible="True">
+        <option name="Apply Scale" value="0" />
+        <option name="Apply Theta" value="1" />
+        <option name="Apply Offset" value="2" />
+      </bitmask32>
+      <stringid name="Input Name" offset="4" visible="True" />
+      <stringid name="Range Name" offset="8" visible="True" />
+      <float name="Time Period In Seconds" offset="12" visible="True" />
+      <struct name="Function" offset="16" visible="True" size="1" label="">
+        <byte name="Data" offset="0" visible="True" />
+      </struct>
+      <stringid name="Input Name" offset="24" visible="True" />
+      <stringid name="Range Name" offset="28" visible="True" />
+      <float name="Time Period In Seconds" offset="32" visible="True" />
+      <struct name="Function" offset="36" visible="True" size="1" label="">
+        <byte name="Data" offset="0" visible="True" />
+      </struct>
+      <stringid name="Input Name" offset="44" visible="True" />
+      <stringid name="Range Name" offset="48" visible="True" />
+      <float name="Time Period In Seconds" offset="52" visible="True" />
+      <struct name="Function" offset="56" visible="True" size="1" label="">
+        <byte name="Data" offset="0" visible="True" />
+      </struct>
+      <stringid name="Input Name" offset="64" visible="True" />
+      <stringid name="Range Name" offset="68" visible="True" />
+      <float name="Time Period In Seconds" offset="72" visible="True" />
+      <struct name="Function" offset="76" visible="True" size="1" label="">
+        <byte name="Data" offset="0" visible="True" />
+      </struct>
+      <stringid name="Input Name" offset="84" visible="True" />
+      <stringid name="Range Name" offset="88" visible="True" />
+      <float name="Time Period In Seconds" offset="92" visible="True" />
+      <struct name="Function" offset="96" visible="True" size="1" label="">
+        <byte name="Data" offset="0" visible="True" />
+      </struct>
+    </struct>
+    <enum32 name="Special HUD Type" offset="96" visible="True">
+      <option name="Unspecial" value="0" />
+      <option name="S.B. Player Emblem" value="1" />
+      <option name="S.B. Other Player Emblem" value="2" />
+      <option name="S.B. Player Score Meter" value="3" />
+      <option name="S.B. Other Player Score Meter" value="4" />
+      <option name="Unit Sheild Meter" value="5" />
+      <option name="Motion Sensor" value="6" />
+      <option name="Territory Meter" value="7" />
+    </enum32>
+  </struct>
+  <struct name="Numerical Elements" offset="16" visible="True" size="84" label="Name">
+    <stringid name="Name" offset="0" visible="True" />
+    <enum8 name="Input 1" offset="4" visible="True">
+      <option name="BASIC Zero" value="0" />
+      <option name="BASIC One" value="1" />
+      <option name="BASIC Time" value="2" />
+      <option name="BASIC Global HUD Fade" value="3" />
+      <option name="..." value="4" />
+      <option name="..." value="5" />
+      <option name="..." value="6" />
+      <option name="..." value="7" />
+      <option name="..." value="8" />
+      <option name="..." value="9" />
+      <option name="..." value="10" />
+      <option name="..." value="11" />
+      <option name="..." value="12" />
+      <option name="..." value="13" />
+      <option name="..." value="14" />
+      <option name="..." value="15" />
+      <option name="UNIT Sheild" value="16" />
+      <option name="UNIT Body" value="17" />
+      <option name="UNIT AutoAimed" value="18" />
+      <option name="UNIT Has No Grenades" value="19" />
+      <option name="UNIT Frag Grenade Count" value="20" />
+      <option name="UNIT Plasma Grenade Count" value="21" />
+      <option name="UNIT Time On DPL Sheild" value="22" />
+      <option name="UNIT Zoom Fraction" value="23" />
+      <option name="UNIT Camo Value" value="24" />
+      <option name="..." value="25" />
+      <option name="..." value="26" />
+      <option name="..." value="27" />
+      <option name="..." value="28" />
+      <option name="..." value="29" />
+      <option name="..." value="30" />
+      <option name="..." value="31" />
+      <option name="..." value="32" />
+      <option name="PARENT Sheild" value="33" />
+      <option name="PARENT Body" value="34" />
+      <option name="..." value="35" />
+      <option name="..." value="36" />
+      <option name="..." value="37" />
+      <option name="..." value="38" />
+      <option name="..." value="39" />
+      <option name="..." value="40" />
+      <option name="..." value="41" />
+      <option name="..." value="42" />
+      <option name="..." value="43" />
+      <option name="..." value="44" />
+      <option name="..." value="45" />
+      <option name="..." value="46" />
+      <option name="..." value="47" />
+      <option name="..." value="48" />
+      <option name="WEAPON Clip Ammo" value="49" />
+      <option name="WEAPON Heat" value="40" />
+      <option name="WEAPON Battery" value="51" />
+      <option name="WEAPON Total Ammo" value="52" />
+      <option name="WEAPON Barrel Spin" value="53" />
+      <option name="WEAPON Overheated" value="54" />
+      <option name="WEAPON Clip Ammo Fraction" value="55" />
+      <option name="WEAPON Time On Overheat" value="56" />
+      <option name="WEAPON Battery Fraction" value="57" />
+      <option name="WEAPON Locking Fraction" value="58" />
+      <option name="..." value="59" />
+      <option name="..." value="60" />
+      <option name="..." value="61" />
+      <option name="..." value="62" />
+      <option name="..." value="63" />
+      <option name="..." value="64" />
+      <option name="..." value="65" />
+      <option name="User Score Fraction" value="66" />
+      <option name="Other User Score Fraction" value="67" />
+      <option name="User Winning" value="68" />
+      <option name="Bomb Arming Amount" value="69" />
+    </enum8>
+    <enum8 name="Input 2" offset="5" visible="True">
+      <option name="BASIC Zero" value="0" />
+      <option name="BASIC One" value="1" />
+      <option name="BASIC Time" value="2" />
+      <option name="BASIC Global HUD Fade" value="3" />
+      <option name="..." value="4" />
+      <option name="..." value="5" />
+      <option name="..." value="6" />
+      <option name="..." value="7" />
+      <option name="..." value="8" />
+      <option name="..." value="9" />
+      <option name="..." value="10" />
+      <option name="..." value="11" />
+      <option name="..." value="12" />
+      <option name="..." value="13" />
+      <option name="..." value="14" />
+      <option name="..." value="15" />
+      <option name="UNIT Sheild" value="16" />
+      <option name="UNIT Body" value="17" />
+      <option name="UNIT AutoAimed" value="18" />
+      <option name="UNIT Has No Grenades" value="19" />
+      <option name="UNIT Frag Grenade Count" value="20" />
+      <option name="UNIT Plasma Grenade Count" value="21" />
+      <option name="UNIT Time On DPL Sheild" value="22" />
+      <option name="UNIT Zoom Fraction" value="23" />
+      <option name="UNIT Camo Value" value="24" />
+      <option name="..." value="25" />
+      <option name="..." value="26" />
+      <option name="..." value="27" />
+      <option name="..." value="28" />
+      <option name="..." value="29" />
+      <option name="..." value="30" />
+      <option name="..." value="31" />
+      <option name="..." value="32" />
+      <option name="PARENT Sheild" value="33" />
+      <option name="PARENT Body" value="34" />
+      <option name="..." value="35" />
+      <option name="..." value="36" />
+      <option name="..." value="37" />
+      <option name="..." value="38" />
+      <option name="..." value="39" />
+      <option name="..." value="40" />
+      <option name="..." value="41" />
+      <option name="..." value="42" />
+      <option name="..." value="43" />
+      <option name="..." value="44" />
+      <option name="..." value="45" />
+      <option name="..." value="46" />
+      <option name="..." value="47" />
+      <option name="..." value="48" />
+      <option name="WEAPON Clip Ammo" value="49" />
+      <option name="WEAPON Heat" value="40" />
+      <option name="WEAPON Battery" value="51" />
+      <option name="WEAPON Total Ammo" value="52" />
+      <option name="WEAPON Barrel Spin" value="53" />
+      <option name="WEAPON Overheated" value="54" />
+      <option name="WEAPON Clip Ammo Fraction" value="55" />
+      <option name="WEAPON Time On Overheat" value="56" />
+      <option name="WEAPON Battery Fraction" value="57" />
+      <option name="WEAPON Locking Fraction" value="58" />
+      <option name="..." value="59" />
+      <option name="..." value="60" />
+      <option name="..." value="61" />
+      <option name="..." value="62" />
+      <option name="..." value="63" />
+      <option name="..." value="64" />
+      <option name="..." value="65" />
+      <option name="User Score Fraction" value="66" />
+      <option name="Other User Score Fraction" value="67" />
+      <option name="User Winning" value="68" />
+      <option name="Bomb Arming Amount" value="69" />
+    </enum8>
+    <enum8 name="Input 3" offset="6" visible="True">
+      <option name="BASIC Zero" value="0" />
+      <option name="BASIC One" value="1" />
+      <option name="BASIC Time" value="2" />
+      <option name="BASIC Global HUD Fade" value="3" />
+      <option name="..." value="4" />
+      <option name="..." value="5" />
+      <option name="..." value="6" />
+      <option name="..." value="7" />
+      <option name="..." value="8" />
+      <option name="..." value="9" />
+      <option name="..." value="10" />
+      <option name="..." value="11" />
+      <option name="..." value="12" />
+      <option name="..." value="13" />
+      <option name="..." value="14" />
+      <option name="..." value="15" />
+      <option name="UNIT Sheild" value="16" />
+      <option name="UNIT Body" value="17" />
+      <option name="UNIT AutoAimed" value="18" />
+      <option name="UNIT Has No Grenades" value="19" />
+      <option name="UNIT Frag Grenade Count" value="20" />
+      <option name="UNIT Plasma Grenade Count" value="21" />
+      <option name="UNIT Time On DPL Sheild" value="22" />
+      <option name="UNIT Zoom Fraction" value="23" />
+      <option name="UNIT Camo Value" value="24" />
+      <option name="..." value="25" />
+      <option name="..." value="26" />
+      <option name="..." value="27" />
+      <option name="..." value="28" />
+      <option name="..." value="29" />
+      <option name="..." value="30" />
+      <option name="..." value="31" />
+      <option name="..." value="32" />
+      <option name="PARENT Sheild" value="33" />
+      <option name="PARENT Body" value="34" />
+      <option name="..." value="35" />
+      <option name="..." value="36" />
+      <option name="..." value="37" />
+      <option name="..." value="38" />
+      <option name="..." value="39" />
+      <option name="..." value="40" />
+      <option name="..." value="41" />
+      <option name="..." value="42" />
+      <option name="..." value="43" />
+      <option name="..." value="44" />
+      <option name="..." value="45" />
+      <option name="..." value="46" />
+      <option name="..." value="47" />
+      <option name="..." value="48" />
+      <option name="WEAPON Clip Ammo" value="49" />
+      <option name="WEAPON Heat" value="40" />
+      <option name="WEAPON Battery" value="51" />
+      <option name="WEAPON Total Ammo" value="52" />
+      <option name="WEAPON Barrel Spin" value="53" />
+      <option name="WEAPON Overheated" value="54" />
+      <option name="WEAPON Clip Ammo Fraction" value="55" />
+      <option name="WEAPON Time On Overheat" value="56" />
+      <option name="WEAPON Battery Fraction" value="57" />
+      <option name="WEAPON Locking Fraction" value="58" />
+      <option name="..." value="59" />
+      <option name="..." value="60" />
+      <option name="..." value="61" />
+      <option name="..." value="62" />
+      <option name="..." value="63" />
+      <option name="..." value="64" />
+      <option name="..." value="65" />
+      <option name="User Score Fraction" value="66" />
+      <option name="Other User Score Fraction" value="67" />
+      <option name="User Winning" value="68" />
+      <option name="Bomb Arming Amount" value="69" />
+    </enum8>
+    <enum8 name="Input 4" offset="7" visible="True">
+      <option name="BASIC Zero" value="0" />
+      <option name="BASIC One" value="1" />
+      <option name="BASIC Time" value="2" />
+      <option name="BASIC Global HUD Fade" value="3" />
+      <option name="..." value="4" />
+      <option name="..." value="5" />
+      <option name="..." value="6" />
+      <option name="..." value="7" />
+      <option name="..." value="8" />
+      <option name="..." value="9" />
+      <option name="..." value="10" />
+      <option name="..." value="11" />
+      <option name="..." value="12" />
+      <option name="..." value="13" />
+      <option name="..." value="14" />
+      <option name="..." value="15" />
+      <option name="UNIT Sheild" value="16" />
+      <option name="UNIT Body" value="17" />
+      <option name="UNIT AutoAimed" value="18" />
+      <option name="UNIT Has No Grenades" value="19" />
+      <option name="UNIT Frag Grenade Count" value="20" />
+      <option name="UNIT Plasma Grenade Count" value="21" />
+      <option name="UNIT Time On DPL Sheild" value="22" />
+      <option name="UNIT Zoom Fraction" value="23" />
+      <option name="UNIT Camo Value" value="24" />
+      <option name="..." value="25" />
+      <option name="..." value="26" />
+      <option name="..." value="27" />
+      <option name="..." value="28" />
+      <option name="..." value="29" />
+      <option name="..." value="30" />
+      <option name="..." value="31" />
+      <option name="..." value="32" />
+      <option name="PARENT Sheild" value="33" />
+      <option name="PARENT Body" value="34" />
+      <option name="..." value="35" />
+      <option name="..." value="36" />
+      <option name="..." value="37" />
+      <option name="..." value="38" />
+      <option name="..." value="39" />
+      <option name="..." value="40" />
+      <option name="..." value="41" />
+      <option name="..." value="42" />
+      <option name="..." value="43" />
+      <option name="..." value="44" />
+      <option name="..." value="45" />
+      <option name="..." value="46" />
+      <option name="..." value="47" />
+      <option name="..." value="48" />
+      <option name="WEAPON Clip Ammo" value="49" />
+      <option name="WEAPON Heat" value="40" />
+      <option name="WEAPON Battery" value="51" />
+      <option name="WEAPON Total Ammo" value="52" />
+      <option name="WEAPON Barrel Spin" value="53" />
+      <option name="WEAPON Overheated" value="54" />
+      <option name="WEAPON Clip Ammo Fraction" value="55" />
+      <option name="WEAPON Time On Overheat" value="56" />
+      <option name="WEAPON Battery Fraction" value="57" />
+      <option name="WEAPON Locking Fraction" value="58" />
+      <option name="..." value="59" />
+      <option name="..." value="60" />
+      <option name="..." value="61" />
+      <option name="..." value="62" />
+      <option name="..." value="63" />
+      <option name="..." value="64" />
+      <option name="..." value="65" />
+      <option name="User Score Fraction" value="66" />
+      <option name="Other User Score Fraction" value="67" />
+      <option name="User Winning" value="68" />
+      <option name="Bomb Arming Amount" value="69" />
+    </enum8>
+    <bitmask16 name="[Do Draw If] Unit Flags" offset="8" visible="True">
+      <option name="Default" value="0" />
+      <option name="Grenade Type Is NONE" value="1" />
+      <option name="Grenade Type Is Frag" value="2" />
+      <option name="Grenade Type Is Plasma" value="3" />
+      <option name="Unit Is Single Wielding" value="4" />
+      <option name="Unit Is Dual Wielding" value="5" />
+      <option name="Unit Is Unzoomed" value="6" />
+      <option name="Unit Is Zoomed (Level 1)" value="7" />
+      <option name="Unit Is Zoomed (Level 2)" value="8" />
+      <option name="Grenades Disabled" value="9" />
+      <option name="Binoculars Enabled" value="10" />
+      <option name="Motion Sensor Enabled" value="11" />
+      <option name="Sheild Enabled" value="12" />
+      <option name="Dervish" value="13" />
+    </bitmask16>
+    <bitmask8 name="[Do Draw If] Extra Flags" offset="10" visible="True">
+      <option name="AutoAim - Friendly" value="0" />
+      <option name="AutoAim - Plasma" value="1" />
+      <option name="AutoAim - Headshot" value="2" />
+      <option name="AutoAim - Vulnerable" value="3" />
+      <option name="AutoAim - Invincible" value="4" />
+    </bitmask8>
+    <bitmask16 name="[Do Draw If] Weapon Flags" offset="11" visible="True">
+      <option name="Primary Weapon" value="0" />
+      <option name="Secondary Weapon" value="1" />
+      <option name="Backpack Weapon" value="2" />
+      <option name="Age Below Cutoff" value="3" />
+      <option name="Clip Below Cutoff" value="4" />
+      <option name="Total Below Cutoff" value="5" />
+      <option name="Overheated" value="6" />
+      <option name="Out Of Ammo" value="7" />
+      <option name="Lock Target Available" value="8" />
+      <option name="Locking" value="9" />
+      <option name="Locked" value="10" />
+    </bitmask16>
+    <bitmask16 name="[Do Draw If] Game Engine State Flags" offset="13" visible="True">
+      <option name="Campaign Solo" value="0" />
+      <option name="Campaign Coop" value="1" />
+      <option name="Free For All" value="2" />
+      <option name="Team Game" value="3" />
+      <option name="User Leading" value="4" />
+      <option name="User Not Leading" value="5" />
+      <option name="Timed Game" value="6" />
+      <option name="Untimed Game" value="7" />
+      <option name="Other Score Valid" value="8" />
+      <option name="Other Score Invalid" value="9" />
+      <option name="Player Is Arming Bomb" value="10" />
+      <option name="Player Talking" value="11" />
+    </bitmask16>
+    <bitmask16 name="[Don't Draw If] Unit Flags" offset="15" visible="True">
+      <option name="Default" value="0" />
+      <option name="Grenade Type Is NONE" value="1" />
+      <option name="Grenade Type Is Frag" value="2" />
+      <option name="Grenade Type Is Plasma" value="3" />
+      <option name="Unit Is Single Wielding" value="4" />
+      <option name="Unit Is Dual Wielding" value="5" />
+      <option name="Unit Is Unzoomed" value="6" />
+      <option name="Unit Is Zoomed (Level 1)" value="7" />
+      <option name="Unit Is Zoomed (Level 2)" value="8" />
+      <option name="Grenades Disabled" value="9" />
+      <option name="Binoculars Enabled" value="10" />
+      <option name="Motion Sensor Enabled" value="11" />
+      <option name="Sheild Enabled" value="12" />
+      <option name="Dervish" value="13" />
+    </bitmask16>
+    <bitmask8 name="[Don't Draw If] Extra Flags" offset="17" visible="True">
+      <option name="AutoAim - Friendly" value="0" />
+      <option name="AutoAim - Plasma" value="1" />
+      <option name="AutoAim - Headshot" value="2" />
+      <option name="AutoAim - Vulnerable" value="3" />
+      <option name="AutoAim - Invincible" value="4" />
+    </bitmask8>
+    <bitmask16 name="[Don't Draw If] Weapon Flags" offset="18" visible="True">
+      <option name="Primary Weapon" value="0" />
+      <option name="Secondary Weapon" value="1" />
+      <option name="Backpack Weapon" value="2" />
+      <option name="Age Below Cutoff" value="3" />
+      <option name="Clip Below Cutoff" value="4" />
+      <option name="Total Below Cutoff" value="5" />
+      <option name="Overheated" value="6" />
+      <option name="Out Of Ammo" value="7" />
+      <option name="Lock Target Available" value="8" />
+      <option name="Locking" value="9" />
+      <option name="Locked" value="10" />
+    </bitmask16>
+    <bitmask16 name="[Don't Draw If] Game Engine State Flags" offset="20" visible="True">
+      <option name="Campaign Solo" value="0" />
+      <option name="Campaign Coop" value="1" />
+      <option name="Free For All" value="2" />
+      <option name="Team Game" value="3" />
+      <option name="User Leading" value="4" />
+      <option name="User Not Leading" value="5" />
+      <option name="Timed Game" value="6" />
+      <option name="Untimed Game" value="7" />
+      <option name="Other Score Valid" value="8" />
+      <option name="Other Score Invalid" value="9" />
+      <option name="Player Is Arming Bomb" value="10" />
+      <option name="Player Talking" value="11" />
+    </bitmask16>
+    <short name="Age Cutoff" offset="22" visible="True" />
+    <short name="Clip Cutoff" offset="24" visible="True" />
+    <short name="Total Cutoff" offset="26" visible="True" />
+    <enum16 name="Anchor" offset="28" visible="True">
+      <option name="Health And Sheild" value="0" />
+      <option name="Weapon HUD" value="1" />
+      <option name="Motion Sensor" value="2" />
+      <option name="Scoreboard" value="3" />
+      <option name="Crosshair" value="4" />
+      <option name="Lock-on Target" value="5" />
+    </enum16>
+    <bitmask16 name="Flags" offset="30" visible="True">
+      <option name="String Is A Number" value="0" />
+      <option name="Force 2-Digit Number" value="1" />
+      <option name="Force 3-Digit Number" value="2" />
+      <option name="Talking Player Hack" value="3" />
+    </bitmask16>
+    <tag name="Shader" offset="32" visible="True" />
+    <id name="Shader" offset="36" visible="True" />
+    <stringid name="String" offset="40" visible="True" />
+    <enum16 name="Justification" offset="44" visible="True">
+      <option name="Left" value="0" />
+      <option name="Center" value="1" />
+      <option name="Right" value="2" />
+    </enum16>
+    <enum16 name="Fullscreen Font Index" offset="46" visible="True">
+      <option name="Default" value="0" />
+      <option name="Number Font" value="1" />
+    </enum16>
+    <enum16 name="Halfscreen Font Index" offset="48" visible="True">
+      <option name="Default" value="0" />
+      <option name="Number Font" value="1" />
+    </enum16>
+    <enum16 name="Quarterscreen Font Index" offset="50" visible="True">
+      <option name="Default" value="0" />
+      <option name="Number Font" value="1" />
+    </enum16>
+    <float name="Fullscreen Scale" offset="52" visible="True" />
+    <float name="Halfscreen Scale" offset="56" visible="True" />
+    <float name="Quarterscreen Scale" offset="60" visible="True" />
+    <short name="Fullscreen Offset X" offset="64" visible="True" />
+    <short name="Fullscreen Offset Y" offset="66" visible="True" />
+    <short name="Halfscreen Offset X" offset="68" visible="True" />
+    <short name="Halfscreen Offset Y" offset="70" visible="True" />
+    <short name="Quarterscreen Offset X" offset="72" visible="True" />
+    <short name="Quarterscreen Offset Y" offset="74" visible="True" />
+    <struct name="Effect" offset="76" visible="True" size="104" label="">
+      <bitmask32 name="Flags" offset="0" visible="True">
+        <option name="Apply Scale" value="0" />
+        <option name="Apply Theta" value="1" />
+        <option name="Apply Offset" value="2" />
+      </bitmask32>
+      <stringid name="Input Name" offset="4" visible="True" />
+      <stringid name="Range Name" offset="8" visible="True" />
+      <float name="Time Period In Seconds" offset="12" visible="True" />
+      <struct name="Function" offset="16" visible="True" size="1" label="">
+        <byte name="Data" offset="0" visible="True" />
+      </struct>
+      <stringid name="Input Name" offset="24" visible="True" />
+      <stringid name="Range Name" offset="28" visible="True" />
+      <float name="Time Period In Seconds" offset="32" visible="True" />
+      <struct name="Function" offset="36" visible="True" size="1" label="">
+        <byte name="Data" offset="0" visible="True" />
+      </struct>
+      <stringid name="Input Name" offset="44" visible="True" />
+      <stringid name="Range Name" offset="48" visible="True" />
+      <float name="Time Period In Seconds" offset="52" visible="True" />
+      <struct name="Function" offset="56" visible="True" size="1" label="">
+        <byte name="Data" offset="0" visible="True" />
+      </struct>
+      <stringid name="Input Name" offset="64" visible="True" />
+      <stringid name="Range Name" offset="68" visible="True" />
+      <float name="Time Period In Seconds" offset="72" visible="True" />
+      <struct name="Function" offset="76" visible="True" size="1" label="">
+        <byte name="Data" offset="0" visible="True" />
+      </struct>
+      <stringid name="Input Name" offset="84" visible="True" />
+      <stringid name="Range Name" offset="88" visible="True" />
+      <float name="Time Period In Seconds" offset="92" visible="True" />
+      <struct name="Function" offset="96" visible="True" size="1" label="">
+        <byte name="Data" offset="0" visible="True" />
+      </struct>
+    </struct>
+  </struct>
+  <short name="Low Clip Cutoff" offset="24" visible="True" />
+  <short name="Low Ammo Cutoff" offset="26" visible="True" />
+  <float name="Age Cutoff" offset="28" visible="True" />
+  <struct name="Unknown98" offset="32" visible="True" size="80" label="Name">
+    <stringid name="Name" offset="0" visible="True" />
+    <enum8 name="Input 1" offset="4" visible="True">
+      <option name="BASIC Zero" value="0" />
+      <option name="BASIC One" value="1" />
+      <option name="BASIC Time" value="2" />
+      <option name="BASIC Global HUD Fade" value="3" />
+      <option name="..." value="4" />
+      <option name="..." value="5" />
+      <option name="..." value="6" />
+      <option name="..." value="7" />
+      <option name="..." value="8" />
+      <option name="..." value="9" />
+      <option name="..." value="10" />
+      <option name="..." value="11" />
+      <option name="..." value="12" />
+      <option name="..." value="13" />
+      <option name="..." value="14" />
+      <option name="..." value="15" />
+      <option name="UNIT Sheild" value="16" />
+      <option name="UNIT Body" value="17" />
+      <option name="UNIT AutoAimed" value="18" />
+      <option name="UNIT Has No Grenades" value="19" />
+      <option name="UNIT Frag Grenade Count" value="20" />
+      <option name="UNIT Plasma Grenade Count" value="21" />
+      <option name="UNIT Time On DPL Sheild" value="22" />
+      <option name="UNIT Zoom Fraction" value="23" />
+      <option name="UNIT Camo Value" value="24" />
+      <option name="..." value="25" />
+      <option name="..." value="26" />
+      <option name="..." value="27" />
+      <option name="..." value="28" />
+      <option name="..." value="29" />
+      <option name="..." value="30" />
+      <option name="..." value="31" />
+      <option name="..." value="32" />
+      <option name="PARENT Sheild" value="33" />
+      <option name="PARENT Body" value="34" />
+      <option name="..." value="35" />
+      <option name="..." value="36" />
+      <option name="..." value="37" />
+      <option name="..." value="38" />
+      <option name="..." value="39" />
+      <option name="..." value="40" />
+      <option name="..." value="41" />
+      <option name="..." value="42" />
+      <option name="..." value="43" />
+      <option name="..." value="44" />
+      <option name="..." value="45" />
+      <option name="..." value="46" />
+      <option name="..." value="47" />
+      <option name="..." value="48" />
+      <option name="WEAPON Clip Ammo" value="49" />
+      <option name="WEAPON Heat" value="40" />
+      <option name="WEAPON Battery" value="51" />
+      <option name="WEAPON Total Ammo" value="52" />
+      <option name="WEAPON Barrel Spin" value="53" />
+      <option name="WEAPON Overheated" value="54" />
+      <option name="WEAPON Clip Ammo Fraction" value="55" />
+      <option name="WEAPON Time On Overheat" value="56" />
+      <option name="WEAPON Battery Fraction" value="57" />
+      <option name="WEAPON Locking Fraction" value="58" />
+      <option name="..." value="59" />
+      <option name="..." value="60" />
+      <option name="..." value="61" />
+      <option name="..." value="62" />
+      <option name="..." value="63" />
+      <option name="..." value="64" />
+      <option name="..." value="65" />
+      <option name="User Score Fraction" value="66" />
+      <option name="Other User Score Fraction" value="67" />
+      <option name="User Winning" value="68" />
+      <option name="Bomb Arming Amount" value="69" />
+    </enum8>
+    <enum8 name="Input 2" offset="5" visible="True">
+      <option name="BASIC Zero" value="0" />
+      <option name="BASIC One" value="1" />
+      <option name="BASIC Time" value="2" />
+      <option name="BASIC Global HUD Fade" value="3" />
+      <option name="..." value="4" />
+      <option name="..." value="5" />
+      <option name="..." value="6" />
+      <option name="..." value="7" />
+      <option name="..." value="8" />
+      <option name="..." value="9" />
+      <option name="..." value="10" />
+      <option name="..." value="11" />
+      <option name="..." value="12" />
+      <option name="..." value="13" />
+      <option name="..." value="14" />
+      <option name="..." value="15" />
+      <option name="UNIT Sheild" value="16" />
+      <option name="UNIT Body" value="17" />
+      <option name="UNIT AutoAimed" value="18" />
+      <option name="UNIT Has No Grenades" value="19" />
+      <option name="UNIT Frag Grenade Count" value="20" />
+      <option name="UNIT Plasma Grenade Count" value="21" />
+      <option name="UNIT Time On DPL Sheild" value="22" />
+      <option name="UNIT Zoom Fraction" value="23" />
+      <option name="UNIT Camo Value" value="24" />
+      <option name="..." value="25" />
+      <option name="..." value="26" />
+      <option name="..." value="27" />
+      <option name="..." value="28" />
+      <option name="..." value="29" />
+      <option name="..." value="30" />
+      <option name="..." value="31" />
+      <option name="..." value="32" />
+      <option name="PARENT Sheild" value="33" />
+      <option name="PARENT Body" value="34" />
+      <option name="..." value="35" />
+      <option name="..." value="36" />
+      <option name="..." value="37" />
+      <option name="..." value="38" />
+      <option name="..." value="39" />
+      <option name="..." value="40" />
+      <option name="..." value="41" />
+      <option name="..." value="42" />
+      <option name="..." value="43" />
+      <option name="..." value="44" />
+      <option name="..." value="45" />
+      <option name="..." value="46" />
+      <option name="..." value="47" />
+      <option name="..." value="48" />
+      <option name="WEAPON Clip Ammo" value="49" />
+      <option name="WEAPON Heat" value="40" />
+      <option name="WEAPON Battery" value="51" />
+      <option name="WEAPON Total Ammo" value="52" />
+      <option name="WEAPON Barrel Spin" value="53" />
+      <option name="WEAPON Overheated" value="54" />
+      <option name="WEAPON Clip Ammo Fraction" value="55" />
+      <option name="WEAPON Time On Overheat" value="56" />
+      <option name="WEAPON Battery Fraction" value="57" />
+      <option name="WEAPON Locking Fraction" value="58" />
+      <option name="..." value="59" />
+      <option name="..." value="60" />
+      <option name="..." value="61" />
+      <option name="..." value="62" />
+      <option name="..." value="63" />
+      <option name="..." value="64" />
+      <option name="..." value="65" />
+      <option name="User Score Fraction" value="66" />
+      <option name="Other User Score Fraction" value="67" />
+      <option name="User Winning" value="68" />
+      <option name="Bomb Arming Amount" value="69" />
+    </enum8>
+    <enum8 name="Input 3" offset="6" visible="True">
+      <option name="BASIC Zero" value="0" />
+      <option name="BASIC One" value="1" />
+      <option name="BASIC Time" value="2" />
+      <option name="BASIC Global HUD Fade" value="3" />
+      <option name="..." value="4" />
+      <option name="..." value="5" />
+      <option name="..." value="6" />
+      <option name="..." value="7" />
+      <option name="..." value="8" />
+      <option name="..." value="9" />
+      <option name="..." value="10" />
+      <option name="..." value="11" />
+      <option name="..." value="12" />
+      <option name="..." value="13" />
+      <option name="..." value="14" />
+      <option name="..." value="15" />
+      <option name="UNIT Sheild" value="16" />
+      <option name="UNIT Body" value="17" />
+      <option name="UNIT AutoAimed" value="18" />
+      <option name="UNIT Has No Grenades" value="19" />
+      <option name="UNIT Frag Grenade Count" value="20" />
+      <option name="UNIT Plasma Grenade Count" value="21" />
+      <option name="UNIT Time On DPL Sheild" value="22" />
+      <option name="UNIT Zoom Fraction" value="23" />
+      <option name="UNIT Camo Value" value="24" />
+      <option name="..." value="25" />
+      <option name="..." value="26" />
+      <option name="..." value="27" />
+      <option name="..." value="28" />
+      <option name="..." value="29" />
+      <option name="..." value="30" />
+      <option name="..." value="31" />
+      <option name="..." value="32" />
+      <option name="PARENT Sheild" value="33" />
+      <option name="PARENT Body" value="34" />
+      <option name="..." value="35" />
+      <option name="..." value="36" />
+      <option name="..." value="37" />
+      <option name="..." value="38" />
+      <option name="..." value="39" />
+      <option name="..." value="40" />
+      <option name="..." value="41" />
+      <option name="..." value="42" />
+      <option name="..." value="43" />
+      <option name="..." value="44" />
+      <option name="..." value="45" />
+      <option name="..." value="46" />
+      <option name="..." value="47" />
+      <option name="..." value="48" />
+      <option name="WEAPON Clip Ammo" value="49" />
+      <option name="WEAPON Heat" value="40" />
+      <option name="WEAPON Battery" value="51" />
+      <option name="WEAPON Total Ammo" value="52" />
+      <option name="WEAPON Barrel Spin" value="53" />
+      <option name="WEAPON Overheated" value="54" />
+      <option name="WEAPON Clip Ammo Fraction" value="55" />
+      <option name="WEAPON Time On Overheat" value="56" />
+      <option name="WEAPON Battery Fraction" value="57" />
+      <option name="WEAPON Locking Fraction" value="58" />
+      <option name="..." value="59" />
+      <option name="..." value="60" />
+      <option name="..." value="61" />
+      <option name="..." value="62" />
+      <option name="..." value="63" />
+      <option name="..." value="64" />
+      <option name="..." value="65" />
+      <option name="User Score Fraction" value="66" />
+      <option name="Other User Score Fraction" value="67" />
+      <option name="User Winning" value="68" />
+      <option name="Bomb Arming Amount" value="69" />
+    </enum8>
+    <enum8 name="Input 4" offset="7" visible="True">
+      <option name="BASIC Zero" value="0" />
+      <option name="BASIC One" value="1" />
+      <option name="BASIC Time" value="2" />
+      <option name="BASIC Global HUD Fade" value="3" />
+      <option name="..." value="4" />
+      <option name="..." value="5" />
+      <option name="..." value="6" />
+      <option name="..." value="7" />
+      <option name="..." value="8" />
+      <option name="..." value="9" />
+      <option name="..." value="10" />
+      <option name="..." value="11" />
+      <option name="..." value="12" />
+      <option name="..." value="13" />
+      <option name="..." value="14" />
+      <option name="..." value="15" />
+      <option name="UNIT Sheild" value="16" />
+      <option name="UNIT Body" value="17" />
+      <option name="UNIT AutoAimed" value="18" />
+      <option name="UNIT Has No Grenades" value="19" />
+      <option name="UNIT Frag Grenade Count" value="20" />
+      <option name="UNIT Plasma Grenade Count" value="21" />
+      <option name="UNIT Time On DPL Sheild" value="22" />
+      <option name="UNIT Zoom Fraction" value="23" />
+      <option name="UNIT Camo Value" value="24" />
+      <option name="..." value="25" />
+      <option name="..." value="26" />
+      <option name="..." value="27" />
+      <option name="..." value="28" />
+      <option name="..." value="29" />
+      <option name="..." value="30" />
+      <option name="..." value="31" />
+      <option name="..." value="32" />
+      <option name="PARENT Sheild" value="33" />
+      <option name="PARENT Body" value="34" />
+      <option name="..." value="35" />
+      <option name="..." value="36" />
+      <option name="..." value="37" />
+      <option name="..." value="38" />
+      <option name="..." value="39" />
+      <option name="..." value="40" />
+      <option name="..." value="41" />
+      <option name="..." value="42" />
+      <option name="..." value="43" />
+      <option name="..." value="44" />
+      <option name="..." value="45" />
+      <option name="..." value="46" />
+      <option name="..." value="47" />
+      <option name="..." value="48" />
+      <option name="WEAPON Clip Ammo" value="49" />
+      <option name="WEAPON Heat" value="40" />
+      <option name="WEAPON Battery" value="51" />
+      <option name="WEAPON Total Ammo" value="52" />
+      <option name="WEAPON Barrel Spin" value="53" />
+      <option name="WEAPON Overheated" value="54" />
+      <option name="WEAPON Clip Ammo Fraction" value="55" />
+      <option name="WEAPON Time On Overheat" value="56" />
+      <option name="WEAPON Battery Fraction" value="57" />
+      <option name="WEAPON Locking Fraction" value="58" />
+      <option name="..." value="59" />
+      <option name="..." value="60" />
+      <option name="..." value="61" />
+      <option name="..." value="62" />
+      <option name="..." value="63" />
+      <option name="..." value="64" />
+      <option name="..." value="65" />
+      <option name="User Score Fraction" value="66" />
+      <option name="Other User Score Fraction" value="67" />
+      <option name="User Winning" value="68" />
+      <option name="Bomb Arming Amount" value="69" />
+    </enum8>
+    <bitmask16 name="[Do Draw If] Unit Flags" offset="8" visible="True">
+      <option name="Default" value="0" />
+      <option name="Grenade Type Is NONE" value="1" />
+      <option name="Grenade Type Is Frag" value="2" />
+      <option name="Grenade Type Is Plasma" value="3" />
+      <option name="Unit Is Single Wielding" value="4" />
+      <option name="Unit Is Dual Wielding" value="5" />
+      <option name="Unit Is Unzoomed" value="6" />
+      <option name="Unit Is Zoomed (Level 1)" value="7" />
+      <option name="Unit Is Zoomed (Level 2)" value="8" />
+      <option name="Grenades Disabled" value="9" />
+      <option name="Binoculars Enabled" value="10" />
+      <option name="Motion Sensor Enabled" value="11" />
+      <option name="Sheild Enabled" value="12" />
+      <option name="Dervish" value="13" />
+    </bitmask16>
+    <bitmask8 name="[Do Draw If] Extra Flags" offset="10" visible="True">
+      <option name="AutoAim - Friendly" value="0" />
+      <option name="AutoAim - Plasma" value="1" />
+      <option name="AutoAim - Headshot" value="2" />
+      <option name="AutoAim - Vulnerable" value="3" />
+      <option name="AutoAim - Invincible" value="4" />
+    </bitmask8>
+    <bitmask16 name="[Do Draw If] Weapon Flags" offset="11" visible="True">
+      <option name="Primary Weapon" value="0" />
+      <option name="Secondary Weapon" value="1" />
+      <option name="Backpack Weapon" value="2" />
+      <option name="Age Below Cutoff" value="3" />
+      <option name="Clip Below Cutoff" value="4" />
+      <option name="Total Below Cutoff" value="5" />
+      <option name="Overheated" value="6" />
+      <option name="Out Of Ammo" value="7" />
+      <option name="Lock Target Available" value="8" />
+      <option name="Locking" value="9" />
+      <option name="Locked" value="10" />
+    </bitmask16>
+    <bitmask16 name="[Do Draw If] Game Engine State Flags" offset="13" visible="True">
+      <option name="Campaign Solo" value="0" />
+      <option name="Campaign Coop" value="1" />
+      <option name="Free For All" value="2" />
+      <option name="Team Game" value="3" />
+      <option name="User Leading" value="4" />
+      <option name="User Not Leading" value="5" />
+      <option name="Timed Game" value="6" />
+      <option name="Untimed Game" value="7" />
+      <option name="Other Score Valid" value="8" />
+      <option name="Other Score Invalid" value="9" />
+      <option name="Player Is Arming Bomb" value="10" />
+      <option name="Player Talking" value="11" />
+    </bitmask16>
+    <bitmask16 name="[Don't Draw If] Unit Flags" offset="15" visible="True">
+      <option name="Default" value="0" />
+      <option name="Grenade Type Is NONE" value="1" />
+      <option name="Grenade Type Is Frag" value="2" />
+      <option name="Grenade Type Is Plasma" value="3" />
+      <option name="Unit Is Single Wielding" value="4" />
+      <option name="Unit Is Dual Wielding" value="5" />
+      <option name="Unit Is Unzoomed" value="6" />
+      <option name="Unit Is Zoomed (Level 1)" value="7" />
+      <option name="Unit Is Zoomed (Level 2)" value="8" />
+      <option name="Grenades Disabled" value="9" />
+      <option name="Binoculars Enabled" value="10" />
+      <option name="Motion Sensor Enabled" value="11" />
+      <option name="Sheild Enabled" value="12" />
+      <option name="Dervish" value="13" />
+    </bitmask16>
+    <bitmask8 name="[Don't Draw If] Extra Flags" offset="17" visible="True">
+      <option name="AutoAim - Friendly" value="0" />
+      <option name="AutoAim - Plasma" value="1" />
+      <option name="AutoAim - Headshot" value="2" />
+      <option name="AutoAim - Vulnerable" value="3" />
+      <option name="AutoAim - Invincible" value="4" />
+    </bitmask8>
+    <bitmask16 name="[Don't Draw If] Weapon Flags" offset="18" visible="True">
+      <option name="Primary Weapon" value="0" />
+      <option name="Secondary Weapon" value="1" />
+      <option name="Backpack Weapon" value="2" />
+      <option name="Age Below Cutoff" value="3" />
+      <option name="Clip Below Cutoff" value="4" />
+      <option name="Total Below Cutoff" value="5" />
+      <option name="Overheated" value="6" />
+      <option name="Out Of Ammo" value="7" />
+      <option name="Lock Target Available" value="8" />
+      <option name="Locking" value="9" />
+      <option name="Locked" value="10" />
+    </bitmask16>
+    <bitmask16 name="[Don't Draw If] Game Engine State Flags" offset="20" visible="True">
+      <option name="Campaign Solo" value="0" />
+      <option name="Campaign Coop" value="1" />
+      <option name="Free For All" value="2" />
+      <option name="Team Game" value="3" />
+      <option name="User Leading" value="4" />
+      <option name="User Not Leading" value="5" />
+      <option name="Timed Game" value="6" />
+      <option name="Untimed Game" value="7" />
+      <option name="Other Score Valid" value="8" />
+      <option name="Other Score Invalid" value="9" />
+      <option name="Player Is Arming Bomb" value="10" />
+      <option name="Player Talking" value="11" />
+    </bitmask16>
+    <short name="Age Cutoff" offset="22" visible="True" />
+    <short name="Clip Cutoff" offset="24" visible="True" />
+    <short name="Total Cutoff" offset="26" visible="True" />
+    <enum16 name="Anchor" offset="28" visible="True">
+      <option name="Health And Sheild" value="0" />
+      <option name="Weapon HUD" value="1" />
+      <option name="Motion Sensor" value="2" />
+      <option name="Scoreboard" value="3" />
+      <option name="Crosshair" value="4" />
+      <option name="Lock-on Target" value="5" />
+    </enum16>
+    <bitmask16 name="Flags" offset="30" visible="True">
+      <option name="unused" value="0" />
+    </bitmask16>
+    <tag name="Bitmap" offset="32" visible="True" />
+    <id name="Bitmap" offset="36" visible="True" />
+    <tag name="Fullscreen Effect" offset="40" visible="True" />
+    <id name="Fullscreen Effect" offset="44" visible="True" />
+    <tag name="Halfscreen Effect" offset="48" visible="True" />
+    <id name="Halfscreen Effect" offset="52" visible="True" />
+    <tag name="Quarterscreen Effect" offset="56" visible="True" />
+    <id name="Quarterscreen Effect" offset="60" visible="True" />
+    <byte name="Fullscreen" offset="64" visible="True" />
+    <byte name="Halfscreen" offset="65" visible="True" />
+    <byte name="Quarterscreen" offset="66" visible="True" />
+    <unused size="1" offset="67" />
+    <short name="Fullscreen Offset X" offset="68" visible="True" />
+    <short name="Fullscreen Offset Y" offset="70" visible="True" />
+    <short name="Halfscreen Offset X" offset="72" visible="True" />
+    <short name="Halfscreen Offset Y" offset="74" visible="True" />
+    <short name="Quarterscreen Offset X" offset="76" visible="True" />
+    <short name="Quarterscreen Offset Y" offset="78" visible="True" />
+  </struct>
+</plugin>

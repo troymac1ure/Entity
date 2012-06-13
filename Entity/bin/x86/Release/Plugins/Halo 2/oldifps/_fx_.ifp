@@ -1,0 +1,29 @@
+<plugin class="&lt;fx&gt;" author="Iron_Forge" version="0.1">
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<unused size="8" default="0" />
+<unused size="4" default="0xFF" />
+<struct name="Unknown">
+  <stringid name="Unknown" visible="false" />
+  <struct name="Unknown" visible="false">
+   <byte name="Float" visible="false" />
+  </struct>
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+</struct>
+<struct name="Sound Template">
+  <struct name="Unknown" visible="false">
+   <stringid name="Unknown" visible="false" />
+   <int name="Unknown" visible="false" />
+   <int name="Unknown" visible="false" />
+   <short name="Unknown" visible="false" />
+   <short name="Unknown" visible="false" />
+   <struct name="Unknown" visible="false">
+    <int name="Unknown" visible="false" />
+    <float name="Unknown" visible="false" />
+    <float name="Unknown" visible="false" />
+    <float name="Unknown" visible="false" />
+   </struct>
+  </struct>
+  <stringid name="Template Channel?"/>
+</struct>
+</plugin>

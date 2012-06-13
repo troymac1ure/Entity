@@ -1,0 +1,62 @@
+<plugin class="tdtl" author="Iron_Forge" version="0.1" headersize="112">
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <undefined name="Unknown" offset="0" visible="False" />
+  <stringid name="Unknown" offset="4" visible="False" />
+  <unused offset="8" size="56" />
+  <float name="Unknown" offset="64" visible="False" />
+  <float name="Unknown" offset="68" visible="False" />
+  <unused offset="72" size="32" />
+  <struct name="Unknown9" offset="104" visible="false" size="236" label="">
+    <undefined name="Unknown" offset="0" visible="False" />
+    <float name="Unknown" offset="4" visible="False" />
+    <undefined name="Unknown" offset="8" visible="False" />
+    <unused offset="12" size="16" />
+    <tag name="Unknown" offset="28" visible="False" />
+    <id name="Unknown" offset="32" visible="False" />
+    <tag name="Unknown" offset="36" visible="False" />
+    <id name="Unknown" offset="40" visible="False" />
+    <unused offset="44" size="8" />
+    <struct name="Unknown19" offset="52" visible="false" size="1" label="">
+      <byte name="Unknown" offset="0" visible="False" />
+    </struct>
+    <struct name="Unknown22" offset="60" visible="false" size="1" label="">
+      <byte name="Unknown" offset="0" visible="False" />
+    </struct>
+    <float name="Unknown" offset="68" visible="False" />
+    <struct name="Unknown26" offset="72" visible="false" size="1" label="">
+      <byte name="Unknown" offset="0" visible="False" />
+    </struct>
+    <unused offset="80" size="64" />
+    <float name="Unknown" offset="144" visible="False" />
+    <float name="Unknown" offset="148" visible="False" />
+    <float name="Unknown" offset="152" visible="False" />
+    <float name="Unknown" offset="156" visible="False" />
+    <float name="Unknown" offset="160" visible="False" />
+    <unused offset="164" size="44" />
+    <undefined name="Unknown" offset="208" visible="False" />
+    <struct name="Unknown37" offset="212" visible="false" size="56" label="">
+      <unused offset="0" size="16" />
+      <struct name="Unknown39" offset="16" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <struct name="Unknown42" offset="24" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <struct name="Unknown42" offset="32" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <struct name="Unknown47" offset="40" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <struct name="Unknown50" offset="48" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+    </struct>
+    <struct name="Unknown54" offset="220" visible="false" size="2" label="">
+      <short name="Unknown" offset="0" visible="False" />
+    </struct>
+    <struct name="Unknown56" offset="228" visible="false" size="1" label="">
+      <byte name="Unknown" offset="0" visible="False" />
+    </struct>
+  </struct>
+</plugin>

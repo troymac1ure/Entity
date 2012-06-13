@@ -1,0 +1,21 @@
+<plugin class="styl" author="Iron_Forge" version="0.1" headersize="92">
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <string32 name="Unknown" offset="0" visible="False" />
+  <undefined name="Unknown" offset="32" visible="False" />
+  <undefined name="Unknown" offset="36" visible="False" />
+  <undefined name="Unknown" offset="40" visible="False" />
+  <undefined name="Unknown" offset="44" visible="False" />
+  <undefined name="Unknown" offset="48" visible="False" />
+  <undefined name="Unknown" offset="52" visible="False" />
+  <undefined name="Unknown" offset="56" visible="False" />
+  <undefined name="Unknown" offset="60" visible="False" />
+  <undefined name="Unknown" offset="64" visible="False" />
+  <undefined name="Unknown" offset="68" visible="False" />
+  <undefined name="Unknown" offset="72" visible="False" />
+  <struct name="Unknown15" offset="76" visible="false" size="4" label="">
+    <undefined name="Unknown" offset="0" visible="False" />
+  </struct>
+  <struct name="Unknown18" offset="84" visible="false" size="32" label="">
+    <string32 name="Unknown" offset="0" visible="False" />
+  </struct>
+</plugin>

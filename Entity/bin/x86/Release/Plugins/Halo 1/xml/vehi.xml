@@ -1,0 +1,167 @@
+<plugin>
+ <tag>vehi</tag>
+ <struct>
+  <name>Main</name>
+  <size>2310</size>
+  <value>
+   <type>reflexive</type>
+   <offset>0x2E4</offset>
+   <name>Seat</name>
+  </value>
+
+  <value>
+   <type>id32</type>
+   <offset>0x2F4</offset>
+   <name>Vehicle ID</name>
+    <option>
+     <value>0</value>
+     <name>Scorpion</name>
+    </option>
+   <option>
+    <value>1</value>
+    <name>Warthog</name>
+   </option>
+   <option>
+    <value>3</value>
+    <name>Drop Ship / Pelican</name>
+   </option>
+   <option>
+    <value>4</value>
+    <name>Ghost / Wraith</name>
+   </option>
+   <option>
+    <value>5</value>
+    <name>Banshee</name>
+   </option>
+   <option>
+    <value>6</value>
+    <name>Turret</name>
+   </option>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x2F8</offset>
+   <name>Top Speed (Forward)</name>
+   <info>Maximum forward speed of this vehicle</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x2FC</offset>
+   <name>Top Speed (Reverse)</name>
+   <info>Maximum reverse speed of this vehicle</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x300</offset>
+   <name>Acceleration</name>
+   <info>Rate of increase from zero to maximum speed</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x304</offset>
+   <name>Deceleration</name>
+   <info>Rate of decrease from maximum speed to zero</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x308</offset>
+   <name>Left Turn Angle</name>
+   <info>Maximum turning angle to the left (for wheeled vehicles only)</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x30C</offset>
+   <name>Right Turn Angle</name>
+   <info>This value is always negative, since its turning the opposite direction as left turn</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x310</offset>
+   <name>Wheel Blur</name>
+   <info>Rate at which the engine changes from the slow wheel texture to the fast wheel texture</info>
+  </value>
+<value>
+   <type>id32</type>
+   <offset>0x8c</offset>
+   <name>Kill Physics</name>
+    <option>
+     <value>-1</value>
+     <name>Select this only to kill physics cannot undo</name>
+    </option>
+  </value>
+<value>
+   <type>id32</type>
+   <offset>0x51C</offset>
+   <name>Kill Antenna</name>
+    <option>
+     <value>-1</value>
+     <name>Select this only to kill antenna cannot undo</name>
+    </option>
+  </value>
+<value>
+   <type>id32</type>
+   <offset>0x19C4</offset>
+   <name>Lower Turret To Floor</name>
+    <option>
+     <value>0</value>
+     <name>Select this only to lower turret cannot undo</name>
+    </option>
+  </value>
+ </struct>
+ <struct>
+  <name>Seat</name>
+  <size>284</size>
+  <value>
+   <type>bitmask32</type>
+   <offset>0x00</offset>
+   <name>Flags</name>
+   <bitmask>
+    <bit>26</bit>
+    <name>Third Person Entrance</name>
+    <info>Changes to 3rd person perspective while entering this seat</info>
+   </bitmask>
+   <bitmask>
+    <bit>27</bit>
+    <name>Uses MC Weapons</name>
+    <info>MC can fire his own weapons from this seat</info>
+   </bitmask>
+   <bitmask>
+    <bit>28</bit>
+    <name>Third Person</name>
+   </bitmask>
+   <bitmask>
+    <bit>29</bit>
+    <name>Fires Weapon</name>
+    <info>Player in this seat controls the vehicles weapon(s)</info>
+   </bitmask>
+   <bitmask>
+    <bit>30</bit>
+    <name>Drives Vehicle</name>
+    <info>Player in this seat controls the vehicles movement</info>
+   </bitmask>
+   <bitmask>
+    <bit>32</bit>
+    <name>MC Invisible</name>
+    <info>MC will become invisible while using this seat</info>
+   </bitmask>
+  </value>
+  <value>
+   <type>string32</type>
+   <offset>0x04</offset>
+   <name>Seat Name</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0xC8</offset>
+   <name>Lower HUD Limit</name>
+   <info>How low the reticle is able to aim</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0xCC</offset>
+   <name>Upper HUD Limit</name>
+   <info>How high the reticle is able to aim</info>
+  </value>
+ </struct>
+
+</plugin>

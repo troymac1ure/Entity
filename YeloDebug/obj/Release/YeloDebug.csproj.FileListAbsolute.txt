@@ -1,0 +1,7 @@
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\YeloDebug\bin\Debug\YeloDebugSettings.xml
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\YeloDebug\bin\Debug\YeloDebug.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\YeloDebug\bin\Debug\YeloDebug.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\YeloDebug\bin\Debug\YeloDebug.XML
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\YeloDebug\obj\Release\ResolveAssemblyReference.cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\YeloDebug\obj\Release\YeloDebug.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\YeloDebug\obj\Release\YeloDebug.pdb

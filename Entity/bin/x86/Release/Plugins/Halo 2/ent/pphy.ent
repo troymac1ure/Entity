@@ -1,0 +1,20 @@
+<plugin class="pphy" author="XZodia" version="0.1" headersize="64">
+  <revision author="XZodia" version="1.0">Completed</revision>
+  <revision author="Shalted" version="0.9">Named Unknowns</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <bitmask32 name="Flags" offset="0" visible="True">
+    <option name="unused" value="0" />
+    <option name="Collides With Structures" value="1" />
+    <option name="Collides With Water Surface" value="2" />
+    <option name="Uses Simple Wind" value="3" />
+    <option name="Uses Dampened Wind" value="4" />
+    <option name="No Gravity" value="5" />
+  </bitmask32>
+  <float name="Density" offset="4" visible="True" />
+  <float name="Air Friction" offset="8" visible="True" />
+  <float name="Water Friction" offset="12" visible="True" />
+  <unused offset="16" size="16" />
+  <float name="Surface Friction" offset="32" visible="True" />
+  <float name="Elasticity" offset="36" visible="True" />
+  <unused offset="40" size="24" />
+</plugin>

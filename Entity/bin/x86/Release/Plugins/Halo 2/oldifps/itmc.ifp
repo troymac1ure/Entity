@@ -1,0 +1,11 @@
+<plugin class="itmc" author="Iron_Forge" version="1.0">
+<revision author="Iron_Forge" version="1.0">Completed...</revision>
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<struct name="Item Permutations">
+  <float name="Weight" />
+  <tag name="Item" />
+  <id name="Item" />
+  <unused size="4" default="0" />
+</struct>
+<uint name="Unused Spawn Time   (in seconds, 0 = default)" />
+</plugin>

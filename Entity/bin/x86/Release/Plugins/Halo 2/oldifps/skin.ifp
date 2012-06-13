@@ -1,0 +1,64 @@
+<plugin class="skin" author="Iron_Forge" version="0.1">
+<revision author="shade45" version="0.12">named a few unknowns</revision>
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<unused size="4" default="0" />
+<tag name="Unknown" visible="false" />
+<id name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<undefined name="Unknown" visible="false" />
+<struct name="Unknown" visible="false">
+  <unused size="4" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <struct name="Unknown" visible="false">
+   <unused size="4" default="0" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <unused size="8" default="0" />
+  </struct>
+</struct>
+<struct name="Text" visible="false">
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <float name="Alpha" visible="false" />
+  <float name="Color Red" visible="false" />
+  <float name="Color Green" visible="false" />
+  <float name="Color Blue" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <stringid name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+</struct>
+<struct name="Unknown" visible="false">
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="8" default="0" />
+  <tag name="Unknown" visible="false" />
+  <id name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="8" default="0" />
+  <stringid name="Unknown" visible="false" />
+  <unused size="8" default="0" />
+</struct>
+<struct name="Unknown" visible="false">
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <tag name="Unknown" visible="false" />
+  <id name="Unknown" visible="false" />
+  <tag name="Unknown" visible="false" />
+  <id name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+</struct>
+<struct name="Unknown" visible="false">
+  <unused size="4" default="0" />
+  <tag name="Unknown" visible="false" />
+  <id name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="4" default="0" />
+</struct>
+</plugin>

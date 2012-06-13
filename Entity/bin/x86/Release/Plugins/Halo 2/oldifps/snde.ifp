@@ -1,0 +1,18 @@
+<plugin class="snde" author="Shalted" version="1.0">
+<revision author="Shalted" version="1.0">Hehe, Finished</revision>
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<unused size="8" default="0" />
+<float name="Priority"/>
+<float name="Room intensity(dB)"/>
+<float name="Room intensity hf(dB)"/>
+<float name="Room Rolloff(0 to 10)"/>
+<float name="Decay Time(.1 to 20) Sec"/>
+<float name="Decay Hf Rattion(.1 to 2)"/>
+<float name="Reflections Delay (0 to 0.3) Sec" />
+<float name="Reverb Intensity(dB -100,20)"/>
+<float name="Reverb Delay(0 to .1) Sec"/>
+<float name="Diffusion"/>
+<float name="Density"/>
+<float name="Hf Refrence(20 to 20,000)Hz"/>
+<unused size="16" default="0" />
+</plugin>

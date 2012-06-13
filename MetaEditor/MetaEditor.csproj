@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6423865E-C775-4F86-AC8D-5BE425761567}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MetaEditor</RootNamespace>
+    <AssemblyName>MetaEditor</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\ColorShifting\ColorChangedEventArgs.cs" />
+    <Compile Include="Components\ColorShifting\ColorHandler.cs" />
+    <Compile Include="Components\ColorShifting\ColorShifting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Components\ColorShifting\ColorShifting.Designer.cs">
+      <DependentUpon>ColorShifting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\BaseField.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\BaseField.Designer.cs">
+      <DependentUpon>BaseField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Bitmask.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Bitmask.Designer.cs">
+      <DependentUpon>Bitmask.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\ColorWheel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\ColorWheel.Designer.cs">
+      <DependentUpon>ColorWheel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\DataValues.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\DataValues.Designer.cs">
+      <DependentUpon>DataValues.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\EntStrings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\EntStrings.Designer.cs">
+      <DependentUpon>EntStrings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Enums.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Enums.Designer.cs">
+      <DependentUpon>Enums.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Float.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Float.Designer.cs">
+      <DependentUpon>Float.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Ident.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Ident.designer.cs">
+      <DependentUpon>Ident.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Indices.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Indices.Designer.cs">
+      <DependentUpon>Indices.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\ReflexiveControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\ReflexiveControl.designer.cs">
+      <DependentUpon>ReflexiveControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\SID.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\SID.designer.cs">
+      <DependentUpon>SID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\TagBlock.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\TagBlock.designer.cs">
+      <DependentUpon>TagBlock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ControlSwapper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ControlSwapper.Designer.cs">
+      <DependentUpon>ControlSwapper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ItemsToShow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ItemsToShow.Designer.cs">
+      <DependentUpon>ItemsToShow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ListEntItems.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ListEntItems.Designer.cs">
+      <DependentUpon>ListEntItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MEStringsSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MEStringsSelector.Designer.cs">
+      <DependentUpon>MEStringsSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ViewAllValues.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ViewAllValues.Designer.cs">
+      <DependentUpon>ViewAllValues.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor.designer.cs">
+      <DependentUpon>MetaEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="METoolBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="METoolBar.Designer.cs">
+      <DependentUpon>METoolBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Globals\Globals.csproj">
+      <Project>{B69CBB19-F523-4B56-B97A-696BCA045ADA}</Project>
+      <Name>Globals</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HaloMap\HaloMap.csproj">
+      <Project>{32FC9CF1-7BD8-4541-81A3-4C6B9B94AFF4}</Project>
+      <Name>HaloMap</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Components\ColorShifting\ColorShifting.resx">
+      <DependentUpon>ColorShifting.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Bitmask.resx">
+      <DependentUpon>Bitmask.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\ColorWheel.resx">
+      <DependentUpon>ColorWheel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\DataValues.resx">
+      <DependentUpon>DataValues.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\EntStrings.resx">
+      <DependentUpon>EntStrings.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Enums.resx">
+      <DependentUpon>Enums.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Float.resx">
+      <DependentUpon>Float.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Ident.resx">
+      <DependentUpon>Ident.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Indices.resx">
+      <DependentUpon>Indices.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\ReflexiveControl.resx">
+      <DependentUpon>ReflexiveControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\SID.resx">
+      <DependentUpon>SID.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\TagBlock.resx">
+      <DependentUpon>TagBlock.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ControlSwapper.resx">
+      <DependentUpon>ControlSwapper.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ItemsToShow.resx">
+      <DependentUpon>ItemsToShow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ListEntItems.resx">
+      <DependentUpon>ListEntItems.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MEStringsSelector.resx">
+      <DependentUpon>MEStringsSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ViewAllValues.resx">
+      <DependentUpon>ViewAllValues.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor.resx">
+      <DependentUpon>MetaEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="METoolBar.resx">
+      <DependentUpon>METoolBar.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

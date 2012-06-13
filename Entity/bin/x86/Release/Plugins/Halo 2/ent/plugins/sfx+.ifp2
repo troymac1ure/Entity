@@ -1,0 +1,85 @@
+<plugin class="sfx+" author="Iron_Forge" version="0.1" headersize="8">
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <struct name="Unknown3" offset="0" visible="false" size="56" label="">
+    <stringid name="Unknown" offset="0" visible="False" />
+    <unused offset="4" size="8" />
+    <undefined name="Unknown" offset="12" visible="False" />
+    <unused offset="16" size="8" />
+    <struct name="Unknown8" offset="24" visible="false" size="72" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <undefined name="Unknown" offset="4" visible="False" />
+      <float name="Unknown" offset="8" visible="False" />
+      <float name="Unknown" offset="12" visible="False" />
+      <unused offset="16" size="8" />
+      <float name="Unknown" offset="24" visible="False" />
+      <float name="Unknown" offset="28" visible="False" />
+      <unused offset="32" size="8" />
+      <float name="Unknown" offset="40" visible="False" />
+      <float name="Unknown" offset="44" visible="False" />
+      <unused offset="48" size="8" />
+      <float name="Unknown" offset="56" visible="False" />
+      <float name="Unknown" offset="60" visible="False" />
+      <unused offset="64" size="8" />
+    </struct>
+    <struct name="Unknown24" offset="32" visible="false" size="48" label="">
+      <unused offset="0" size="16" />
+      <float name="Unknown" offset="16" visible="False" />
+      <float name="Unknown" offset="20" visible="False" />
+      <float name="Unknown" offset="24" visible="False" />
+      <float name="Unknown" offset="28" visible="False" />
+      <float name="Unknown" offset="32" visible="False" />
+      <float name="Unknown" offset="36" visible="False" />
+      <unused offset="40" size="8" />
+    </struct>
+    <struct name="Unknown34" offset="40" visible="false" size="64" label="">
+      <unused offset="0" size="16" />
+      <float name="Unknown" offset="16" visible="False" />
+      <float name="Unknown" offset="20" visible="False" />
+      <float name="Unknown" offset="24" visible="False" />
+      <float name="Unknown" offset="28" visible="False" />
+      <float name="Unknown" offset="32" visible="False" />
+      <float name="Unknown" offset="36" visible="False" />
+      <unused offset="40" size="8" />
+      <float name="Unknown" offset="48" visible="False" />
+      <float name="Unknown" offset="52" visible="False" />
+      <unused offset="56" size="8" />
+    </struct>
+    <struct name="Unknown47" offset="48" visible="false" size="40" label="">
+      <tag name="Unknown" offset="0" visible="False" />
+      <id name="Unknown" offset="4" visible="False" />
+      <struct name="Unknown50" offset="8" visible="false" size="16" label="">
+        <tag name="Unknown" offset="0" visible="False" />
+        <id name="Unknown" offset="4" visible="False" />
+        <float name="Unknown" offset="8" visible="False" />
+        <unused offset="12" size="4" />
+      </struct>
+      <unused offset="16" size="16" />
+      <struct name="Unknown57" offset="32" visible="false" size="20" label="">
+        <struct name="Unknown58" offset="0" visible="false" size="28" label="">
+          <struct name="Unknown59" offset="0" visible="false" size="16" label="">
+            <undefined name="Unknown" offset="0" visible="False" />
+            <struct name="Unknown61" offset="4" visible="false" size="1" label="">
+              <byte name="Unknown" offset="0" visible="False" />
+            </struct>
+            <float name="Unknown" offset="12" visible="False" />
+          </struct>
+          <struct name="Unknown66" offset="8" visible="false" size="4" label="">
+            <float name="Unknown" offset="0" visible="False" />
+          </struct>
+          <struct name="Unknown69" offset="16" visible="false" size="4" label="">
+            <undefined name="Unknown" offset="0" visible="False" />
+          </struct>
+          <undefined name="Unknown" offset="24" visible="False" />
+        </struct>
+        <struct name="Unknown74" offset="8" visible="false" size="16" label="">
+          <undefined name="Unknown" offset="0" visible="False" />
+          <struct name="Unknown76" offset="4" visible="false" size="1" label="">
+            <byte name="Unknown" offset="0" visible="False" />
+          </struct>
+          <float name="Unknown" offset="12" visible="False" />
+        </struct>
+        <undefined name="Unknown" offset="16" visible="False" />
+      </struct>
+    </struct>
+  </struct>
+</plugin>

@@ -1,0 +1,181 @@
+<plugin class="mode" author="Doom" version="0.4.1">
+<revision author="Doom" version="0.4.1">opened up some unknowns to try to figure out wht they do, renamed some unknows...</revision>
+<revision author="Doom" version="0.4">Made bones and markers moveable...</revision> 
+<revision author="Iron_Forge" version="0.3">Added some unknown values...</revision>
+ <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+ <stringid name="Model Name" />
+ <undefined name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <unused size="8" default="0" />
+ <struct name="Bounding Box" visible="false">
+  <float name="X (min)" />
+  <float name="X (max)" />
+  <float name="Y (min)" />
+  <float name="Y (max)" />
+  <float name="Z (min)" />
+  <float name="Z (max)" />
+  <float name="U (min)" />
+  <float name="U (max)" />
+  <float name="V (min)" />
+  <float name="V (max)" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+ </struct>
+ <struct name="LOD" indexBy="Part Name">
+  <stringid name="Part Name" />
+  <undefined name="Unknown" visible="false" />
+  <struct name="Permutation" indexBy="Permutation Name">
+   <stringid name="Permutation Name" />
+   <short name="Lowest Piece (Index)" />
+   <short name="Low Piece (Index)" />
+   <short name="Medium-Low Piece (Index)" />
+   <short name="Medium-High Piece (Index)" />
+   <short name="High Piece (Index)" />
+   <short name="Highest Piece (Index)" />
+  </struct>
+ </struct>
+ <struct name="Part">
+  <uint name="Type" />
+  <ushort name="Vertex Count" />
+  <ushort name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <ushort name="Bone Type" />
+  <ushort name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="8" default="0" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="8" default="0" />
+  <uint name="Raw Offset" />
+  <uint name="Raw Size" />
+  <uint name="Raw Header Size" />
+  <uint name="Raw Data Size" />
+  <struct name="Resource">
+   <undefined name="Unknown" visible="false" />
+   <undefined name="Unknown" visible="false" />
+   <uint name="Size" />
+   <uint name="Offset" />
+  </struct>
+  <id name="Model Identifier" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="4" default="0xFF" />
+ </struct>
+ <struct name="Unused" visible="false">
+  <unused size="4" default="0" />
+ </struct>
+ <struct name="Unknown" visible="false">
+  <undefined name="Unknown" visible="false" />
+  <struct name="Unknown" visible="false">
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <unused size="4" default="0" />
+  </struct>
+ </struct>
+ <undefined name="Unknown" visible="false" />
+ <undefined name="Unknown" visible="false" />
+ <unused size="4" default="0" />
+ <struct name="Bone" indexBy="Bone Name">
+  <stringid name="Bone Name" />
+  <short name="Parent (Index)" />
+  <short name="First Child (Index)" />
+  <short name="Next Sibling (Index)" />
+  <short name="Unknown" visible="false" />
+  <float name="X" visible="false" />
+  <float name="Y" visible="false" />
+  <float name="Z" visible="false" />
+  <float name="Yaw" visible="false" />
+  <float name="Pitch" visible="false" />
+  <float name="Roll" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <float name="single bone X" visible="false" />
+  <float name="single bone Y" visible="false" />
+  <float name="single bone Z" visible="false" />
+  <float name="Distance from Parent" />
+ </struct>
+ <unused size="8" default="0" /> <struct name="Marker" indexBy="Marker Name">
+  <stringid name="Marker Name" />
+  <struct name="coordinates" visible="true">
+   <undefined name="Unknown" visible="false" />
+   <float name="y (when seen from back)" visible="true" />
+   <float name="x" visible="true" />
+   <float name="z" visible="true" />
+   <float name="Yaw" visible="false" />
+   <float name="Pitch" visible="false" />
+   <float name="Roll" visible="false" />
+   <undefined name="Unknown" visible="false" />
+   <undefined name="Unknown" visible="false" />
+  </struct>
+ </struct>
+ <struct name="Shader">
+  <tag name="Unused" visible="false" />
+  <id name="Unused" visible="false" />
+  <tag name="Shader" />
+  <id name="Shader" />
+  <struct name="Unknown" visible="false">
+   <undefined name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+  </struct>
+  <unused size="8" default="0" />
+ </struct>
+ <unused size="8" default="0" />
+ <float name="Unknown" visible="false" />
+ <struct name="Unknown" visible="false">
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <float name="Unknown" visible="false" />
+  <undefined name="Unknown" visible="false" />
+  <struct name="Unknown" visible="false">
+   <undefined name="Unknown" visible="false" />
+   <struct name="Unknown" visible="false">
+    <undefined name="Unknown" visible="false" />
+    <undefined name="Unknown" visible="false" />
+   </struct>
+  </struct>
+  <struct name="Unknown" visible="false">
+   <undefined name="Unknown" visible="false" />
+  </struct>
+  <unused size="16" default="0" />
+  <undefined name="Raw Offset" />
+  <undefined name="Raw Size" />
+  <undefined name="Raw Header Size" />
+  <undefined name="Raw Data Size" />
+  <struct name="Resource">
+   <undefined name="Unknown" visible="false" />
+   <float name="Unknown" visible="false" />
+   <uint name="Size" />
+   <uint name="Offset" />
+  </struct>
+  <id name="Model Identifier" />
+  <undefined name="Unknown" visible="false" />
+  <unused size="4" default="0xFF" />
+ </struct>
+ <struct name="Unknown" visible="false">
+  <struct name="Unknown" visible="false">
+   <struct name="Unknown" visible="false">
+    <undefined name="Unknown" visible="false" />
+    <undefined name="Unknown" visible="false" />
+   </struct>
+   <struct name="Unknown" visible="false">
+    <undefined name="Unknown" visible="false" />
+    <undefined name="Unknown" visible="false" />
+   </struct>
+  </struct>
+ </struct>
+</plugin>

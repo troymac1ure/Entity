@@ -1,0 +1,59 @@
+<plugin class="eqip" author="Iron_Forge" version="0.1" headersize="316">
+<revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+<undefined name="Unknown"  offset="0" visible="false" />
+<float name="Unknown"  offset="4" visible="false" />
+<unused size="12"  offset="8" />
+<float name="Unknown"  offset="20" visible="false" />
+<unused size="4"  offset="24" />
+<undefined name="Unknown"  offset="28" visible="false" />
+<unused size="20"  offset="32" />
+<tag name="Unknown"  offset="52" visible="false" />
+<id name="Unknown"  offset="56" visible="false" />
+<tag name="Unused"  offset="60" visible="false" />
+<id name="Unused"  offset="64" visible="false" />
+<tag name="Unused"  offset="68" visible="false" />
+<id name="Unused"  offset="72" visible="false" />
+<tag name="Unused"  offset="76" visible="false" />
+<id name="Unused"  offset="80" visible="false" />
+<tag name="Unknown"  offset="84" visible="false" />
+<id name="Unknown"  offset="88" visible="false" />
+<unused size="16"  offset="92" />
+<float name="Unknown"  offset="108" visible="false" />
+<float name="Unknown"  offset="112" visible="false" />
+<float name="Unknown"  offset="116" visible="false" />
+<float name="Unknown"  offset="120" visible="false" />
+<float name="Unknown"  offset="124" visible="false" />
+<float name="Unknown"  offset="128" visible="false" />
+<float name="Unknown"  offset="132" visible="false" />
+<float name="Unknown"  offset="136" visible="false" />
+<float name="Unknown"  offset="140" visible="false" />
+<unused size="36"  offset="144" />
+<struct name="Unknown31" offset="180" visible="false"  size="8">
+<float name="Unknown"  offset="0" visible="false" />
+<id name="Unknown"  offset="4" visible="false" />
+</struct>
+<undefined name="Unknown"  offset="188" visible="false" />
+<undefined name="Unknown"  offset="192" visible="false" />
+<float name="Unknown"  offset="196" visible="false" />
+<unused size="24"  offset="200" />
+<stringid name="Unknown"  offset="224" visible="false" />
+<stringid name="Unknown"  offset="228" visible="false" />
+<stringid name="Unknown"  offset="232" visible="false" />
+<unused size="8"  offset="236" />
+<tag name="Unused"  offset="244" visible="false" />
+<id name="Unused"  offset="248" visible="false" />
+<unused size="8"  offset="252" />
+<unused size="8"  offset="260" />
+<tag name="Unknown"  offset="268" visible="false" />
+<id name="Unknown"  offset="272" visible="false" />
+<float name="Unknown"  offset="276" visible="false" />
+<float name="Unknown"  offset="280" visible="false" />
+<tag name="Unused"  offset="284" visible="false" />
+<id name="Unused"  offset="288" visible="false" />
+<tag name="Unknown"  offset="292" visible="false" />
+<id name="Unknown"  offset="296" visible="false" />
+<undefined name="Unknown"  offset="300" visible="false" />
+<float name="Unknown"  offset="304" visible="false" />
+<tag name="Unknown"  offset="308" visible="false" />
+<id name="Unknown"  offset="312" visible="false" />
+</plugin>

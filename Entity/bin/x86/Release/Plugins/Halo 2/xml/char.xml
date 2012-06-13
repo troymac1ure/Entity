@@ -1,0 +1,49 @@
+<plugin>
+	<tag>char</tag>
+	<struct>
+		<name>Main</name>
+		<size>0</size>
+		<value>
+			<type>bitmask32</type>
+			<offset>0xEE</offset>
+			<name>FLAGS</name>
+			<bitmask>
+				<bit>22</bit>
+				<name>Honor Guard/Captain</name>
+			</bitmask>
+			<bitmask>
+				<bit>23</bit>
+				<name>Guard</name>
+			</bitmask>
+		</value>
+		<value>
+			<type>reflexive</type>
+			<offset>0x3c</offset>
+			<name>Health and Shield</name>
+		</value>
+	</struct>
+	<struct>
+		<name>Health and Shield</name>
+		<size>112</size>
+		<value>
+			<type>float</type>
+			<offset>0x4</offset>
+			<name>Minimum health</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x00c</offset>
+			<name>Maximum health</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x008</offset>
+			<name>Minimum shield</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x10</offset>
+			<name>Maximum shield</name>
+		</value>
+	</struct>
+</plugin>

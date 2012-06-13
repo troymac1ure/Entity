@@ -1,0 +1,22 @@
+<plugin>
+	<tag>lens</tag>
+	<struct>
+		<name>Main</name>
+		<size>0</size>
+		<value>
+			<type>float</type>
+			<offset>0x0a0</offset>
+			<name>Horizontal glare</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x11c</offset>
+			<name>Glare brightness/darkness</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x128</offset>
+			<name>Number of rings</name>
+		</value>
+	</struct>
+</plugin>

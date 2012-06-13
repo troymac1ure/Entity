@@ -1,0 +1,10 @@
+C:\Downloads\Example Code\VC#\NewCustomTabControl\CustomTabControl\bin\Debug\JacksonSoft.CustomTabControl.dll
+C:\Downloads\Example Code\VC#\NewCustomTabControl\CustomTabControl\bin\Debug\JacksonSoft.CustomTabControl.pdb
+C:\Downloads\Example Code\VC#\NewCustomTabControl\CustomTabControl\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Downloads\Example Code\VC#\NewCustomTabControl\CustomTabControl\obj\x86\Debug\JacksonSoft.CustomTabControl.dll
+C:\Downloads\Example Code\VC#\NewCustomTabControl\CustomTabControl\obj\x86\Debug\JacksonSoft.CustomTabControl.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\CustomTabControl\bin\Debug\JacksonSoft.CustomTabControl.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\CustomTabControl\bin\Debug\JacksonSoft.CustomTabControl.pdb
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\CustomTabControl\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\CustomTabControl\obj\x86\Debug\JacksonSoft.CustomTabControl.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\CustomTabControl\obj\x86\Debug\JacksonSoft.CustomTabControl.pdb

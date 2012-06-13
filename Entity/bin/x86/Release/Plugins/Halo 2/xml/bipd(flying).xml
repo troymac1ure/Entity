@@ -1,0 +1,177 @@
+<plugin>
+	<tag>bipd</tag>
+	<struct>
+		<name>Main</name>
+		<size>0</size>
+
+		<value>
+			<type>bitmask32</type>
+			<offset>0x3b4</offset>
+			<name>Flags</name>
+			<bitmask>
+				<bit>0</bit>
+				<name>Unknown 1</name>
+			</bitmask>
+
+</value>
+
+		<value>
+			<type>id32</type>
+			<offset>0x3B4</offset>
+			<name>Flashlight (1st Person)</name>
+			<option>
+				<value>0</value>
+				<name>On</name>
+			</option>
+			<option>
+				<value>369100192</value>
+				<name>Off</name>
+			</option>
+		</value>
+		<value>
+			<type>id32</type>
+			<offset>0x3CC</offset>
+			<name>Flashlight (3rd Person)</name>
+			<option>
+				<value>0</value>
+				<name>On</name>
+			</option>
+			<option>
+				<value>369100192</value>
+				<name>Off</name>
+			</option>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x4</offset>
+			<name>Item pickup distance (0.0001)</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x1b0</offset>
+			<name>Throw distance</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x1f8</offset>
+			<name>Jump height</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x270</offset>
+			<name>Vehicle exit distance</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x274</offset>
+			<name>Biped weight (0.0001)</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x014</offset>
+			<name>Flying on impact/explosion?</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x0cc</offset>
+			<name>Aggressiveness</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x218</offset>
+			<name>Standing height</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x21c</offset>
+			<name>Crouching height</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x4CC</offset>
+			<name>Position change speed</name>
+		</value>
+		<value>
+			<type>bitmask32</type>
+			<offset>0x264</offset>
+			<name>Flying</name>
+			<bitmask>
+				<bit>0</bit>
+				<name>Unknown 2</name>
+			</bitmask>
+			<bitmask>
+				<bit>26</bit>
+				<name>Flying 1???</name>
+			</bitmask>
+			<bitmask>
+				<bit>28</bit>
+				<name>Flying 2???</name>
+			</bitmask>
+			<bitmask>
+				<bit>30</bit>
+				<name>Unknown 3</name>
+			</bitmask>
+			<bitmask>
+				<bit>31</bit>
+				<name>Unknown 4</name>
+			</bitmask>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2cc</offset>
+			<name>45 = (flying)1</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2d0</offset>
+			<name>1 = (flying)2</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2d4</offset>
+			<name>5 = (flying)3</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2d8</offset>
+			<name>45 = (flying)4</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2dc</offset>
+			<name>4 = (flying)5</name>
+		</value>
+
+		<value>
+			<type>float</type>
+			<offset>0x2e0</offset>
+			<name>3.5 = (flying)6</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2e4</offset>
+			<name>90 = (flying)7</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2e8</offset>
+			<name>90 = (flying)8</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2ec</offset>
+			<name>45 = (flying)9</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2f0</offset>
+			<name>90 = (flying)10</name>
+		</value>
+		<value>
+			<type>float</type>
+			<offset>0x2f4</offset>
+			<name>1 = (flying)11</name>
+		</value>
+
+	</struct>
+</plugin>

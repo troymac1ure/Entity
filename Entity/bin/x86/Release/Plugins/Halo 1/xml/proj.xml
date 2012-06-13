@@ -1,0 +1,45 @@
+<plugin>
+ <tag>proj</tag>
+ <struct>
+  <name>Main</name>
+  <size>0</size>
+  <value>
+   <type>float</type>
+   <offset>0x1BC</offset>
+   <name>Explode Delay #1</name>
+   <info>Minimum time for explosion</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x1C0</offset>
+   <name>Explode Delay #2</name>
+   <info>Maximum time for explosion</info>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x1C8</offset>
+   <name>Life Span</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x1CC</offset>
+   <name>Weight / Arc</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x1E4</offset>
+   <name>Initial Speed</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x1E8</offset>
+   <name>Final Speed</name>
+  </value>
+  <value>
+   <type>float</type>
+   <offset>0x1EC</offset>
+   <name>Homing / Turning</name>
+   <info>Increasing this value will allow the projectile to turn more, giving it more homing ability</info>
+  </value>
+ </struct>
+</plugin>

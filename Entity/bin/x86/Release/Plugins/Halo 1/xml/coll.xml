@@ -1,0 +1,59 @@
+<plugin>
+
+ <tag>coll</tag>
+
+ <struct>
+
+ <name>Main</name> 
+  <size>0</size> 
+ <value>
+   <type>short</type>
+   <offset>0xA</offset>
+   <name>Health</name>
+  </value>
+  <value>
+   <type>short</type>
+   <offset>0xCF</offset>
+   <name>Shield</name>
+  </value>
+   <value>
+  <type>reflexive</type> 
+  <offset>0x28C</offset> 
+  <name>Collision Part</name> 
+  </value>
+
+  </struct>
+
+ <struct>
+
+  <name>Collision Part</name> 
+  <size>64</size>
+
+  <value>
+   <type>string32</type>
+   <offset>0x0</offset>
+   <name>Name Of Item</name>
+</value> 
+<value>
+   <type>id16</type>
+   <offset>0x20</offset>
+   <name>Collision On/Off</name>
+   <option>
+    <value>0</value>
+    <name>On</name>
+   </option>
+<option>
+    <value>1</value>
+    <name>On</name>
+   </option>
+<option>
+    <value>2</value>
+    <name>On2</name>
+   </option>
+   <option>
+    <value>-1</value>
+    <name>Off</name>
+   </option>
+</value>
+</struct>
+</plugin>

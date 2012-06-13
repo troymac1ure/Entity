@@ -1,0 +1,31 @@
+<plugin class="snd!" author="Iron_Forge" version="0.2" headersize="20">
+  <revision author="Shalted" version="0.5">No Comment</revision>
+  <revision author="TfAv1228" version="0.2">Named Some Unknowns</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <bitmask16 name="Flags" offset="0" visible="true">
+    <option name="Split into premutations" value="1"/>
+    <option name="3rd Person?" value="10"/>
+    <option name="3rd Person?" value="11"/>
+    <option name="Unknown" value="12"/>
+  </bitmask16>
+  <short name="Sound Class" offset="2" visible="True" />
+  <enum8 name="Format" offset="4" visible="True" >
+    <option name="Mono 22050kbps" value="0"/>
+    <option name="Stero 44100kbps" value="1"/>
+    <option name="WMA Specific" value="2"/>
+  </enum8>
+  <enum8 name="Compression" offset="4" visible="True" >
+    <option name="None" value="0"/>
+    <option name="XBox ADPCM" value="1"/>
+    <option name="ima adpcm?" value="2"/>
+    <option name="ogg?" value="3"/>
+    <option name="WMA" value="4"/>
+  </enum8>
+  <short name="Index to Sound Properties" offset="6" visible="true" />
+  <short name="Index to Sound Premutations" offset="8" visible="True" />
+  <byte name="Premutation Chunk Count" offset="10" visible="True" />
+  <byte name="Index to Sound Unknown17" offset="11" visible="False" />
+  <short name="Not Index :D"  offset="6" visible="true" />
+  <short name="Index to Combat Dialog Raw"  offset="8" visible="True" />
+  <int name="Not Index :D" offset="16" visible="False" />
+</plugin>

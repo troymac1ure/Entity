@@ -1,0 +1,138 @@
+<plugin class="nhdt" author="Shalted" version="0.4" headersize="40">
+  <revision author="Soldier of  Light" version="0.4">Added some values...</revision>
+  <revision author="Shalted" version="0.3">Added some values</revision>
+  <revision author="Iron_Forge" version="0.1">Added basic layout of plugin...</revision>
+  <tag name="Child UI" offset="0" visible="False" />
+  <id name="Child UI" offset="4" visible="False" />
+  <struct name="UI Component" offset="8" size="100" label="Name">
+    <stringid name="Name" offset="0"/>
+    <int name="Unknown" offset="4" visible="False" />
+    <int name="Unknown" offset="8" visible="False" />
+    <int name="Unknown" offset="12" visible="False" />
+    <int name="Unknown" offset="16" visible="False" />
+    <int name="Unknown" offset="20" visible="False" />
+    <int name="Unknown" offset="24" visible="False" />
+    <enum16 name="Anchor" offset="26">
+      <option name="Top Right" value="0"/>
+      <option name="Top Left" value="1"/>
+      <option name="Bottom Left" value="2"/>
+      <option name="Bottom Right" value="3"/>
+      <option name="Center" value="4"/>
+    </enum16>
+    <short name="Mask Properties(Bitmask)" offset="28" visible="False" />
+    <tag name="Object Bitmap" offset="32"/>
+    <id name="Object Bitmap" offset="36"/>
+    <tag name="Unknown" offset="40" visible="False" />
+    <id name="Unknown" offset="44" visible="False" />
+    <byte name="Full Screen Image #" offset="48" visible="True" />
+    <byte name="Split Screen Image #" offset="49" visible="True" />
+    <byte name="Quad Screen Image #" offset="50" visible="True" />
+    <byte name="Unknown" offset="51" visible="False" />
+    <int name="Unknown" offset="52" visible="False" />
+    <int name="Unknown" offset="56" visible="False" />
+    <int name="Unknown" offset="60" visible="False" />
+    <float name="Full Horizontal Offset" offset="64" />
+    <float name="Full Vertical Offset" offset="68" />
+    <float name="Split Horizontal Offset" offset="72" visible="True" />
+    <float name="Split Vertical Offset" offset="76" visible="True" />
+    <float name="Quad Horizontal Offset" offset="80" visible="True" />
+    <float name="Quad Vertical Offset" offset="84" visible="True" />
+    <struct name="Unknown28" offset="88" visible="false" size="104" label="">
+      <undefined name="Unknown" offset="0" visible="False" />
+      <stringid name="Unknown" offset="4" visible="False" />
+      <unused offset="8" size="8" />
+      <struct name="Unknown32" offset="16" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <stringid name="Unknown" offset="24" visible="False" />
+      <unused offset="28" size="8" />
+      <struct name="Unknown37" offset="36" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <stringid name="Unknown" offset="44" visible="False" />
+      <unused offset="48" size="8" />
+      <struct name="Unknown42" offset="56" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <unused offset="64" size="12" />
+       <struct name="Unknown42" offset="76" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <stringid name="Unknown" offset="84" visible="False" />
+      <unused offset="88" size="8" />
+      <struct name="Unknown50" offset="96" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+    </struct>
+    <undefined name="Unknown" offset="96" visible="False" />
+  </struct>
+  <struct name="Numerical Elements" offset="16" size="84" label="Name">
+    <stringid name="Name" offset="0" />
+    <int name="Unknown" offset="4" visible="False" />
+    <int name="Unknown" offset="8" visible="False" />
+    <int name="Unknown" offset="12" visible="False" />
+    <int name="Unknown" offset="16" visible="False" />
+    <int name="Unknown" offset="20" visible="False" />
+    <int name="Unknown" offset="24" visible="False" />
+    <enum16 name="Anchor" offset="28">
+      <option name="Top Right" value="0"/>
+      <option name="Top Left" value="1"/>
+      <option name="Bottom Left" value="2"/>
+      <option name="Bottom Right" value="3"/>
+      <option name="Center" value="4"/>
+    </enum16>
+    <short name="Unkown" offset="30" visible="False" />
+    <tag name="Unknown" offset="32" visible="False" />
+    <id name="Unknown" offset="36" visible="False" />
+    <stringid name="Unknown" offset="40" visible="False" />
+    <undefined name="Unknown" offset="44" visible="False" />
+    <unused offset="48" size="4" />
+    <float name="Unknown" offset="52" visible="False" />
+    <float name="Unknown" offset="56" visible="False" />
+    <float name="Unknown" offset="60" visible="False" />
+    <int name="Unknown" offset="64" visible="False" />
+    <int name="Unknown" offset="68" visible="False" />
+    <int name="Unknown" offset="72" visible="False" />
+    <struct name="Unknown76" offset="76" visible="false" size="104" label="">
+      <unused offset="0" size="16" />
+      <struct name="Unknown76.0" offset="16" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <unused offset="24" size="12" />
+       <struct name="Unknown76.1" offset="36" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <unused offset="44" size="12" />
+      <struct name="Unknown76.2" offset="56" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <unused offset="64" size="12" />
+      <struct name="Unknown76.3" offset="76" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+      <stringid name="Unknown" offset="84" visible="False" />
+      <unused offset="88" size="8" />
+       <struct name="Unknown76.4" offset="96" visible="false" size="1" label="">
+        <byte name="Unknown" offset="0" visible="False" />
+      </struct>
+    </struct>
+  </struct>
+  <int name="Unknown" offset="24" visible="False" />
+  <float name="Unknown" offset="28" visible="False" />
+  <struct name="Unknown98" offset="32" visible="false" size="80" label="">
+    <unused offset="0" size="8" />
+    <undefined name="Unknown" offset="8" visible="False" />
+    <unused offset="12" size="4" />
+    <undefined name="Unknown" offset="16" visible="False" />
+    <unused offset="20" size="8" />
+    <undefined name="Unknown" offset="28" visible="False" />
+    <tag name="Unknown" offset="32" visible="False" />
+    <id name="Unknown" offset="36" visible="False" />
+    <unused offset="40" size="8" />
+    <tag name="Unused" offset="48" visible="False" />
+    <id name="Unused" offset="52" visible="False" />
+    <tag name="Unused" offset="56" visible="False" />
+    <id name="Unused" offset="60" visible="False" />
+    <unused offset="64" size="16" />
+  </struct>
+</plugin>
