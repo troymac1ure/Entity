@@ -101,6 +101,16 @@ namespace entity.Main
         #endregion
 
         #region Debug Toolbar
+        private void tstbDebugIP_TextChanged(object sender, EventArgs e)
+        {
+            if (tstbDebugIP.Text.Length == 0)
+            {
+                tstbDebugIP.Text = "<Auto>";
+                tstbDebugIP.SelectionStart = 0;
+                tstbDebugIP.SelectionLength = 6;
+            }
+        }
+
         private void tsbtnDebugConnect_Click(object sender, EventArgs e)
         {
             tslblDebugStatus.Text = "[Attempting to connect...]";

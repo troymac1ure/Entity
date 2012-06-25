@@ -10,6 +10,7 @@
 namespace entity.Main
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using System.Windows.Forms;
@@ -39,6 +40,10 @@ namespace entity.Main
 
             // this.labelDate.Text = AssemblyDescription.ToString();
             // this.labelDate.Left = 450 - this.labelDate.Width;
+            linkLabel1.Links.Clear();
+            linkLabel1.Links.Add(0, linkLabel1.Text.Length, "http://www.remnantmods.com");
+            linkLabel2.Links.Remove(linkLabel2.Links[0]);
+            linkLabel2.Links.Add(0, linkLabel2.Text.Length, "http://sourceforge.net/projects/hexbox/");
         }
 
         #endregion
@@ -157,5 +162,12 @@ namespace entity.Main
         }
 
         #endregion
+
+        private void linkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ProcessStartInfo sInfo = new ProcessStartInfo(e.Link.LinkData.ToString());  
+            Process.Start(sInfo);
+        }
+
     }
 }

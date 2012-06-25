@@ -73,6 +73,12 @@ namespace entity.Main
         {
             InitializeComponent();
 
+            // Hopefully this will fix the sorting issues on Vista (7 too?). XP looks fine.
+            this.tsPanelTop.Controls.Clear();
+            this.tsPanelTop.Controls.Add(this.mainMenu1);
+            this.tsPanelTop.Controls.Add(this.menuStrip1);
+            this.tsPanelTop.Controls.Add(this.menuStripDebug);
+
             // Locks the toolbars in place. Left unlocked at design time for easy editing
             this.tsPanelTop.Locked = true;
             updateMenuStripLock();
@@ -201,7 +207,7 @@ namespace entity.Main
             Globals.PluginSetSelector.populate();
             tscbPluginSet.Items.AddRange(Globals.PluginSetSelector.getNames());
             tscbPluginSet.SelectedItem = Globals.PluginSetSelector.getActivePlugin();
-            if (tscbPluginSet.SelectedIndex == -1)
+            if (tscbPluginSet.SelectedIndex == -1 && tscbPluginSet.Items.Count > 0)
                 tscbPluginSet.SelectedIndex = 0;
         }
 
@@ -313,7 +319,7 @@ namespace entity.Main
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
         /// <remarks></remarks>
-        private void Form1_DragDrop(object sender, DragEventArgs e)
+        public void Form1_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -468,9 +474,6 @@ namespace entity.Main
 
             wc.Dispose();
 
-            Prefs.lastCheck = DateTime.Now;
-            Prefs.Save();
-
             // Run update checker
             string args = "/pid:" + Process.GetCurrentProcess().Id;
             if (!showInfo)
@@ -482,7 +485,14 @@ namespace entity.Main
                 args += " /om:" + mapForm.map.filePath;
             }
 
-            Process.Start(Global.StartupPath + "\\" + updateUpdFile, args);
+            // Checks to see if Entity has been exited before running update routine (causes issues)
+            if (Process.GetCurrentProcess().MainWindowHandle.ToString() != "0")
+            {
+                Prefs.lastCheck = DateTime.Now;
+                Prefs.Save();
+
+                Process.Start(Global.StartupPath + "\\" + updateUpdFile, args);
+            }
         }
 
         /// <summary>
@@ -519,6 +529,12 @@ namespace entity.Main
 
                 i++;
             }
+
+            // Using arrow keys in menu causes scrolling past end of menu; fixed if we increase menu size by 1
+            this.menuFile.DropDown.AutoSize = false;
+            this.menuFile.DropDown.Size = new System.Drawing.Size(
+                    this.menuFile.DropDown.PreferredSize.Width,
+                    this.menuFile.DropDown.PreferredSize.Height + 1);
         }
 
         /// <summary>
@@ -595,8 +611,8 @@ namespace entity.Main
         }
 
         /// <summary>
-        /// When the main form deactivates, we disable each open map window, otherwise the first opened map will
-        /// always return to the focused position
+        /// When the main form deactivates, we disable each open map window below the active MDI child window,
+        /// otherwise the first OPENED map will always return to the focused position
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -604,12 +620,14 @@ namespace entity.Main
         {
             foreach (MapForm mf in this.MdiChildren)
             {
-                mf.Enabled = false;
+                if (this.ActiveMdiChild != mf)
+                    mf.Enabled = false;
             }            
         }
 
         /// <summary>
-        /// When the form regains focus, we re-enable each opened map. This keeps the maps in the current selected order.
+        /// When the form regains focus, we re-enable each opened map. This keeps the maps in the current
+        /// selected order.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

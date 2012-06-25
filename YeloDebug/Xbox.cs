@@ -1446,17 +1446,24 @@ namespace YeloDebug
 		/// </summary>
 		public Xbox()
         {
-            // load settings file
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load("YeloDebugSettings.xml");
+            try
+            {
+                // load settings file
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(Application.StartupPath + "\\YeloDebugSettings.xml");
 
-            // check that setting and assembly versions match
-            string assemblyVersion = Assembly.GetExecutingAssembly().FullName.Substring(19, 10);
-            string settingsVersion = xmlDoc.GetElementsByTagName("Version")[0].InnerText;
-            if (assemblyVersion != settingsVersion) throw new ApiException("YeloDebug version does not match the version of the settings file.");
+                // check that setting and assembly versions match
+                string assemblyVersion = Assembly.GetExecutingAssembly().FullName.Substring(19, 10);
+                string settingsVersion = xmlDoc.GetElementsByTagName("Version")[0].InnerText;
+                if (assemblyVersion != settingsVersion) throw new ApiException("YeloDebug version does not match the version of the settings file.");
 
-            // get settings information
-            xdkRegistryPath = xmlDoc.GetElementsByTagName("XdkRegistryPath")[0].InnerText;
+                // get settings information
+                xdkRegistryPath = xmlDoc.GetElementsByTagName("XdkRegistryPath")[0].InnerText;
+            }
+            catch
+            {
+                throw new Exception("YeloDebugSettings.xml not found or unreadable.");
+            }
         }
 
 		~Xbox() { Disconnect(); }
@@ -1471,41 +1478,47 @@ namespace YeloDebug
         {
             List<DebugConnection> connections = new List<DebugConnection>();
 
-            // create our connection
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            s.EnableBroadcast = true;
-
-            // broadcast our request
-            byte[] sendBuf = { 3, 0 };
-            s.SendTo(sendBuf, new IPEndPoint(IPAddress.Broadcast, 731));
-
-            // wait for response
-            DateTime before = DateTime.Now;
-            TimeSpan elapse = new TimeSpan();
-            while (s.Available == 0)
+            try
             {
-                Thread.Sleep(0);
-                elapse = DateTime.Now - before;
-                if (elapse.TotalMilliseconds > timeout)
-                    throw new NoConnectionException("No xbox connection detected.");
-            }
+                // create our connection
+                s.EnableBroadcast = true;
 
-            // parse any information returned
-            byte[] data = new byte[s.Available];
-            EndPoint end = new IPEndPoint(IPAddress.Any, 0);
-            while (s.Available > 0)
+                // broadcast our request
+                byte[] sendBuf = { 3, 0 };
+                s.SendTo(sendBuf, new IPEndPoint(IPAddress.Broadcast, 731));
+
+                // wait for response
+                DateTime before = DateTime.Now;
+                TimeSpan elapse = new TimeSpan();
+                while (s.Available == 0)
+                {
+                    Thread.Sleep(0);
+                    elapse = DateTime.Now - before;
+                    if (elapse.TotalMilliseconds > timeout)
+                        throw new NoConnectionException("No xbox connection detected.");
+                }
+
+                // parse any information returned
+                byte[] data = new byte[s.Available];
+                EndPoint end = new IPEndPoint(IPAddress.Any, 0);
+                while (s.Available > 0)
+                {
+                    s.ReceiveFrom(data, ref end);
+                    IPEndPoint endpoint = (IPEndPoint)end;
+                    connections.Add(new DebugConnection(((IPEndPoint)end).Address, ASCIIEncoding.ASCII.GetString(data, 2, data.Length - 2).Replace("\0", "")));
+                }
+
+            }
+            finally
             {
-                s.ReceiveFrom(data, ref end);
-                IPEndPoint endpoint = (IPEndPoint)end;
-                connections.Add(new DebugConnection(((IPEndPoint)end).Address, ASCIIEncoding.ASCII.GetString(data, 2, data.Length - 2).Replace("\0", "")));   
+                // close the connection
+                s.Close();
             }
-
-            // close the connection
-            s.Close();
 
             // check to make sure that each box has unique connection information...(case sensitive)
             for (int i = 0; i < connections.Count; i++)
-                for (int j = 0; j < connections.Count; j++)
+                for (int j = i; j < connections.Count; j++)
                     if (i != j && (connections[i].Name == connections[j].Name || connections[i].IP == connections[j].IP))
                         throw new NoConnectionException("Multiple consoles found that have the same connection information.  Please ensure that each box connected to the network has different debug names and ips.");
 
@@ -1696,9 +1709,17 @@ namespace YeloDebug
 
             // If we don't receive data back, then don't try to connect
             if (dc.IP == null)
-                return;
+            {
+                connected = false;
+                throw new NoConnectionException("No xbox connection detected.");
+            }
 
-            Connect(dc.Name);
+            //store debug info
+            debugName = LastConnectionUsed = dc.Name;
+            debugIP = dc.IP;
+
+            // Call shared connect function
+            _connect();
         }
 
         /// <summary>

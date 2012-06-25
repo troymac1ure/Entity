@@ -27,11 +27,7 @@ namespace Globals
         /// <remarks></remarks>
         static Global()
         {
-#if !DEBUG
             StartupPath = Application.StartupPath;
-#else
-            StartupPath = Path.GetDirectoryName(Application.StartupPath) + "\\Release";
-#endif
         }
 
         #endregion
@@ -39,9 +35,7 @@ namespace Globals
         #region Properties
 
         /// <summary>
-        /// Use this instead of Application.StartUpPath, so all additional
-        /// files (ie. plugins) can only exist in the RELEASE folder and this
-        /// string will point to that even when running in debug.
+        /// Is equal to Application.StartUpPath, although could be changed if needed
         /// </summary>
         /// <remarks></remarks>
         public static string StartupPath { get; private set; }

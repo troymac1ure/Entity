@@ -32,7 +32,7 @@ namespace entity.MapForms
             // Load the DDS info & picture
             loadDDSInfo(filename, this.bitm);
 
-            // ?????
+            // Get the filename variable from the path / filename combo
             filename = filename.Substring(filename.LastIndexOf('\\') + 1);
                        
             // Populate Bitmap Injection box with number of bitmaps in current selection
@@ -104,20 +104,8 @@ namespace entity.MapForms
                 totalSize *= 6;
             byte[] guh = new byte[totalSize];
             */
-            byte[] guh = new byte[br.BaseStream.Length-br.BaseStream.Position + (widthPad * dds.ddsd.height * byteStep)];
-            if (widthPad == 0)
-            {
-                br.BaseStream.Read(guh, 0, guh.Length);
-            }
-            else
-            {
-                // Change data to include padding
-                for (int h = 0; h < dds.ddsd.height; h++)
-                {
-                    br.BaseStream.Read(
-                        guh, h * (dds.ddsd.width + widthPad) * byteStep, dds.ddsd.width * byteStep);
-                }
-            }
+            byte[] guh = new byte[br.BaseStream.Length-br.BaseStream.Position]; // + (widthPad * dds.ddsd.height * byteStep)];
+            br.BaseStream.Read(guh, 0, guh.Length);
             
             // Determine DDS Format
             ParsedBitmap.BitmapFormat bmf = DDS.getBitmapFormat(dds);
@@ -152,6 +140,7 @@ namespace entity.MapForms
 
             #region Fill the source info box with the DDS information
             this.lbSourceDDS.Items.Add("Aspect : " + dds.ddsd.width + "x" + dds.ddsd.height);
+            this.lbSourceDDS.Items.Add("w/ Pad : " + (dds.ddsd.width + widthPad) + "x" + dds.ddsd.height);
             int bpp = 32;
             string format = string.Empty;
             switch (dds.ddsd.ddfPixelFormat.FourCC)
@@ -265,7 +254,10 @@ namespace entity.MapForms
             index = lbInjectionBitmap.SelectedIndex;
 
             lbDestBitmap.Items.Clear();
-            lbDestBitmap.Items.Add("Aspect : " + this.bitm.Properties[index].width + "x" + this.bitm.Properties[index].height);
+            int width = this.bitm.Properties[index].width;
+            lbDestBitmap.Items.Add("Aspect : " + width + "x" + this.bitm.Properties[index].height);
+            int tempPad = width % 16 == 0 ? 0 : (16 - width % 16);
+            lbDestBitmap.Items.Add("w/ Pad : " + (width + tempPad) + "x" + this.bitm.Properties[index].height);
             lbDestBitmap.Items.Add("BPP    : " + this.bitm.Properties[index].bitsPerPixel);
             lbDestBitmap.Items.Add("Type   : " + this.bitm.Properties[index].typename.ToString().Substring(10));
             lbDestBitmap.Items.Add("Format : " + this.bitm.Properties[index].formatname.ToString().Substring(12));

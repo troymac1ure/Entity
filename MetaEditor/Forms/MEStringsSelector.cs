@@ -366,6 +366,7 @@ namespace MetaEditor.Forms
             listBoxUpdate = true;
             timer1.Interval = 700;
             timer1.Enabled = true;
+            timer1.Start();
         }
 
         /// <summary>

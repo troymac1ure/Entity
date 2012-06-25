@@ -102,6 +102,11 @@ namespace entity.MapForms
         /// </summary>
         private int selectedplugin = -1;
 
+        /// <summary>
+        /// Keeps track of the currently viewed bitmap (for animated bitmaps)
+        /// </summary>
+        private int bitmapCount = 0;
+
         #endregion
 
         #region Constructors and Destructors
@@ -339,6 +344,13 @@ namespace entity.MapForms
                 }
             }
 
+            // Only allow bitmaps to select Bitmap Viewer
+            if (editMode == EditorModes.BitmapViewer && map.SelectedMeta.type != "bitm")
+            {
+                ltmpTools.Visible = true;
+                return;
+            }
+
             // "Check" the selected panel
             hexEditorToolStripMenuItem.Checked = (editMode == EditorModes.HexViewer);
             bitmapEditorToolStripMenuItem.Checked = (editMode == EditorModes.BitmapViewer);
@@ -378,17 +390,20 @@ namespace entity.MapForms
                 {
                     c.BringToFront();
 
-                    // Hide all other panels
+                    // Hide all other panels, except for Bitmap Viewer
                     for (int i = 1; i < this.splitContainer2.Panel1.Controls.Count; i++)
                     {
-                        this.splitContainer2.Panel1.Controls[i].Visible = false;
+                        if (this.splitContainer2.Panel1.Controls[i] != ltmpTools)
+                            this.splitContainer2.Panel1.Controls[i].Visible = false;
                     }
 
                     // This method allows us to have an auto-bitmap viewer
-                    if (map.SelectedMeta != null && map.SelectedMeta.type == "bitm" && editMode != EditorModes.BitmapViewer)
-                        ltmpTools.Visible = false;
-                    else
-                        ltmpTools.SendToBack();
+                    if (map.SelectedMeta != null && map.SelectedMeta.type == "bitm")
+                        if (editMode != EditorModes.BitmapViewer)
+                            ltmpTools.Visible = false;
+                        else
+                            this.splitContainer2.Panel1.Controls[1].Visible = true;
+                            //ltmpTools.SendToBack();
                 }
             }
 
@@ -401,6 +416,13 @@ namespace entity.MapForms
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
+            if (map.SelectedMeta == null)
+            {
+                map.OpenMap(MapTypes.Internal);
+                map.SelectedMeta = GetMapBitmapMeta(map);
+                map.CloseMap();
+                this.selectTag(map.SelectedMeta.TagIndex);
+            }
             if (map.SelectedMeta.type == "bitm")
             {
                 this.ltmpTools.Visible = true;
@@ -454,19 +476,28 @@ namespace entity.MapForms
         public void DisplayMapBitmap()
         {
             map.OpenMap(MapTypes.Internal);
-            Meta m = GetMapBitmapMeta(map);
-            if (m != null)
+            try
             {
-                ParsedBitmap pm = new ParsedBitmap(ref m, map);
-                //if (bitmMainPtr != IntPtr.Zero)
-                //{
-                //    Marshal.FreeHGlobal(bitmMainPtr);
-                //}
+                Meta m = GetMapBitmapMeta(map);
+                if (m != null)
+                {
+                    ParsedBitmap pm = new ParsedBitmap(ref m, map);
+                    //if (bitmMainPtr != IntPtr.Zero)
+                    //{
+                    //    Marshal.FreeHGlobal(bitmMainPtr);
+                    //}
 
-                pictureBox1.Image = pm.FindChunkAndDecode(0, 0, 0, ref m, map, 0, 0);
+                    pictureBox1.Image = pm.FindChunkAndDecode(0, 0, 0, ref m, map, 0, 0);
+                }
             }
-
-            map.CloseMap();
+            catch
+            {
+                // Who cares if we can't load the map bitmap due to a missing MainMenu.map?
+            }
+            finally
+            {
+                map.CloseMap();
+            }
         }
 
         /// <summary>
@@ -484,7 +515,7 @@ namespace entity.MapForms
             {
                 // ;&&Map.HaloVersion!= Map.HaloVersionEnum.Halo1 )
                 ParsedBitmap pm = new ParsedBitmap(ref meta, map);
-                
+
                 Bitmap b = pm.FindChunkAndDecode(0, 0, 0, ref meta, map, 0, 0);
 
                 // Raw.ParsedBitmap.BitmapInfo bmInfo = new Entity.Raw.ParsedBitmap.BitmapInfo(pm.Properties[0].formatname, pm.Properties[0].swizzle);
@@ -499,6 +530,7 @@ namespace entity.MapForms
                 {
                     buttonInternalize.Visible = true;
                 }
+                timer1.Start();
             }
             else
             {
@@ -4167,7 +4199,7 @@ namespace entity.MapForms
         /// <param name="e">The e.</param>
         /// <remarks></remarks>
         private void treeView1_DragDrop(object sender, DragEventArgs e)
-        {
+        {            
             MapForm f = (MapForm)e.Data.GetData(this.GetType());
             this.treeView1.PathSeparator = ".";
             f.treeView1.PathSeparator = ".";
@@ -4599,16 +4631,17 @@ namespace entity.MapForms
             public void AddMetasToListView(ref Map map, ListView templv)
             {
                 templv.VirtualMode = true;
+                templv.VirtualListSize = 0;
                 templv.RetrieveVirtualItem -= metalist_RetrieveVirtualItem;
                 templv.BeginUpdate();
                 templv.AutoScrollOffset = new Point(0, 0);
-                ListItems.Clear();
                 templv.Columns.Clear();
                 templv.View = View.Details;
                 templv.CheckBoxes = true;
                 templv.Columns.Add("Size", 80, HorizontalAlignment.Center);
                 templv.Columns.Add("Tag Type", 80, HorizontalAlignment.Center);
                 templv.Columns.Add("Tag Name", 180, HorizontalAlignment.Center);
+                ListItems.Clear();
 
                 // templv.Sort = false;
                 ListViewItem l;
@@ -4639,6 +4672,105 @@ namespace entity.MapForms
             }
 
             /// <summary>
+            /// The add references to list view.
+            /// </summary>
+            /// <param name="meta">The meta.</param>
+            /// <param name="templv">The templv.</param>
+            /// <param name="type">The type.</param>
+            /// <remarks></remarks>
+            public void AddReferencesToListView(Meta meta, ListView templv, Meta.ItemType type)
+            {
+                if (meta == null)
+                {
+                    return;
+                }
+                
+                ///// Annoying error ?here? on Vista, etc /////
+                try
+                {
+                    templv.VirtualMode = true;
+                    templv.VirtualListSize = 0;
+                    templv.RetrieveVirtualItem -= templv_RetrieveVirtualItem;
+                    templv.BeginUpdate();
+                    templv.AutoScrollOffset = new Point(0, 0);
+                    ListItems.Clear();
+
+                    templv.View = View.Details;
+
+                    ListViewItem l;
+                    for (int x = 0; x < meta.items.Count; x++)
+                    {
+                        Meta.Item i = meta.items[x];
+
+                        if (i.type != type)
+                        {
+                            continue;
+                        }
+
+                        switch (i.type)
+                        {
+                            case Meta.ItemType.Reflexive:
+                                Meta.Reflexive r = (Meta.Reflexive)i;
+                                l = new ListViewItem(r.description);
+                                l.Tag = x;
+
+                                l.SubItems.Add(r.offset.ToString());
+                                l.SubItems.Add(r.translation.ToString());
+                                l.SubItems.Add(r.chunkcount.ToString());
+                                l.SubItems.Add(r.chunksize.ToString());
+                                l.SubItems.Add(r.pointstotagtype);
+                                l.SubItems.Add(r.pointstotagname);
+                                l.SubItems.Add(r.intagtype);
+                                l.SubItems.Add(r.intagname);
+                                ListItems.Add(l);
+                                break;
+                            case Meta.ItemType.Ident:
+                                Meta.Ident id = (Meta.Ident)i;
+                                l = new ListViewItem(id.description);
+                                l.Tag = x;
+
+                                l.SubItems.Add(id.offset.ToString());
+                                l.SubItems.Add(id.pointstotagtype);
+                                l.SubItems.Add(id.pointstotagname);
+                                l.SubItems.Add(id.intagtype);
+                                l.SubItems.Add(id.intagname);
+                                ListItems.Add(l);
+                                break;
+                            case Meta.ItemType.String:
+                                Meta.String s = (Meta.String)i;
+                                l = new ListViewItem(s.description);
+                                l.Tag = x;
+
+                                l.SubItems.Add(s.offset.ToString());
+                                l.SubItems.Add(s.name);
+                                l.SubItems.Add(s.intagtype);
+                                l.SubItems.Add(s.intagname);
+                                ListItems.Add(l);
+                                break;
+                        }
+
+                        // System.Windows.Forms.Layout.LayoutEngine
+                        // Application.DoEvents();
+                    }
+
+                    templv.VirtualListSize = ListItems.Count;
+
+                    templv.RetrieveVirtualItem += templv_RetrieveVirtualItem;
+                    templv.EndUpdate();
+                }
+                catch (Exception exc)
+                {
+                    Global.ShowErrorMsg("Reference viewer, ListView population exception", exc);
+                }
+                Application.DoEvents();
+            }
+
+            #endregion
+
+            // Hashtable curDirectory;
+            #region Methods
+
+            /// <summary>
             /// The add metas to tree view.
             /// </summary>
             /// <param name="map">The map.</param>
@@ -4661,103 +4793,6 @@ namespace entity.MapForms
                         break;
                 }
             }
-
-            /// <summary>
-            /// The add references to list view.
-            /// </summary>
-            /// <param name="meta">The meta.</param>
-            /// <param name="templv">The templv.</param>
-            /// <param name="type">The type.</param>
-            /// <remarks></remarks>
-            public void AddReferencesToListView(Meta meta, ListView templv, Meta.ItemType type)
-            {
-                if (meta == null)
-                {
-                    return;
-                }
-
-                templv.VirtualMode = true;
-                templv.RetrieveVirtualItem -= templv_RetrieveVirtualItem;
-                templv.BeginUpdate();
-                templv.AutoScrollOffset = new Point(0, 0);
-                ListItems.Clear();
-
-                templv.View = View.Details;
-
-                ListViewItem l;
-                for (int x = 0; x < meta.items.Count; x++)
-                {
-                    Meta.Item i = meta.items[x];
-
-                    if (i.type != type)
-                    {
-                        continue;
-                    }
-
-                    switch (i.type)
-                    {
-                        case Meta.ItemType.Reflexive:
-                            Meta.Reflexive r = (Meta.Reflexive)i;
-                            l = new ListViewItem(r.description);
-                            l.Tag = x;
-
-                            l.SubItems.Add(r.offset.ToString());
-                            l.SubItems.Add(r.translation.ToString());
-                            l.SubItems.Add(r.chunkcount.ToString());
-                            l.SubItems.Add(r.chunksize.ToString());
-                            l.SubItems.Add(r.pointstotagtype);
-                            l.SubItems.Add(r.pointstotagname);
-                            l.SubItems.Add(r.intagtype);
-                            l.SubItems.Add(r.intagname);
-                            ListItems.Add(l);
-                            break;
-                        case Meta.ItemType.Ident:
-                            Meta.Ident id = (Meta.Ident)meta.items[x];
-                            l = new ListViewItem(id.description);
-                            l.Tag = x;
-
-                            l.SubItems.Add(id.offset.ToString());
-                            l.SubItems.Add(id.pointstotagtype);
-                            l.SubItems.Add(id.pointstotagname);
-                            l.SubItems.Add(id.intagtype);
-                            l.SubItems.Add(id.intagname);
-                            ListItems.Add(l);
-                            break;
-                        case Meta.ItemType.String:
-                            Meta.String s = (Meta.String)meta.items[x];
-                            l = new ListViewItem(s.description);
-                            l.Tag = x;
-
-                            l.SubItems.Add(s.offset.ToString());
-                            l.SubItems.Add(s.name);
-                            l.SubItems.Add(s.intagtype);
-                            l.SubItems.Add(s.intagname);
-                            ListItems.Add(l);
-                            break;
-                    }
-
-                    // System.Windows.Forms.Layout.LayoutEngine
-                    // Application.DoEvents();
-                    RichTextBox rr = new RichTextBox();
-                }
-
-                try
-                {
-                    templv.VirtualListSize = ListItems.Count;
-                }
-                catch
-                {
-                }
-
-                templv.RetrieveVirtualItem += templv_RetrieveVirtualItem;
-                templv.EndUpdate();
-                Application.DoEvents();
-            }
-
-            #endregion
-
-            // Hashtable curDirectory;
-            #region Methods
 
             /// <summary>
             /// The add meta by folder to tree view.
@@ -5035,7 +5070,14 @@ namespace entity.MapForms
             /// <remarks></remarks>
             private void metalist_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
             {
-                e.Item = ListItems[e.ItemIndex];
+                try
+                {
+                    e.Item = ListItems[e.ItemIndex];
+                }
+                catch (Exception ex)
+                {
+                    Global.ShowErrorMsg("Retrieve Virtual Item Exception, " + e.ItemIndex + " / " + ListItems.Count, ex);
+                }
             }
 
             /// <summary>
@@ -5046,7 +5088,14 @@ namespace entity.MapForms
             /// <remarks></remarks>
             private void templv_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
             {
-                e.Item = ListItems[e.ItemIndex];
+                try
+                {
+                    e.Item = ListItems[e.ItemIndex];
+                }
+                catch (Exception ex)
+                {
+                    Global.ShowErrorMsg("Retrieve Virtual Item Exception, " + e.ItemIndex + " / " + ListItems.Count, ex);
+                }
             }
 
             #endregion
@@ -5102,15 +5151,43 @@ namespace entity.MapForms
             return control; 
         } 
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.F1:
+                    setEditorMode(EditorModes.ReferenceEditor);
+                    return true;
+                case Keys.F2:
+                    setEditorMode(EditorModes.MetaEditor2);
+                    return true;
+                case Keys.F3:
+                    setEditorMode(EditorModes.MetaEditor1);
+                    return true;
+                case Keys.F4:
+                    setEditorMode(EditorModes.HexViewer);
+                    return true;
+                case Keys.F5:
+                    setEditorMode(EditorModes.BitmapViewer);
+                    return true;
+                default:
+                    // Call the base class
+                    return base.ProcessCmdKey(ref msg, keyData);
+            }
+        } 
+
         private void MapForm_KeyPress(object sender, KeyPressEventArgs e)
         {
             Control c = FindFocusedControl(this);
-            switch (c.GetType().ToString())
+            if (c != null)
             {
-                case "System.Windows.Forms.ComboBox":
-                case "System.Windows.Forms.ListBox":
-                case "System.Windows.Forms.TextBox":
-                    return;
+                switch (c.GetType().ToString())
+                {
+                    case "System.Windows.Forms.ComboBox":
+                    case "System.Windows.Forms.ListBox":
+                    case "System.Windows.Forms.TextBox":
+                        return;
+                }
             }
             switch (e.KeyChar)
             {
@@ -5135,5 +5212,25 @@ namespace entity.MapForms
             e.Handled = true;
         }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (map.SelectedMeta.type != "bitm")
+            {
+                timer1.Stop();
+                return;
+            }
+
+            ParsedBitmap pm = new ParsedBitmap(ref map.SelectedMeta, map);
+            if (pm.Properties[0].typename != ParsedBitmap.BitmapType.BITM_TYPE_3D)
+            {
+                timer1.Stop();
+                return;
+            }
+            Bitmap b = pm.FindChunkAndDecode(0, 0, 0, ref map.SelectedMeta, map, bitmapCount++, 0);
+            pictureBox1.Image = b;
+            if (bitmapCount > pm.Properties[0].depth)
+                bitmapCount = 1;
+
+        }        
     }
 }

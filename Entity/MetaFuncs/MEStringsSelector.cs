@@ -173,6 +173,7 @@ namespace entity.MetaFuncs
             listBox1.TopIndex = _selectedIndex;
             textBox1.Text = string.Empty;
             textBox1.Focus();
+            
         }
 
         /// <summary>
@@ -387,10 +388,11 @@ namespace entity.MetaFuncs
         /// </param>
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            timer1.Stop();
+            tmr_MEStrings.Stop();
             listBoxUpdate = true;
-            timer1.Interval = 700;
-            timer1.Enabled = true;
+            tmr_MEStrings.Interval = 700;
+            tmr_MEStrings.Enabled = true;
+            tmr_MEStrings.Start();
         }
 
         /// <summary>
@@ -402,7 +404,7 @@ namespace entity.MetaFuncs
         /// <param name="e">
         /// The e.
         /// </param>
-        private void timer1_Tick(object sender, EventArgs e)
+        private void tmr_MEStrings_Tick(object sender, EventArgs e)
         {
             if (listBox1.Focused)
             {
@@ -414,7 +416,7 @@ namespace entity.MetaFuncs
                 return;
             }
 
-            timer1.Stop();
+            tmr_MEStrings.Stop();
             listBoxUpdate = false;
             string oldSel = null;
             if (listBox1.SelectedIndex != -1)
@@ -436,7 +438,7 @@ namespace entity.MetaFuncs
                 listBox1.SelectedIndex = 0;
             }
 
-            timer1.Enabled = true;
+            tmr_MEStrings.Enabled = true;
         }
 
         #endregion

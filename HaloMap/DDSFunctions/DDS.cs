@@ -574,24 +574,35 @@ namespace HaloMap.DDSFunctions
             // ' Read dds header
             dds.ReadStruct(ref br);
 
-            if (pmProp.width != dds.ddsd.width || pmProp.height != dds.ddsd.height)
+            // Check padded values as we can allow bitmaps of different size if they have the same padding
+            int pmPropPaddedWidth = pmProp.width + (pmProp.width % 16 == 0 ? 0 : (16 - pmProp.width % 16));
+            int ddsPaddedWidth = dds.ddsd.width + (dds.ddsd.width % 16 == 0 ? 0 : (16 - dds.ddsd.width % 16));
+            if (ddsPaddedWidth != pmPropPaddedWidth || pmProp.height != dds.ddsd.height)
             {
-                MessageBox.Show("ERROR (Bitmap #" + index + "): Images are different dimensions!");
+                MessageBox.Show("ERROR (Bitmap #" + index + "): Images have different padded dimensions!");
                 return;
             }
-            
+            // Set new image width
+            pmProp.width = (ushort)dds.ddsd.width;
+
+            #region Discover if we are doing a bitmap, 3D or cubemap
             ParsedBitmap.BitmapType type = ParsedBitmap.BitmapType.BITM_TYPE_2D;
             if ((dds.ddsd.ddsCaps.caps2 & (int)DDSEnum.DDSCAPS2_VOLUME) > 0)
                 type = ParsedBitmap.BitmapType.BITM_TYPE_3D;
             else if ((dds.ddsd.ddsCaps.caps2 & (int)DDSEnum.DDSCAPS2_CUBEMAP) > 0)
                 type = ParsedBitmap.BitmapType.BITM_TYPE_CUBEMAP;
+            #endregion
 
             // If they are different types
             if (pmProp.typename != type)
             {
-                MessageBox.Show("ERROR: Images are different types!");
+                MessageBox.Show("ERROR: Images are different types!" +
+                    "\nInjected image = " + type +
+                    "\nInternal image = " + pmProp.typename);
                 return;
             }
+            if (bi.formatname.ToString().ToUpper().Contains("DXT"))
+                bi.bitsPerPixel = 32; // Some programs don't save these values, so to be sure
 
             int rawsize = (int)br.BaseStream.Length - 128;
             br.BaseStream.Position = 128;
@@ -614,7 +625,7 @@ namespace HaloMap.DDSFunctions
                 {
                     #region calculate width, height & stream length of mipmap
                     // each mipmap is 1/2 width & height
-                    int tWidth = dds.ddsd.width / (1 << i);
+                    int tWidth = ddsPaddedWidth / (1 << i);
                     int tHeight = dds.ddsd.height / (1 << i);
 
                     // Contains the size of the current MipMap
@@ -634,8 +645,24 @@ namespace HaloMap.DDSFunctions
                     }
                     #endregion
 
-                    mipStreams[c][i] = new byte[Math.Min(mipStreamLength, bChunk.Length - mipOffset)];
-                    Array.Copy(bChunk, mipOffset, mipStreams[c][i], 0, mipStreams[c][i].Length);
+                    mipStreams[c][i] = new byte[mipStreamLength];
+                    if (dds.ddsd.width == ddsPaddedWidth)
+                        Array.Copy(bChunk, mipOffset, mipStreams[c][i], 0, mipStreams[c][i].Length);
+                    else
+                    {
+                        int byteStep = (dds.ddsd.ddfPixelFormat.RGBBitCount >> 3);
+                        Array.Clear(mipStreams[c][i], 0, mipStreams[c][i].Length);
+                        // Copy each line, adding padding to the output
+                        for (int h = 0; h < (dds.ddsd.height); h++)
+                        {
+                            Array.Copy(
+                                bChunk,
+                                mipOffset + h * dds.ddsd.width * byteStep,
+                                mipStreams[c][i],
+                                h * ddsPaddedWidth * byteStep,
+                                dds.ddsd.width * byteStep);
+                        }
+                    }
                     mipOffset += mipStreams[c][i].Length;
                 }
 
@@ -650,7 +677,7 @@ namespace HaloMap.DDSFunctions
                     string tempInfo =
                         "\nBPP: " + pmProp.bitsPerPixel.ToString() + ", " + bi.bitsPerPixel.ToString() +
                         "\nDXT: " + pmProp.formatname.ToString() + ", " + bi.formatname.ToString() + " (DXT = " + pmProp.formatname.ToString().Contains("DXT") + ")";
-                    MessageBox.Show("Incompatible format types\n *NOTE* No conversions to any DXT (compressed) format supported!\n" + tempInfo);
+                    MessageBox.Show("Incompatible format types\n Check Bits Per Pixel & Format type\n *NOTE* No conversions to any DXT (compressed) format supported!\n" + tempInfo);
                     return;
                 }
 
@@ -701,11 +728,13 @@ namespace HaloMap.DDSFunctions
                 #endregion
 
 
-                #region Add padding, byte changes, etc
+                #region Add padding, byte changes, etc                
                 for (int mi = 0; mi < mipStreams[c].Length; mi++)
                 {
                     int mipWidth = pmProp.width >> mi;
 
+                    // We don't need to pad the saved data as we pad any data read in
+                    /*
                     if (pmProp.width % 16 != 0)
                         //if (mipWidth % 16 != 0)
                     {
@@ -727,6 +756,7 @@ namespace HaloMap.DDSFunctions
                         }
                         mipStreams[c][mi] = paddedChunk;
                     }
+                    */
 
                     // G8B8 is based on a 128 value for 0 and adds -/+, so adjust values to 128
                     if (pmProp.formatname == ParsedBitmap.BitmapFormat.BITM_FORMAT_G8B8)
@@ -1540,8 +1570,11 @@ namespace HaloMap.DDSFunctions
                 // For volume textures, this is the depth of the volume.
                 // dwFlags should include DDSD_DEPTH in this case.
 
-                //// WRONG! There are volume textures / 3D bitmaps
-                depth = 0; // 'There are no volume textures (that I know of) in Halo.
+                depth = b2.depth > 1 ? b2.depth : 0; // UPDATE: There are volume textures / 3D bitmaps
+                if (depth > 0)
+                {
+                    flags = flags + (int)DDSEnum.DDSD_DEPTH;
+                }
 
                 // For items with mipmap levels, this is the total number of levels in the mipmap
                 // chain of the main image. dwFlags should include DDSD_MIPMAPCOUNT in this case

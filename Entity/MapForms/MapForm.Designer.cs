@@ -326,6 +326,7 @@ namespace entity.MapForms
             this.viewPRTMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extractPRTMOBJToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBitmapDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.treeviewcontext.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -725,55 +726,55 @@ namespace entity.MapForms
             this.referenceEditorToolStripMenuItem.Checked = true;
             this.referenceEditorToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.referenceEditorToolStripMenuItem.Name = "referenceEditorToolStripMenuItem";
-            this.referenceEditorToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.referenceEditorToolStripMenuItem.Text = "[1] Reference Editor";
+            this.referenceEditorToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.referenceEditorToolStripMenuItem.Text = "[F1] Reference Editor";
             this.referenceEditorToolStripMenuItem.Click += new System.EventHandler(this.referenceToolStripMenuItem_Click);
             // 
             // metaEditorNewToolStripMenuItem
             // 
             this.metaEditorNewToolStripMenuItem.Name = "metaEditorNewToolStripMenuItem";
-            this.metaEditorNewToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.metaEditorNewToolStripMenuItem.Text = "[2] Meta Editor Plus";
+            this.metaEditorNewToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.metaEditorNewToolStripMenuItem.Text = "[F2] Meta Editor Plus";
             this.metaEditorNewToolStripMenuItem.Click += new System.EventHandler(this.metaEditorNewToolStripMenuItem_Click);
             // 
             // metaEditorToolStripMenuItem
             // 
             this.metaEditorToolStripMenuItem.Name = "metaEditorToolStripMenuItem";
-            this.metaEditorToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.metaEditorToolStripMenuItem.Text = "[3] Meta Editor";
+            this.metaEditorToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.metaEditorToolStripMenuItem.Text = "[F3] Meta Editor";
             this.metaEditorToolStripMenuItem.Click += new System.EventHandler(this.metaEditorToolStripMenuItem_Click);
             // 
             // hexEditorToolStripMenuItem
             // 
             this.hexEditorToolStripMenuItem.Name = "hexEditorToolStripMenuItem";
-            this.hexEditorToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.hexEditorToolStripMenuItem.Text = "[4] Hex Editor";
+            this.hexEditorToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.hexEditorToolStripMenuItem.Text = "[F4] Hex Editor";
             this.hexEditorToolStripMenuItem.Click += new System.EventHandler(this.hexEditorToolStripMenuItem_Click);
             // 
             // rebuilderToolStripMenuItem
             // 
             this.rebuilderToolStripMenuItem.Name = "rebuilderToolStripMenuItem";
-            this.rebuilderToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.rebuilderToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.rebuilderToolStripMenuItem.Text = "Rebuilder";
             this.rebuilderToolStripMenuItem.Click += new System.EventHandler(this.rebuilderToolStripMenuItem_Click);
             // 
             // fixSystemLinkToolStripMenuItem
             // 
             this.fixSystemLinkToolStripMenuItem.Name = "fixSystemLinkToolStripMenuItem";
-            this.fixSystemLinkToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.fixSystemLinkToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.fixSystemLinkToolStripMenuItem.Text = "Fix System Link";
             this.fixSystemLinkToolStripMenuItem.Click += new System.EventHandler(this.fixSystemLinkToolStripMenuItem_Click);
             // 
             // pluginsToolStripMenuItem
             // 
             this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
-            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.pluginsToolStripMenuItem.Text = "Plugins";
             // 
             // exportScriptsToolStripMenuItem
             // 
             this.exportScriptsToolStripMenuItem.Name = "exportScriptsToolStripMenuItem";
-            this.exportScriptsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.exportScriptsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.exportScriptsToolStripMenuItem.Text = "Export Scripts";
             this.exportScriptsToolStripMenuItem.Visible = false;
             this.exportScriptsToolStripMenuItem.Click += new System.EventHandler(this.exportScriptsToolStripMenuItem_Click);
@@ -841,7 +842,7 @@ namespace entity.MapForms
             this.convertToBumpMapToolStripMenuItem,
             this.bitmapEditorToolStripMenuItem});
             this.BitmapContextStrip.Name = "contextMenuStrip1";
-            this.BitmapContextStrip.Size = new System.Drawing.Size(189, 92);
+            this.BitmapContextStrip.Size = new System.Drawing.Size(189, 114);
             // 
             // saveBitmapToolStripMenuItem
             // 
@@ -854,7 +855,7 @@ namespace entity.MapForms
             // 
             this.injectBitmapToolStripMenuItem.Name = "injectBitmapToolStripMenuItem";
             this.injectBitmapToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.injectBitmapToolStripMenuItem.Text = "Inject";
+            this.injectBitmapToolStripMenuItem.Text = "Inject Bitmap";
             this.injectBitmapToolStripMenuItem.Click += new System.EventHandler(this.injectBitmapToolStripMenuItem_Click);
             // 
             // convertToBumpMapToolStripMenuItem
@@ -868,7 +869,7 @@ namespace entity.MapForms
             // 
             this.bitmapEditorToolStripMenuItem.Name = "bitmapEditorToolStripMenuItem";
             this.bitmapEditorToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.bitmapEditorToolStripMenuItem.Text = "Bitmap Editor";
+            this.bitmapEditorToolStripMenuItem.Text = "[F5] Bitmap Editor";
             this.bitmapEditorToolStripMenuItem.Click += new System.EventHandler(this.bitmapEditorToolStripMenuItem_Click);
             // 
             // secondaryMagicBox
@@ -1470,6 +1471,7 @@ namespace entity.MapForms
             this.hexView1.BackColor = System.Drawing.Color.DarkGray;
             this.hexView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.hexView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.hexView1.Enabled = false;
             this.hexView1.Location = new System.Drawing.Point(0, 0);
             this.hexView1.Name = "hexView1";
             this.hexView1.Padding = new System.Windows.Forms.Padding(10);
@@ -1512,7 +1514,7 @@ namespace entity.MapForms
             // LibraryPanel
             // 
             this.LibraryPanel.AutoScroll = true;
-            this.LibraryPanel.BackColor = System.Drawing.Color.White;
+            this.LibraryPanel.BackColor = System.Drawing.Color.DarkGray;
             this.LibraryPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LibraryPanel.Location = new System.Drawing.Point(0, 0);
             this.LibraryPanel.Name = "LibraryPanel";
@@ -1786,6 +1788,11 @@ namespace entity.MapForms
             // 
             this.openBitmapDialog1.Filter = "DDS  (*.DDS) | *.DDS";
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 80;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // MapForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -1798,7 +1805,6 @@ namespace entity.MapForms
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeView1_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeView1_DragEnter);
-            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MapForm_KeyPress);
             this.TextChanged += new System.EventHandler(this.MapForm_TextChanged);
             this.treeviewcontext.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
@@ -1847,6 +1853,7 @@ namespace entity.MapForms
         private Button btnUndock;
         private Label lblRawSize;
         private RichTextBox metaRawBox;
+        private Timer timer1;
     }
 }
 

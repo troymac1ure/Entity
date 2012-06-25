@@ -50,6 +50,7 @@ namespace entity.Main
             tbExtractsFolder.Text = Prefs.pathExtractsFolder;
             tbPatchFolder.Text = Prefs.pathPatchFolder;
             useDefaultMaps.Checked = Prefs.useDefaultMaps;
+            cbUseRegistry.Checked = Prefs.useRegistryEntries;
             checkUpdates.SelectedItem = Prefs.checkUpdate;
 
             /*
@@ -238,6 +239,7 @@ namespace entity.Main
             Prefs.pathExtractsFolder = tbExtractsFolder.Text;
             Prefs.pathPatchFolder = tbPatchFolder.Text;
             Prefs.useDefaultMaps = useDefaultMaps.Checked;
+            Prefs.useRegistryEntries = cbUseRegistry.Checked;
             Prefs.checkUpdate = (Prefs.updateFrequency)checkUpdates.SelectedItem;
 
             Prefs.Save();
@@ -263,7 +265,7 @@ namespace entity.Main
         /// <param name="e"></param>
         private void btnClearRegistry_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("This will remove all Halo 2 entires from the registry. Are you sure you wish to cntinue?",
+            if (MessageBox.Show("This will remove all Halo 2 entires from the registry. Are you sure you wish to continue?",
                                 "Remove Halo 2 Registry Entries?", 
                                 MessageBoxButtons.YesNo) == DialogResult.Yes)
             {

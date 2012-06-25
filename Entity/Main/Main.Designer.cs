@@ -143,7 +143,7 @@ namespace entity.Main
             this.menuStripDebug.Name = "menuStripDebug";
             this.menuStripDebug.Size = new System.Drawing.Size(383, 25);
             this.menuStripDebug.Stretch = false;
-            this.menuStripDebug.TabIndex = 3;
+            this.menuStripDebug.TabIndex = 5;
             this.menuStripDebug.Text = "Debug Xbox";
             // 
             // tslblDebugIP
@@ -157,6 +157,7 @@ namespace entity.Main
             this.tstbDebugIP.Name = "tstbDebugIP";
             this.tstbDebugIP.Size = new System.Drawing.Size(100, 21);
             this.tstbDebugIP.Text = "<Auto>";
+            this.tstbDebugIP.TextChanged += new System.EventHandler(this.tstbDebugIP_TextChanged);
             this.tstbDebugIP.Click += new System.EventHandler(this.tstbDebugIP_Click);
             // 
             // tsbtnDebugConnect
@@ -239,7 +240,7 @@ namespace entity.Main
             // 
             // mainMenu1
             // 
-            this.mainMenu1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.mainMenu1.Dock = System.Windows.Forms.DockStyle.None;
             this.mainMenu1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuFile,
             this.menuTools,
@@ -250,7 +251,7 @@ namespace entity.Main
             this.mainMenu1.Name = "mainMenu1";
             this.mainMenu1.Size = new System.Drawing.Size(256, 24);
             this.mainMenu1.Stretch = false;
-            this.mainMenu1.TabIndex = 5;
+            this.mainMenu1.TabIndex = 3;
             this.mainMenu1.Text = "MainMenu";
             this.mainMenu1.ItemAdded += new System.Windows.Forms.ToolStripItemEventHandler(this.MainMenuStrip_ItemAdded);
             // 
@@ -318,6 +319,7 @@ namespace entity.Main
             this.closeEntity.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.X)));
             this.closeEntity.Size = new System.Drawing.Size(256, 22);
             this.closeEntity.Text = "Exit";
+            this.closeEntity.Click += new System.EventHandler(this.closeEntity_Click);
             // 
             // menuItem1
             // 
@@ -457,6 +459,7 @@ namespace entity.Main
             this.tsPanelTop.Controls.Add(this.menuStripDebug);
             this.tsPanelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.tsPanelTop.Location = new System.Drawing.Point(0, 0);
+            this.tsPanelTop.MaximumSize = new System.Drawing.Size(8000, 50);
             this.tsPanelTop.Name = "tsPanelTop";
             this.tsPanelTop.Orientation = System.Windows.Forms.Orientation.Horizontal;
             this.tsPanelTop.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
@@ -482,6 +485,7 @@ namespace entity.Main
             this.tsPanelBottom.ContextMenuStrip = this.contextMenuStripMenu;
             this.tsPanelBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tsPanelBottom.Location = new System.Drawing.Point(0, 645);
+            this.tsPanelBottom.MaximumSize = new System.Drawing.Size(8000, 25);
             this.tsPanelBottom.Name = "tsPanelBottom";
             this.tsPanelBottom.Orientation = System.Windows.Forms.Orientation.Horizontal;
             this.tsPanelBottom.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
@@ -490,6 +494,7 @@ namespace entity.Main
             // 
             // Form1
             // 
+            this.AllowDrop = true;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(960, 645);
@@ -503,7 +508,11 @@ namespace entity.Main
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Entity";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Deactivate += new System.EventHandler(this.Form1_Deactivate);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Activated += new System.EventHandler(this.Form1_Activated);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
             this.menuStripDebug.ResumeLayout(false);
             this.menuStripDebug.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -515,7 +524,6 @@ namespace entity.Main
             this.contextMenuStripMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         /// <summary>
@@ -526,7 +534,7 @@ namespace entity.Main
             foreach (MenuStrip ms in tsPanelTop.Controls)
             {
                 // Don't include the mainmenu in our list
-                if (ms.Text == MainMenuStrip.Text)
+                if (ms == mainMenu1)
                     continue;
                 int i = contextMenuStripMenu.Items.IndexOfKey(ms.Text);
                 if (i == -1)
@@ -619,17 +627,19 @@ namespace entity.Main
 
         /// <summary>
         /// Removes the Minimize, Restore & Close buttons from being placed in out MenuStrip when maximized
+        /// as they are placed in a strange location due to multiple toolstripmenus
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void MainMenuStrip_ItemAdded(object sender, ToolStripItemEventArgs e)
-        {
-            for (int x = this.MainMenuStrip.Items.Count - 1; x >= 0; x--)
+        {            
+            MenuStrip ms = (MenuStrip)sender;
+            for (int x = ms.Items.Count - 1; x >= 0; x--)
             {
-                if (this.MainMenuStrip.Items[x].Text == "Mi&nimize" ||
-                    this.MainMenuStrip.Items[x].Text == "&Restore" ||
-                    this.MainMenuStrip.Items[x].Text == "&Close")
-                    this.MainMenuStrip.Items.RemoveAt(x);
+                if (ms.Items[x].Text == "Mi&nimize" ||
+                    ms.Items[x].Text == "&Restore" ||
+                    ms.Items[x].Text == "&Close")
+                    ms.Items.RemoveAt(x);
             }
         }
 

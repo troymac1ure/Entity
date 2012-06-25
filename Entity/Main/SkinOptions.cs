@@ -60,17 +60,25 @@ namespace entity.Main
             skinshit = new SkinInfo[100];
 
             DirectoryInfo di = new DirectoryInfo(Global.StartupPath + "\\Skins");
-            FileInfo[] diar1 = di.GetFiles("*.esf");
-            int i = 0;
-            foreach (FileInfo dra in diar1)
+            try
             {
-                skinshit[i] = teststuff(dra.ToString());
-                i = i + 1;
-            }
+                FileInfo[] diar1 = di.GetFiles("*.esf");
+                int i = 0;
+                foreach (FileInfo dra in diar1)
+                {
+                    skinshit[i] = teststuff(dra.ToString());
+                    i = i + 1;
+                }
 
-            for (int j = 0; j < i; j++)
+                for (int j = 0; j < i; j++)
+                {
+                    comboBox1.Items.Add(skinshit[j].skin_name);
+                }
+            }
+            catch (Exception ex)
             {
-                comboBox1.Items.Add(skinshit[j].skin_name);
+                Global.ShowErrorMsg("Error finding skins or skin directory.", ex);
+                this.Close();
             }
         }
 
@@ -176,7 +184,8 @@ namespace entity.Main
         private void SkinOptions_Load(object sender, EventArgs e)
         {
             GenerateSkinSets();
-            GetSettings();
+            if (comboBox1.Items.Count > 0)
+                GetSettings();
         }
 
         /// <summary>

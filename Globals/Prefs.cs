@@ -356,14 +356,12 @@ namespace Globals
         {
             // check for settings file
             bool settingsFileExists = File.Exists(FilePath);
-            
-            // Parse the settings file
+
+                // Parse the settings file
             if (settingsFileExists)
             {
                 XmlDocument doc = new XmlDocument();
 
-                //try
-                //{
                 // load settings into document
                 doc.Load(FilePath);
 
@@ -507,6 +505,7 @@ namespace Globals
                     }
                 }
             }
+
             // If useRegistryEntires is set to false & the settings file exists, then the
             // user doesn't wish to use the registry, so we are good to exit
             if (settingsFileExists && !useRegistryEntries)
@@ -516,110 +515,125 @@ namespace Globals
             if (useRegistryEntries)
             {
                 // Used for accessing the registry
-                RegistryAccess Reg;                
+                RegistryAccess Reg;
 
-                // UseSettingsFile contains a list of Entity directories that wish to use the settings file instead of
-                // the registry. Check if our path is in the list for using the settings file.
-                Reg = new RegistryAccess(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2 + @"Entity\UseSettingsFile\");
-                
-                // If Entry exists in list, use settings file if it exists
-                if (Reg.getValue(Globals.Global.StartupPath) != null)
-                    return settingsFileExists;
-
-                // Try to open the settings for Halo 2, if it doesn't exist, Reg.isOpen == false
-                Reg = new RegistryAccess(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2Paths);
-                if (Reg.isOpen)
+                try
                 {
-                    string tempS = string.Empty;
-                    #region General Halo2 paths in registry
-                    tempS = Reg.getValue(RegistryAccess.RegNames.MainMenuFile);
-                    if (tempS != null) Prefs.pathMainmenu = tempS;
-                    tempS = Reg.getValue(RegistryAccess.RegNames.SharedFile);
-                    if (tempS != null) Prefs.pathShared = tempS;
-                    tempS = Reg.getValue(RegistryAccess.RegNames.SinglePlayerSharedFile);
-                    if (tempS != null) Prefs.pathSPShared = tempS;
-                    tempS = Reg.getValue(RegistryAccess.RegNames.BitmapsFile);
-                    if (tempS != null) Prefs.pathBitmaps = tempS;
-                    tempS = Reg.getValue(RegistryAccess.RegNames.MapsPath);
-                    if (tempS != null) Prefs.pathMapFolder = tempS;
-                    tempS = Reg.getValue(RegistryAccess.RegNames.BitmapsPath);
-                    if (tempS != null) Prefs.pathBitmapsFolder = tempS;
-                    tempS = Reg.getValue(RegistryAccess.RegNames.ExtractsPath);
-                    if (tempS != null) Prefs.pathExtractsFolder = tempS;
-                    tempS = Reg.getValue(RegistryAccess.RegNames.PluginsPath);
-                    if (tempS != null) Prefs.pathPluginsFolder = tempS;
-                    tempS = Reg.getValue(RegistryAccess.RegNames.CleanMapsPath);
-                    if (tempS != null) Prefs.pathCleanMaps = tempS;
-                    #endregion
-                    #region Entity specific paths & settings
-                    Reg = new RegistryAccess(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2 + @"Entity\");
-                    tempS = Reg.getValue("PatchFolder");
-                    if (tempS != null) Prefs.pathPatchFolder = tempS;
-                    tempS = Reg.getValue("UseDefaultMaps");
-                    if (tempS != null) Prefs.useDefaultMaps = bool.Parse(tempS);
-                    Prefs.useRegistryEntries = true;
+                    // UseSettingsFile contains a list of Entity directories that wish to use the settings file instead of
+                    // the registry. Check if our path is in the list for using the settings file.
+                    Reg = new RegistryAccess(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2 + @"Entity\UseSettingsFile\");
 
-                    // Check for recent files in the registry
-                    Reg = new RegistryAccess(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2RecentFiles);
+                    // If Entry exists in list, use settings file if it exists
+                    if (Reg.getValue(Globals.Global.StartupPath) != null)
+                        return settingsFileExists;
+
+                    // Try to open the settings for Halo 2, if it doesn't exist, Reg.isOpen == false
+                    Reg = new RegistryAccess(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2Paths);
                     if (Reg.isOpen)
                     {
-                        for (int count = Prefs.MaxRecentFiles-1; count >= 0; count--)
-                        {
-                            tempS = Reg.getValue(count.ToString());
-                            if (tempS != null)
+                        string tempS = string.Empty;
+                        #region General Halo2 paths in registry
+                        tempS = Reg.getValue(RegistryAccess.RegNames.MainMenuFile);
+                        if (tempS != null) Prefs.pathMainmenu = tempS;
+                        tempS = Reg.getValue(RegistryAccess.RegNames.SharedFile);
+                        if (tempS != null) Prefs.pathShared = tempS;
+                        tempS = Reg.getValue(RegistryAccess.RegNames.SinglePlayerSharedFile);
+                        if (tempS != null) Prefs.pathSPShared = tempS;
+                        tempS = Reg.getValue(RegistryAccess.RegNames.BitmapsFile);
+                        if (tempS != null) Prefs.pathBitmaps = tempS;
+                        tempS = Reg.getValue(RegistryAccess.RegNames.MapsPath);
+                        if (tempS != null) Prefs.pathMapFolder = tempS;
+                        tempS = Reg.getValue(RegistryAccess.RegNames.BitmapsPath);
+                        if (tempS != null) Prefs.pathBitmapsFolder = tempS;
+                        tempS = Reg.getValue(RegistryAccess.RegNames.ExtractsPath);
+                        if (tempS != null) Prefs.pathExtractsFolder = tempS;
+                        tempS = Reg.getValue(RegistryAccess.RegNames.PluginsPath);
+                        if (tempS != null) Prefs.pathPluginsFolder = tempS;
+                        tempS = Reg.getValue(RegistryAccess.RegNames.CleanMapsPath);
+                        if (tempS != null) Prefs.pathCleanMaps = tempS;
+                        #endregion
+                        #region Entity specific paths & settings
+                        Reg = new RegistryAccess(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2 + @"Entity\");
+                        tempS = Reg.getValue("PatchFolder");
+                        if (tempS != null) Prefs.pathPatchFolder = tempS;
+                        tempS = Reg.getValue("UseDefaultMaps");
+                        if (tempS != null) Prefs.useDefaultMaps = bool.Parse(tempS);
+                        Prefs.useRegistryEntries = true;
+                        #region Automatic Update
+                        tempS = Reg.getValue("lastCheck");
+                        if (tempS != null)
+                            try
                             {
-                                RecentFile rf = new RecentFile();
-                                rf.Path = tempS;
-                                RecentOpenedMaps.Insert(0, rf);
+                                Prefs.lastCheck = DateTime.Parse(tempS);
                             }
-                        }
-                    }
-
-                    #endregion
-                    #region Load Quick Access Tags
-                    if (Prefs.useRegistryEntries)
-                    {
-                        RegistryAccess ra = new RegistryAccess(Microsoft.Win32.Registry.CurrentUser, RegistryAccess.RegPaths.Halo2 + @"Entity\ME\Tags\");
-                        string[] tags = ra.getKeys();
-                        foreach (string tagType in tags)
-                        {
-                            QuickAccessTagType qatt = new QuickAccessTagType();
-                            qatt.TagType = tagType;
-                            ra.setKey(Microsoft.Win32.Registry.CurrentUser, RegistryAccess.RegPaths.Halo2 + @"Entity\ME\Tags\" + tagType + @"\");
-                            foreach (string tagName in ra.getNames())
+                            catch
                             {
-                                if (ra.getValue(tagName).ToLower() == "true")
-                                    qatt.TagPaths.Add(tagName);
+                                Prefs.lastCheck = DateTime.MinValue;
                             }
-                            if (qatt.TagPaths.Count > 0)
-                                QuickAccessTagTypes.Add(qatt);
-                        }
-                    }
-                    #endregion
-                    #region Automatic Update
-                    tempS = Reg.getValue("lastCheck");
-                    if (tempS != null)
+                        tempS = Reg.getValue("checkUpdate");
                         try
                         {
-                            Prefs.lastCheck = DateTime.Parse(tempS);
+                            Prefs.updateFrequency updateFreq = (Prefs.updateFrequency)Enum.Parse(typeof(Prefs.updateFrequency), tempS);
+                            Prefs.checkUpdate = updateFreq;
                         }
                         catch
                         {
-                            Prefs.lastCheck = DateTime.MinValue;
+                            Prefs.checkUpdate = Prefs.updateFrequency.Daily;
                         }
-                    tempS = Reg.getValue("checkUpdate");
-                    try
-                    {
-                        Prefs.updateFrequency updateFreq = (Prefs.updateFrequency)Enum.Parse(typeof(Prefs.updateFrequency), tempS);
-                        Prefs.checkUpdate = updateFreq;
+                        #endregion;
+
+                        // Check for recent files in the registry
+                        Reg = new RegistryAccess(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2RecentFiles);
+                        if (Reg.isOpen)
+                        {
+                            for (int count = Prefs.MaxRecentFiles - 1; count >= 0; count--)
+                            {
+                                tempS = Reg.getValue(count.ToString());
+                                if (tempS != null)
+                                {
+                                    RecentFile rf = new RecentFile();
+                                    rf.Path = tempS;
+                                    RecentOpenedMaps.Insert(0, rf);
+                                }
+                            }
+                        }
+
+                        #endregion
+                        #region Load Quick Access Tags
+                        if (Prefs.useRegistryEntries)
+                        {
+                            try
+                            {
+                                RegistryAccess ra = new RegistryAccess(Microsoft.Win32.Registry.CurrentUser, RegistryAccess.RegPaths.Halo2 + @"Entity\ME\Tags\");
+                                string[] tags = ra.getKeys();
+                                foreach (string tagType in tags)
+                                {
+                                    QuickAccessTagType qatt = new QuickAccessTagType();
+                                    qatt.TagType = tagType;
+                                    ra.setKey(Microsoft.Win32.Registry.CurrentUser, RegistryAccess.RegPaths.Halo2 + @"Entity\ME\Tags\" + tagType + @"\");
+                                    foreach (string tagName in ra.getNames())
+                                    {
+                                        if (ra.getValue(tagName).ToLower() == "true")
+                                            qatt.TagPaths.Add(tagName);
+                                    }
+                                    if (qatt.TagPaths.Count > 0)
+                                        QuickAccessTagTypes.Add(qatt);
+                                }
+                            }
+                            catch
+                            {
+                                // Ignore errors regarding to Quick keys
+                            }
+                        }
+                        #endregion
+                        Reg.CloseReg();
+                        return true;
                     }
-                    catch
-                    {
-                        Prefs.checkUpdate = Prefs.updateFrequency.Daily;
-                    }
-                    #endregion;
-                    Reg.CloseReg();
-                    return true;
+                }
+                catch (Exception e)
+                {
+                    Global.ShowErrorMsg("Prefs Load Exception", e);
+                    return settingsFileExists;
                 }
 
             }

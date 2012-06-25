@@ -39,7 +39,8 @@
             this.cbHideUnused = new System.Windows.Forms.CheckBox();
             this.btnSaveValues = new System.Windows.Forms.Button();
             this.btnRestoreValues = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.cbSortByName = new System.Windows.Forms.CheckBox();
+            this.tmr_MEControlPage = new System.Windows.Forms.Timer(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeViewTagReflexives = new System.Windows.Forms.TreeView();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -60,7 +61,6 @@
             this.btnTreeViewOpen = new System.Windows.Forms.RadioButton();
             this.cmIdent = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.jumpToTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cbSortByName = new System.Windows.Forms.CheckBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -113,26 +113,41 @@
             this.btnSaveValues.Name = "btnSaveValues";
             this.btnSaveValues.Size = new System.Drawing.Size(80, 23);
             this.btnSaveValues.TabIndex = 3;
-            this.btnSaveValues.Text = "Save Values";
+            this.btnSaveValues.Text = "Export Values";
             this.toolTip1.SetToolTip(this.btnSaveValues, "Backs up all tag values, allowing for later restoration");
             this.btnSaveValues.UseVisualStyleBackColor = true;
             this.btnSaveValues.Click += new System.EventHandler(this.btnSaveValues_Click);
             // 
             // btnRestoreValues
             // 
+            this.btnRestoreValues.Enabled = false;
             this.btnRestoreValues.Location = new System.Drawing.Point(89, 74);
             this.btnRestoreValues.Name = "btnRestoreValues";
             this.btnRestoreValues.Size = new System.Drawing.Size(80, 23);
             this.btnRestoreValues.TabIndex = 4;
-            this.btnRestoreValues.Text = "Restore Values";
+            this.btnRestoreValues.Text = "Import Values";
             this.toolTip1.SetToolTip(this.btnRestoreValues, "Restores chosen values within a tag");
             this.btnRestoreValues.UseVisualStyleBackColor = true;
             this.btnRestoreValues.Click += new System.EventHandler(this.btnRestoreValues_Click);
             // 
-            // timer1
+            // cbSortByName
             // 
-            this.timer1.Interval = 500;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.cbSortByName.AutoSize = true;
+            this.cbSortByName.Checked = true;
+            this.cbSortByName.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbSortByName.Location = new System.Drawing.Point(9, 51);
+            this.cbSortByName.Name = "cbSortByName";
+            this.cbSortByName.Size = new System.Drawing.Size(91, 17);
+            this.cbSortByName.TabIndex = 5;
+            this.cbSortByName.Text = "Sort By Name";
+            this.toolTip1.SetToolTip(this.cbSortByName, "Sorts either by offset or name");
+            this.cbSortByName.UseVisualStyleBackColor = true;
+            this.cbSortByName.CheckedChanged += new System.EventHandler(this.cbSortByName_CheckedChanged);
+            // 
+            // tmr_MEControlPage
+            // 
+            this.tmr_MEControlPage.Interval = 500;
+            this.tmr_MEControlPage.Tick += new System.EventHandler(this.tmr_MEControlPage_Tick);
             // 
             // splitContainer1
             // 
@@ -165,7 +180,7 @@
             this.treeViewTagReflexives.Location = new System.Drawing.Point(0, 0);
             this.treeViewTagReflexives.Name = "treeViewTagReflexives";
             this.treeViewTagReflexives.ShowNodeToolTips = true;
-            this.treeViewTagReflexives.Size = new System.Drawing.Size(227, 268);
+            this.treeViewTagReflexives.Size = new System.Drawing.Size(193, 268);
             this.treeViewTagReflexives.TabIndex = 0;
             this.treeViewTagReflexives.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeViewTagReflexives_DrawNode);
             this.treeViewTagReflexives.DoubleClick += new System.EventHandler(this.treeViewTagReflexives_DoubleClick);
@@ -183,7 +198,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 268);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(227, 104);
+            this.panel1.Size = new System.Drawing.Size(193, 104);
             this.panel1.TabIndex = 1;
             this.panel1.MouseLeave += new System.EventHandler(this.treeViewTagReflexives_MouseLeave);
             // 
@@ -193,7 +208,7 @@
             this.panelMetaEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMetaEditor.Location = new System.Drawing.Point(0, 50);
             this.panelMetaEditor.Name = "panelMetaEditor";
-            this.panelMetaEditor.Size = new System.Drawing.Size(697, 250);
+            this.panelMetaEditor.Size = new System.Drawing.Size(731, 250);
             this.panelMetaEditor.TabIndex = 1;
             // 
             // panelInfoPane
@@ -205,7 +220,7 @@
             this.panelInfoPane.Location = new System.Drawing.Point(0, 300);
             this.panelInfoPane.Multiline = true;
             this.panelInfoPane.Name = "panelInfoPane";
-            this.panelInfoPane.Size = new System.Drawing.Size(697, 72);
+            this.panelInfoPane.Size = new System.Drawing.Size(731, 72);
             this.panelInfoPane.TabIndex = 0;
             this.panelInfoPane.Text = "Info Pane";
             this.panelInfoPane.Visible = false;
@@ -220,14 +235,14 @@
             this.toolStripPanel1.Name = "toolStripPanel1";
             this.toolStripPanel1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             this.toolStripPanel1.RowMargin = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.toolStripPanel1.Size = new System.Drawing.Size(697, 50);
+            this.toolStripPanel1.Size = new System.Drawing.Size(731, 50);
             // 
             // tsNavigation
             // 
             this.tsNavigation.Dock = System.Windows.Forms.DockStyle.None;
             this.tsNavigation.Location = new System.Drawing.Point(0, 0);
             this.tsNavigation.Name = "tsNavigation";
-            this.tsNavigation.Size = new System.Drawing.Size(697, 25);
+            this.tsNavigation.Size = new System.Drawing.Size(731, 25);
             this.tsNavigation.Stretch = true;
             this.tsNavigation.TabIndex = 0;
             this.tsNavigation.Text = "toolStrip1";
@@ -359,10 +374,9 @@
             this.btnTreeViewOpen.TabStop = true;
             this.btnTreeViewOpen.Text = ">>";
             this.btnTreeViewOpen.UseVisualStyleBackColor = true;
-            this.btnTreeViewOpen.MouseLeave += new System.EventHandler(this.btnTreeViewOpen_MouseLeave);
+            this.btnTreeViewOpen.MouseLeave += new System.EventHandler(this.treeViewTagReflexives_MouseLeave);
             this.btnTreeViewOpen.MouseEnter += new System.EventHandler(this.btnTreeViewOpen_MouseEnter);
             this.btnTreeViewOpen.Click += new System.EventHandler(this.btnTreeViewOpen_Click);
-            this.btnTreeViewOpen.MouseLeave += new System.EventHandler(this.treeViewTagReflexives_MouseLeave);
             // 
             // cmIdent
             // 
@@ -377,20 +391,6 @@
             this.jumpToTagToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.jumpToTagToolStripMenuItem.Text = "Jump To Tag";
             this.jumpToTagToolStripMenuItem.Click += new System.EventHandler(this.jumpToTagToolStripMenuItem_Click);
-            // 
-            // cbSortByName
-            // 
-            this.cbSortByName.AutoSize = true;
-            this.cbSortByName.Checked = true;
-            this.cbSortByName.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbSortByName.Location = new System.Drawing.Point(9, 51);
-            this.cbSortByName.Name = "cbSortByName";
-            this.cbSortByName.Size = new System.Drawing.Size(91, 17);
-            this.cbSortByName.TabIndex = 5;
-            this.cbSortByName.Text = "Sort By Name";
-            this.toolTip1.SetToolTip(this.cbSortByName, "Sorts either by offset or name");
-            this.cbSortByName.UseVisualStyleBackColor = true;
-            this.cbSortByName.CheckedChanged += new System.EventHandler(this.cbSortByName_CheckedChanged);
             // 
             // MetaEditorControlPage
             // 
@@ -420,7 +420,7 @@
         }
 
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer tmr_MEControlPage;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView treeViewTagReflexives;
         private System.Windows.Forms.Panel panel1;

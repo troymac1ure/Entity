@@ -225,10 +225,9 @@ namespace HaloMap.RawData
         {
             int stride = 0;
 
-
             #region Volume Textures / 3D
             if (type == BitmapType.BITM_TYPE_3D)
-            {
+            {                
                 List<Bitmap> images = new List<Bitmap>();
                 Bitmap finalImage = null;
                 List<IntPtr> tPtr = new List<IntPtr>();
@@ -240,34 +239,63 @@ namespace HaloMap.RawData
                 try
                 {
                     // Make our new image large enough to handle a square of all the images together with a 2 pixel pad between
+                    int imageSize = width * height * bitsPerPixel >> 3;
                     int rCount = (int)(Math.Sqrt(depth) + 0.5);
                     int tWidth = rCount * (width + 1);
                     int tHeight = (int)Math.Round(depth / rCount + 0.5f, MidpointRounding.AwayFromZero) * (height + 2);
-                    int imageSize = width * height * bitsPerPixel >> 3;
-                    for (int i = 0; i < depth; i++)
+
+                    // Display 3D bitmaps combined as a 2D bitmap
+                    if (visualchunkindex == 0)
+                    {
+                        for (int i = 0; i < depth; i++)
+                        {
+                            byte[] tempBytes = new byte[imageSize];
+                            Array.Copy(bitmBytes, i * imageSize, tempBytes, 0, imageSize);
+
+                            stride = DecodeBitmap(
+                                ref tempBytes,
+                                height,
+                                width,
+                                1,
+                                bitsPerPixel,
+                                type,
+                                format,
+                                false,
+                                map,
+                                visualchunkindex,
+                                ident);
+
+                            tPtr.Add(Marshal.AllocHGlobal(tempBytes.Length));
+                            RtlMoveMemory(tPtr[tPtr.Count - 1], tempBytes, tempBytes.Length);
+                            Bitmap bitmap = new Bitmap(
+                                width, height, stride, PixelFormat.Format32bppArgb, tPtr[tPtr.Count - 1]);
+
+                            images.Add(bitmap);
+                        }
+                    }
+                    // Display only one of the 3D images
+                    else
                     {
                         byte[] tempBytes = new byte[imageSize];
-                        Array.Copy(bitmBytes, i * imageSize, tempBytes, 0, imageSize);
+                        Array.Copy(bitmBytes, (visualchunkindex - 1) * imageSize, tempBytes, 0, imageSize);
 
                         stride = DecodeBitmap(
-                            ref tempBytes, 
-                            height, 
-                            width, 
-                            1, 
-                            bitsPerPixel, 
-                            type, 
-                            format, 
-                            false, 
-                            map, 
-                            visualchunkindex, 
+                            ref tempBytes,
+                            height,
+                            width,
+                            1,
+                            bitsPerPixel,
+                            type,
+                            format,
+                            false,
+                            map,
+                            visualchunkindex,
                             ident);
-
                         tPtr.Add(Marshal.AllocHGlobal(tempBytes.Length));
                         RtlMoveMemory(tPtr[tPtr.Count - 1], tempBytes, tempBytes.Length);
-                        Bitmap bitmap = new Bitmap(
-                            width, height, stride, PixelFormat.Format32bppArgb, tPtr[tPtr.Count - 1]);
-
-                        images.Add(bitmap);
+                        images.Add(new Bitmap(width, height, stride, PixelFormat.Format32bppArgb, tPtr[tPtr.Count - 1]));
+                        tWidth = width;
+                        tHeight = height;
                     }
 
                     // create a bitmap to hold the combined image
@@ -284,14 +312,14 @@ namespace HaloMap.RawData
                         foreach (Bitmap image in images)
                         {
                             g.DrawImage(
-                                image, 
+                                image,
                                 new Rectangle(
                                     offset % tWidth, (offset / tWidth) * (image.Height + 1), image.Width, image.Height));
                             offset += image.Width + 1;
                         }
                     }
-
                     return finalImage;
+
                 }
                 catch (Exception ex)
                 {
@@ -301,7 +329,7 @@ namespace HaloMap.RawData
                     }
 
                     throw ex;
-                    Globals.Global.ShowErrorMsg("Error loading bitmap" ,ex);
+                    //Global.ShowErrorMsg("Error loading bitmap", ex);
                 }
                 finally
                 {
@@ -446,7 +474,7 @@ namespace HaloMap.RawData
                     }
 
                     throw ex;
-                    Global.ShowErrorMsg("Error while processing bitmap", ex);
+                    //Global.ShowErrorMsg("Error while processing bitmap", ex);
                 }
                 finally
                 {

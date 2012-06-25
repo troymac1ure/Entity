@@ -670,7 +670,7 @@ namespace entity.HexEditor
             }
             catch (Exception ex1)
             {
-                MessageBox.Show(ex1.Message);
+                Globals.Global.ShowErrorMsg("Hex Editor Saving Routine", ex1);
             }
         }
 
@@ -725,7 +725,7 @@ namespace entity.HexEditor
             }
             catch (Exception ex1)
             {
-                MessageBox.Show(ex1.Message);
+                Globals.Global.ShowErrorMsg("Hex Editor Meta Selection", ex1);
                 return;
             }
         }
@@ -746,7 +746,7 @@ namespace entity.HexEditor
             }
             catch (Exception ex1)
             {
-                MessageBox.Show(ex1.Message);
+                Globals.Global.ShowErrorMsg("Hex Editor Raw Selection [" + this.cbRawNumber.SelectedIndex + "]", ex1);
                 return;
             }
         }

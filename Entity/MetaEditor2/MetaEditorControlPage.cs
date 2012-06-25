@@ -1169,11 +1169,11 @@ namespace entity.MetaEditor2
             panelInfoPane.Text = info;
 
             panelInfoPane.Visible = true;
-            timer1.Stop();
+            tmr_MEControlPage.Stop();
             if (time > 0)
             {
-                timer1.Interval = time;
-                timer1.Start();
+                tmr_MEControlPage.Interval = time;
+                tmr_MEControlPage.Start();
             }
         }
 
@@ -1334,10 +1334,10 @@ namespace entity.MetaEditor2
         private void jumpToTagToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Control c = ((ContextMenuStrip)((ToolStripItem)sender).Owner).SourceControl;
-            MapForms.MapForm mf = (MapForms.MapForm)((WinMetaEditor)this.TopLevelControl).Owner;
+            MapForms.MapForm mf = (MapForms.MapForm)((WinMetaEditor)this.ParentForm).Owner;
             int tagNum = map.Functions.ForMeta.FindByNameAndTagType(c.Controls[2].Text, c.Controls[1].Text);
             mf.selectTag(tagNum);
-            ((WinMetaEditor)this.TopLevelControl).addNewTab(map.SelectedMeta, false);
+            ((WinMetaEditor)this.ParentForm).addNewTab(map.SelectedMeta, false);
         }
 
         private void MetaEditorControlPage_Activated(object sender, EventArgs e)
@@ -1372,9 +1372,10 @@ namespace entity.MetaEditor2
             tscb.Enabled = true;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void tmr_MEControlPage_Tick(object sender, EventArgs e)
         {
             panelInfoPane.Visible = false;
+            tmr_MEControlPage.Stop();    
         }
 
         private void treeViewTagReflexives_AfterSelect(object sender, TreeViewEventArgs e)

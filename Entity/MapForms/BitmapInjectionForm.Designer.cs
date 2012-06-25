@@ -43,7 +43,8 @@
             // 
             // lblInjectionBitmap
             // 
-            this.lblInjectionBitmap.Location = new System.Drawing.Point(259, 83);
+            this.lblInjectionBitmap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblInjectionBitmap.Location = new System.Drawing.Point(291, 126);
             this.lblInjectionBitmap.Name = "lblInjectionBitmap";
             this.lblInjectionBitmap.Size = new System.Drawing.Size(140, 20);
             this.lblInjectionBitmap.TabIndex = 0;
@@ -51,7 +52,8 @@
             // 
             // lbInjectionBitmap
             // 
-            this.lbInjectionBitmap.Location = new System.Drawing.Point(262, 106);
+            this.lbInjectionBitmap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbInjectionBitmap.Location = new System.Drawing.Point(294, 149);
             this.lbInjectionBitmap.Name = "lbInjectionBitmap";
             this.lbInjectionBitmap.Size = new System.Drawing.Size(127, 82);
             this.lbInjectionBitmap.TabIndex = 1;
@@ -59,7 +61,8 @@
             // 
             // btnInject
             // 
-            this.btnInject.Location = new System.Drawing.Point(289, 38);
+            this.btnInject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnInject.Location = new System.Drawing.Point(321, 38);
             this.btnInject.Name = "btnInject";
             this.btnInject.Size = new System.Drawing.Size(75, 23);
             this.btnInject.TabIndex = 2;
@@ -68,10 +71,12 @@
             // 
             // lbSourceDDS
             // 
+            this.lbSourceDDS.Font = new System.Drawing.Font("Courier New", 8.25F);
+            this.lbSourceDDS.ItemHeight = 14;
             this.lbSourceDDS.Location = new System.Drawing.Point(12, 26);
             this.lbSourceDDS.Name = "lbSourceDDS";
             this.lbSourceDDS.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.lbSourceDDS.Size = new System.Drawing.Size(149, 69);
+            this.lbSourceDDS.Size = new System.Drawing.Size(149, 88);
             this.lbSourceDDS.TabIndex = 3;
             // 
             // pbSourceDDS
@@ -79,25 +84,29 @@
             this.pbSourceDDS.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pbSourceDDS.Location = new System.Drawing.Point(176, 26);
             this.pbSourceDDS.Name = "pbSourceDDS";
-            this.pbSourceDDS.Size = new System.Drawing.Size(70, 70);
+            this.pbSourceDDS.Size = new System.Drawing.Size(90, 90);
             this.pbSourceDDS.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbSourceDDS.TabIndex = 4;
             this.pbSourceDDS.TabStop = false;
             // 
             // lbDestBitmap
             // 
-            this.lbDestBitmap.Location = new System.Drawing.Point(12, 118);
+            this.lbDestBitmap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lbDestBitmap.Font = new System.Drawing.Font("Courier New", 8.25F);
+            this.lbDestBitmap.ItemHeight = 14;
+            this.lbDestBitmap.Location = new System.Drawing.Point(12, 143);
             this.lbDestBitmap.Name = "lbDestBitmap";
             this.lbDestBitmap.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.lbDestBitmap.Size = new System.Drawing.Size(149, 69);
+            this.lbDestBitmap.Size = new System.Drawing.Size(149, 88);
             this.lbDestBitmap.TabIndex = 5;
             // 
             // pbDestBitmap
             // 
+            this.pbDestBitmap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pbDestBitmap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbDestBitmap.Location = new System.Drawing.Point(176, 118);
+            this.pbDestBitmap.Location = new System.Drawing.Point(176, 143);
             this.pbDestBitmap.Name = "pbDestBitmap";
-            this.pbDestBitmap.Size = new System.Drawing.Size(70, 70);
+            this.pbDestBitmap.Size = new System.Drawing.Size(90, 90);
             this.pbDestBitmap.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbDestBitmap.TabIndex = 6;
             this.pbDestBitmap.TabStop = false;
@@ -113,8 +122,9 @@
             // 
             // lblInternalBitmap
             // 
+            this.lblInternalBitmap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblInternalBitmap.AutoSize = true;
-            this.lblInternalBitmap.Location = new System.Drawing.Point(12, 102);
+            this.lblInternalBitmap.Location = new System.Drawing.Point(12, 127);
             this.lblInternalBitmap.Name = "lblInternalBitmap";
             this.lblInternalBitmap.Size = new System.Drawing.Size(80, 13);
             this.lblInternalBitmap.TabIndex = 8;
@@ -124,7 +134,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(401, 200);
+            this.ClientSize = new System.Drawing.Size(433, 243);
             this.Controls.Add(this.lblInternalBitmap);
             this.Controls.Add(this.lblDDSFile);
             this.Controls.Add(this.lblInjectionBitmap);
