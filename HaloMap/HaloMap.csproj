@@ -94,6 +94,11 @@
       <DependentUpon>EntityPlugin.cs</DependentUpon>
     </Compile>
     <Compile Include="Libraries\LibraryManager.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="RawData\BSPModel.cs" />
     <Compile Include="Render\Optimization.cs">
       <SubType>Code</SubType>
@@ -144,6 +149,10 @@
     <EmbeddedResource Include="Libraries\EntityPlugin.resx">
       <DependentUpon>EntityPlugin.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="RealTimeHalo\RthDLL.dll">
       <SubType>Designer</SubType>

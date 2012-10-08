@@ -23,3 +23,4 @@ C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\HaloMap\obj\x86\Debug\Halo
 C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\HaloMap\bin\x86\Debug\YeloDebug.dll
 C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\HaloMap\bin\x86\Debug\YeloDebug.pdb
 C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\HaloMap\bin\x86\Debug\YeloDebug.xml
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\HaloMap\obj\x86\Debug\HaloMap.Properties.Resources.resources

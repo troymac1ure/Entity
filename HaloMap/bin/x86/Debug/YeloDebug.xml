@@ -396,6 +396,11 @@
             Registry entry to store the last connection used.
             </summary>
         </member>
+        <member name="F:YeloDebug.Xbox.connections">
+            <summary>
+            Keeps a list of available connections
+            </summary>
+        </member>
         <member name="M:YeloDebug.Xbox.#ctor">
             <summary>
             Xbox connection.

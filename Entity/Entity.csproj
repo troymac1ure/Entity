@@ -87,6 +87,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Main\HelpForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\HelpForm.Designer.cs">
+      <DependentUpon>HelpForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="HexEditor\GoToDialogBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,6 +134,12 @@
     </Compile>
     <Compile Include="Main\MapWizard.designer.cs">
       <DependentUpon>MapWizard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\PluginUpdater.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\PluginUpdater.Designer.cs">
+      <DependentUpon>PluginUpdater.cs</DependentUpon>
     </Compile>
     <Compile Include="Main\Settings.cs">
       <SubType>Form</SubType>
@@ -338,6 +350,9 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
+    <EmbeddedResource Include="Main\HelpForm.resx">
+      <DependentUpon>HelpForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="HexEditor\GoToDialogBox.resx">
       <DependentUpon>GoToDialogBox.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -358,6 +373,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Main\MapWizard.resx">
       <DependentUpon>MapWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\PluginUpdater.resx">
+      <DependentUpon>PluginUpdater.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
@@ -517,6 +535,16 @@
       <Project>{6423865E-C775-4F86-AC8D-5BE425761567}</Project>
       <Name>MetaEditor</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="SHDocVw">
+      <Guid>{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>1</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

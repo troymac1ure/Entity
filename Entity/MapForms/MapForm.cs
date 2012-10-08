@@ -5155,19 +5155,19 @@ namespace entity.MapForms
         {
             switch (keyData)
             {
-                case Keys.F1:
+                case Keys.F5:
                     setEditorMode(EditorModes.ReferenceEditor);
                     return true;
-                case Keys.F2:
+                case Keys.F6:
                     setEditorMode(EditorModes.MetaEditor2);
                     return true;
-                case Keys.F3:
+                case Keys.F7:
                     setEditorMode(EditorModes.MetaEditor1);
                     return true;
-                case Keys.F4:
+                case Keys.F8:
                     setEditorMode(EditorModes.HexViewer);
                     return true;
-                case Keys.F5:
+                case Keys.F9:
                     setEditorMode(EditorModes.BitmapViewer);
                     return true;
                 default:

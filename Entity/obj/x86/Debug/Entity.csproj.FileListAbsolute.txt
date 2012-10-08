@@ -105,3 +105,8 @@ C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Debug\entit
 C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Debug\Be.Windows.Forms.HexBox.dll
 C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Debug\Be.Windows.Forms.HexBox.pdb
 C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Debug\Be.Windows.Forms.HexBox.xml
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Debug\entity.Main.PluginUpdater.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Debug\entity.HelpForm.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Debug\Interop.SHDocVw.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Debug\Interop.SHDocVw.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Debug\Entity.csproj.ResolveComReference.cache

@@ -684,7 +684,7 @@ namespace entity.Main
         }
 
         /// <summary>
-        /// The mainmenueditmenu item 7_ click.
+        /// Opens up the MAINMENU editor dialog.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
@@ -696,7 +696,7 @@ namespace entity.Main
         }
 
         /// <summary>
-        /// The makedefault map editor menu item_ click.
+        /// Makes .MAP files open by default in Entity.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
@@ -722,7 +722,7 @@ namespace entity.Main
         }
 
         /// <summary>
-        /// The new map form_ form closed.
+        /// Called when Entity is closed (closes all open instances of MAPFORM).
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
@@ -745,7 +745,7 @@ namespace entity.Main
         }
 
         /// <summary>
-        /// The newmapmenu_ click.
+        /// Opens the dialog to create a new map from a clean version
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
@@ -759,7 +759,7 @@ namespace entity.Main
         }
 
         /// <summary>
-        /// The openmapmenu_ click.
+        /// Opens a .MAP file into a MAPFORM
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
@@ -920,8 +920,6 @@ namespace entity.Main
                 }
             }
         }
-        
-        #endregion
 
         /// <summary>
         /// Handles the FormClosing event of the Form1 control.
@@ -947,5 +945,37 @@ namespace entity.Main
             updateContextMenuList();
         }
 
+        private void helpContents_Click(object sender, EventArgs e)
+        {
+            HelpForm hf = new HelpForm();
+            hf.Size = new System.Drawing.Size(
+                Screen.PrimaryScreen.WorkingArea.Width * 2 / 3,
+                Screen.PrimaryScreen.WorkingArea.Height * 4 / 5);
+            hf.Show();
+        }
+
+        private void toolsLatestPlugins_Click(object sender, EventArgs e)
+        {
+            PluginUpdater pu = new PluginUpdater();
+            pu.Add("hlmt", new Version(1, 0, 1, 0));
+            pu.ShowDialog();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.F1:
+                    helpContents_Click(this, null);
+                    return true;
+                case Keys.F2:
+                    mainmenuEdit_Click(this, null);
+                    return true;
+                default:
+                    // Call the base class
+                    return base.ProcessCmdKey(ref msg, keyData);
+            }
+        } 
+        #endregion
    }
 }

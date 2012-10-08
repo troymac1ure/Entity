@@ -98,6 +98,7 @@ namespace entity.Main
             this.menuTools = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsFormatPlugins = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsLatestPlugins = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsSkinOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsVideoSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsCheckForUpdates = new System.Windows.Forms.ToolStripMenuItem();
@@ -106,8 +107,9 @@ namespace entity.Main
             this.tileVertical = new System.Windows.Forms.ToolStripMenuItem();
             this.tileCascade = new System.Windows.Forms.ToolStripMenuItem();
             this.menuHelp = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpContents = new System.Windows.Forms.ToolStripMenuItem();
             this.helpVEControls = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.mainmenuEditorMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.mainmenuEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.mainmenuAddthisMap = new System.Windows.Forms.ToolStripMenuItem();
@@ -139,9 +141,9 @@ namespace entity.Main
             this.tsbtnDebugLoadMap,
             this.tslblDebugStatus,
             this.tsbtnDebugReset});
-            this.menuStripDebug.Location = new System.Drawing.Point(577, 0);
+            this.menuStripDebug.Location = new System.Drawing.Point(669, 0);
             this.menuStripDebug.Name = "menuStripDebug";
-            this.menuStripDebug.Size = new System.Drawing.Size(383, 25);
+            this.menuStripDebug.Size = new System.Drawing.Size(291, 25);
             this.menuStripDebug.Stretch = false;
             this.menuStripDebug.TabIndex = 5;
             this.menuStripDebug.Text = "Debug Xbox";
@@ -211,7 +213,7 @@ namespace entity.Main
             this.toolStripLabel1,
             this.tscbPluginSet,
             this.tsbtnEditPluginSet});
-            this.menuStrip1.Location = new System.Drawing.Point(259, 0);
+            this.menuStrip1.Location = new System.Drawing.Point(351, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(318, 25);
             this.menuStrip1.Stretch = false;
@@ -249,7 +251,7 @@ namespace entity.Main
             this.mainmenuEditorMenu});
             this.mainMenu1.Location = new System.Drawing.Point(3, 0);
             this.mainMenu1.Name = "mainMenu1";
-            this.mainMenu1.Size = new System.Drawing.Size(256, 24);
+            this.mainMenu1.Size = new System.Drawing.Size(348, 24);
             this.mainMenu1.Stretch = false;
             this.mainMenu1.TabIndex = 3;
             this.mainMenu1.Text = "MainMenu";
@@ -332,6 +334,7 @@ namespace entity.Main
             this.menuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolsSettings,
             this.toolsFormatPlugins,
+            this.toolsLatestPlugins,
             this.toolsSkinOptions,
             this.toolsVideoSettings,
             this.toolsCheckForUpdates});
@@ -353,6 +356,13 @@ namespace entity.Main
             this.toolsFormatPlugins.Text = "Convert IFP Plugins";
             this.toolsFormatPlugins.Click += new System.EventHandler(this.toolsFormatPlugins_Click);
             // 
+            // toolsLatestPlugins
+            // 
+            this.toolsLatestPlugins.Name = "toolsLatestPlugins";
+            this.toolsLatestPlugins.Size = new System.Drawing.Size(179, 22);
+            this.toolsLatestPlugins.Text = "Update Plugins";
+            this.toolsLatestPlugins.Click += new System.EventHandler(this.toolsLatestPlugins_Click);
+            // 
             // toolsSkinOptions
             // 
             this.toolsSkinOptions.Name = "toolsSkinOptions";
@@ -364,7 +374,7 @@ namespace entity.Main
             // 
             this.toolsVideoSettings.Name = "toolsVideoSettings";
             this.toolsVideoSettings.Size = new System.Drawing.Size(179, 22);
-            this.toolsVideoSettings.Text = "Video Settings";
+            this.toolsVideoSettings.Text = "Video Information";
             this.toolsVideoSettings.Click += new System.EventHandler(this.toolsVideoSettings_Click);
             // 
             // toolsCheckForUpdates
@@ -408,18 +418,19 @@ namespace entity.Main
             // menuHelp
             // 
             this.menuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.helpAbout,
-            this.helpVEControls});
+            this.helpContents,
+            this.helpVEControls,
+            this.helpAbout});
             this.menuHelp.Name = "menuHelp";
             this.menuHelp.Size = new System.Drawing.Size(40, 20);
             this.menuHelp.Text = "Help";
             // 
-            // helpAbout
+            // helpContents
             // 
-            this.helpAbout.Name = "helpAbout";
-            this.helpAbout.Size = new System.Drawing.Size(186, 22);
-            this.helpAbout.Text = "About";
-            this.helpAbout.Click += new System.EventHandler(this.helpAbout_Click);
+            this.helpContents.Name = "helpContents";
+            this.helpContents.Size = new System.Drawing.Size(186, 22);
+            this.helpContents.Text = "Contents";
+            this.helpContents.Click += new System.EventHandler(this.helpContents_Click);
             // 
             // helpVEControls
             // 
@@ -427,6 +438,13 @@ namespace entity.Main
             this.helpVEControls.Size = new System.Drawing.Size(186, 22);
             this.helpVEControls.Text = "Visual Editor Controls";
             this.helpVEControls.Click += new System.EventHandler(this.helpVEControls_Click);
+            // 
+            // helpAbout
+            // 
+            this.helpAbout.Name = "helpAbout";
+            this.helpAbout.Size = new System.Drawing.Size(186, 22);
+            this.helpAbout.Text = "About";
+            this.helpAbout.Click += new System.EventHandler(this.helpAbout_Click);
             // 
             // mainmenuEditorMenu
             // 
@@ -524,6 +542,7 @@ namespace entity.Main
             this.contextMenuStripMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         /// <summary>
@@ -700,6 +719,8 @@ namespace entity.Main
         private ContextMenuStrip contextMenuStripMenu;
         private ToolStripMenuItem lockToolbarToolStripMenuItem;
         private ToolStripPanel tsPanelBottom;
+        private ToolStripMenuItem toolsLatestPlugins;
+        private ToolStripMenuItem helpContents;
 
     }
 }

@@ -936,10 +936,12 @@ namespace YeloDebug
     /// </summary>
     public struct DebugConnection
     {
+        public IPAddress LocalIP;
         public IPAddress IP;
         public string Name;
-        public DebugConnection(IPAddress ip, string name)
+        public DebugConnection(IPAddress localip, IPAddress ip, string name)
         {
+            LocalIP = localip;
             IP = ip;
             Name = name;
         }
@@ -958,6 +960,12 @@ namespace YeloDebug
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string xdkRegistryPath = @"HKEY_CURRENT_USER\Software\Microsoft\XboxSDK";   // default
+
+        /// <summary>
+        /// Keeps a list of available connections
+        /// </summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private List<DebugConnection> connections = new List<DebugConnection>();
 
 		#endregion
 
@@ -991,7 +999,7 @@ namespace YeloDebug
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private bool connected = false;
 
-		/// <summary>
+        /// <summary>
 		/// Gets the xbox debug ip address.
 		/// </summary>
 		public IPAddress DebugIP   { get { return debugIP; } }
@@ -1476,39 +1484,66 @@ namespace YeloDebug
         /// <returns></returns>
         public List<DebugConnection> QueryXboxConnections()
         {
-            List<DebugConnection> connections = new List<DebugConnection>();
+            // Remove any previous listings of sockets
+            connections.Clear();
 
             Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
+                        
             try
             {
-                // create our connection
-                s.EnableBroadcast = true;
+                // Cycle through all available network interfaces
+                foreach (var i in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
+                    foreach (var ua in i.GetIPProperties().UnicastAddresses)
+                    {
+                        try
+                        {
+                            // Bind to our chosen network interfaces Local IP Address
+                            s.Bind(new IPEndPoint(ua.Address, 0));
 
-                // broadcast our request
-                byte[] sendBuf = { 3, 0 };
-                s.SendTo(sendBuf, new IPEndPoint(IPAddress.Broadcast, 731));
+                            // broadcast our request
+                            byte[] sendBuf = { 3, 0 };
+                            s.SendTo(sendBuf, new IPEndPoint(IPAddress.Broadcast, 731));
 
-                // wait for response
-                DateTime before = DateTime.Now;
-                TimeSpan elapse = new TimeSpan();
-                while (s.Available == 0)
-                {
-                    Thread.Sleep(0);
-                    elapse = DateTime.Now - before;
-                    if (elapse.TotalMilliseconds > timeout)
-                        throw new NoConnectionException("No xbox connection detected.");
-                }
+                            // wait for response
+                            DateTime before = DateTime.Now;
+                            TimeSpan elapse = new TimeSpan();
+                            while (s.Available == 0)
+                            {
+                                Thread.Sleep(0);
+                                elapse = DateTime.Now - before;
+                                if (elapse.TotalMilliseconds > timeout)
+                                    break;
+                            }
 
-                // parse any information returned
-                byte[] data = new byte[s.Available];
-                EndPoint end = new IPEndPoint(IPAddress.Any, 0);
-                while (s.Available > 0)
-                {
-                    s.ReceiveFrom(data, ref end);
-                    IPEndPoint endpoint = (IPEndPoint)end;
-                    connections.Add(new DebugConnection(((IPEndPoint)end).Address, ASCIIEncoding.ASCII.GetString(data, 2, data.Length - 2).Replace("\0", "")));
-                }
+                            // If we find a connection, break out
+                            if (s.Available != 0)
+                            {
+                                // parse any information returned
+                                byte[] data = new byte[s.Available];
+                                EndPoint end = new IPEndPoint(IPAddress.Any, 0);
+                                while (s.Available > 0)
+                                {
+                                    s.ReceiveFrom(data, ref end);
+                                    IPEndPoint endpoint = (IPEndPoint)end;
+                                    connections.Add(new DebugConnection(ua.Address, ((IPEndPoint)end).Address, ASCIIEncoding.ASCII.GetString(data, 2, data.Length - 2).Replace("\0", "")));
+                                }
+                            }
+                            
+                            // Destroy our binded socket
+                            s.Close();
+                            s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                            s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+                        }
+                    }
 
+                // If no connections were found, throw an exception
+                if (connections.Count == 0)
+                    throw new NoConnectionException("No xbox connection detected.");
             }
             finally
             {
@@ -1534,8 +1569,14 @@ namespace YeloDebug
             connection = new TcpClient();
             connection.ReceiveBufferSize = 20 * 0x100000;
             connection.SendBufferSize = 20 * 0x100000;
-            connection.NoDelay = true;
-            connection.Connect(debugIP, 731);
+            connection.NoDelay = true;           
+            foreach (DebugConnection dc in connections)
+                if (dc.IP == debugIP)
+                {
+                    connection.Client.Bind(new IPEndPoint(dc.LocalIP, 0));
+                    break;
+                }
+            connection.Connect(debugIP, notificationPort);
             connected = Ping(100);  // make sure it is successful
 
             // make sure they are using the current xbdm.dll v7887
@@ -1583,6 +1624,16 @@ namespace YeloDebug
                     // attempt to narrow the list down to one connection
                     if (connections.Count > 1)
                     {
+
+                        #region Create a form to allow an Xbox choice selection
+                        Form tempForm = new Form() { Size = new Size(200, 400) };
+                        ListBox lb = new ListBox() { Dock = DockStyle.Fill  };
+                        tempForm.Controls.Add(lb);
+                        foreach ( DebugConnection dc in connections) 
+                            lb.Items.Add(dc.IP + " [" + dc.Name + "]");
+                        tempForm.ShowDialog();
+                        #endregion
+
                         bool found = false;
                         foreach (DebugConnection dbgConnection in connections)
                         {
@@ -1635,10 +1686,14 @@ namespace YeloDebug
 
                     // determines the debug name and ip of the specified xbox system
                     int index = -1;
-                    List<DebugConnection> connections = QueryXboxConnections();
+                    if (connections.Count == 0)
+                        connections = QueryXboxConnections();
                     for (int i = 0; i < connections.Count; i++)
                         if (connections[i].Name.ToLower() == xbox.ToLower() || connections[i].IP.ToString().ToLower() == xbox.ToLower())
+                        {
                             index = i;
+                            break;
+                        }
                     if (index == -1) throw new NoConnectionException("Unable to connect to the specified xbox.");
 
                     //store debug info
@@ -1662,9 +1717,6 @@ namespace YeloDebug
         /// <param name="ip"></param>
         public void ConnectToIP(string ip)
         {
-            // create our connection
-            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-
             // Change our string into a byte array
             string[] ipStrs = ip.Split('.');
             byte[] bytes = new byte[4];
@@ -1677,49 +1729,82 @@ namespace YeloDebug
             {
                 throw new Exception("Invalid IP Address");
             }
-            // broadcast our request
-            byte[] sendBuf = { 3, 0 };
-            IPEndPoint IPEnd = new IPEndPoint(new IPAddress(bytes), 731);
-            s.SendTo(sendBuf, IPEnd);
 
-            // wait for response
-            DateTime before = DateTime.Now;
-            TimeSpan elapse = new TimeSpan();
-            while (s.Available == 0)
+            // create our connection
+            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
+            connected = false;
+
+            try
             {
-                Thread.Sleep(0);
-                elapse = DateTime.Now - before;
-                if (elapse.TotalMilliseconds > timeout)
-                    throw new NoConnectionException("No xbox connection detected.");
+                foreach (var i in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces())
+                    foreach (var ua in i.GetIPProperties().UnicastAddresses)
+                    {
+                        s.Bind(new IPEndPoint(ua.Address, 0));
+                        byte[] sendBuf = { 3, 0 };
+                        IPEndPoint IPEnd = new IPEndPoint(new IPAddress(bytes), notificationPort);
+                        s.SendTo(sendBuf, IPEnd);
+
+                        // wait for response
+                        DateTime before = DateTime.Now;
+                        TimeSpan elapse = new TimeSpan();
+                        while (s.Available == 0)
+                        {
+                            Thread.Sleep(0);
+                            elapse = DateTime.Now - before;
+                            if (elapse.TotalMilliseconds > timeout)
+                                break;
+                        }
+
+                        if (s.Available != 0)
+                        {
+                            // parse any information returned
+                            byte[] data = new byte[s.Available];
+                            EndPoint end = new IPEndPoint(IPEnd.Address, 0);
+                            DebugConnection dc = new DebugConnection();
+                            while (s.Available > 0)
+                            {
+                                s.ReceiveFrom(data, ref end);
+                                IPEndPoint endpoint = (IPEndPoint)end;
+                                dc = new DebugConnection(ua.Address, ((IPEndPoint)end).Address, ASCIIEncoding.ASCII.GetString(data, 2, data.Length - 2).Replace("\0", ""));
+                            }
+
+                            // If we don't receive data back, then don't try to connect
+                            if (dc.IP == null)
+                            {
+                                s.Close();
+                                s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                                s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
+                                continue;
+                            }
+
+                            //store debug info
+                            connections.Clear();
+                            connections.Add(dc);
+                            debugName = LastConnectionUsed = dc.Name;
+                            debugIP = dc.IP;
+                            connected = true;
+
+                            // close the connection
+                            s.Close();
+                            s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+
+                            // Call shared connect function
+                            _connect();
+                            return;
+                        }
+                        // close the connection
+                        s.Close();
+                        s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                    }
             }
-
-            // parse any information returned
-            byte[] data = new byte[s.Available];
-            EndPoint end = new IPEndPoint(IPEnd.Address, 0);
-            DebugConnection dc = new DebugConnection();
-            while (s.Available > 0)
+            finally
             {
-                s.ReceiveFrom(data, ref end);
-                IPEndPoint endpoint = (IPEndPoint)end;
-                dc = new DebugConnection(((IPEndPoint)end).Address, ASCIIEncoding.ASCII.GetString(data, 2, data.Length - 2).Replace("\0", ""));
+                s.Close();
             }
-
-            // close the connection
-            s.Close();
-
-            // If we don't receive data back, then don't try to connect
-            if (dc.IP == null)
-            {
-                connected = false;
+            if (!connected)
                 throw new NoConnectionException("No xbox connection detected.");
-            }
 
-            //store debug info
-            debugName = LastConnectionUsed = dc.Name;
-            debugIP = dc.IP;
-
-            // Call shared connect function
-            _connect();
         }
 
         /// <summary>
