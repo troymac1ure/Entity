@@ -1209,7 +1209,7 @@ namespace entity.MetaEditor2
             int tempTabNum = wME.addNewTab(map.SelectedMeta, true);
             map.SelectedMeta = oldMeta;
 
-            ((MetaEditorControlPage)wME.customTabControl1.TabPages[tempTabNum].Controls[0]).gotoOffset(((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).baseOffset);
+            ((MetaEditorControlPage)wME.tabs.Tabs[tempTabNum].AttachedControl.Controls[0].Controls[0]).gotoOffset(((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).baseOffset);
 
             wME.Show();
             wME.Focus();

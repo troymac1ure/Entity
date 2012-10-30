@@ -627,8 +627,8 @@ namespace entity.MapForms
                         // If we are not switching from a different editor mode (on MetaEditor2) and
                         // we already have the current tag loaded in the editor, then we can load a duplicate
                         wME.addNewTab(map.SelectedMeta, getEditorMode() == EditorModes.MetaEditor2 &&
-                                                        wME.customTabControl1.TabPages.Count > 0 &&
-                                                        wME.customTabControl1.SelectedTab.Text == ("[" + map.SelectedMeta.type + "] " + map.SelectedMeta.name.Substring(map.SelectedMeta.name.LastIndexOf('\\') + 1)));
+                                                        wME.tabs.Tabs.Count > 0 &&
+                                                        wME.tabs.SelectedTab.Text == ("[" + map.SelectedMeta.type + "] " + map.SelectedMeta.name.Substring(map.SelectedMeta.name.LastIndexOf('\\') + 1)));
                         wME.Dock = DockStyle.Fill;
                     }
                     break;

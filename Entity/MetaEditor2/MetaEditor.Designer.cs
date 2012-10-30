@@ -1,4 +1,7 @@
-﻿namespace entity.MetaEditor2
+﻿using System.Drawing;
+using DevComponents.DotNetBar;
+using System.Windows.Forms;
+namespace entity.MetaEditor2
 {
     partial class WinMetaEditor
     {
@@ -28,72 +31,65 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.customTabControl1 = new System.Windows.Forms.CustomTabControl();
+            this.tabs = new DevComponents.DotNetBar.TabControl();
+            ((System.ComponentModel.ISupportInitialize)(this.tabs)).BeginInit();
             this.SuspendLayout();
             // 
-            // tabControl1
+            // tabs
             // 
-            this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
-            this.tabControl1.ItemSize = new System.Drawing.Size(100, 21);
-            this.tabControl1.Location = new System.Drawing.Point(277, 144);
-            this.tabControl1.Multiline = true;
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.ShowToolTips = true;
-            this.tabControl1.Size = new System.Drawing.Size(468, 187);
-            this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
-            this.tabControl1.TabIndex = 3;
-            this.tabControl1.Visible = false;
-            // 
-            // customTabControl1
-            // 
-            this.customTabControl1.DisplayStyle = System.Windows.Forms.TabStyle.Chrome;
-            // 
-            // 
-            // 
-            this.customTabControl1.DisplayStyleProvider.BorderColor = System.Drawing.SystemColors.ControlDark;
-            this.customTabControl1.DisplayStyleProvider.BorderColorHot = System.Drawing.SystemColors.ControlDark;
-            this.customTabControl1.DisplayStyleProvider.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(172)))), ((int)(((byte)(178)))));
-            this.customTabControl1.DisplayStyleProvider.CloserColor = System.Drawing.Color.DarkGray;
-            this.customTabControl1.DisplayStyleProvider.CloserColorActive = System.Drawing.Color.White;
-            this.customTabControl1.DisplayStyleProvider.FocusTrack = false;
-            this.customTabControl1.DisplayStyleProvider.HotTrack = true;
-            this.customTabControl1.DisplayStyleProvider.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.customTabControl1.DisplayStyleProvider.Opacity = 1F;
-            this.customTabControl1.DisplayStyleProvider.Overlap = 16;
-            this.customTabControl1.DisplayStyleProvider.Padding = new System.Drawing.Point(7, 5);
-            this.customTabControl1.DisplayStyleProvider.Radius = 16;
-            this.customTabControl1.DisplayStyleProvider.ShowTabCloser = true;
-            this.customTabControl1.DisplayStyleProvider.TextColor = System.Drawing.SystemColors.ControlText;
-            this.customTabControl1.DisplayStyleProvider.TextColorDisabled = System.Drawing.SystemColors.ControlDark;
-            this.customTabControl1.DisplayStyleProvider.TextColorSelected = System.Drawing.SystemColors.ControlText;
-            this.customTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.customTabControl1.HotTrack = true;
-            this.customTabControl1.Location = new System.Drawing.Point(0, 0);
-            this.customTabControl1.Name = "customTabControl1";
-            this.customTabControl1.SelectedIndex = 0;
-            this.customTabControl1.Size = new System.Drawing.Size(1023, 560);
-            this.customTabControl1.TabIndex = 4;
-            this.customTabControl1.TabClosing += new System.EventHandler<System.Windows.Forms.TabControlCancelEventArgs>(this.customTabControl1_TabClosing);
+            this.tabs.AutoCloseTabs = true;
+            this.tabs.CanReorderTabs = true;
+            this.tabs.CloseButtonOnTabsVisible = true;
+            this.tabs.CloseButtonPosition = DevComponents.DotNetBar.eTabCloseButtonPosition.Right;
+            this.tabs.ColorScheme.TabBackgroundGradientAngle = 180;
+            this.tabs.ColorScheme.TabItemBackground = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.tabs.ColorScheme.TabItemBackground2 = System.Drawing.Color.FromArgb(((int)(((byte)(188)))), ((int)(((byte)(188)))), ((int)(((byte)(188)))));
+            this.tabs.ColorScheme.TabItemBorderLight = System.Drawing.Color.Empty;
+            this.tabs.ColorScheme.TabItemHotBackground2 = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(226)))), ((int)(((byte)(236)))));
+            this.tabs.ColorScheme.TabItemHotBackgroundColorBlend.AddRange(new DevComponents.DotNetBar.BackgroundColorBlend[] {
+            new DevComponents.DotNetBar.BackgroundColorBlend(System.Drawing.Color.FromArgb(((int)(((byte)(218)))), ((int)(((byte)(232)))), ((int)(((byte)(250))))), 0F),
+            new DevComponents.DotNetBar.BackgroundColorBlend(System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(217)))), ((int)(((byte)(246))))), 0.45F),
+            new DevComponents.DotNetBar.BackgroundColorBlend(System.Drawing.Color.FromArgb(((int)(((byte)(203)))), ((int)(((byte)(223)))), ((int)(((byte)(248))))), 0.45F),
+            new DevComponents.DotNetBar.BackgroundColorBlend(System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(247)))), ((int)(((byte)(253))))), 1F)});
+            this.tabs.ColorScheme.TabItemHotBorder = System.Drawing.Color.Empty;
+            this.tabs.ColorScheme.TabItemHotBorderLight = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))));
+            this.tabs.ColorScheme.TabItemSelectedBackground2 = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(226)))), ((int)(((byte)(236)))));
+            this.tabs.ColorScheme.TabItemSelectedBackgroundColorBlend.AddRange(new DevComponents.DotNetBar.BackgroundColorBlend[] {
+            new DevComponents.DotNetBar.BackgroundColorBlend(System.Drawing.Color.FromArgb(((int)(((byte)(227)))), ((int)(((byte)(239)))), ((int)(((byte)(255))))), 0F),
+            new DevComponents.DotNetBar.BackgroundColorBlend(System.Drawing.Color.FromArgb(((int)(((byte)(215)))), ((int)(((byte)(232)))), ((int)(((byte)(255))))), 0.45F),
+            new DevComponents.DotNetBar.BackgroundColorBlend(System.Drawing.Color.FromArgb(((int)(((byte)(203)))), ((int)(((byte)(223)))), ((int)(((byte)(248))))), 0.45F),
+            new DevComponents.DotNetBar.BackgroundColorBlend(System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(244)))), ((int)(((byte)(253))))), 1F)});
+            this.tabs.ColorScheme.TabItemSelectedBorder = System.Drawing.Color.FromArgb(((int)(((byte)(147)))), ((int)(((byte)(145)))), ((int)(((byte)(176)))));
+            this.tabs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabs.FixedTabSize = new System.Drawing.Size(0, 18);
+            this.tabs.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabs.Location = new System.Drawing.Point(0, 0);
+            this.tabs.Name = "tabs";
+            this.tabs.SelectedTabFont = new System.Drawing.Font("Microsoft Sans Serif", 8.6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabs.SelectedTabIndex = -1;
+            this.tabs.Size = new System.Drawing.Size(1023, 560);
+            this.tabs.TabIndex = 0;
+            this.tabs.TabLayoutType = DevComponents.DotNetBar.eTabLayoutType.MultilineWithNavigationBox;
+            this.tabs.TabItemClose += new DevComponents.DotNetBar.TabStrip.UserActionEventHandler(this.tabs_TabItemClose);
             // 
             // WinMetaEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1023, 560);
-            this.Controls.Add(this.customTabControl1);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.tabs);
             this.Name = "WinMetaEditor";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WinMetaEditor_FormClosing);
+            ((System.ComponentModel.ISupportInitialize)(this.tabs)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        public System.Windows.Forms.TabControl tabControl1;
-        public System.Windows.Forms.CustomTabControl customTabControl1;
+        public DevComponents.DotNetBar.TabControl tabs;
+
+
     }
 }

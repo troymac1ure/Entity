@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using entity.MapForms;
 using HaloMap.Meta;
+using DevComponents.DotNetBar;
 
 namespace entity.MetaEditor2
 {
@@ -46,11 +47,11 @@ namespace entity.MetaEditor2
             string typeAndTag = "[" + meta.type.ToLower() + "] " + map.SelectedMeta.name.Substring(meta.name.LastIndexOf('\\') + 1);
 
             if (!allowDuplicate)
-                for (int i = 0; i < this.customTabControl1.TabPages.Count; i++)
-                    if (this.customTabControl1.TabPages[i].Text == typeAndTag)
+                for (int i = 0; i < this.tabs.Tabs.Count; i++)
+                    if (this.tabs.Tabs[i].Text == typeAndTag)
                     {
-                        this.customTabControl1.SelectedIndex = i;
-                        this.customTabControl1.SelectedTab.Focus();
+                        this.tabs.SelectedTabIndex = i;
+                        //this.tabs.SelectedTab.Focus();
                         return i;
                     }
 
@@ -58,54 +59,52 @@ namespace entity.MetaEditor2
             this.BackColor = bgColor;
             this.ForeColor = fgColor;
             mecp.setFormColors(fgColor, bgColor);
-
+            
             // mapName = map.filePath.Substring(map.filePath.LastIndexOf('\\') + 1).ToUpper() +
-            TabPage tp = new TabPage();
-            tp.Controls.Add(mecp);
+            TabItem tp = tabs.CreateTab(typeAndTag);
+            mecp.Parent = tp.AttachedControl;
             mecp.Dock = DockStyle.Fill;
-            tp.Text = typeAndTag;
-            tp.ToolTipText = "[" + meta.type.ToLower() + "] " + meta.name;
+            tp.Tooltip = "[" + meta.type.ToLower() + "] " + meta.name;
 
-            this.customTabControl1.AllowDrop = true;
-            this.customTabControl1.DragDrop += new DragEventHandler(tp_DragDrop);
-            this.customTabControl1.DragEnter += new DragEventHandler(tp_DragEnter);
-            this.customTabControl1.DragLeave += new EventHandler(tp_DragLeave);
-            // These tabs don't change selected index till MouseUp, so do it on MouseDown!
-            this.customTabControl1.MouseDown += new MouseEventHandler(tabControl1_MouseDown);
-            this.customTabControl1.MouseMove += new MouseEventHandler(tabControl1_MouseMove);
+            this.tabs.AllowDrop = true;
+            //this.tabs.DragDrop += new DragEventHandler(tp_DragDrop);
+            //this.tabs.DragEnter += new DragEventHandler(tp_DragEnter);
+            //this.tabs.DragLeave += new EventHandler(tp_DragLeave);
+            //// These tabs don't change selected index till MouseUp, so do it on MouseDown!
+            //this.tabs.MouseDown += new MouseEventHandler(tabControl1_MouseDown);
+            //this.tabs.MouseMove += new MouseEventHandler(tabControl1_MouseMove);
 
-            this.customTabControl1.TabPages.Add(tp);
-            this.customTabControl1.SelectedIndex = customTabControl1.TabPages.IndexOf(tp);
+            this.tabs.SelectedTabIndex = tabs.Tabs.IndexOf(tp);
 
             this.WindowState = FormWindowState.Normal;
             this.Show();
             this.Focus();
 
-            return customTabControl1.TabPages.IndexOf(tp);
+            return tabs.Tabs.IndexOf(tp);
         }
 
         // These tabs don't change selected index till MouseUp, so we do it on MouseDown instead for dragging purposes!
-        void tabControl1_MouseDown(object sender, MouseEventArgs e)
-        {
-            for (int i = 0; i < tabControl1.TabPages.Count; i++)
-            {
-                TabPage tpTemp = tabControl1.TabPages[i];
-                Rectangle r = tabControl1.GetTabRect(i);
-                int change = (i < tabControl1.SelectedIndex ? 1 : -1);
-                if ((e.X >= r.Left + change * -10) && (e.X <= r.Left + r.Width + change * -10) &&
-                    (e.Y >= r.Top) && (e.Y < r.Top + r.Height))
-                {
-                    {                        
-                        tabControl1.SelectedTab = tpTemp;
-                        this.Text = map.filePath.Substring(map.filePath.LastIndexOf('\\') + 1).ToUpper() + ": " +
-                                tpTemp.ToolTipText;
-                    }
-                }
-            }
-        }
+        //void tabControl1_MouseDown(object sender, MouseEventArgs e)
+        //{
+        //    for (int i = 0; i < tabs.Tabs.Count; i++)
+        //    {
+        //        TabItem tpTemp = tabs.Tabs[i];
+        //        Rectangle r = tabs.GetTabRect(i);
+        //        int change = (i < tabs.SelectedIndex ? 1 : -1);
+        //        if ((e.X >= r.Left + change * -10) && (e.X <= r.Left + r.Width + change * -10) &&
+        //            (e.Y >= r.Top) && (e.Y < r.Top + r.Height))
+        //        {
+        //            {                        
+        //                tabs.SelectedTab = tpTemp;
+        //                this.Text = map.filePath.Substring(map.filePath.LastIndexOf('\\') + 1).ToUpper() + ": " +
+        //                        tpTemp.ToolTipText;
+        //            }
+        //        }
+        //    }
+        //}
 
-        void tabControl1_MouseMove(object sender, MouseEventArgs e)
-        {
+        //void tabControl1_MouseMove(object sender, MouseEventArgs e)
+        //{
             /*
             if (e.Button == MouseButtons.Left)
             {
@@ -113,10 +112,10 @@ namespace entity.MetaEditor2
 
                 int mX = e.X;
                 int mY = e.Y;
-                TabPage tp = tabControl1.SelectedTab;
-                for (int i = 0; i < tabControl1.TabPages.Count; i++)
+                TabItem tp = tabControl1.SelectedTab;
+                for (int i = 0; i < tabControl1.Tabs.Count; i++)
                 {
-                    TabPage tpTemp = tabControl1.TabPages[i];
+                    TabItem tpTemp = tabControl1.Tabs[i];
                     if (tp == tpTemp)
                         continue;
                     Rectangle r = tabControl1.GetTabRect(i);
@@ -132,8 +131,8 @@ namespace entity.MetaEditor2
                             return;
                         }
                         //
-                        tabControl1.TabPages.Remove(tpTemp);
-                        tabControl1.TabPages.Insert(tabControl1.SelectedIndex + (change < 0 ? 0 : 1), tpTemp);
+                        tabControl1.Tabs.Remove(tpTemp);
+                        tabControl1.Tabs.Insert(tabControl1.SelectedIndex + (change < 0 ? 0 : 1), tpTemp);
                         break;
                     }
                 }
@@ -142,43 +141,43 @@ namespace entity.MetaEditor2
                 isDragging = false;
             */
 
-        }
+        //}
 
-        void tp_DragDrop(object sender, DragEventArgs e)
-        {
+        //void tp_DragDrop(object sender, DragEventArgs e)
+        //{
             /*
-            TabPage DropTab = (TabPage)(e.Data.GetData(typeof(TabPage)));
+            TabItem DropTab = (TabItem)(e.Data.GetData(typeof(TabItem)));
             int mX = e.X - this.Left;
             int mY = e.Y - this.Top - (this.FontHeight+17);
-            for (int i = 0; i < tabControl1.TabPages.Count; i++)
+            for (int i = 0; i < tabControl1.Tabs.Count; i++)
             {
-                TabPage tp = tabControl1.TabPages[i];
+                TabItem tp = tabControl1.Tabs[i];
                 Rectangle r = tabControl1.GetTabRect(i);
                 if ((mX >= r.Left) && (mX <= r.Left + r.Width + 30 ) &&
                     (mY >= r.Top) && (mY <= r.Top + r.Height))
                 {
-                    tabControl1.TabPages.RemoveAt(i);
-                    tabControl1.TabPages.Insert(i, tp);
+                    tabControl1.Tabs.RemoveAt(i);
+                    tabControl1.Tabs.Insert(i, tp);
                     break;
                 }
             }
             */
             //if (tabControl1.SelectedTab != DropTab)
-            //    this.tabControl1.TabPages.Add(DropTab);
-        }
+            //    this.tabControl1.Tabs.Add(DropTab);
+        //}
 
-        void tp_DragLeave(object sender, EventArgs e)
-        {
+        //void tp_DragLeave(object sender, EventArgs e)
+        //{
             //
-        }
+        //}
 
-        void tp_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(typeof(TabPage)))
-                e.Effect = DragDropEffects.Move;
-            else 
-                e.Effect = DragDropEffects.None;
-        }
+        //void tp_DragEnter(object sender, DragEventArgs e)
+        //{
+        //    if (e.Data.GetDataPresent(typeof(TabItem)))
+        //        e.Effect = DragDropEffects.Move;
+        //    else 
+        //        e.Effect = DragDropEffects.None;
+        //}
 
 
         /// <summary>
@@ -194,10 +193,10 @@ namespace entity.MetaEditor2
         private void WinMetaEditor_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Close all open tabs??
-            foreach (TabPage tp in this.customTabControl1.TabPages)
+            foreach (TabItem tp in this.tabs.Tabs)
             {
                 // Dispose of each Meta Editor Control Page (causes change save validation
-                tp.Controls[0].Dispose();
+                tp.AttachedControl.Controls[0].Dispose();
             }
         }
 
@@ -210,8 +209,13 @@ namespace entity.MetaEditor2
         private void customTabControl1_TabClosing(object sender, TabControlCancelEventArgs e)
         {
 
-            if (customTabControl1.TabPages.Count <= 1)
+            if (tabs.Tabs.Count <= 1)
                 this.Close();
+        }
+
+        private void tabs_TabItemClose(object sender, TabStripActionEventArgs e)
+        {
+            ((DevComponents.DotNetBar.TabControl)sender).SelectedTab.AttachedControl.Controls[0].Dispose();
         }
 
     }
