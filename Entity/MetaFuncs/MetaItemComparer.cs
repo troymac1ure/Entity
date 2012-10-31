@@ -63,21 +63,29 @@ namespace entity.MetaFuncs
                 ifpMeta.ReadMetaFromMap(counter, false);
 
                 // parse ifp and scan meta with it
-                IFPIO io = IFPHashMap.GetIfp(ifpMeta.type, map.HaloVersion);
-
-                ifpMeta.headersize = io.headerSize;
-                manualMeta.headersize = io.headerSize;
                 try
                 {
-                    ifpMeta.scanner.ScanWithIFP(ref io);
+                    IFPIO io = IFPHashMap.GetIfp(ifpMeta.type, map.HaloVersion);
+
+                    ifpMeta.headersize = io.headerSize;
+                    manualMeta.headersize = io.headerSize;
+                    try
+                    {
+                        ifpMeta.scanner.ScanWithIFP(ref io);
+                    }
+                    catch (Exception ex)
+                    {
+                        Global.ShowErrorMsg("Broken IFP - " + ifpMeta.type, ex);
+                    }
+
+                    manualMeta.scanner.ScanManually();
+                    check(map);
                 }
                 catch (Exception ex)
                 {
-                    Global.ShowErrorMsg("Broken IFP - " + ifpMeta.type,ex);
+                    Globals.Global.ShowErrorMsg(string.Empty, ex);
                 }
 
-                manualMeta.scanner.ScanManually();
-                check(map);
             }
 
             currentForm.SetProgressBar(0);

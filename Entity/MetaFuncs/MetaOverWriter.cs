@@ -220,13 +220,21 @@ namespace entity.MetaFuncs
 
                 Meta m = new Meta(map);
                 m.ReadMetaFromMap(x, true);
-                IFPIO ifpx = IFPHashMap.GetIfp(m.type, map.HaloVersion);
+                try
+                {
+                    IFPIO ifpx = IFPHashMap.GetIfp(m.type, map.HaloVersion);
 
-                m.headersize = ifpx.headerSize;
-                m.scanner.ScanWithIFP(ref ifpx);
+                    m.headersize = ifpx.headerSize;
+                    m.scanner.ScanWithIFP(ref ifpx);
 
-                // metaScanner.ScanManually(ref m, ref map);
-                metas.Add(m);
+                    // metaScanner.ScanManually(ref m, ref map);
+                    metas.Add(m);
+                }
+                catch (System.Exception ex)
+                {
+                    Globals.Global.ShowErrorMsg(string.Empty, ex);
+                }
+
             }
 
             FixReflexives(metas, map);

@@ -658,13 +658,21 @@ namespace entity.MapForms
             // Reads the current TAGNumber Meta
             m.ReadMetaFromMap(TagNumber, false);
 
-            IFPIO ifpx = IFPHashMap.GetIfp(m.type, map.HaloVersion);
-            m.headersize = ifpx.headerSize;
+            try
+            {
+                IFPIO ifpx = IFPHashMap.GetIfp(m.type, map.HaloVersion);
+                m.headersize = ifpx.headerSize;
 
-            // Scans IFP and loads IDENTS, REFLEXIVES & STRINGS into "m" for Reference List
-            m.scanner.ScanWithIFP(ref ifpx);
-            metasplit = new MetaSplitter();
-            metasplit.SplitWithIFP(ref ifpx, ref m, map);
+                // Scans IFP and loads IDENTS, REFLEXIVES & STRINGS into "m" for Reference List
+                m.scanner.ScanWithIFP(ref ifpx);
+                metasplit = new MetaSplitter();
+                metasplit.SplitWithIFP(ref ifpx, ref m, map);
+            }
+            catch (Exception ex)
+            {
+                Globals.Global.ShowErrorMsg(string.Empty, ex);
+            }
+
         }
 
         /// <summary>

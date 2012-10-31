@@ -2398,63 +2398,70 @@ namespace entity.MapForms
             Meta m = new Meta(map);
             m.ReadMetaFromMap(3, true);
 
-            IFPIO io = IFPHashMap.GetIfp("scnr", map.HaloVersion);
-            m.headersize = io.headerSize;
-            m.scanner.ScanWithIFP(ref io);
-
-            MetaSplitter metasplit = new MetaSplitter();
-            metasplit.SplitWithIFP(ref io, ref m, map);
-
-            for (int x = 0; x < metasplit.Header.Chunks[0].ChunkResources.Count; x++)
+            try
             {
-                // Offset 984 = [SCNR] Predicted Resources
-                if (metasplit.Header.Chunks[0].ChunkResources[x].offset == 984)
+                IFPIO io = IFPHashMap.GetIfp("scnr", map.HaloVersion);
+                m.headersize = io.headerSize;
+                m.scanner.ScanWithIFP(ref io);
+
+                MetaSplitter metasplit = new MetaSplitter();
+                metasplit.SplitWithIFP(ref io, ref m, map);
+
+                for (int x = 0; x < metasplit.Header.Chunks[0].ChunkResources.Count; x++)
                 {
-                    MetaSplitter.SplitReflexive reflex =
-                        (MetaSplitter.SplitReflexive)metasplit.Header.Chunks[0].ChunkResources[x];
-
-                    // count = # of chunks incl. added/removed
-                    // reflex.Chunks.Count = # of chunks listed in Predicted Resources (?)
-                    int diff = count - reflex.Chunks.Count;
-
-                    // Add/Remove chunks to match the difference
-                    for (int y = 0; y < diff; y++)
+                    // Offset 984 = [SCNR] Predicted Resources
+                    if (metasplit.Header.Chunks[0].ChunkResources[x].offset == 984)
                     {
-                        MetaSplitter.SplitReflexive MetaChunk = new MetaSplitter.SplitReflexive();
-                        MetaChunk.splitReflexiveType = MetaSplitter.SplitReflexive.SplitReflexiveType.Chunk;
-                        MetaChunk.chunksize = 4;
+                        MetaSplitter.SplitReflexive reflex =
+                            (MetaSplitter.SplitReflexive)metasplit.Header.Chunks[0].ChunkResources[x];
 
-                        MetaChunk.MS = new MemoryStream(4);
-                        reflex.Chunks.Add(MetaChunk);
+                        // count = # of chunks incl. added/removed
+                        // reflex.Chunks.Count = # of chunks listed in Predicted Resources (?)
+                        int diff = count - reflex.Chunks.Count;
+
+                        // Add/Remove chunks to match the difference
+                        for (int y = 0; y < diff; y++)
+                        {
+                            MetaSplitter.SplitReflexive MetaChunk = new MetaSplitter.SplitReflexive();
+                            MetaChunk.splitReflexiveType = MetaSplitter.SplitReflexive.SplitReflexiveType.Chunk;
+                            MetaChunk.chunksize = 4;
+
+                            MetaChunk.MS = new MemoryStream(4);
+                            reflex.Chunks.Add(MetaChunk);
+                        }
+
+                        for (int y = 0; y < reflex.Chunks.Count; y++)
+                        {
+                            BinaryWriter BW = new BinaryWriter(reflex.Chunks[y].MS);
+                            BW.Write(ids[y]);
+                        }
+
+                        metasplit.Header.Chunks[0].ChunkResources[x] = reflex;
+                        break;
                     }
-
-                    for (int y = 0; y < reflex.Chunks.Count; y++)
-                    {
-                        BinaryWriter BW = new BinaryWriter(reflex.Chunks[y].MS);
-                        BW.Write(ids[y]);
-                    }
-
-                    metasplit.Header.Chunks[0].ChunkResources[x] = reflex;
-                    break;
                 }
+
+                Meta newmeta = MetaBuilder.BuildMeta(metasplit, map);
+
+                map.OpenMap(MapTypes.Internal);
+
+                map.ChunkTools.Add(newmeta);
+                map.CloseMap();
+
+                // info.OpenMap(MapTypes.Internal);
+                // info.BW.BaseStream.Position = m.offset + r.translation;
+                // for (int x = 0; x < count; x++)
+                // {
+                // info.BW.Write(ids[x]);
+                // }
+                // info.CloseMap();
+                map = Map.Refresh(map);
+                MessageBox.Show("Done");
             }
-
-            Meta newmeta = MetaBuilder.BuildMeta(metasplit, map);
-
-            map.OpenMap(MapTypes.Internal);
-
-            map.ChunkTools.Add(newmeta);
-            map.CloseMap();
-
-            // info.OpenMap(MapTypes.Internal);
-            // info.BW.BaseStream.Position = m.offset + r.translation;
-            // for (int x = 0; x < count; x++)
-            // {
-            // info.BW.Write(ids[x]);
-            // }
-            // info.CloseMap();
-            map = Map.Refresh(map);
-            MessageBox.Show("Done");
+            catch (Exception ex)
+            {
+                Global.ShowErrorMsg(string.Empty, ex);
+            }
         }
 
         /// <summary>
@@ -4156,6 +4163,8 @@ namespace entity.MapForms
                     Meta m = new Meta(map);
                     m.ReadMetaFromMap(x, false);
 
+                    try
+                    {
                     IFPIO ifpx = IFPHashMap.GetIfp(m.type, map.HaloVersion);
                     m.headersize = ifpx.headerSize;
 
@@ -4169,6 +4178,11 @@ namespace entity.MapForms
                     if (map.MetaInfo.TagType[x] != "sbsp")
                     {
                         DisplaySplit(metasplit.Header, e.Node);
+                    }
+                    }
+                    catch (Exception ex)
+                    {
+                        Global.ShowErrorMsg(string.Empty, ex);
                     }
 
                     map.CloseMap();

@@ -141,63 +141,71 @@ namespace entity.MetaEditor2
         {
             if (meta == null)
                 return;
-            ifp = HaloMap.Plugins.IFPHashMap.GetIfp(meta.type, HaloVersion);
 
-            #region Save info about our current Selected Node
-            TreeNode node = this.SelectedNode;
-            string tempS = string.Empty;
-            string[] path = new string[0];
-            if (node != null)
+            try
             {
-                while (node.Level > 0)
+                ifp = HaloMap.Plugins.IFPHashMap.GetIfp(meta.type, HaloVersion);
+
+                #region Save info about our current Selected Node
+                TreeNode node = this.SelectedNode;
+                string tempS = string.Empty;
+                string[] path = new string[0];
+                if (node != null)
                 {
-                    tempS = "\\" + ((reflexiveData)node.Tag).reflexive.offset.ToString() + tempS;
-                    node = node.Parent;
-                }
-                path = ("0" + tempS).Split('\\');
-            }
-            #endregion
-
-            this.Nodes.Clear();
-            this.Sorted = sortByName;
-            this.Nodes.Add("0", ".:[ MAIN ]:.");
-            reflexiveData rd = new reflexiveData();
-            this.Nodes[0].Tag = rd;
-            rd.node = this.Nodes[0];
-            rd.chunkCount = 1;
-            rd.chunkSelected = 0;
-            rd.baseOffset = 0; // meta.offset;
-            rd.inTagNumber = meta.TagIndex;
-            refData.Clear();
-            refData.Add(rd);
-
-            BinaryReader br = new BinaryReader(memStream);
-            this.Nodes[0].Nodes.AddRange(loadTreeReflexives(br, 0, ifp.items, true)); //meta.offset
-
-            //this.ExpandAll();
-            this.Nodes[0].Expand();
-
-            #region Re-Select our previously selected node
-            TreeNodeCollection nodes = this.Nodes[0].Nodes;
-            this.Enabled = false;
-            this.SelectedNode = this.Nodes[0];
-            for (int i = 1; i < path.Length; i++)
-            {
-                foreach (TreeNode tn in nodes)
-                {
-                    if (((reflexiveData)tn.Tag).reflexive.offset.ToString() == path[i])
+                    while (node.Level > 0)
                     {
-                        this.SelectedNode = tn;
-                        nodes = tn.Nodes;
-                        break;
+                        tempS = "\\" + ((reflexiveData)node.Tag).reflexive.offset.ToString() + tempS;
+                        node = node.Parent;
+                    }
+                    path = ("0" + tempS).Split('\\');
+                }
+                #endregion
+
+                this.Nodes.Clear();
+                this.Sorted = sortByName;
+                this.Nodes.Add("0", ".:[ MAIN ]:.");
+                reflexiveData rd = new reflexiveData();
+                this.Nodes[0].Tag = rd;
+                rd.node = this.Nodes[0];
+                rd.chunkCount = 1;
+                rd.chunkSelected = 0;
+                rd.baseOffset = 0; // meta.offset;
+                rd.inTagNumber = meta.TagIndex;
+                refData.Clear();
+                refData.Add(rd);
+
+                BinaryReader br = new BinaryReader(memStream);
+                this.Nodes[0].Nodes.AddRange(loadTreeReflexives(br, 0, ifp.items, true)); //meta.offset
+
+                //this.ExpandAll();
+                this.Nodes[0].Expand();
+
+                #region Re-Select our previously selected node
+                TreeNodeCollection nodes = this.Nodes[0].Nodes;
+                this.Enabled = false;
+                this.SelectedNode = this.Nodes[0];
+                for (int i = 1; i < path.Length; i++)
+                {
+                    foreach (TreeNode tn in nodes)
+                    {
+                        if (((reflexiveData)tn.Tag).reflexive.offset.ToString() == path[i])
+                        {
+                            this.SelectedNode = tn;
+                            nodes = tn.Nodes;
+                            break;
+                        }
                     }
                 }
+                // If we didn't get the right node, deselect all nodes
+                if (this.SelectedNode.Level != path.Length - 1)
+                    this.SelectedNode = null;
+                this.Enabled = true;
+                #endregion
             }
-            // If we didn't get the right node, deselect all nodes
-            if (this.SelectedNode.Level != path.Length - 1)
-                this.SelectedNode = null;
-            this.Enabled = true;
-            #endregion
+            catch (Exception ex)
+            {
+                Globals.Global.ShowErrorMsg(string.Empty, ex);
+            }
         }
 
         public TreeNode[] loadTreeReflexives(BinaryReader BR, int metaOffset, object[] items, bool enabled)

@@ -910,6 +910,10 @@ namespace entity.Main
             }
             Prefs.pathPluginsFolder = Globals.PluginSetSelector.getPath(tscbPluginSet.SelectedItem.ToString());
 
+            // Make sure to reload all plugins!
+            HaloMap.Plugins.IFPHashMap.H1IFPHash.Clear();
+            HaloMap.Plugins.IFPHashMap.H2IFPHash.Clear();
+
             foreach (MapForm mf in this.MdiChildren)
             {
                 if (mf.map.SelectedMeta != null)
@@ -957,7 +961,6 @@ namespace entity.Main
         private void toolsLatestPlugins_Click(object sender, EventArgs e)
         {
             PluginUpdater pu = new PluginUpdater();
-            pu.Add("hlmt", new Version(1, 0, 1, 0));
             pu.ShowDialog();
         }
 

@@ -446,12 +446,19 @@ using Globals;
         private void treeViewTags_AfterSelect(object sender, TreeViewEventArgs e)
         {
             treeView1.Nodes.Clear();
-            IFPIO ifpx = IFPHashMap.GetIfp(e.Node.Text, map.HaloVersion);
+            try
+            {
+                IFPIO ifpx = IFPHashMap.GetIfp(e.Node.Text, map.HaloVersion);
 
-            // path stores parent offsets
-            string path = string.Empty;
+                // path stores parent offsets
+                string path = string.Empty;
 
-            treeView1.Nodes.AddRange(CreateTree(ifpx.items, path));
+                treeView1.Nodes.AddRange(CreateTree(ifpx.items, path));
+            }
+            catch (Exception ex)
+            {
+                Global.ShowErrorMsg(string.Empty, ex);
+            }
         }
 
         /// <summary>

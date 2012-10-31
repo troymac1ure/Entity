@@ -40,7 +40,7 @@ namespace entity.MetaEditor2
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(641, 7);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(26, 13);
+            this.label1.Size = new System.Drawing.Size(61, 13);
             this.label1.TabIndex = 4;
             this.label1.Text = "Tag / Ident";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -62,11 +62,10 @@ namespace entity.MetaEditor2
             this.cbTagIdent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbTagIdent.FormattingEnabled = true;
             this.cbTagIdent.Location = new System.Drawing.Point(243, 4);
-            this.cbTagIdent.MinimumSize = new System.Drawing.Size(100,21);
+            this.cbTagIdent.MinimumSize = new System.Drawing.Size(100, 0);
             this.cbTagIdent.Name = "cbTagIdent";
             this.cbTagIdent.Size = new System.Drawing.Size(348, 21);
             this.cbTagIdent.TabIndex = 3;
-            this.cbTagIdent.Text = "Ident";
             this.cbTagIdent.MouseClick += new System.Windows.Forms.MouseEventHandler(this.cbTagIdent_MouseClick);
             this.cbTagIdent.DropDownClosed += new System.EventHandler(this.cbTagIdent_DropDownClose);
             this.cbTagIdent.DropDown += new System.EventHandler(this.cbTagIdent_DropDown);
@@ -80,7 +79,6 @@ namespace entity.MetaEditor2
             this.cbTagType.Name = "cbTagType";
             this.cbTagType.Size = new System.Drawing.Size(57, 21);
             this.cbTagType.TabIndex = 2;
-            this.cbTagType.Text = "Type";
             this.cbTagType.SelectedIndexChanged += new System.EventHandler(this.cbTagType_SelectedIndexChanged);
             this.cbTagType.DropDown += new System.EventHandler(this.cbTagType_DropDown);
             // 

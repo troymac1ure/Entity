@@ -190,66 +190,73 @@ namespace entity.MetaEditor2
 
         private void createTreeListing()
         {
-            ifp = HaloMap.Plugins.IFPHashMap.GetIfp(meta.type, map.HaloVersion);
-
-            #region Save info about our current Selected Node
-            TreeNode node = treeViewTagReflexives.SelectedNode;            
-            string tempS = string.Empty;
-            string[] path = new string[0];
-            if (node != null)
-            {                
-                while (node.Level > 0)
-                {
-                    tempS = "\\" + ((reflexiveData)node.Tag).reflexive.offset.ToString() + tempS;
-                    node = node.Parent;
-                }
-                path = ("0" + tempS).Split('\\');
-            }
-            #endregion
-
-            treeViewTagReflexives.Nodes.Clear();
-            treeViewTagReflexives.Sorted = cbSortByName.Checked;
-            treeViewTagReflexives.Nodes.Add("0", ".:[ MAIN ]:.");
-            reflexiveData rd = new reflexiveData();
-            treeViewTagReflexives.Nodes[0].Tag = rd;
-            rd.node = treeViewTagReflexives.Nodes[0];
-            rd.chunkCount = 1;
-            rd.chunkSelected = 0;
-            rd.baseOffset = 0; // meta.offset;
-            rd.inTagNumber = meta.TagIndex;
-            refData.Clear();
-            refData.Add(rd);
-
-            map.OpenMap(MapTypes.Internal);
-
-            treeViewTagReflexives.Nodes[0].Nodes.AddRange( loadTreeReflexives( meta.offset, ifp.items, true));
-
-            map.CloseMap();
-
-            //treeViewTagReflexives.ExpandAll();
-            treeViewTagReflexives.Nodes[0].Expand();
-
-            #region Re-Select our previously selected node
-            TreeNodeCollection nodes = treeViewTagReflexives.Nodes[0].Nodes;
-            treeViewTagReflexives.Enabled = false;
-            treeViewTagReflexives.SelectedNode = treeViewTagReflexives.Nodes[0];
-            for (int i = 1; i < path.Length; i++)
+            try
             {
-                foreach (TreeNode tn in nodes)
+                ifp = HaloMap.Plugins.IFPHashMap.GetIfp(meta.type, map.HaloVersion);
+
+                #region Save info about our current Selected Node
+                TreeNode node = treeViewTagReflexives.SelectedNode;
+                string tempS = string.Empty;
+                string[] path = new string[0];
+                if (node != null)
                 {
-                    if (((reflexiveData)tn.Tag).reflexive.offset.ToString() == path[i])
+                    while (node.Level > 0)
                     {
-                        treeViewTagReflexives.SelectedNode = tn;
-                        nodes = tn.Nodes;
-                        break;
+                        tempS = "\\" + ((reflexiveData)node.Tag).reflexive.offset.ToString() + tempS;
+                        node = node.Parent;
+                    }
+                    path = ("0" + tempS).Split('\\');
+                }
+                #endregion
+
+                treeViewTagReflexives.Nodes.Clear();
+                treeViewTagReflexives.Sorted = cbSortByName.Checked;
+                treeViewTagReflexives.Nodes.Add("0", ".:[ MAIN ]:.");
+                reflexiveData rd = new reflexiveData();
+                treeViewTagReflexives.Nodes[0].Tag = rd;
+                rd.node = treeViewTagReflexives.Nodes[0];
+                rd.chunkCount = 1;
+                rd.chunkSelected = 0;
+                rd.baseOffset = 0; // meta.offset;
+                rd.inTagNumber = meta.TagIndex;
+                refData.Clear();
+                refData.Add(rd);
+
+                map.OpenMap(MapTypes.Internal);
+
+                treeViewTagReflexives.Nodes[0].Nodes.AddRange(loadTreeReflexives(meta.offset, ifp.items, true));
+
+                map.CloseMap();
+
+                //treeViewTagReflexives.ExpandAll();
+                treeViewTagReflexives.Nodes[0].Expand();
+
+                #region Re-Select our previously selected node
+                TreeNodeCollection nodes = treeViewTagReflexives.Nodes[0].Nodes;
+                treeViewTagReflexives.Enabled = false;
+                treeViewTagReflexives.SelectedNode = treeViewTagReflexives.Nodes[0];
+                for (int i = 1; i < path.Length; i++)
+                {
+                    foreach (TreeNode tn in nodes)
+                    {
+                        if (((reflexiveData)tn.Tag).reflexive.offset.ToString() == path[i])
+                        {
+                            treeViewTagReflexives.SelectedNode = tn;
+                            nodes = tn.Nodes;
+                            break;
+                        }
                     }
                 }
+                // If we didn't get the right node, deselect all nodes
+                if (treeViewTagReflexives.SelectedNode.Level != path.Length - 1)
+                    treeViewTagReflexives.SelectedNode = null;
+                treeViewTagReflexives.Enabled = true;
+                #endregion
             }
-            // If we didn't get the right node, deselect all nodes
-            if (treeViewTagReflexives.SelectedNode.Level != path.Length - 1)
-                treeViewTagReflexives.SelectedNode = null;
-            treeViewTagReflexives.Enabled = true;
-            #endregion
+            catch (Exception ex)
+            {
+                Globals.Global.ShowErrorMsg(string.Empty, ex);
+            }
         }
 
         private TreeNode findNodeOffset(TreeNodeCollection tns, int offset)
@@ -404,6 +411,8 @@ namespace entity.MetaEditor2
                             //tempident.Controls[1].ContextMenuStrip = identContext;
                             panelMetaEditor.Controls.Add(tempident);
                             tempident.BringToFront();
+                            panelMetaEditor.Controls[0].Controls[1].MouseEnter += new EventHandler(cbIdent_MouseEnter);
+                            panelMetaEditor.Controls[0].Controls[1].MouseLeave += new EventHandler(cbIdent_MouseLeave);
                             panelMetaEditor.Controls[0].Controls[2].GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
                             tempident.ContextMenuStrip = cmIdent;
                             break;
@@ -1316,6 +1325,33 @@ namespace entity.MetaEditor2
             rs.Dispose();
         }
 
+        private void cbIdent_MouseLeave(object sender, EventArgs e)
+        {
+            // If our tag is not null, make sure it actually is an image, then release the used memory and restore the 
+            // original picture
+            if (this.MapForm.pictureBox1.Tag != null && this.MapForm.pictureBox1.Tag is Image)
+            {
+                this.MapForm.pictureBox1.Image.Dispose();
+                this.MapForm.pictureBox1.Image = (Image)this.MapForm.pictureBox1.Tag;
+                this.MapForm.pictureBox1.Tag = null;
+            }
+        }
+
+        private void cbIdent_MouseEnter(object sender, EventArgs e)
+        {
+            // Get the main Ident control to be used
+            Ident id = (Ident)((Control)sender).Parent;
+
+            if (id.tagType == "bitm")
+            {
+                // Read Ident name and load appropriate bitmap into MapForm picture box
+                this.MapForm.pictureBox1.Tag = this.MapForm.pictureBox1.Image;                
+                Meta meta = Map.GetMetaFromTagIndex(id.tagIndex, map, true, false);
+                HaloMap.RawData.ParsedBitmap pm = new HaloMap.RawData.ParsedBitmap(ref meta, map);
+                this.MapForm.pictureBox1.Image = pm.FindChunkAndDecode(0, 0, 0, ref meta, map, 0, 0);
+            }
+        }
+
         private void cbHideUnused_CheckedChanged(object sender, EventArgs e)
         {
             createTreeListing();
@@ -1560,12 +1596,33 @@ namespace entity.MetaEditor2
                 }
                 #endregion
 
+                // Update label listings on combobox
+                string[] s = loadLabels(rd);
+                ToolStripComboBox tcb = ((ToolStripComboBox)tsNavigation.Items[j * 3 + 2]);
+                // We need to disable update for this or it endless loops when changing selected index
+                tcb.SelectedIndexChanged -= tsbc_SelectedIndexChanged;
+                for (int ii = 0; ii < tcb.Items.Count; ii++)
+                {
+                    tcb.Items[ii] = ii + " : \"" + s[ii] + "\"";
+                }
+                // ...and re-enable afterwards
+                tcb.SelectedIndexChanged += tsbc_SelectedIndexChanged;
+
             }
 
             tn = treeViewTagReflexives.SelectedNode;
 
             if ((((reflexiveData)tn.Tag).chunkCount) > 0)
                 ReloadMetaForSameReflexive(((reflexiveData)tn.Tag).baseOffset);
+
+            // Update status bar to reflect listings
+            this.MapForm.statusBarText = string.Empty;
+            int i = 0;
+            foreach (ToolStripItem tsi in tsNavigation.Items)
+            {
+                if (++i % 3 == 0)
+                    this.MapForm.statusBarText += tsi.Text + " \\ ";
+            }
         }
 
         private void tsBtnResetValue_Click(object sender, EventArgs e)

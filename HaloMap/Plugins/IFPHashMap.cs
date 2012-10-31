@@ -66,9 +66,7 @@ namespace HaloMap.Plugins
                     }
                     catch (Exception e)
                     {
-                        Global.ShowErrorMsg("Error Reading Ifp: " + TagType, e);
-
-                        // return tempifp;
+                        throw new Exception("Error Reading Ifp: " + TagType, e);
                     }
 
                     // IFPHashMap.H2IFPHash.Remove(TagType);
