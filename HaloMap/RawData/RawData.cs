@@ -1582,6 +1582,7 @@ namespace HaloMap.RawData
                 BinaryFormatter b = new BinaryFormatter();
                 Sound temps = (Sound)meta.raw;
                 b.Serialize(s, temps.Permutations);
+                s.Flush();
                 s.Close();
             }
 
@@ -1596,8 +1597,7 @@ namespace HaloMap.RawData
             xtw.WriteAttributeString("Time", DateTime.Now.ToShortTimeString());
             xtw.WriteAttributeString("EntityVersion", "0.1");
 
-            FileStream FS = new FileStream(temp, FileMode.Create);
-            BinaryWriter BW = new BinaryWriter(FS);
+            BinaryWriter BW = new BinaryWriter(new FileStream(temp, FileMode.Create));
             int loc = 0;
             for (x = 0; x < this.rawChunks.Count; x++)
             {
@@ -1619,9 +1619,10 @@ namespace HaloMap.RawData
                 loc += r.size;
             }
 
+            BW.Flush();
             BW.Close();
-            FS.Close();
             xtw.WriteEndElement();
+            xtw.Flush();
             xtw.Close();
         }
 

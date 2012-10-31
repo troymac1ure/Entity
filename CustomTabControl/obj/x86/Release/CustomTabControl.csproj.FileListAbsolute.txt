@@ -1,3 +1,0 @@
-C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\CustomTabControl\bin\Release\JacksonSoft.CustomTabControl.dll
-C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\CustomTabControl\obj\x86\Release\ResolveAssemblyReference.cache
-C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\CustomTabControl\obj\x86\Release\JacksonSoft.CustomTabControl.dll

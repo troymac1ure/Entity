@@ -653,12 +653,11 @@ namespace HaloMap.Meta
             outputFileName = outputFileName.Replace(">", "_");
 
             // write memorysteam of meta to file
-            FileStream FS = new FileStream(outputFileName, FileMode.Create);
-            BinaryWriter BW = new BinaryWriter(FS);
+            BinaryWriter BW = new BinaryWriter(new FileStream(outputFileName, FileMode.Create));
             BW.BaseStream.Position = 0;
             BW.BaseStream.Write(this.MS.ToArray(), 0, this.size);
+            BW.Flush();
             BW.Close();
-            FS.Close();
 
             XmlTextWriter xtw = new XmlTextWriter(outputFileName + ".xml", Encoding.Default);
             xtw.Formatting = Formatting.Indented;
@@ -724,6 +723,7 @@ namespace HaloMap.Meta
             }
 
             xtw.WriteEndElement();
+            xtw.Flush();
             xtw.Close();
             if (this.rawType != RawDataContainerType.Empty)
             {
@@ -771,10 +771,8 @@ namespace HaloMap.Meta
 
 
             int y = newName.LastIndexOf("\\") + 1;
-            FileStream FS =
-                new FileStream(
-                    outputFilePath + "\\" + newName.Substring(y, newName.Length - y) + ".info", FileMode.Create);
-            StreamWriter SW = new StreamWriter(FS);
+            StreamWriter SW = new StreamWriter(new FileStream(
+                    outputFilePath + "\\" + newName.Substring(y, newName.Length - y) + ".info", FileMode.Create));
             for (int x = 0; x < metas.Count; x++)
             {
                 Meta m = (Meta)metas[x];
@@ -851,8 +849,8 @@ namespace HaloMap.Meta
                 SW.WriteLine(temp3);
             }
 
+            SW.Flush();
             SW.Close();
-            FS.Close();
 
             // Reset Progress Bar
             pb.Value = 0;

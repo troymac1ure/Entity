@@ -110,3 +110,6 @@ C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Debug\entit
 C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Debug\Interop.SHDocVw.dll
 C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Debug\Interop.SHDocVw.dll
 C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Debug\Entity.csproj.ResolveComReference.cache
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Debug\HexBox.resx
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Debug\HexBox.cs
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Debug\DevComponents.DotNetBar2.dll

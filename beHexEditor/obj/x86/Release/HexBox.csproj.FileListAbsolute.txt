@@ -1,8 +1,0 @@
-C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\beHexEditor\bin\x86\Release\HexBox.resx
-C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\beHexEditor\bin\x86\Release\HexBox.cs
-C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\beHexEditor\bin\x86\Release\Be.Windows.Forms.HexBox.dll
-C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\beHexEditor\obj\x86\Release\ResolveAssemblyReference.cache
-C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\beHexEditor\obj\x86\Release\Be.Windows.Forms.HexBox.resources
-C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\beHexEditor\obj\x86\Release\Be.Windows.Forms.Properties.Resources.resources
-C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\beHexEditor\obj\x86\Release\HexBox.csproj.GenerateResource.Cache
-C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\beHexEditor\obj\x86\Release\Be.Windows.Forms.HexBox.dll
