@@ -1208,7 +1208,7 @@ namespace entity.Tools
 
             int howfar = 0;
 
-            // I believe this is the Meta Table Start ??
+            // Recreate Meta Table Index
             int metaTableStart = map.IndexHeader.tagsOffset + ((map.IndexHeader.metaCount - 1) * 16);
             for (int x = 0; x < metas.Count; x++)
             {
@@ -1342,13 +1342,20 @@ namespace entity.Tools
                             map.BW.BaseStream.Position = offset + id.offset;
                             map.BW.Write(id.ident);
                             break;
+
                         case Meta.ItemType.Reflexive:
                             Meta.Reflexive reflex = (Meta.Reflexive)i;
                             int newreflex = reflex.translation + offset + map.SecondaryMagic;
+                            // Handle referenced reflexives
+                            if (reflex.pointstoTagIndex != m.TagIndex)
+                            {
+                                newreflex = totalshift + reflex.translation + map.MetaInfo.Offset[reflex.pointstoTagIndex] + map.SecondaryMagic;
+                            }
                             map.BW.BaseStream.Position = offset + reflex.offset;
                             map.BW.Write(reflex.chunkcount);
                             map.BW.Write(newreflex);
                             break;
+
                         case Meta.ItemType.String:
                             Meta.String s = (Meta.String)i;
                             short stringnum = 0;

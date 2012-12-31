@@ -246,7 +246,34 @@ namespace HaloMap.RealTimeHalo
                     break;
             }
         }
-        
+
+        public static void Poke(uint Addr, byte[] Data, int size)
+        {
+            if (!_IsConnected)
+                return;
+            // Calculate the offset
+
+            switch (connectedDebugType)
+            {
+                case debugType.RthDLL:
+                    uint Ptr = BaseAddress + (Addr - VirtMatgOffset);
+
+                    // Init connection
+                    uint con = console.OpenConnection(null);
+
+                    // Poke
+                    uint Out = 0;
+                    console.DebugTarget.SetMemory(Ptr, (uint)(size / 8), Data, out Out);
+
+                    // Close connection
+                    console.CloseConnection(con);
+                    break;
+                case debugType.YeloDebug:
+                    xboxDebug.SetMemory(Addr, Data);
+                    break;
+            }
+        }
+
         /// <summary>
         /// Retrieves data from a connected debug xbox
         /// </summary>

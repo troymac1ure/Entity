@@ -307,9 +307,11 @@ namespace HaloMap.Map
                 for (int counter = 0; counter < count; counter++)
                 {
                     br.BaseStream.Position = this.tableOffset + US[counter].offset;
-                    byte[] temp = br.ReadBytes(US[counter].size);
+                    byte[] temp = br.ReadBytes(US[counter].size + US[counter].size % 2);    // Round up to nearest even
                     US[counter].uString = decode.GetString(temp);
                 }
+                br.Close();
+                fs.Close();
             }
 
             #endregion

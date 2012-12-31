@@ -141,10 +141,18 @@
   <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>127, 91</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="rawDataDropDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAGdJREFUOE+tkwkK
+        ACAIBPP/jzY6jI6VlVCIwNrxyKRAU8V+Eexf3iaMLDdqRGx3DggW6jQ/K5J6EOCnzQG92YkAi8j2M+iW
+        ARPikjJLuPvBm5jzjI3yM0jPOH+P8U6KQMh/HMcIhIUVRFbSP199xyQAAAAASUVORK5CYII=
+</value>
+  </data>
   <metadata name="BitmapContextStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>150, 54</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         /9j/4AAQSkZJRgABAQEAYABgAAD/4QAWRXhpZgAATU0AKgAAAAgAAAAAAAD/2wBDAAgGBgcGBQgHBwcJ
@@ -318,14 +326,6 @@
         j/hAfE3/AEDP/I8f/wAVSugMa/8A9dH/ANck/lVSusvPA/iSWRCmm5Cxqv8Ar4+oH+9Vf/hAfE3/AEDP
         /I8f/wAVTvqJLQ5uvX/hT/yK9z/1+v8A+gJXCf8ACA+Jv+gZ/wCR4/8A4qvRfAWkX2iaFNbahB5MrXLS
         Bd6tlSqjOQT3BpMaP//Z
-</value>
-  </data>
-  <data name="rawDataDropDown.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAGdJREFUOE+tkwkK
-        ACAIBPP/jzY6jI6VlVCIwNrxyKRAU8V+Eexf3iaMLDdqRGx3DggW6jQ/K5J6EOCnzQG92YkAi8j2M+iW
-        ARPikjJLuPvBm5jzjI3yM0jPOH+P8U6KQMh/HMcIhIUVRFbSP199xyQAAAAASUVORK5CYII=
 </value>
   </data>
   <metadata name="splitContainer3.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

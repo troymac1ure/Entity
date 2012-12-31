@@ -113,6 +113,7 @@ namespace entity.Main
             this.mainmenuEditorMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.mainmenuEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.mainmenuAddthisMap = new System.Windows.Forms.ToolStripMenuItem();
+            this.visualEditScreensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsPanelTop = new System.Windows.Forms.ToolStripPanel();
             this.contextMenuStripMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.lockToolbarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -450,7 +451,8 @@ namespace entity.Main
             // 
             this.mainmenuEditorMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mainmenuEdit,
-            this.mainmenuAddthisMap});
+            this.mainmenuAddthisMap,
+            this.visualEditScreensToolStripMenuItem});
             this.mainmenuEditorMenu.Name = "mainmenuEditorMenu";
             this.mainmenuEditorMenu.Size = new System.Drawing.Size(67, 20);
             this.mainmenuEditorMenu.Text = "Mainmenu";
@@ -458,16 +460,23 @@ namespace entity.Main
             // mainmenuEdit
             // 
             this.mainmenuEdit.Name = "mainmenuEdit";
-            this.mainmenuEdit.Size = new System.Drawing.Size(147, 22);
-            this.mainmenuEdit.Text = "&Edit";
+            this.mainmenuEdit.Size = new System.Drawing.Size(172, 22);
+            this.mainmenuEdit.Text = "Edit map listings";
             this.mainmenuEdit.Click += new System.EventHandler(this.mainmenuEdit_Click);
             // 
             // mainmenuAddthisMap
             // 
             this.mainmenuAddthisMap.Name = "mainmenuAddthisMap";
-            this.mainmenuAddthisMap.Size = new System.Drawing.Size(147, 22);
+            this.mainmenuAddthisMap.Size = new System.Drawing.Size(172, 22);
             this.mainmenuAddthisMap.Text = "&Add this map";
             this.mainmenuAddthisMap.Visible = false;
+            // 
+            // visualEditScreensToolStripMenuItem
+            // 
+            this.visualEditScreensToolStripMenuItem.Name = "visualEditScreensToolStripMenuItem";
+            this.visualEditScreensToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.visualEditScreensToolStripMenuItem.Text = "Visual Menu Editor";
+            this.visualEditScreensToolStripMenuItem.Click += new System.EventHandler(this.mainmenuvisualedit_click);
             // 
             // tsPanelTop
             // 
@@ -721,6 +730,7 @@ namespace entity.Main
         private ToolStripPanel tsPanelBottom;
         private ToolStripMenuItem toolsLatestPlugins;
         private ToolStripMenuItem helpContents;
+        private ToolStripMenuItem visualEditScreensToolStripMenuItem;
 
     }
 }

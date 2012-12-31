@@ -587,13 +587,14 @@ namespace HaloMap.Meta
                                         "Tag: [" + meta.Map.MetaInfo.TagType[TagIndex] + "] " +
                                         meta.Map.FileNames.Name[TagIndex] + "    @ Offset: " + off.ToString().PadLeft(10) +
                                         " ,  Name: \"" + tempident.name + "\"");
+                                    i.ident = -1;
                                 }
 
                                 i.pointstoTagIndex = -1;
                                 i.pointstotagname = "Null";
                             }
 
-                            i.mapOffset = offset + tempident.offset + (x * chunksize);
+                            //i.mapOffset = offset + tempident.offset + (x * chunksize);
                             i.offset = i.mapOffset - meta.Map.MetaInfo.Offset[TagIndex];
                             if (meta.parsed)
                             {

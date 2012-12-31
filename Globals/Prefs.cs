@@ -362,147 +362,154 @@ namespace Globals
             {
                 XmlDocument doc = new XmlDocument();
 
-                // load settings into document
-                doc.Load(FilePath);
-
-                // loop rootnode's nodes, and depending on what node we find
-                // do a different action.
-                foreach (XmlNode node in doc.DocumentElement.ChildNodes)
+                try
                 {
-                    switch (node.Name)
+                    // load settings into document
+                    doc.Load(FilePath);
+
+                    // loop rootnode's nodes, and depending on what node we find
+                    // do a different action.
+                    foreach (XmlNode node in doc.DocumentElement.ChildNodes)
                     {
-                        case XML_NODE_MAINMENUFILE:
-                            {
-                                pathMainmenu = node.InnerText;
-                                break;
-                            }
-                        case XML_NODE_MPSHAREDFILE:
-                            {
-                                pathShared = node.InnerText;
-                                break;
-                            }
-                        case XML_NODE_SPSHAREDFILE:
-                            {
-                                pathSPShared = node.InnerText;
-                                break;
-                            }
-                        case XML_NODE_BITMAPSFILE:
-                            {
-                                pathBitmaps = node.InnerText;
-                                break;
-                            }
-
-                        case XML_NODE_MAPSFOLDER:
-                            {
-                                pathMapFolder = node.InnerText;
-                                break;
-                            }
-                        case XML_NODE_CLEANMAPSFOLDER:
-                            {
-                                pathCleanMaps = node.InnerText;
-                                break;
-                            }
-                        case XML_NODE_PLUGINSFOLDER:
-                            {
-                                pathPluginsFolder = node.InnerText;
-                                break;
-                            }
-                        case XML_NODE_BITMAPSFOLDER:
-                            {
-                                pathBitmapsFolder = node.InnerText;
-                                break;
-                            }
-                        case XML_NODE_EXTRACTSFOLDER:
-                            {
-                                pathExtractsFolder = node.InnerText;
-                                break;
-                            }
-                        case XML_NODE_PATCHFOLDER:
-                            {
-                                pathPatchFolder = node.InnerText;
-                                break;
-                            }
-
-                        case XML_NODE_USEDEFMAPS:
-                            {
-                                useDefaultMaps = bool.Parse(node.InnerText);
-                                break;
-                            }
-                        case XML_NODE_USEREGISTRY:
-                            {
-                                useRegistryEntries = bool.Parse(node.InnerText);
-                                break;
-                            }
-                        case XML_NODE_CHECKUPDATE:
-                            {
-                                checkUpdate = (updateFrequency)Enum.Parse(typeof(updateFrequency), node.InnerText);
-                                break;
-                            }
-                        case XML_NODE_LASTUPDATECHECK:
-                            {
-                                lastCheck = DateTime.Parse(node.InnerText);
-                                break;
-                            }
-
-
-                        case XML_NODE_RECENTMAPSLIST:
-                            {
-                                foreach (XmlNode recentMapNode in node)
+                        switch (node.Name)
+                        {
+                            case XML_NODE_MAINMENUFILE:
                                 {
-                                    RecentFile rf = new RecentFile();
-                                    rf.Path = recentMapNode.InnerText;
-                                    RecentOpenedMaps.Add(rf);
+                                    pathMainmenu = node.InnerText;
+                                    break;
                                 }
-                                break;
-                            }
-                        case XML_NODE_QUICKACCESSTAGSLIST:
-                            {
-                                foreach (XmlNode quickAccessNode in node)
+                            case XML_NODE_MPSHAREDFILE:
                                 {
-                                    QuickAccessTagType quickAcess = new QuickAccessTagType();
-                                    quickAcess.TagType = quickAccessNode.Attributes[XML_ATTR_TAGTYPENAME].InnerText;
-                                    foreach (XmlNode tagPathNode in quickAccessNode)
+                                    pathShared = node.InnerText;
+                                    break;
+                                }
+                            case XML_NODE_SPSHAREDFILE:
+                                {
+                                    pathSPShared = node.InnerText;
+                                    break;
+                                }
+                            case XML_NODE_BITMAPSFILE:
+                                {
+                                    pathBitmaps = node.InnerText;
+                                    break;
+                                }
+
+                            case XML_NODE_MAPSFOLDER:
+                                {
+                                    pathMapFolder = node.InnerText;
+                                    break;
+                                }
+                            case XML_NODE_CLEANMAPSFOLDER:
+                                {
+                                    pathCleanMaps = node.InnerText;
+                                    break;
+                                }
+                            case XML_NODE_PLUGINSFOLDER:
+                                {
+                                    pathPluginsFolder = node.InnerText;
+                                    break;
+                                }
+                            case XML_NODE_BITMAPSFOLDER:
+                                {
+                                    pathBitmapsFolder = node.InnerText;
+                                    break;
+                                }
+                            case XML_NODE_EXTRACTSFOLDER:
+                                {
+                                    pathExtractsFolder = node.InnerText;
+                                    break;
+                                }
+                            case XML_NODE_PATCHFOLDER:
+                                {
+                                    pathPatchFolder = node.InnerText;
+                                    break;
+                                }
+
+                            case XML_NODE_USEDEFMAPS:
+                                {
+                                    useDefaultMaps = bool.Parse(node.InnerText);
+                                    break;
+                                }
+                            case XML_NODE_USEREGISTRY:
+                                {
+                                    useRegistryEntries = bool.Parse(node.InnerText);
+                                    break;
+                                }
+                            case XML_NODE_CHECKUPDATE:
+                                {
+                                    checkUpdate = (updateFrequency)Enum.Parse(typeof(updateFrequency), node.InnerText);
+                                    break;
+                                }
+                            case XML_NODE_LASTUPDATECHECK:
+                                {
+                                    lastCheck = DateTime.Parse(node.InnerText);
+                                    break;
+                                }
+
+
+                            case XML_NODE_RECENTMAPSLIST:
+                                {
+                                    foreach (XmlNode recentMapNode in node)
                                     {
-                                        //switch (tagPathNode.Name)
-                                        //{
-                                        //    case XML_NODE_QUICKACCESSTAGPATH:
-                                        //        {
-                                        quickAcess.TagPaths.Add(tagPathNode.InnerText);
-                                        //            break;
-                                        //        }
-
-                                        //}
+                                        RecentFile rf = new RecentFile();
+                                        rf.Path = recentMapNode.InnerText;
+                                        RecentOpenedMaps.Add(rf);
                                     }
-                                    QuickAccessTagTypes.Add(quickAcess);
+                                    break;
                                 }
-                                break;
-                            }
-                        case XML_NODE_USERPLUGINMASKS:
-                            {
-                                foreach (XmlNode pluginMaskNode in node)
+                            case XML_NODE_QUICKACCESSTAGSLIST:
                                 {
-                                    CustomPluginMask mask = new CustomPluginMask();
-                                    mask.Name = pluginMaskNode.Attributes[XML_ATTR_PLUGINMASKNAME].InnerText;
-
-                                    foreach (XmlNode maskNode in pluginMaskNode)
+                                    foreach (XmlNode quickAccessNode in node)
                                     {
-                                        //switch (maskNode.Name)
-                                        //{
-                                        //    case XML_NODE_PLUGINMASK_VISIBLETAGTYPE:
-                                        //        {
-                                        mask.VisibleTagTypes.Add(
-                                            maskNode.Attributes[XML_ATTR_TAGTYPENAME].InnerText);
-                                        //            break;
-                                        //        }
+                                        QuickAccessTagType quickAcess = new QuickAccessTagType();
+                                        quickAcess.TagType = quickAccessNode.Attributes[XML_ATTR_TAGTYPENAME].InnerText;
+                                        foreach (XmlNode tagPathNode in quickAccessNode)
+                                        {
+                                            //switch (tagPathNode.Name)
+                                            //{
+                                            //    case XML_NODE_QUICKACCESSTAGPATH:
+                                            //        {
+                                            quickAcess.TagPaths.Add(tagPathNode.InnerText);
+                                            //            break;
+                                            //        }
 
-                                        //}
+                                            //}
+                                        }
+                                        QuickAccessTagTypes.Add(quickAcess);
                                     }
-
-                                    CustomPluginMasks.Add(mask);
+                                    break;
                                 }
-                                break;
-                            }
+                            case XML_NODE_USERPLUGINMASKS:
+                                {
+                                    foreach (XmlNode pluginMaskNode in node)
+                                    {
+                                        CustomPluginMask mask = new CustomPluginMask();
+                                        mask.Name = pluginMaskNode.Attributes[XML_ATTR_PLUGINMASKNAME].InnerText;
+
+                                        foreach (XmlNode maskNode in pluginMaskNode)
+                                        {
+                                            //switch (maskNode.Name)
+                                            //{
+                                            //    case XML_NODE_PLUGINMASK_VISIBLETAGTYPE:
+                                            //        {
+                                            mask.VisibleTagTypes.Add(
+                                                maskNode.Attributes[XML_ATTR_TAGTYPENAME].InnerText);
+                                            //            break;
+                                            //        }
+
+                                            //}
+                                        }
+
+                                        CustomPluginMasks.Add(mask);
+                                    }
+                                    break;
+                                }
+                        }
                     }
+                }
+                catch
+                {
+                    settingsFileExists = false;
                 }
             }
 

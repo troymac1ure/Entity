@@ -88,7 +88,7 @@ namespace HaloMap.H2MetaContainers
             for (int x = 0; x < tempc; x++)
             {
                 SoundNames.Add(meta.Map.Strings.Name[BR.ReadUInt16()]);
-                BR.ReadInt16();
+                ushort s = BR.ReadUInt16();
             }
 
             BR.BaseStream.Position = 32;

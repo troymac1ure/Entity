@@ -146,7 +146,7 @@ namespace entity.Main
             map = Map.LoadFromFile(Prefs.pathMainmenu);
             if (map == null)
             {
-                MessageBox.Show("Fail");
+                MessageBox.Show("Mainmenu load failed!");
                 return;
             }
 

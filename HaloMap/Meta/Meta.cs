@@ -243,7 +243,14 @@ namespace HaloMap.Meta
 
                         this.headersize = io.headerSize;
 
-                        scanner.ScanWithIFP(ref io);
+                        string[] sa = scanner.ScanWithIFP(ref io);
+                        if (sa.Length > 0)
+                        {
+                            string s = string.Empty;
+                            for (int i = 0; i < sa.Length; i++)
+                                s += "\n" + sa[i];
+                            MessageBox.Show("Errors were detected with the following idents:\n" + s);
+                        }
                     }
                     else
                     {
@@ -257,7 +264,7 @@ namespace HaloMap.Meta
         }
 
         /// <summary>
-        /// The ask for tag name.
+        /// Asks for a tag name for export.
         /// </summary>
         /// <param name="newName">The new name.</param>
         /// <returns>The ask for tag name.</returns>
@@ -396,9 +403,9 @@ namespace HaloMap.Meta
         }
 
         /// <summary>
-        /// The load meta from file.
+        /// Load meta from an XML file.
         /// </summary>
-        /// <param name="inputFileName">The input file name.</param>
+        /// <param name="inputFileName">The XML file name.</param>
         /// <remarks></remarks>
         public void LoadMetaFromFile(string inputFileName)
         {
@@ -955,92 +962,105 @@ namespace HaloMap.Meta
             float test = meta.items.Count;
 
             float currentpercentsize = percentsize / test;
+            
+            Item i = null;
 
-            for (int x = 0; x < meta.items.Count; x++)
+            try
             {
-                Item i = meta.items[x];
-                if (i.type != ItemType.Ident)
+                for (int x = 0; x < meta.items.Count; x++)
                 {
-                    continue;
-                }
-
-                float currentpercentage = percent + (currentpercentsize * x);
-                pb.Value = (int)currentpercentage;
-                Application.DoEvents();
-                Ident id = (Ident)i;
-
-                if (id.ident == -1)
-                {
-                    continue;
-                }
-
-                if (id.ident == 0)
-                {
-                    int tagIndex = Map.Functions.ForMeta.FindByNameAndTagType("sbsp", i.intagname);
-                    id.ident = Map.MetaInfo.Ident[tagIndex];
-                }
-
-                bool exists = false;
-
-                for (int e = 0; e < metas.Count; e++)
-                {
-                    Meta tempmeta = (Meta)metas[e];
-
-                    // if (id.pointstotagtype  ==tempmeta.type&&id.pointstotagname ==tempmeta.name )
-                    if (id.ident == tempmeta.ident)
+                    i = meta.items[x];
+                    if (i.type != ItemType.Ident)
                     {
-                        exists = true;
-                        break;
+                        continue;
                     }
+
+                    float currentpercentage = percent + (currentpercentsize * x);
+                    pb.Value = (int)currentpercentage;
+                    Application.DoEvents();
+                    
+                    Ident id = (Ident)i;
+
+                    if (id.ident == -1)
+                    {
+                        continue;
+                    }
+
+                    if (id.ident == 0)
+                    {
+                        int tagIndex = Map.Functions.ForMeta.FindByNameAndTagType("sbsp", i.intagname);
+                        id.ident = Map.MetaInfo.Ident[tagIndex];
+                    }
+
+                    bool exists = false;
+
+                    for (int e = 0; e < metas.Count; e++)
+                    {
+                        Meta tempmeta = (Meta)metas[e];
+
+                        // if (id.pointstotagtype  ==tempmeta.type&&id.pointstotagname ==tempmeta.name )
+                        if (id.ident == tempmeta.ident)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    }
+
+                    if (exists)
+                    {
+                        continue;
+                    }
+
+                    // Drag & drop w/ recursive locks up. num == -1
+                    int num = Map.Functions.ForMeta.FindMetaByID(id.ident);
+                    if (num < 0)
+                    {
+                        MessageBox.Show("ERROR! Not Found!");
+                    }
+
+                    Meta m = new Meta(Map);
+                    if (parsed)
+                    {
+                        m.parsed = true;
+                    }
+
+                    m.ReadMetaFromMap(num, false);
+                    if (m.type == "ltmp" | m.type == "matg")
+                    {
+                        continue;
+                    }
+
+                    if (m.type == "phmo" | m.type == "coll" | m.type == "jmad")
+                    {
+                        m.parsed = false;
+                    }
+
+                    if (m.type != "jmad")
+                    {
+                        IFPIO ifp = IFPHashMap.GetIfp(m.type, Map.HaloVersion);
+                        m.headersize = ifp.headerSize;
+
+                        m.scanner.ScanWithIFP(ref ifp);
+                    }
+                    else
+                    {
+                        m.scanner.ScanManually();
+                    }
+
+                    m.SortItemsByOffset();
+
+                    metas.Add(m);
+
+                    Application.DoEvents();
+                    SaveRecursiveFunction(m, ref metas, parsed, pb, currentpercentage, currentpercentsize);
                 }
-
-                if (exists)
-                {
-                    continue;
-                }
-
-                // Drag & drop w/ recursive locks up. num == -1
-                int num = Map.Functions.ForMeta.FindMetaByID(id.ident);
-                if (num < 0)
-                {
-                    MessageBox.Show("ERROR! Not Found!");
-                }
-
-                Meta m = new Meta(Map);
-                if (parsed)
-                {
-                    m.parsed = true;
-                }
-
-                m.ReadMetaFromMap(num, false);
-                if (m.type == "ltmp" | m.type == "matg")
-                {
-                    continue;
-                }
-
-                if (m.type == "phmo" | m.type == "coll" | m.type == "jmad")
-                {
-                    m.parsed = false;
-                }
-
-                if (m.type != "jmad")
-                {
-                    IFPIO ifp = IFPHashMap.GetIfp(m.type, Map.HaloVersion);
-                    m.headersize = ifp.headerSize;
-
-                    m.scanner.ScanWithIFP(ref ifp);
-                }
-                else
-                {
-                    m.scanner.ScanManually();
-                }
-
-                m.SortItemsByOffset();
-
-                metas.Add(m);
-
-                Application.DoEvents();
-                SaveRecursiveFunction(m, ref metas, parsed, pb, currentpercentage, currentpercentsize);
+            }
+            catch (Exception e)
+            {
+                string addOn = "\nin [" + meta.type + "] " + meta.name;
+                if (i.type == ItemType.Ident)
+                    addOn = "\n" + i.description + ", Ident: " + ((Ident)i).ident + addOn;
+                throw new Exception(e.Message + addOn, e.InnerException);
             }
         }
 

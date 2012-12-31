@@ -224,6 +224,8 @@ namespace entity.MapForms
             this.metaEditorNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.metaEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hexEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.StringEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebuilderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixSystemLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -369,7 +371,7 @@ namespace entity.MapForms
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Margin = new System.Windows.Forms.Padding(3, 50, 3, 3);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(160, 527);
+            this.treeView1.Size = new System.Drawing.Size(192, 527);
             this.treeView1.TabIndex = 0;
             this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseDoubleClick);
             this.treeView1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeExpand);
@@ -569,7 +571,7 @@ namespace entity.MapForms
             this.statusbar});
             this.statusStrip1.Location = new System.Drawing.Point(0, 669);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(748, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(899, 22);
             this.statusStrip1.TabIndex = 13;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -587,7 +589,7 @@ namespace entity.MapForms
                         | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
                         | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusbar.Name = "statusbar";
-            this.statusbar.Size = new System.Drawing.Size(531, 17);
+            this.statusbar.Size = new System.Drawing.Size(682, 17);
             this.statusbar.Spring = true;
             this.statusbar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -603,7 +605,7 @@ namespace entity.MapForms
             this.references.HideSelection = false;
             this.references.Location = new System.Drawing.Point(0, 0);
             this.references.Name = "references";
-            this.references.Size = new System.Drawing.Size(565, 669);
+            this.references.Size = new System.Drawing.Size(716, 669);
             this.references.TabIndex = 14;
             this.references.UseCompatibleStateImageBehavior = false;
             this.references.View = System.Windows.Forms.View.Details;
@@ -712,6 +714,8 @@ namespace entity.MapForms
             this.metaEditorNewToolStripMenuItem,
             this.metaEditorToolStripMenuItem,
             this.hexEditorToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.StringEditorToolStripMenuItem,
             this.rebuilderToolStripMenuItem,
             this.fixSystemLinkToolStripMenuItem,
             this.pluginsToolStripMenuItem,
@@ -726,55 +730,72 @@ namespace entity.MapForms
             this.referenceEditorToolStripMenuItem.Checked = true;
             this.referenceEditorToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.referenceEditorToolStripMenuItem.Name = "referenceEditorToolStripMenuItem";
-            this.referenceEditorToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.referenceEditorToolStripMenuItem.Text = "[F1] Reference Editor";
+            this.referenceEditorToolStripMenuItem.ShortcutKeyDisplayString = "F5";
+            this.referenceEditorToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.referenceEditorToolStripMenuItem.Text = "Reference Editor";
             this.referenceEditorToolStripMenuItem.Click += new System.EventHandler(this.referenceToolStripMenuItem_Click);
             // 
             // metaEditorNewToolStripMenuItem
             // 
             this.metaEditorNewToolStripMenuItem.Name = "metaEditorNewToolStripMenuItem";
-            this.metaEditorNewToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.metaEditorNewToolStripMenuItem.Text = "[F2] Meta Editor Plus";
+            this.metaEditorNewToolStripMenuItem.ShortcutKeyDisplayString = "F6";
+            this.metaEditorNewToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.metaEditorNewToolStripMenuItem.Text = "Meta Editor Plus";
             this.metaEditorNewToolStripMenuItem.Click += new System.EventHandler(this.metaEditorNewToolStripMenuItem_Click);
             // 
             // metaEditorToolStripMenuItem
             // 
             this.metaEditorToolStripMenuItem.Name = "metaEditorToolStripMenuItem";
-            this.metaEditorToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.metaEditorToolStripMenuItem.Text = "[F3] Meta Editor";
+            this.metaEditorToolStripMenuItem.ShortcutKeyDisplayString = "F7";
+            this.metaEditorToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.metaEditorToolStripMenuItem.Text = "Meta Editor";
             this.metaEditorToolStripMenuItem.Click += new System.EventHandler(this.metaEditorToolStripMenuItem_Click);
             // 
             // hexEditorToolStripMenuItem
             // 
             this.hexEditorToolStripMenuItem.Name = "hexEditorToolStripMenuItem";
-            this.hexEditorToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.hexEditorToolStripMenuItem.Text = "[F4] Hex Editor";
+            this.hexEditorToolStripMenuItem.ShortcutKeyDisplayString = "F8";
+            this.hexEditorToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.hexEditorToolStripMenuItem.Text = "Hex Editor";
             this.hexEditorToolStripMenuItem.Click += new System.EventHandler(this.hexEditorToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(205, 6);
+            // 
+            // StringEditorToolStripMenuItem
+            // 
+            this.StringEditorToolStripMenuItem.Name = "StringEditorToolStripMenuItem";
+            this.StringEditorToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
+            this.StringEditorToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.StringEditorToolStripMenuItem.Text = "Unicode String Viewer";
+            this.StringEditorToolStripMenuItem.Click += new System.EventHandler(this.StringEditorToolStripMenuItem_Click);
             // 
             // rebuilderToolStripMenuItem
             // 
             this.rebuilderToolStripMenuItem.Name = "rebuilderToolStripMenuItem";
-            this.rebuilderToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.rebuilderToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.rebuilderToolStripMenuItem.Text = "Rebuilder";
             this.rebuilderToolStripMenuItem.Click += new System.EventHandler(this.rebuilderToolStripMenuItem_Click);
             // 
             // fixSystemLinkToolStripMenuItem
             // 
             this.fixSystemLinkToolStripMenuItem.Name = "fixSystemLinkToolStripMenuItem";
-            this.fixSystemLinkToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.fixSystemLinkToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.fixSystemLinkToolStripMenuItem.Text = "Fix System Link";
             this.fixSystemLinkToolStripMenuItem.Click += new System.EventHandler(this.fixSystemLinkToolStripMenuItem_Click);
             // 
             // pluginsToolStripMenuItem
             // 
             this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
-            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.pluginsToolStripMenuItem.Text = "Plugins";
             // 
             // exportScriptsToolStripMenuItem
             // 
             this.exportScriptsToolStripMenuItem.Name = "exportScriptsToolStripMenuItem";
-            this.exportScriptsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.exportScriptsToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
             this.exportScriptsToolStripMenuItem.Text = "Export Scripts";
             this.exportScriptsToolStripMenuItem.Visible = false;
             this.exportScriptsToolStripMenuItem.Click += new System.EventHandler(this.exportScriptsToolStripMenuItem_Click);
@@ -842,7 +863,7 @@ namespace entity.MapForms
             this.convertToBumpMapToolStripMenuItem,
             this.bitmapEditorToolStripMenuItem});
             this.BitmapContextStrip.Name = "contextMenuStrip1";
-            this.BitmapContextStrip.Size = new System.Drawing.Size(189, 114);
+            this.BitmapContextStrip.Size = new System.Drawing.Size(189, 92);
             // 
             // saveBitmapToolStripMenuItem
             // 
@@ -868,8 +889,9 @@ namespace entity.MapForms
             // bitmapEditorToolStripMenuItem
             // 
             this.bitmapEditorToolStripMenuItem.Name = "bitmapEditorToolStripMenuItem";
+            this.bitmapEditorToolStripMenuItem.ShortcutKeyDisplayString = "F9";
             this.bitmapEditorToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
-            this.bitmapEditorToolStripMenuItem.Text = "[F5] Bitmap Editor";
+            this.bitmapEditorToolStripMenuItem.Text = "Bitmap Editor";
             this.bitmapEditorToolStripMenuItem.Click += new System.EventHandler(this.bitmapEditorToolStripMenuItem_Click);
             // 
             // secondaryMagicBox
@@ -1259,8 +1281,8 @@ namespace entity.MapForms
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Panel2.Controls.Add(this.statusStrip1);
-            this.splitContainer1.Size = new System.Drawing.Size(911, 691);
-            this.splitContainer1.SplitterDistance = 160;
+            this.splitContainer1.Size = new System.Drawing.Size(1094, 691);
+            this.splitContainer1.SplitterDistance = 192;
             this.splitContainer1.SplitterWidth = 3;
             this.splitContainer1.TabIndex = 17;
             // 
@@ -1280,7 +1302,7 @@ namespace entity.MapForms
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
-            this.splitContainer3.Size = new System.Drawing.Size(160, 691);
+            this.splitContainer3.Size = new System.Drawing.Size(192, 691);
             this.splitContainer3.SplitterDistance = 25;
             this.splitContainer3.SplitterWidth = 2;
             this.splitContainer3.TabIndex = 2;
@@ -1299,7 +1321,7 @@ namespace entity.MapForms
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Padding = new System.Windows.Forms.Padding(0, 2, 0, 0);
-            this.toolStrip2.Size = new System.Drawing.Size(160, 25);
+            this.toolStrip2.Size = new System.Drawing.Size(192, 25);
             this.toolStrip2.TabIndex = 1;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -1340,7 +1362,7 @@ namespace entity.MapForms
             this.toolStripBSPEditor.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBSPEditor.Image")));
             this.toolStripBSPEditor.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripBSPEditor.Name = "toolStripBSPEditor";
-            this.toolStripBSPEditor.Size = new System.Drawing.Size(69, 17);
+            this.toolStripBSPEditor.Size = new System.Drawing.Size(69, 20);
             this.toolStripBSPEditor.Text = "Visual Editor";
             this.toolStripBSPEditor.ToolTipText = "BSP Visual Editor";
             this.toolStripBSPEditor.Click += new System.EventHandler(this.toolStripBSPEditor_Click);
@@ -1380,7 +1402,7 @@ namespace entity.MapForms
             // 
             this.splitContainer4.Panel2.Controls.Add(this.LowerOptionsBar);
             this.splitContainer4.Panel2.Controls.Add(this.buttonLowerOptions);
-            this.splitContainer4.Size = new System.Drawing.Size(160, 664);
+            this.splitContainer4.Size = new System.Drawing.Size(192, 664);
             this.splitContainer4.SplitterDistance = 527;
             this.splitContainer4.SplitterWidth = 2;
             this.splitContainer4.TabIndex = 2;
@@ -1394,7 +1416,7 @@ namespace entity.MapForms
             this.LowerOptionsBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LowerOptionsBar.Location = new System.Drawing.Point(0, 0);
             this.LowerOptionsBar.Name = "LowerOptionsBar";
-            this.LowerOptionsBar.Size = new System.Drawing.Size(160, 113);
+            this.LowerOptionsBar.Size = new System.Drawing.Size(192, 113);
             this.LowerOptionsBar.TabIndex = 1;
             this.LowerOptionsBar.Tag = false;
             // 
@@ -1427,7 +1449,7 @@ namespace entity.MapForms
             this.buttonLowerOptions.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.buttonLowerOptions.Location = new System.Drawing.Point(0, 113);
             this.buttonLowerOptions.Name = "buttonLowerOptions";
-            this.buttonLowerOptions.Size = new System.Drawing.Size(160, 22);
+            this.buttonLowerOptions.Size = new System.Drawing.Size(192, 22);
             this.buttonLowerOptions.TabIndex = 0;
             this.buttonLowerOptions.Text = "Close Options";
             this.buttonLowerOptions.UseVisualStyleBackColor = true;
@@ -1452,8 +1474,8 @@ namespace entity.MapForms
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.panel2);
-            this.splitContainer2.Size = new System.Drawing.Size(748, 669);
-            this.splitContainer2.SplitterDistance = 565;
+            this.splitContainer2.Size = new System.Drawing.Size(899, 669);
+            this.splitContainer2.SplitterDistance = 716;
             this.splitContainer2.TabIndex = 14;
             // 
             // MetaEditor2Panel
@@ -1462,7 +1484,7 @@ namespace entity.MapForms
             this.MetaEditor2Panel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MetaEditor2Panel.Location = new System.Drawing.Point(0, 0);
             this.MetaEditor2Panel.Name = "MetaEditor2Panel";
-            this.MetaEditor2Panel.Size = new System.Drawing.Size(565, 669);
+            this.MetaEditor2Panel.Size = new System.Drawing.Size(716, 669);
             this.MetaEditor2Panel.TabIndex = 16;
             this.MetaEditor2Panel.Visible = false;
             // 
@@ -1475,7 +1497,7 @@ namespace entity.MapForms
             this.hexView1.Location = new System.Drawing.Point(0, 0);
             this.hexView1.Name = "hexView1";
             this.hexView1.Padding = new System.Windows.Forms.Padding(10);
-            this.hexView1.Size = new System.Drawing.Size(565, 669);
+            this.hexView1.Size = new System.Drawing.Size(716, 669);
             this.hexView1.TabIndex = 0;
             this.hexView1.Visible = false;
             // 
@@ -1486,7 +1508,7 @@ namespace entity.MapForms
             this.ltmpTools.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ltmpTools.Location = new System.Drawing.Point(0, 0);
             this.ltmpTools.Name = "ltmpTools";
-            this.ltmpTools.Size = new System.Drawing.Size(565, 669);
+            this.ltmpTools.Size = new System.Drawing.Size(716, 669);
             this.ltmpTools.TabIndex = 17;
             // 
             // MetaEditorPanel
@@ -1496,7 +1518,7 @@ namespace entity.MapForms
             this.MetaEditorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MetaEditorPanel.Location = new System.Drawing.Point(0, 0);
             this.MetaEditorPanel.Name = "MetaEditorPanel";
-            this.MetaEditorPanel.Size = new System.Drawing.Size(565, 669);
+            this.MetaEditorPanel.Size = new System.Drawing.Size(716, 669);
             this.MetaEditorPanel.TabIndex = 15;
             this.MetaEditorPanel.Visible = false;
             // 
@@ -1508,7 +1530,7 @@ namespace entity.MapForms
             this.metaEditor1.Location = new System.Drawing.Point(0, 0);
             this.metaEditor1.Name = "metaEditor1";
             this.metaEditor1.Padding = new System.Windows.Forms.Padding(2);
-            this.metaEditor1.Size = new System.Drawing.Size(565, 669);
+            this.metaEditor1.Size = new System.Drawing.Size(716, 669);
             this.metaEditor1.TabIndex = 0;
             // 
             // LibraryPanel
@@ -1518,7 +1540,7 @@ namespace entity.MapForms
             this.LibraryPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LibraryPanel.Location = new System.Drawing.Point(0, 0);
             this.LibraryPanel.Name = "LibraryPanel";
-            this.LibraryPanel.Size = new System.Drawing.Size(565, 669);
+            this.LibraryPanel.Size = new System.Drawing.Size(716, 669);
             this.LibraryPanel.TabIndex = 16;
             this.LibraryPanel.Visible = false;
             // 
@@ -1797,7 +1819,7 @@ namespace entity.MapForms
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.DarkGray;
-            this.ClientSize = new System.Drawing.Size(911, 691);
+            this.ClientSize = new System.Drawing.Size(1094, 691);
             this.Controls.Add(this.splitContainer1);
             this.KeyPreview = true;
             this.Name = "MapForm";
@@ -1854,6 +1876,8 @@ namespace entity.MapForms
         private Label lblRawSize;
         private RichTextBox metaRawBox;
         private Timer timer1;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem StringEditorToolStripMenuItem;
     }
 }
 

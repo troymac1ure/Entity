@@ -695,6 +695,28 @@ namespace entity.Main
             mme.ShowDialog();
         }
 
+        private void mainmenuvisualedit_click(object sender, EventArgs e)
+        {
+            // Check for open instance (only allow one)
+            MainmenuVisualEdit mmve = null;
+            foreach (Form f in Application.OpenForms)
+            {
+                if (f.GetType().Name == "MainmenuVisualEdit")
+                {
+                    mmve = (MainmenuVisualEdit)f;
+                    break;
+                }
+            }
+            if (mmve == null) 
+                mmve = new MainmenuVisualEdit();
+            
+            // Show form & focus
+            mmve.Show();
+            mmve.Focus();
+
+
+        }
+
         /// <summary>
         /// Makes .MAP files open by default in Entity.
         /// </summary>
@@ -980,5 +1002,6 @@ namespace entity.Main
             }
         } 
         #endregion
-   }
+
+    }
 }

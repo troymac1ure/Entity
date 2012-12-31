@@ -25,6 +25,28 @@ namespace entity.MetaEditor2
         public Color BackgroundColor { get { return bgColor; } set { bgColor = value; } }
         public Color ForegroundColor { get { return fgColor; } set { fgColor = value; } }
 
+        /// <summary>
+        /// Keeps track of externally references reflexives
+        /// </summary>
+        public List<references> reflexiveReferences = new List<references>();
+
+        public class references
+        {
+            public int chunkCount;
+            public int ident;
+            public string name;
+            public int offset;
+            public int size;
+            public int tagIndex;
+            public string tagType;
+            public string tagName;
+
+            public override string ToString()
+            {
+                return "\"" + name + "\", count=" + chunkCount + "  =>  [" + tagType + "] " + tagName;
+            }
+        }
+
         public WinMetaEditor(MapForm sender, HaloMap.Map.Map map)
         {
             InitializeComponent();
@@ -44,7 +66,7 @@ namespace entity.MetaEditor2
         /// <returns>Page Number of active tab</returns>
         public int addNewTab( Meta meta, bool allowDuplicate)
         {
-            string typeAndTag = "[" + meta.type.ToLower() + "] " + map.SelectedMeta.name.Substring(meta.name.LastIndexOf('\\') + 1);
+            string typeAndTag = "[" + meta.type.ToLower() + "] " + meta.name.Substring(meta.name.LastIndexOf('\\') + 1);
 
             if (!allowDuplicate)
                 for (int i = 0; i < this.tabs.Tabs.Count; i++)
@@ -55,7 +77,7 @@ namespace entity.MetaEditor2
                         return i;
                     }
 
-            MetaEditorControlPage mecp = new MetaEditorControlPage(meta, mapForm);
+            MetaEditorControlPage mecp = new MetaEditorControlPage(meta, mapForm);            
             this.BackColor = bgColor;
             this.ForeColor = fgColor;
             mecp.setFormColors(fgColor, bgColor);
@@ -64,7 +86,7 @@ namespace entity.MetaEditor2
             TabItem tp = tabs.CreateTab(typeAndTag);
             mecp.Parent = tp.AttachedControl;
             mecp.Dock = DockStyle.Fill;
-            tp.Tooltip = "[" + meta.type.ToLower() + "] " + meta.name;
+            tp.Tooltip = "[" + @meta.type.ToLower() + "] " + @meta.name;
 
             this.tabs.AllowDrop = true;
             //this.tabs.DragDrop += new DragEventHandler(tp_DragDrop);

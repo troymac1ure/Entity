@@ -147,7 +147,7 @@ namespace entity.MapForms
             toolTip.SetToolTip(this.saveMetaButton, "Exports tag data");
 
             // Load Strings Table in a background process
-            ThreadStart ts = delegate { LoadStringsBackgroundWorker(map.Strings.Name); };
+            ThreadStart ts = delegate { LoadStringsBackgroundWorker(map); };
             Thread thr = new Thread(ts);
             thr.Start();
 
@@ -1302,12 +1302,23 @@ namespace entity.MapForms
         /// </summary>
         /// <param name="names">The names.</param>
         /// <remarks></remarks>
-        private void LoadStringsBackgroundWorker(object names)
+        private void LoadStringsBackgroundWorker(Map map)
         {
             if (!this.Disposing && !this.IsDisposed)
                 try
                 {
-                    sSwap = new MEStringsSelector((string[])names, this);
+                    // Wait for up to 10 seconds for map to close (if open) to avoid conflicts)
+                    int count = 100;
+                    while (map.isOpen)
+                    {
+                        Thread.Sleep(100);
+                        
+                        // If time has elapsed, just forget the pre-loading of strings
+                        if (count-- <= 0)
+                            return;
+                    }
+                    // Pre-load string data
+                    sSwap = new MEStringsSelector(map, this);
                 }
                 catch
                 {
@@ -1495,7 +1506,7 @@ namespace entity.MapForms
                             Meta.String str = (Meta.String)item;
                             if (sSwap == null)
                             {
-                                sSwap = new MEStringsSelector(map.Strings.Name, this);
+                                sSwap = new MEStringsSelector(map, this);
                             }
 
                             sSwap.SelectedID = str.id;
@@ -2006,6 +2017,11 @@ namespace entity.MapForms
             Builder build = new Builder();
             ArrayList metas = new ArrayList();
             metas = scanandpassmetasfordraganddrop();
+            
+            // Holds name before renaming
+            ArrayList metaNameBackup = new ArrayList();
+
+            // Create new indexed names for each tag to be duplicated
             for (int x = 0; x < metas.Count; x++)
             {
                 string[] temps = ((Meta)metas[x]).name.Split('(', ')', ' ');
@@ -2043,15 +2059,97 @@ namespace entity.MapForms
                     }
                 }
                 while (tempcount != -1);
+                // Save original tag Index, type, new name, (space for) new ident
+                metaNameBackup.Add(new object[4] { ((Meta)metas[x]).TagIndex, ((Meta)metas[x]).type, newname, -1 });
                 ((Meta)metas[x]).name = newname;
             }
 
             string temp = ((Meta)metas[0]).name;
             addToQuickList(map.SelectedMeta.type, temp);
             build.MapBuilder(metas, ref layout, map, soundsCheckBox.Checked);
+
+            // Update new tags
             map = Map.Refresh(map);
+            metas = scanandpassmetasfordraganddrop();
+
+            // Redirect all pointers within tags to point to duplicated tags
+            map.OpenMap(MapTypes.Internal);
+            for (int count = 0; count < metaNameBackup.Count; count++)
+            {
+                if (this.progressbar.Value != count * 100 / metaNameBackup.Count)
+                {
+                    this.progressbar.Value = count * 100 / metaNameBackup.Count;
+                    Application.DoEvents();
+                }
+                object[] o = (object[])metaNameBackup[count];
+
+                for (int x = 0; x < metas.Count; x++)
+                {
+                    Meta m = (Meta)metas[x];
+                    
+                    // Find matching tag (cannot access metas[count] directly as some tags get removed)
+                    //if (m.type != (string)o[1] || m.name != (string)o[2])
+                    if (m.TagIndex != (int)o[0])
+                            continue;
+                    int index = map.Functions.ForMeta.FindByNameAndTagType((string)o[1], (string)o[2]);
+                    
+                    if (index != -1)
+                        o[3] = map.MetaInfo.Ident[index];
+                    else
+                        o[3] = m.ident;
+                    break;                    
+                }
+                // (Only?) First listing is wrong due to already being renamed, so just grab it from the map
+                if ((int)o[3] == -1)
+                {
+                    int index = map.Functions.ForMeta.FindByNameAndTagType((string)o[1], (string)o[2]);
+                    if (index != -1)
+                        o[3] = map.MetaInfo.Ident[index];
+                }
+            }
+
+            // Write updated Idents to all listings in the map file
+            foreach (Meta m in metas)
+            {
+                if (this.progressbar.Value != metas.IndexOf(m) * 100 / metas.Count)
+                {
+                    this.progressbar.Value = metas.IndexOf(m) * 100 / metas.Count;
+                    Application.DoEvents();
+                }
+                foreach (HaloMap.Meta.Meta.Item i in m.items)
+                    if (i is Meta.Ident)
+                    {
+                        Meta.Ident id = (Meta.Ident)i;
+                        for (int count = 0; count < metaNameBackup.Count; count++)
+                        {
+                            object[] o = (object[])metaNameBackup[count];
+                            if ((int)o[0] == id.pointstoTagIndex)
+                            {
+                                /*
+                                BinaryReader br = new BinaryReader(m.MS);
+                                br.BaseStream.Position = id.offset;
+                                int lll = br.ReadInt32();
+                                map.BR.BaseStream.Position = id.mapOffset;
+                                int llll = map.BR.ReadInt32();
+                                */
+
+                                map.BW.BaseStream.Position = id.mapOffset;
+                                map.BW.Write((int)o[3]);
+                            }
+                        }
+                    }
+            }
+            map.CloseMap();
+
+            map = Map.Refresh(map);
+            
+            // ME2 stores pointer to loaded map, so we need to close all open tabs to ensure compatibilty
+            if (wME != null)
+                wME.Dispose();
+
             formFuncs.AddMetasToTreeView(map, treeView1, metaView, false);
             setNodePath(treeView1, temp);
+            this.progressbar.Value = 0;
             this.Enabled = true;
 
             // MessageBox.Show("Done");
@@ -5226,6 +5324,13 @@ namespace entity.MapForms
             e.Handled = true;
         }
 
+        private void StringEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sSwap == null)
+                sSwap = new MEStringsSelector(map, this);
+            sSwap.ShowDialog();
+        }
+        
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (map.SelectedMeta.type != "bitm")
@@ -5245,6 +5350,6 @@ namespace entity.MapForms
             if (bitmapCount > pm.Properties[0].depth)
                 bitmapCount = 1;
 
-        }        
+        }
     }
 }

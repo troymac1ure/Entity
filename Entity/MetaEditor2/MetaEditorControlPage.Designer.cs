@@ -61,6 +61,9 @@
             this.btnTreeViewOpen = new System.Windows.Forms.RadioButton();
             this.cmIdent = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.jumpToTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmTreeReflexives = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsExternalReferenceAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsExternalReferencePoint = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -69,6 +72,7 @@
             this.tsMetaMassEdit.SuspendLayout();
             this.tsDebugCommands.SuspendLayout();
             this.cmIdent.SuspendLayout();
+            this.cmTreeReflexives.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnReset
@@ -174,6 +178,7 @@
             // 
             // treeViewTagReflexives
             // 
+            this.treeViewTagReflexives.ContextMenuStrip = this.cmTreeReflexives;
             this.treeViewTagReflexives.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeViewTagReflexives.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
             this.treeViewTagReflexives.HideSelection = false;
@@ -185,7 +190,9 @@
             this.treeViewTagReflexives.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeViewTagReflexives_DrawNode);
             this.treeViewTagReflexives.DoubleClick += new System.EventHandler(this.treeViewTagReflexives_DoubleClick);
             this.treeViewTagReflexives.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewTagReflexives_AfterSelect);
+            this.treeViewTagReflexives.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeViewTagReflexives_BeforeSelect);
             this.treeViewTagReflexives.MouseLeave += new System.EventHandler(this.treeViewTagReflexives_MouseLeave);
+            this.treeViewTagReflexives.Click += new System.EventHandler(this.treeViewTagReflexives_Click);
             // 
             // panel1
             // 
@@ -317,7 +324,7 @@
             this.tscbApplyTo});
             this.tsDebugCommands.Location = new System.Drawing.Point(402, 25);
             this.tsDebugCommands.Name = "tsDebugCommands";
-            this.tsDebugCommands.Size = new System.Drawing.Size(203, 25);
+            this.tsDebugCommands.Size = new System.Drawing.Size(172, 25);
             this.tsDebugCommands.TabIndex = 1;
             // 
             // tsbtnPeek
@@ -330,7 +337,7 @@
             this.tsbtnPeek.Size = new System.Drawing.Size(34, 22);
             this.tsbtnPeek.Text = "Peek";
             this.tsbtnPeek.ToolTipText = "Displays retrieved values from the debug box";
-            this.tsbtnPeek.Click += new System.EventHandler(this.tsbtnPeek_Click);
+            this.tsbtnPeek.CheckedChanged += new System.EventHandler(this.tsbtnPeek_CheckedChanged);
             // 
             // tsbtnPoke
             // 
@@ -346,14 +353,12 @@
             // tscbApplyTo
             // 
             this.tscbApplyTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.tscbApplyTo.Enabled = false;
             this.tscbApplyTo.Items.AddRange(new object[] {
             "Value",
             "Reflexive",
-            "Value in all reflexives",
-            "Tag"});
+            "All Reflexives"});
             this.tscbApplyTo.Name = "tscbApplyTo";
-            this.tscbApplyTo.Size = new System.Drawing.Size(121, 25);
+            this.tscbApplyTo.Size = new System.Drawing.Size(90, 25);
             // 
             // btnTreeViewOpen
             // 
@@ -392,6 +397,28 @@
             this.jumpToTagToolStripMenuItem.Text = "Jump To Tag";
             this.jumpToTagToolStripMenuItem.Click += new System.EventHandler(this.jumpToTagToolStripMenuItem_Click);
             // 
+            // cmTreeReflexives
+            // 
+            this.cmTreeReflexives.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsExternalReferenceAdd,
+            this.tsExternalReferencePoint});
+            this.cmTreeReflexives.Name = "cmTreeReflexives";
+            this.cmTreeReflexives.Size = new System.Drawing.Size(224, 48);
+            // 
+            // tsExternalReferenceAdd
+            // 
+            this.tsExternalReferenceAdd.Name = "tsExternalReferenceAdd";
+            this.tsExternalReferenceAdd.Size = new System.Drawing.Size(223, 22);
+            this.tsExternalReferenceAdd.Text = "Add to external references";
+            this.tsExternalReferenceAdd.Click += new System.EventHandler(this.tsExternalReferenceAdd_Click);
+            // 
+            // tsExternalReferencePoint
+            // 
+            this.tsExternalReferencePoint.Name = "tsExternalReferencePoint";
+            this.tsExternalReferencePoint.Size = new System.Drawing.Size(223, 22);
+            this.tsExternalReferencePoint.Text = "Reference external reflexive";
+            this.tsExternalReferencePoint.Click += new System.EventHandler(this.tsExternalReferencePoint_Click);
+            // 
             // MetaEditorControlPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -415,6 +442,7 @@
             this.tsDebugCommands.ResumeLayout(false);
             this.tsDebugCommands.PerformLayout();
             this.cmIdent.ResumeLayout(false);
+            this.cmTreeReflexives.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -448,6 +476,9 @@
         private System.Windows.Forms.Button btnRestoreValues;
         private System.Windows.Forms.Button btnSaveValues;
         private System.Windows.Forms.CheckBox cbSortByName;
+        private System.Windows.Forms.ContextMenuStrip cmTreeReflexives;
+        private System.Windows.Forms.ToolStripMenuItem tsExternalReferenceAdd;
+        private System.Windows.Forms.ToolStripMenuItem tsExternalReferencePoint;
 
     }
 }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3678046C-55D1-4D24-B45F-0942F861FB3A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -125,12 +125,19 @@
     <Compile Include="Main\MainMenuEdit.Designer.cs">
       <DependentUpon>MainMenuEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Main\MainmenuVisualEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\MainmenuVisualEdit.Designer.cs">
+      <DependentUpon>MainmenuVisualEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main\MapWizard.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Main\MapWizard.designer.cs">
       <DependentUpon>MapWizard.cs</DependentUpon>
     </Compile>
+    <Compile Include="Main\MenuClasses.cs" />
     <Compile Include="Main\PluginUpdater.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -149,6 +156,7 @@
     <Compile Include="Main\SkinOptions.Designer.cs">
       <DependentUpon>SkinOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Main\Skin.cs" />
     <Compile Include="Main\VideoSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -366,6 +374,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Main\MainMenuEdit.resx">
       <DependentUpon>MainMenuEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\MainmenuVisualEdit.resx">
+      <DependentUpon>MainmenuVisualEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main\MapWizard.resx">
       <DependentUpon>MapWizard.cs</DependentUpon>

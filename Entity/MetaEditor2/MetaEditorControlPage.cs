@@ -115,7 +115,7 @@ namespace entity.MetaEditor2
             this.map = mapForm.map;
 
             this.meta = meta;
-
+            this.BR = new BinaryReader(meta.MS);
             // Create a backup of the Tags memory stream, for restoring, comparing, etc
             msBackup = new MemoryStream(meta.MS.ToArray());
             msDebug = new MemoryStream((int)meta.MS.Length);
@@ -224,7 +224,7 @@ namespace entity.MetaEditor2
 
                 map.OpenMap(MapTypes.Internal);
 
-                treeViewTagReflexives.Nodes[0].Nodes.AddRange(loadTreeReflexives(meta.offset, ifp.items, true));
+                treeViewTagReflexives.Nodes[0].Nodes.AddRange(loadTreeReflexives(meta.offset, ifp.items, true));               
 
                 map.CloseMap();
 
@@ -301,7 +301,13 @@ namespace entity.MetaEditor2
 
         private void loadControls(TreeNode Location)
         {
+            toolTip1.AutoPopDelay = 10000;
             reflexiveData rd = (reflexiveData)Location.Tag;
+
+            if (rd.chunkCount > 100000) // Some very large number
+                throw new Exception("\"" + rd.node.Text + "\" appears to contain " + rd.chunkCount + "chunks!\n"
+                    + "Try reloading tag. If problem persists, you likely have a corrupt map!");
+
             int chNum = rd.chunkSelected;
             bool enabled = rd.chunkCount != 0;
             int metaOffset = rd.baseOffset;
@@ -638,10 +644,11 @@ namespace entity.MetaEditor2
                     case IFPIO.ObjectEnum.Unused:
                         {
                             DataValues tempUnknown = new DataValues(meta, ctl.name, map, ctl.offset, IFPIO.ObjectEnum.Unused, ctl.lineNumber);
+                            tempUnknown.size = ((IFPIO.Unused)ctl).size;
                             tempUnknown.TabIndex = tabIndex;
                             if (enabled) tempUnknown.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
                             if (tempUnknown.ValueType == IFPIO.ObjectEnum.Unused)
-                                tempUnknown.textBox1.Text = "unused (size " + ((IFPIO.Unused)ctl).size + ")";
+                                tempUnknown.textBox1.Text = "unused (size " + tempUnknown.size + ")";
                             panelMetaEditor.Controls.Add(tempUnknown);
                             tempUnknown.BringToFront();
 
@@ -732,7 +739,7 @@ namespace entity.MetaEditor2
                 IFPIO.ObjectEnum ObjType = bo.ObjectType;
                 s = string.Empty;
 
-                // For Block Indexes (Indices)
+                #region For Block Indexes (Indices)
                 if (bo is IFPIO.IFPInt && (((IFPIO.IFPInt)bo)).entIndex != null)
                 {
                     int value = -1;
@@ -787,6 +794,7 @@ namespace entity.MetaEditor2
                             break;
                     }
                 }
+                #endregion
 
                 switch (ObjType)
                 {
@@ -979,16 +987,15 @@ namespace entity.MetaEditor2
                 return;
 
             treeViewTagReflexives.SuspendLayout();
+            // See if we are in the MAIN of the tag
             if (parent != treeViewTagReflexives.Nodes[0])
             {
                 reflexiveData rd = (reflexiveData)parent.Tag;
-                if (rd.inTagNumber != meta.TagIndex)
+                if (rd.inTagNumber != meta.TagIndex && ((reflexiveData)parent.Parent.Tag).inTagNumber != meta.TagIndex)
                 {
                     map.OpenMap(MapTypes.Internal);
                     BR = map.BR;
                     BR.BaseStream.Position = ((reflexiveData)parent.Parent.Tag).baseOffset + rd.reflexive.offset;
-                    if (((reflexiveData)parent.Parent.Tag).inTagNumber == meta.TagIndex)
-                        BR.BaseStream.Position += meta.offset;
                 }
                 else
                 {
@@ -1000,7 +1007,11 @@ namespace entity.MetaEditor2
 
                 rd.inTagNumber = map.Functions.ForMeta.FindMetaByOffset(rd.baseOffset);
                 if (rd.inTagNumber == meta.TagIndex)
+                {
                     rd.baseOffset -= meta.offset;
+                    parent.ForeColor = Color.Black;
+                    parent.ToolTipText = "Offset: " + rd.reflexive.offset.ToString();
+                }
                 else
                 {
                     map.CloseMap();
@@ -1217,8 +1228,8 @@ namespace entity.MetaEditor2
             ((MapForms.MapForm)this.ParentForm.Owner).LoadMeta(((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).inTagNumber);
             int tempTabNum = wME.addNewTab(map.SelectedMeta, true);
             map.SelectedMeta = oldMeta;
-
-            ((MetaEditorControlPage)wME.tabs.Tabs[tempTabNum].AttachedControl.Controls[0].Controls[0]).gotoOffset(((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).baseOffset);
+            
+            ((MetaEditorControlPage)this).gotoOffset(((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).baseOffset);
 
             wME.Show();
             wME.Focus();
@@ -1342,7 +1353,7 @@ namespace entity.MetaEditor2
             // Get the main Ident control to be used
             Ident id = (Ident)((Control)sender).Parent;
 
-            if (id.tagType == "bitm")
+            if (id.tagType == "bitm" && id.identInt32 != -1)
             {
                 // Read Ident name and load appropriate bitmap into MapForm picture box
                 this.MapForm.pictureBox1.Tag = this.MapForm.pictureBox1.Image;                
@@ -1418,61 +1429,78 @@ namespace entity.MetaEditor2
         {
             if (!treeViewTagReflexives.Enabled)
                 return;
+
             TreeNode tn = e.Node;
 
             // Show a wait cursor while the selected reflexive is loading
             this.Cursor = Cursors.WaitCursor;
 
-            loadControls(tn);
-
-            tsNavigation.Items.Clear();
-            while (tn.Parent != null)
+            try
             {
-                addReflexive(tsNavigation, tn.Text);
-                tsNavigation.Items[1].Name = tn.Name;
+                loadControls(tn);
 
-                reflexiveData rd = (reflexiveData)tn.Tag;
-
-                // will throw exception if in the [MAIN] reflexive, so just ignore
-                /*
-                try
+                tsNavigation.Items.Clear();
+                while (tn.Parent != null)
                 {
-                    if (ctl.name == rd.reflexive.label && !labelFound)
-                    {
-                        labelFound = true;
-                        panelMetaEditor.Controls[0].Controls[1].LostFocus += new EventHandler(WinMEControl_LostFocus);
-                    }
-                }
-                catch { }
-                */
+                    addReflexive(tsNavigation, tn.Text);
+                    tsNavigation.Items[1].Name = tn.Name;
 
-                string[] s = loadLabels(rd);
-                //  Create reflexive count comboBox listings
-                for (int i = 0; i < rd.chunkCount; i++)
-                {
-                    if (s[i] != null)
-                        ((ToolStripComboBox)tsNavigation.Items[2]).Items.Add(i + " : \"" + s[i] + "\"");
-                    else
-                        ((ToolStripComboBox)tsNavigation.Items[2]).Items.Add(i);
-                }
+                    reflexiveData rd = (reflexiveData)tn.Tag;
 
-                if (rd.chunkCount != 0)
-                {
-                    if (rd.chunkSelected > rd.chunkCount)
-                        rd.chunkSelected = rd.chunkCount - 1;
+                    // will throw exception if in the [MAIN] reflexive, so just ignore
+                    /*
                     try
                     {
-                        // Stop it from running ReloadMetaForSameReflexive() since we just loaded it
-                        ((ToolStripComboBox)tsNavigation.Items[2]).Enabled = false;
-                        ((ToolStripComboBox)tsNavigation.Items[2]).SelectedIndex = rd.chunkSelected;
-                        ((ToolStripComboBox)tsNavigation.Items[2]).Enabled = true;
+                        if (ctl.name == rd.reflexive.label && !labelFound)
+                        {
+                            labelFound = true;
+                            panelMetaEditor.Controls[0].Controls[1].LostFocus += new EventHandler(WinMEControl_LostFocus);
+                        }
+                    }
+                    catch { }
+                    */
+
+                    string[] s = new string[rd.chunkCount];
+                    try
+                    {
+                        s = loadLabels(rd);
                     }
                     catch
                     {
+                        // Errors occur with labels when reflexive lies in another tag, so just ignore
                     }
-                }
 
-                tn = tn.Parent;
+                    //  Create reflexive count comboBox listings
+                    for (int i = 0; i < rd.chunkCount; i++)
+                    {
+                        if (s[i] != null)
+                            ((ToolStripComboBox)tsNavigation.Items[2]).Items.Add(i + " : \"" + s[i] + "\"");
+                        else
+                            ((ToolStripComboBox)tsNavigation.Items[2]).Items.Add(i);
+                    }
+
+                    if (rd.chunkCount != 0)
+                    {
+                        if (rd.chunkSelected > rd.chunkCount)
+                            rd.chunkSelected = rd.chunkCount - 1;
+                        try
+                        {
+                            // Stop it from running ReloadMetaForSameReflexive() since we just loaded it
+                            ((ToolStripComboBox)tsNavigation.Items[2]).Enabled = false;
+                            ((ToolStripComboBox)tsNavigation.Items[2]).SelectedIndex = rd.chunkSelected;
+                            ((ToolStripComboBox)tsNavigation.Items[2]).Enabled = true;
+                        }
+                        catch
+                        {
+                        }
+                    }
+
+                    tn = tn.Parent;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
 
             // Restore our mouse cursor
@@ -1498,7 +1526,29 @@ namespace entity.MetaEditor2
                       "\"\r\nYou must edit these values in the parent tag." +
                       "\r\nDouble click the reflexive in the tree on the left to load the reflexive in the given tag.", 0);
             else
+            {
                 showInfoBox("", 1);
+                if ((bool)treeViewTagReflexives.Tag)
+                    tsbtnPeek.Checked = true;
+            }
+
+        }
+
+        void treeViewTagReflexives_BeforeSelect(object sender, System.Windows.Forms.TreeViewCancelEventArgs e)
+        {
+            treeViewTagReflexives.Tag = tsbtnPeek.Checked;
+            if (tsbtnPeek.Checked)
+                tsbtnPeek.Checked = false;
+        }
+
+        private void treeViewTagReflexives_Click(object sender, EventArgs e)
+        {
+            MouseEventArgs me = e as MouseEventArgs;
+            if (me.Button == MouseButtons.Right)
+            {
+                TreeNode c = treeViewTagReflexives.GetNodeAt(me.Location);
+                treeViewTagReflexives.SelectedNode = c;
+            }
 
         }
 
@@ -1539,7 +1589,7 @@ namespace entity.MetaEditor2
 
         void tsbc_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Not sure why I did this, but stops external reflexives from loading data
+            // Did this to stop populating data twice on load, but stops external reflexives from loading data
             //if (!((ToolStripItem)sender).Enabled)
             //    return;
 
@@ -1570,6 +1620,11 @@ namespace entity.MetaEditor2
             for (int j = tsGroupNumber; j <= tsGroupNumber + levelsUp; j++)
             {
                 rd = (reflexiveData)tns[j - tsGroupNumber].Tag;
+
+                if (rd.chunkCount > 70000) // Some very large number
+                    throw new Exception( "\"" + tsNavigation.Items[j * 3 + 1].Name + "\" appears to contain " + rd.chunkCount + "chunks!\n"
+                        + "Try reloading tag. If problem persists, you likely have a corrupt map!" );
+
                 tsNavigation.Items[j * 3 + 1].Text = tsNavigation.Items[j * 3 + 1].Name + " [" + rd.chunkCount + "]";
                 int selection = ((ToolStripComboBox)tsNavigation.Items[j * 3 + 2]).SelectedIndex;
                 int count = ((ToolStripComboBox)tsNavigation.Items[j * 3 + 2]).Items.Count;
@@ -1656,7 +1711,8 @@ namespace entity.MetaEditor2
             meta.MS.Write(b, 0, b.Length);
 
             ReloadMetaForSameReflexive(((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).baseOffset);
-            CurrentControl.Focus();
+            if (CurrentControl != null)
+                CurrentControl.Focus();
             this.showInfoBox("Current reflexive values reset to last save / original values", 3400);
         }
 
@@ -1727,12 +1783,146 @@ namespace entity.MetaEditor2
                 {
                     meta.MS.Position = ofs + i * rd.reflexive.chunkSize;
                     // Allows quickly offseting multiple placements
-                    b = BitConverter.GetBytes((float)(BitConverter.ToSingle(b,0) + 0.8f));
+                    //b = BitConverter.GetBytes((float)(BitConverter.ToSingle(b,0) + 0.8f));
                     meta.MS.Write(b, 0, CurrentControl.size);
                 }
             }
             CurrentControl.Focus();
             this.showInfoBox("Current value copied to all chunks of current reflexive", 3000);
+        }
+
+        private void tsExternalReferenceAdd_Click(object sender, EventArgs e)
+        {
+            TreeNode tn = treeViewTagReflexives.SelectedNode;
+            reflexiveData rd = (reflexiveData)tn.Tag;
+            if (rd.reflexive == null)
+            {
+                MessageBox.Show("Not a reflexive!");
+                return;
+            }
+
+            WinMetaEditor.references refs = new WinMetaEditor.references();
+            if (rd.inTagNumber == this.meta.TagIndex)
+            {
+                refs.ident = this.meta.offset + rd.baseOffset + this.meta.magic;
+                refs.offset = rd.baseOffset;
+                refs.tagIndex = this.meta.TagIndex;
+                refs.tagName = this.meta.name;
+                refs.tagType = this.meta.type;
+            }
+            else
+            {
+                refs.tagIndex = map.Functions.ForMeta.FindMetaByOffset(rd.baseOffset);
+                Meta m = new Meta(map);
+                map.OpenMap(MapTypes.Internal);
+                m.ReadMetaFromMap(refs.tagIndex, true);
+                map.CloseMap();
+                refs.ident = rd.baseOffset + m.magic;
+                refs.offset = rd.baseOffset;
+                refs.tagName = m.name;
+                refs.tagType = m.type;
+                m.Dispose();
+            }
+            refs.chunkCount = rd.chunkCount;
+            refs.size = rd.reflexive.chunkSize;            
+            refs.name = rd.reflexive.name;
+
+            // Check for duplicates & remove
+            List<WinMetaEditor.references> refList = ((WinMetaEditor)this.ParentForm).reflexiveReferences;
+            for (int i = 0; i < refList.Count; i++)
+            {
+                if (refList[i].ident == refs.ident)
+                    refList.RemoveAt(i--);
+            }
+            
+            // Always add to top of list
+            refList.Insert(0, refs);
+        }
+
+        private void tsExternalReferencePoint_Click(object sender, EventArgs e)
+        {
+            TreeNode tn = treeViewTagReflexives.SelectedNode;
+            reflexiveData rd = (reflexiveData)tn.Tag;
+            List<WinMetaEditor.references> refList = ((WinMetaEditor)this.ParentForm).reflexiveReferences;
+
+            #region Form Data
+            Form f = new Form();
+            f.MinimizeBox = false;
+            f.MinimumSize = new Size(300, 130);
+            f.Size = new Size(550, 90 + Math.Min(refList.Count * 12, 280));
+            f.Text = "Select external reflexive to reference";
+
+            ListBox lb = new ListBox();
+            lb.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lb.DataSource = refList;
+            lb.Location = new Point(5, 5);
+            lb.Size = new Size(f.Width - 18, f.Height - 80);
+
+            /*
+            for (int i = 0; i < refList.Count; i++)
+            {
+                // Only add same size references (mostly compatible; could add an incorrect but same size one) 
+                if (refList[i].size == rd.reflexive.chunkSize)
+                    lb.Items.Add(refList[i]);
+            }
+            */
+
+            Button bSelect = new Button();
+            bSelect.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            bSelect.DialogResult = DialogResult.OK;
+            bSelect.MinimumSize = new Size(50, 16);
+            bSelect.Location = new Point( f.Width / 2 - bSelect.Width / 2, f.Height - bSelect.Height - 45);
+            bSelect.Text = "Select";
+
+            Button bRemove = new Button();
+            bRemove.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            bRemove.Location = new Point(30, f.Height - bSelect.Height - 45);
+            bRemove.Text = "Remove";
+            bRemove.Click += (s, ev) =>
+                {
+                    refList.Remove((WinMetaEditor.references)lb.SelectedItem);
+                    ((CurrencyManager)lb.BindingContext[lb.DataSource]).Refresh();
+                };
+            lb.DoubleClick += (s, ev) =>
+                {
+                    f.DialogResult = DialogResult.OK;
+                    f.Close();
+                };
+
+            f.Controls.Add(lb);
+            f.Controls.Add(bRemove);
+            f.Controls.Add(bSelect);
+            #endregion
+
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                // If changing a reflexive that is contained within the tag to an external, backup the original first
+                if (rd.inTagNumber == meta.TagIndex)
+                {
+                    tsExternalReferenceAdd_Click(this, null);
+                    showInfoBox("Original reflexive reference has been added to list (backed up)", 1000);
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(1000);
+                }
+
+                WinMetaEditor.references r = (WinMetaEditor.references)lb.SelectedItem;
+                if (r != null)
+                {
+                    BinaryWriter bw = new BinaryWriter(meta.MS);
+                    meta.MS.Position = rd.reflexive.offset;
+                    bw.Write(r.chunkCount);
+                    bw.Write(r.ident);
+                    
+                    rd.baseOffset = r.offset;
+                    rd.inTagNumber = r.tagIndex;
+
+                    // Refresh the tree (to show black/internal or red/external and update tooltip)
+                    refreshTreeListing(tn);
+                    // Reselect to update external tag lockout and warning box
+                    treeViewTagReflexives_AfterSelect(this, new TreeViewEventArgs(tn));
+                }
+            }
+            f.Dispose();
         }
 
         #endregion
@@ -1778,54 +1968,96 @@ namespace entity.MetaEditor2
                 HaloMap.RealTimeHalo.RTH_Imports.Poke(
                     (uint)(CurrentControl.offsetInMap + CurrentControl.meta.magic),
                     value,
-                    CurrentControl.size);
+                    CurrentControl.size); 
             }
         }
+        
+        /// <summary>
+        /// Pokes a full reflexive to the xbox
+        /// </summary>
+        /// <param name="rd">The reflexive to poke</param>
+        private void debugPokeReflexive(reflexiveData rd)
+        {          
 
-        private void debugPokeReflexive()
-        {
-            reflexiveData rd = (reflexiveData)treeViewTagReflexives.SelectedNode.Tag;
+            // The end of the block to read
+            int endOffset = 0;
 
-            /*
-            // Idents must be poked individually with Tag Type, then Tag Name. It doesn't change if both
-            // are poked at once.
-            if (CurrentControl is Ident && CurrentControl.size == 8)
+            // The start of the block to read
+            int startOffset = endOffset;
+
+            // The size of the block to read
+            int readSize = 0;
+
+            // For tag main section, use headersize instead of reflexive size
+            int size = rd.reflexive == null ? meta.headersize : rd.reflexive.chunkSize;
+            
+            // Keeps track of the control we are checking
+            int controlNum = panelMetaEditor.Controls.Count;
+
+            // Initialize with chunkOffset & size = 0
+            BaseField oldc = new BaseField();
+
+            // Read in blocks, stopping at all 8-byte Idents and reflexives to be handled accordingly
+            while (startOffset != size)
             {
-                BA.Position = rd.baseOffset + CurrentControl.chunkOffset;
-                Byte[] bytes = BA.ReadBytes(CurrentControl.size);
-                HaloMap.RealTimeHalo.RTH_Imports.Poke(
-                    (uint)(CurrentControl.offsetInMap + CurrentControl.meta.magic),
-                    BitConverter.ToUInt32(bytes, 0),
-                    4);
-                HaloMap.RealTimeHalo.RTH_Imports.Poke(
-                    (uint)(CurrentControl.offsetInMap + CurrentControl.meta.magic + 4),
-                    BitConverter.ToUInt32(bytes, 4),
-                    4);
-            }
-            */
-            BR.BaseStream.Position = rd.baseOffset; // + CurrentControl.chunkOffset;
-            byte[] buffer = BR.ReadBytes(rd.reflexive.chunkSize);
-            /*
-            HaloMap.RealTimeHalo.RTH_Imports.Poke(
-                (uint)(CurrentControl.offsetInMap + CurrentControl.meta.magic),
-                buffer,
-                CurrentControl.size);
-            */
-        }
+                controlNum--;
 
-        void tsbtnPeek_Click(object sender, System.EventArgs e)
-        {
-            if (!HaloMap.RealTimeHalo.RTH_Imports.IsConnected)
-            {
-                // Add update info here //
-                tsbtnPeek.Checked = false;
-                foreach (Control c in this.panelMetaEditor.Controls)
+                BaseField c = null;
+                int sizeChange = 0;
+                if (controlNum >= 0)
                 {
-                    c.Controls[1].ForeColor = Color.Black;
+                    c = (BaseField)panelMetaEditor.Controls[controlNum];
+                    sizeChange = c.size;
                 }
-                showInfoBox("Debug xbox not connected!", 2000);
-                return;
+                else
+                {
+                    readSize = endOffset - startOffset;
+                }
+
+                if (readSize > 0)
+                {
+                    BR.BaseStream.Position = startOffset + rd.baseOffset;
+                    byte[] buffer = BR.ReadBytes(readSize);
+                    HaloMap.RealTimeHalo.RTH_Imports.Poke(
+                        (uint)(meta.offset + rd.baseOffset + startOffset + meta.magic),
+                        buffer,
+                        readSize);
+                    // If second part of Tag/Ident...
+                    if (c != null && c.chunkOffset >= endOffset)
+                        startOffset = c.chunkOffset;
+                    else
+                        startOffset = endOffset;
+                }
+
+                readSize = 0;
+
+                // Idents must be poked individually with Tag Type, then Tag Name. It doesn't change if both
+                // are poked at once.
+                if (c is Ident && c.size == 8)
+                {
+
+                    // Not positive if this will work, but we can try!
+                    readSize = c.chunkOffset - startOffset + 4; // TAG portion as well
+                    sizeChange = 4;
+                    if (readSize != 0)
+                        controlNum++;
+                }
+
+                // Check for a reflexive between controls
+                if (c != null && c.chunkOffset > endOffset)
+                {
+                    readSize = endOffset - startOffset;
+                    endOffset = c.chunkOffset;
+                    controlNum++;
+                    sizeChange = 0;
+                }
+                endOffset += sizeChange;
+                oldc = c;
             }
+        }
+
+        void tsbtnPeek_CheckedChanged(object sender, System.EventArgs e)
+        {
             // Update any changes to our backup before loading Peek values
             if (CurrentControl != null)
                 CurrentControl.BaseField_Leave(null, null);
@@ -1840,18 +2072,30 @@ namespace entity.MetaEditor2
 
             if (this.tsbtnPeek.Checked)
             {
+                if (!HaloMap.RealTimeHalo.RTH_Imports.IsConnected)
+                {
+                    // Add update info here //
+                    tsbtnPeek.Checked = false;
+                    foreach (Control c in this.panelMetaEditor.Controls)
+                    {
+                        c.Controls[1].ForeColor = Color.Black;
+                    }
+                    showInfoBox("Debug xbox not connected!", 2000);
+                    return;
+                }
+              
                 // Backup out data
                 byte[] b = new byte[chunkSize];
                 meta.MS.Position = ofs;
                 meta.MS.Read(b, 0, b.Length);
                 msDebug.Position = ofs;
                 msDebug.Write(b, 0, b.Length);
-
+              
                 // Read from our debug box
                 uint offset = (uint)(meta.offset + meta.magic + ofs);
                 b = (byte[])HaloMap.RealTimeHalo.RTH_Imports.Peek(offset, (uint)chunkSize);
                 meta.MS.Position = ofs;
-                meta.MS.Write(b, 0, b.Length);
+                meta.MS.Write(b, 0, b.Length);              
             }
             else
             {
@@ -1871,7 +2115,18 @@ namespace entity.MetaEditor2
 
             foreach (Control c in this.panelMetaEditor.Controls)
             {
-                c.Controls[1].ForeColor = this.tsbtnPeek.Checked ? Color.Red : Color.Black;
+                if (c is Bitmask)
+                {
+                    for (int i = 0; i < c.Controls[0].Controls.Count; i++)
+
+                        c.Controls[0].Controls[i].ForeColor = this.tsbtnPeek.Checked ? Color.Red : Color.Black;
+                }
+                else 
+                {
+                    if (c is Ident)
+                        c.Controls[2].ForeColor = this.tsbtnPeek.Checked ? Color.Red : Color.Black;
+                    c.Controls[1].ForeColor = this.tsbtnPeek.Checked ? Color.Red : Color.Black;
+                }
             }
             ReloadMetaForSameReflexive(((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).baseOffset);
             if (CurrentControl != null)
@@ -1909,11 +2164,35 @@ namespace entity.MetaEditor2
                     break;
                 // Reflexive 
                 case 1:
-                    debugPokeReflexive();
+                    debugPokeReflexive((reflexiveData)treeViewTagReflexives.SelectedNode.Tag);
                     break;
                 // Individual value in all reflexive chunks
                 case 2:
-                    //debugPokeValue();
+                    string backupText = tsbtnPoke.Text;
+                    reflexiveData rd = (reflexiveData)treeViewTagReflexives.SelectedNode.Tag;
+                    int sel = rd.chunkSelected;
+                    panelMetaEditor.Enabled = false;
+                    if (treeViewTagReflexives.SelectedNode.Parent != null)
+                    {
+                        for (int i = 0; i < rd.chunkCount; i++)
+                        {
+                            tsbtnPoke.Text = i.ToString() + "...";
+                            Application.DoEvents();
+                            if (i == sel) 
+                                continue;
+
+                            rd.chunkSelected = i;
+                            refreshTreeListing(rd.node);
+                            debugPokeReflexive((reflexiveData)rd);
+                        }
+                    }
+                    rd.chunkSelected = sel;
+                    tscbApplyTo.Text = sel.ToString() + "...";
+                    Application.DoEvents();
+                    refreshTreeListing(rd.node);
+                    debugPokeReflexive((reflexiveData)rd);
+                    panelMetaEditor.Enabled = true;
+                    tsbtnPoke.Text = backupText;
                     break;
                 // Full tag 
                 case 3:
@@ -1933,7 +2212,7 @@ namespace entity.MetaEditor2
                     break;
                 case Keys.Space:
                     tsbtnPeek.Checked = true;
-                    tsbtnPeek_Click(sender, null);
+                    tsbtnPeek_CheckedChanged(sender, null);
                     break;
             }
         }
@@ -1944,7 +2223,7 @@ namespace entity.MetaEditor2
             {
                 case Keys.Space:
                     tsbtnPeek.Checked = false;
-                    tsbtnPeek_Click(sender, null);
+                    tsbtnPeek_CheckedChanged(sender, null);
                     break;
             }
         }

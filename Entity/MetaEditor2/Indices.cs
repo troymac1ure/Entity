@@ -156,19 +156,22 @@ namespace entity.MetaEditor2
                     }
             }
             this.label2.Text = this.EntName;
+            if (this.EntIndex.reflexiveTagType + this.EntIndex.reflexiveTagName != string.Empty)
+            {
+                System.Windows.Forms.ToolTip toolTip1 = new ToolTip();
+                toolTip1.IsBalloon = true;
+                toolTip1.AutoPopDelay = 10000;
+                toolTip1.SetToolTip(
+                    this.comboBox1, 
+                    "Label located in [" + this.EntIndex.reflexiveTagType + "] " + this.EntIndex.reflexiveTagName);
+            }
         }
 
         public override void BaseField_Leave(object sender, EventArgs e)
         {
-            System.IO.BinaryWriter BW = new System.IO.BinaryWriter(map.SelectedMeta.MS);
-            if (map.Functions.ForMeta.FindMetaByOffset(((Indices)this).offsetInMap) == map.SelectedMeta.TagIndex)
-            {
-                BW.BaseStream.Position = this.offsetInMap - map.SelectedMeta.offset;
-            }
-            else
-            {
-                //((WinMetaEditor)this.TopLevelControl).ExternalData.Items.Add();
-            }
+            System.IO.BinaryWriter bw = new System.IO.BinaryWriter(meta.MS);
+            if (((WinMetaEditor)this.ParentForm).checkSelectionInCurrentTag())
+                bw.BaseStream.Position = this.offsetInMap - meta.offset;
 
             string tempstring1 = this.comboBox1.Text;
             if (tempstring1.Contains(" Is Invalid. On Line ") || tempstring1.Contains("Something is wrong with this ") || tempstring1.Contains(" : Value is Too Small To Be An Index") || tempstring1.Contains(" : Value is Too Large To Be The Indexer"))
@@ -193,37 +196,37 @@ namespace entity.MetaEditor2
                 {
                     case IFPIO.ObjectEnum.Short:
                         {
-                            BW.Write(Convert.ToInt16(this.Value));
+                            bw.Write(Convert.ToInt16(this.Value));
                             break;
                         }
                     case IFPIO.ObjectEnum.Int:
                         {
-                            BW.Write(Convert.ToInt32(this.Value));
+                            bw.Write(Convert.ToInt32(this.Value));
                             break;
                         }
                     case IFPIO.ObjectEnum.UShort:
                         {
-                            BW.Write(Convert.ToUInt16(this.Value));
+                            bw.Write(Convert.ToUInt16(this.Value));
                             break;
                         }
                     case IFPIO.ObjectEnum.UInt:
                         {
-                            BW.Write(Convert.ToUInt32(this.Value));
+                            bw.Write(Convert.ToUInt32(this.Value));
                             break;
                         }
                     case IFPIO.ObjectEnum.Float:
                         {
-                            BW.Write(Convert.ToSingle(this.Value));
+                            bw.Write(Convert.ToSingle(this.Value));
                             break;
                         }
                     case IFPIO.ObjectEnum.Unknown:
                         {
-                            BW.Write(Convert.ToSingle(this.Value));
+                            bw.Write(Convert.ToSingle(this.Value));
                             break;
                         }
                     case IFPIO.ObjectEnum.Byte:
                         {
-                            BW.Write(Convert.ToByte(this.Value));
+                            bw.Write(Convert.ToByte(this.Value));
                             break;
                         }
                 }
@@ -239,8 +242,24 @@ namespace entity.MetaEditor2
             this.isNulledOutReflexive = false;
             System.IO.BinaryReader BR = new System.IO.BinaryReader(meta.MS);
 
+            int mapMetaOffset = meta.offset;
+
+            if (this.EntIndex.reflexiveTagType + this.EntIndex.reflexiveTagName != string.Empty)
+            {
+                int tagNum = map.Functions.ForMeta.FindByNameAndTagType(this.EntIndex.reflexiveTagType, this.EntIndex.reflexiveTagName);
+                if (tagNum != -1)
+                {
+                    Meta meta2 = new Meta(map);
+                    map.OpenMap(MapTypes.Internal);
+                    meta2.ReadMetaFromMap(tagNum, true);
+                    map.CloseMap();
+                    mapMetaOffset = meta2.offset;
+                    this.EntIndex.reflexiveLayer = "root";
+                }
+            }
+
             if (this.EntIndex.reflexiveLayer.ToLower() == "root")
-                this.indexedReflexiveOffset = map.SelectedMeta.offset + this.EntIndex.ReflexiveOffset;
+                this.indexedReflexiveOffset = mapMetaOffset + this.EntIndex.ReflexiveOffset;
             else if (this.EntIndex.reflexiveLayer.ToLower() == "oneup")
                 this.indexedReflexiveOffset = iIndexedReflexiveOffset + this.EntIndex.ReflexiveOffset;
             
@@ -254,7 +273,7 @@ namespace entity.MetaEditor2
             map.BA.Position = iOffset + this.chunkOffset;
             */
             BR.BaseStream.Position = iOffset + this.chunkOffset;
-            this.offsetInMap = map.SelectedMeta.offset + iOffset + this.chunkOffset;
+            this.offsetInMap = meta.offset + iOffset + this.chunkOffset;
 
             switch (ValueType)
             {
@@ -332,7 +351,7 @@ namespace entity.MetaEditor2
             }
             map.BR.BaseStream.Position = this.indexedReflexiveOffset;
             this.indexedReflexiveChunkCount = map.BR.ReadInt32();
-            this.indexedReflexiveTranslatedOffset = map.BR.ReadInt32() - map.SelectedMeta.magic;
+            this.indexedReflexiveTranslatedOffset = map.BR.ReadInt32() - meta.magic;
             if (openedMap == true)
                 map.CloseMap();
         }
@@ -570,7 +589,7 @@ namespace entity.MetaEditor2
                 }
                 this.Value = Convert.ToInt32(tempstring1.Substring(0, counter));
             }
-            uint Address = (uint)(this.offsetInMap + map.SelectedMeta.magic);
+            uint Address = (uint)(this.offsetInMap + meta.magic);
             switch (ValueType)
             {
                 case IFPIO.ObjectEnum.Short:

@@ -40,6 +40,9 @@ namespace entity.MetaEditor2
             this.Dock = DockStyle.Top;
             this.Controls[0].Text = EntName;
             this.AutoSize = false;
+
+            //this.comboBox1.DataSource = map.Strings.Name;      
+            this.comboBox1.DataSource = null;    // Loading data source takes a long time. Only do it when needed.
         }
 
         public override void BaseField_Leave(object sender, EventArgs e)
@@ -69,65 +72,90 @@ namespace entity.MetaEditor2
             //    this.Save();
         }
 
-        private void SIDLoader_DropDown(object sender, EventArgs e)
+        private void btnSID_Click(object sender, EventArgs e)
         {
-            string tempSidString = ((System.Windows.Forms.ComboBox)sender).Text;
-            SID sid = (SID)((Control)sender).Parent;
-
-            MapForms.MapForm mf = (MapForms.MapForm)this.ParentForm.Owner;
+            string tempSidString = this.comboBox1.Text;
             
+            MapForms.MapForm mf = (MapForms.MapForm)this.ParentForm.Owner;
+
             if (mf != null)
             {
                 if (mf.sSwap == null)
-                    mf.sSwap = new entity.MetaFuncs.MEStringsSelector(map.Strings.Name, ((Form)this.TopLevelControl).Owner);
+                    mf.sSwap = new entity.MetaFuncs.MEStringsSelector(map, ((Form)this.TopLevelControl).Owner);
 
-                mf.sSwap.SelectedID = sid.sidIndexer;
+                mf.sSwap.SelectedID = this.sidIndexer;                
                 mf.sSwap.ShowDialog();
                 //this.Enabled = true;
 
-                if (sid.sidIndexer != mf.sSwap.SelectedID)
+                if (this.sidIndexer != mf.sSwap.SelectedID)
                 {
-                    sid.sidIndexer = mf.sSwap.SelectedID;
-                    ((System.Windows.Forms.ComboBox)sender).SelectedIndex = -1;
-                    ((System.Windows.Forms.ComboBox)sender).Text = map.Strings.Name[mf.sSwap.SelectedID];
+                    this.sidIndexer = mf.sSwap.SelectedID;
+                    this.comboBox1.SelectedIndex = -1;
+                    this.comboBox1.Text = map.Strings.Name[mf.sSwap.SelectedID];
                 }
+            }
+        }
 
-            }
-            else
+        private void SIDLoader_DropDown(object sender, EventArgs e)
+        {
+            // Populate data source on drop down if not already done
+            if (this.comboBox1.DataSource == null)
             {
-                ((System.Windows.Forms.ComboBox)sender).Items.Clear();
-                this.sidIndexerList.Clear();
-                ((System.Windows.Forms.ComboBox)sender).Items.Add("");
-                this.sidIndexerList.Add(0);
-                for (int counter = 0; counter < map.Strings.Name.Length; counter++)
+                // If we don't use BindingSource, all comboBoxes will change selected value when one changes
+                this.comboBox1.DataSource = new BindingSource(map.Strings.Name, null);
+                this.comboBox1.SelectedIndex = this.sidIndexer;
+            }
+
+            /*
+            string tempSidString = this.comboBox1.Text;
+            SID sid = (SID)this;
+
+            MapForms.MapForm mf = (MapForms.MapForm)this.ParentForm.Owner;
+
+            /*
+             * This is done for a quick search function. Type a partial word in the box and then click down
+            this.comboBox1.Items.Clear();
+            this.sidIndexerList.Clear();
+            this.comboBox1.Items.Add("");
+            this.sidIndexerList.Add(0);
+            for (int counter = 0; counter < map.Strings.Name.Length; counter++)
+            {
+                if (map.Strings.Name[counter].Contains(tempSidString) == true)
                 {
-                    if (map.Strings.Name[counter].Contains(tempSidString) == true)
-                    {
-                        ((System.Windows.Forms.ComboBox)sender).Items.Add(map.Strings.Name[counter]);
-                        string xe = map.Strings.Name[counter];
-                        this.sidIndexerList.Add(counter);
-                        if (counter == sidIndexer)
-                            ((System.Windows.Forms.ComboBox)sender).SelectedIndex = this.sidIndexerList.Count - 1;
-                    }
+                    this.comboBox1.Items.Add(map.Strings.Name[counter]);
+                    string xe = map.Strings.Name[counter];
+                    this.sidIndexerList.Add(counter);
+                    if (counter == sidIndexer)
+                        this.comboBox1.SelectedIndex = this.sidIndexerList.Count - 1;
                 }
             }
-        }       
+            */
+
+        }    
  
         private void SIDLoader_DropDownClose(object sender, EventArgs e)
         {
-            if (((System.Windows.Forms.ComboBox)sender).SelectedIndex != -1)
+            /*
+            if (this.comboBox1.SelectedIndex != -1)
             try
             {
-                sidIndexer = sidIndexerList[((System.Windows.Forms.ComboBox)sender).SelectedIndex];
+                sidIndexer = sidIndexerList[this.comboBox1.SelectedIndex];
             }
             catch
             {
                 sidIndexer = 0;
             }
+            */
         }
 
         void comboBox1_TextChanged(object sender, System.EventArgs e)
         {
+            // Populate data source on text change if not already done
+            if (this.comboBox1.DataSource == null && this.comboBox1.Focused)
+            {
+                this.comboBox1.DataSource = map.Strings.Name;
+                this.comboBox1.SelectedIndex = this.sidIndexer;
+            }
         }
 
         public void Populate(int iOffset, bool useMemoryStream)
@@ -135,7 +163,6 @@ namespace entity.MetaEditor2
             this.isNulledOutReflexive = false;
             System.IO.BinaryReader BR = new System.IO.BinaryReader(meta.MS);
             //set offsets
-            BR.BaseStream.Position = iOffset + this.chunkOffset;
             BR.BaseStream.Position = iOffset + this.chunkOffset;
             this.offsetInMap = iOffset + this.chunkOffset;
             // If we need to read / save tag info directly to file...
@@ -160,19 +187,31 @@ namespace entity.MetaEditor2
             {
                 string s = map.Strings.Name[this.sidIndexer];
                 if (map.Strings.Length[this.sidIndexer] == sidLength)
-                    ((System.Windows.Forms.ComboBox)this.Controls[1]).Text = s;
+                {
+                    if (this.comboBox1.DataSource == null)
+                    {
+                        this.comboBox1.Items.Clear();
+                        this.comboBox1.Items.Add(s);
+                        this.comboBox1.SelectedIndex = 0;
+                    }
+                    else
+                        this.comboBox1.SelectedIndex = this.sidIndexer; //.Text = s;
+                }
                 else
-                    ((System.Windows.Forms.ComboBox)this.Controls[1]).Text = "";
+                    this.comboBox1.Text = "";
             }
             catch
             {
-                ((System.Windows.Forms.ComboBox)this.Controls[1]).Text = "error reading sid";
+                this.comboBox1.Text = "error reading sid";
             }
+
+            /*
             if (AddEvents == true)
             {
-                ((System.Windows.Forms.ComboBox)this.Controls[1]).TextChanged += new System.EventHandler(this.comboBox1_TextChanged);
+                this.comboBox1.TextChanged += new System.EventHandler(this.comboBox1_TextChanged);
                 AddEvents = false;
             }
+            */
         }
 
         public override void Save()

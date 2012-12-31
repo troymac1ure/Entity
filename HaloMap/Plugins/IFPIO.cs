@@ -2147,7 +2147,9 @@ namespace HaloMap.Plugins
                 xtr.GetAttribute("reflexivesize"), 
                 xtr.GetAttribute("itemoffset"), 
                 xtr.GetAttribute("itemtype"), 
-                xtr.GetAttribute("layer"), 
+                xtr.GetAttribute("layer"),
+                xtr.GetAttribute("tagtype"),
+                xtr.GetAttribute("tagname"),
                 xtr.LineNumber);
         }
 
@@ -2710,6 +2712,15 @@ namespace HaloMap.Plugins
             /// </summary>
             public string reflexiveLayer;
 
+            /// <summary>
+            /// The base tag type (for external tag listings)
+            /// </summary>
+            public string reflexiveTagType;
+            /// <summary>
+            /// The base tag name (for external tag listings)
+            /// </summary>
+            public string reflexiveTagName;
+
             #endregion
 
             #region Constructors and Destructors
@@ -2729,9 +2740,13 @@ namespace HaloMap.Plugins
                 string ifpReflexiveSize, 
                 string ifpItemOffset, 
                 string ENTItemType, 
-                string Layer, 
+                string Layer,
+                string TagType,
+                string TagName,
                 int linenumber)
             {
+                this.reflexiveTagType = TagType == null ? string.Empty : TagType;
+                this.reflexiveTagName = TagName == null ? string.Empty : TagName;
                 this.reflexiveLayer = Layer;
                 lineNumber = linenumber;
                 if (ifpReflexiveOffset == null | ifpItemOffset == null | ifpReflexiveSize == null)
@@ -2762,6 +2777,16 @@ namespace HaloMap.Plugins
                 }
             }
 
+            public Index(
+                string ifpReflexiveOffset,
+                string ifpReflexiveSize,
+                string ifpItemOffset,
+                string ENTItemType,
+                string Layer,
+                int linenumber) : 
+                this(ifpItemOffset, ifpReflexiveSize, ifpItemOffset, ENTItemType, Layer, string.Empty, string.Empty, linenumber)
+            {
+            }
             #endregion
         }
 

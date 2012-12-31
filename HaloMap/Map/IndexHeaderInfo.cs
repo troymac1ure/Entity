@@ -145,16 +145,36 @@ namespace HaloMap.Map
             scnrID = BR.ReadInt32();
             matgID = BR.ReadInt32();
 
+            BR.BaseStream.Position = map.MapHeader.indexOffset + 24;
+            metaCount = BR.ReadInt32();
+            
             /// ** This causes failure when setting a different MATG tag as active as the tag is now located **
             /// ** at the end of the meta, not the start
-            BR.BaseStream.Position = tagsOffset + 8;
+            //  BR.BaseStream.Position = tagsOffset + 8;
+
             /// Either need to search through all index listings for lowest offset or ???
             /// However, this is all useless if H2 uses the below method; in which case MATG is unable to 
             /// be copied & replaced
-            map.SecondaryMagic = BR.ReadInt32() - (map.MapHeader.indexOffset + map.MapHeader.metaStart);
 
-            BR.BaseStream.Position = map.MapHeader.indexOffset + 24;
-            metaCount = BR.ReadInt32();
+            int metaNum = 0;
+            int metaOfs = int.MaxValue;
+            for (int i = 0; i < metaCount; i++)
+            {
+                BR.BaseStream.Position = tagsOffset + i * 16 + 8;
+                int ofs = BR.ReadInt32();
+                if (ofs < metaOfs)
+                {
+                    metaOfs = ofs;
+                    metaNum = i;
+                }
+            }
+
+            map.SecondaryMagic = metaOfs - (map.MapHeader.indexOffset + map.MapHeader.metaStart);
+            
+            // Old method
+            // BR.BaseStream.Position = tagsOffset + 8;
+            // map.SecondaryMagic = BR.ReadInt32() - (map.MapHeader.indexOffset + map.MapHeader.metaStart);
+
         }
 
         /// <summary>

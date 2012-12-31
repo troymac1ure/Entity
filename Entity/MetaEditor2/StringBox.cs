@@ -80,7 +80,7 @@ namespace entity.MetaEditor2
             if (mf != null)
             {
                 if (mf.sSwap == null)
-                    mf.sSwap = new entity.MetaFuncs.MEStringsSelector(map.Strings.Name, ((Form)this.TopLevelControl).Owner);
+                    mf.sSwap = new entity.MetaFuncs.MEStringsSelector(map, ((Form)this.TopLevelControl).Owner);
 
                 mf.sSwap.SelectedID = sid.sidIndexer;
                 mf.sSwap.ShowDialog();

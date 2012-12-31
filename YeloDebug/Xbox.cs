@@ -1454,6 +1454,7 @@ namespace YeloDebug
 		/// </summary>
 		public Xbox()
         {
+            xdkRegistryPath = "HKEY_CURRENT_USER\\Software\\Microsoft\\XboxSDK";
             try
             {
                 // load settings file
@@ -1470,7 +1471,8 @@ namespace YeloDebug
             }
             catch
             {
-                throw new Exception("YeloDebugSettings.xml not found or unreadable.");
+                if (MessageBox.Show("YeloDebugSettings.xml not found or unreadable.\nAttempt to continue?", "Yelo Error", MessageBoxButtons.YesNo) == DialogResult.No)
+                    throw new Exception("YeloDebugSettings.xml not found or unreadable.");
             }
         }
 
