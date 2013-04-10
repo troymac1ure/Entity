@@ -82,6 +82,111 @@ namespace entity.Main.MenuClasses
         }
     }
 
+    public class animationData : baseData
+    {
+        // Keyframe 0 = Selected
+        // Keyframe 1 = Above?
+        // Keyframe 2 = Below?
+
+        public class keyFrame : baseData
+        {
+            public int unused;
+            public float alpha;
+            public float posX;
+            public float posY;
+            public float posZ;
+
+            public keyFrame(int Order)
+                : base(Order)
+            {
+            }
+
+            public void Read(BinaryReader br)
+            {
+                br.BaseStream.Position = offset;
+                unused = br.ReadInt32();
+                alpha = br.ReadSingle();
+                posX = br.ReadSingle();
+                posY = br.ReadSingle();
+                posZ = br.ReadSingle();
+            }
+
+            public void Write(BinaryWriter bw)
+            {
+                bw.BaseStream.Position = offset;
+                bw.Write(unused);
+                bw.Write(alpha);
+                bw.Write(posX);
+                bw.Write(posY);
+                bw.Write(posZ);
+            }
+        }
+
+        public int period;
+        public keyFrame[] keyFrames;
+
+        public animationData(int Order, Meta Meta)
+            : base(Order)
+        {
+            this.meta = Meta;
+        }
+
+        public void Read(BinaryReader br)
+        {
+            br.BaseStream.Position = offset;
+            int flags = br.ReadInt32();
+            //leftAligned = ((flags & 1) != 0); // bit 0
+            //rightAligned = ((flags & 2) != 0); // bit 1
+            //pulsing = ((flags & 4) != 0); // bit 2
+            //tinyText = ((flags & 8) != 0); // bit 3
+
+            period = br.ReadInt32();
+            int keyFrameCount = br.ReadInt32();
+            int keyFrameOffset = br.ReadInt32() - meta.magic;
+
+            if (keyFrameCount > 0)
+            {
+                BinaryReader br2 = br;
+                int keyFrameTag = meta.Map.Functions.ForMeta.FindMetaByOffset(keyFrameOffset);
+                if (keyFrameTag != meta.TagIndex)
+                {
+                    Meta newMeta = Map.GetMetaFromTagIndex(keyFrameTag, meta.Map, false, true);
+                    br2 = new BinaryReader(newMeta.MS);
+                    keyFrameOffset -= newMeta.offset;
+                }
+                else
+                    keyFrameOffset -= meta.offset;
+
+                keyFrames = new keyFrame[keyFrameCount];
+                for (int i = 0; i < keyFrameCount; i++)
+                {
+                    keyFrames[i] = new keyFrame(order);
+                    keyFrames[i].offset = keyFrameOffset + i * 20;
+                    keyFrames[i].Read(br2);
+                }
+            }
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.BaseStream.Position = offset;
+            int flags = int.MaxValue; // -8 - 4 - 2 - 1;
+            //flags += flags | (leftAligned ? 1 : 0); // bit 0
+            //flags += flags | (rightAligned ? 2 : 0); // bit 1
+            //flags += flags | (pulsing ? 4 : 0); // bit 2
+            //flags += flags | (tinyText ? 8 : 0); // bit 3
+            bw.Write(flags);
+
+            bw.Write(period);
+            bw.Write((int)keyFrames.Length);
+            bw.Write((int)keyFrames[0].offset + meta.offset + meta.magic);
+            for (int i = 0; i < keyFrames.Length; i++)
+            {
+                keyFrames[i].Write(bw);
+            }
+        }
+    }
+
     public class bitmapData : baseData
     {
         public bool ignoreForMenuSpacing;
@@ -248,7 +353,7 @@ namespace entity.Main.MenuClasses
 
     public class screenData : baseData
     {
-        public List<string> strings = new List<string>();
+        public List<entity.MetaFuncs.MEStringsSelector.Unicode> strings = new List<entity.MetaFuncs.MEStringsSelector.Unicode>();
 
         public bool flag0;
         public bool flag1;
@@ -303,8 +408,15 @@ namespace entity.Main.MenuClasses
             for (int i = 0; i < count; i++)
             {
                 br.BaseStream.Position = utOffset + map.Unicode.ut[0].US[offset + i].offset;
-                strings.Add(new string(br.ReadChars(map.Unicode.ut[0].US[offset + i].size)));
+                strings.Add(
+                    new entity.MetaFuncs.MEStringsSelector.Unicode(
+                        offset + i,
+                        map.Unicode.ut[0].US[offset + i].uString,
+                        map.Unicode.ut[0].US[offset + i].size,
+                        map.Unicode.ut[0].US[offset + i].offset,
+                        null));
             }
+            //new string(br.ReadChars(map.Unicode.ut[0].US[offset + i].size));
             map.CloseMap();
             return true;
         }

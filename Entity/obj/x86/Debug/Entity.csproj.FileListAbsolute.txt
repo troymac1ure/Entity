@@ -113,3 +113,6 @@ C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Debug\Entit
 C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Debug\HexBox.resx
 C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Debug\HexBox.cs
 C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\bin\x86\Debug\DevComponents.DotNetBar2.dll
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Debug\entity.Main.MainmenuVisualEdit.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Debug\entity.MetaEditor2.ColorWheel.resources
+C:\GAMES\XBox\Halo2\Programs\Source\Entity 2.1 Source\Entity\obj\x86\Debug\entity.MetaEditor2.argb_color.resources

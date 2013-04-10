@@ -28,6 +28,7 @@ namespace Globals
             public static string ExtractsPath = "Extracts";
             public static string MainMenuFile = "MainMenu";
             public static string MapsPath = "Maps";
+            public static string FontsPath = "Fonts";
             public static string PluginsPath = "Plugins";
             public static string SharedFile = "Shared";
             public static string SinglePlayerSharedFile = "SPShared";

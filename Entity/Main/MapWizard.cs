@@ -68,14 +68,14 @@ namespace entity.Main
         {
             string[] fileNames;
             label1.Text = Prefs.pathCleanMaps;
-            label2.Text = Prefs.pathMapFolder;
+            label2.Text = Prefs.pathMapsFolder;
             try
             {
                 fileNames = Directory.GetFiles(Prefs.pathCleanMaps, "*.map");
             }
             catch
             {
-                fileNames = Directory.GetFiles(Prefs.pathMapFolder, "*.map");
+                fileNames = Directory.GetFiles(Prefs.pathMapsFolder, "*.map");
             }
 
             for (int i = 0; i < fileNames.Length; i++)
@@ -118,7 +118,7 @@ namespace entity.Main
             string oldText = butt.Text;
             butt.Text = ".: Copying Map :.";
             Application.DoEvents();
-            string newName = Prefs.pathMapFolder + "\\" + newMapFileTextBox.Text;
+            string newName = Prefs.pathMapsFolder + "\\" + newMapFileTextBox.Text;
             try
             {
                 File.Copy(Prefs.pathCleanMaps + "\\" + baseMapComboBox.Text + ".map", newName);

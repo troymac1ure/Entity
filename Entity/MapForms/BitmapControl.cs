@@ -252,7 +252,7 @@ namespace entity.MapForms
 
             // Wow. That's alot of parents. o SHOULD be type MapForm
             // object o = this.Parent.Parent.Parent.Parent.Parent.Parent;
-            object o = ((Form1)this.TopLevelControl).ActiveMdiChild;
+            object o = ((Form)this.TopLevelControl).ActiveMdiChild;
             if (o is MapForm)
             {
                 MapForm mf = (MapForm)o;

@@ -45,13 +45,15 @@
             this.lblSelectStringIDs = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblUnicodePosition = new System.Windows.Forms.Label();
+            this.lblUnicodeSort = new System.Windows.Forms.Label();
+            this.cbUnicodeSort = new System.Windows.Forms.ComboBox();
             this.lblUnicode = new System.Windows.Forms.Label();
             this.cbShowAllUnicodes = new System.Windows.Forms.CheckBox();
             this.lbUnicodes = new System.Windows.Forms.ListBox();
-            this.cbUnicodeSort = new System.Windows.Forms.ComboBox();
-            this.lblUnicodeSort = new System.Windows.Forms.Label();
-            this.lblUnicodePosition = new System.Windows.Forms.Label();
+            this.lblStringIDNumber = new System.Windows.Forms.Label();
+            this.cbSIDSort = new System.Windows.Forms.ComboBox();
+            this.lblSIDSort = new System.Windows.Forms.Label();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -72,7 +74,10 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.lblStringIDNumber);
+            this.splitContainer1.Panel1.Controls.Add(this.lblSIDSort);
             this.splitContainer1.Panel1.Controls.Add(this.cbSelectStringIDs);
+            this.splitContainer1.Panel1.Controls.Add(this.cbSIDSort);
             this.splitContainer1.Panel1.Controls.Add(this.lblStringID);
             this.splitContainer1.Panel1.Controls.Add(this.btnSelect);
             this.splitContainer1.Panel1.Controls.Add(this.checkBox1);
@@ -80,7 +85,6 @@
             this.splitContainer1.Panel1.Controls.Add(this.lblSelectStringIDs);
             this.splitContainer1.Panel1.Controls.Add(this.label2);
             this.splitContainer1.Panel1.Controls.Add(this.textBox1);
-            this.splitContainer1.Panel1.Controls.Add(this.label1);
             // 
             // splitContainer1.Panel2
             // 
@@ -104,7 +108,7 @@
             "All",
             "Unicode Strings",
             "No Unicode Strings"});
-            this.cbSelectStringIDs.Location = new System.Drawing.Point(387, 200);
+            this.cbSelectStringIDs.Location = new System.Drawing.Point(383, 199);
             this.cbSelectStringIDs.Name = "cbSelectStringIDs";
             this.cbSelectStringIDs.Size = new System.Drawing.Size(159, 21);
             this.cbSelectStringIDs.TabIndex = 15;
@@ -122,7 +126,7 @@
             // btnSelect
             // 
             this.btnSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelect.Location = new System.Drawing.Point(445, 2);
+            this.btnSelect.Location = new System.Drawing.Point(67, 2);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(99, 22);
             this.btnSelect.TabIndex = 13;
@@ -158,7 +162,7 @@
             // 
             this.lblSelectStringIDs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblSelectStringIDs.AutoSize = true;
-            this.lblSelectStringIDs.Location = new System.Drawing.Point(384, 183);
+            this.lblSelectStringIDs.Location = new System.Drawing.Point(381, 183);
             this.lblSelectStringIDs.Name = "lblSelectStringIDs";
             this.lblSelectStringIDs.Size = new System.Drawing.Size(105, 13);
             this.lblSelectStringIDs.TabIndex = 9;
@@ -184,17 +188,36 @@
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
-            // label1
+            // lblUnicodePosition
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(221, 5);
-            this.label1.Name = "label1";
-            this.label1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 6);
-            this.label1.Size = new System.Drawing.Size(223, 19);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Double click the new string to select it or click";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lblUnicodePosition.AutoSize = true;
+            this.lblUnicodePosition.Location = new System.Drawing.Point(223, 11);
+            this.lblUnicodePosition.Name = "lblUnicodePosition";
+            this.lblUnicodePosition.Size = new System.Drawing.Size(57, 13);
+            this.lblUnicodePosition.TabIndex = 11;
+            this.lblUnicodePosition.Text = "Unicode #";
+            // 
+            // lblUnicodeSort
+            // 
+            this.lblUnicodeSort.AutoSize = true;
+            this.lblUnicodeSort.Location = new System.Drawing.Point(381, 9);
+            this.lblUnicodeSort.Name = "lblUnicodeSort";
+            this.lblUnicodeSort.Size = new System.Drawing.Size(58, 13);
+            this.lblUnicodeSort.TabIndex = 10;
+            this.lblUnicodeSort.Text = "Sort Order:";
+            // 
+            // cbUnicodeSort
+            // 
+            this.cbUnicodeSort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbUnicodeSort.FormattingEnabled = true;
+            this.cbUnicodeSort.Items.AddRange(new object[] {
+            "Name",
+            "Offset"});
+            this.cbUnicodeSort.Location = new System.Drawing.Point(445, 6);
+            this.cbUnicodeSort.Name = "cbUnicodeSort";
+            this.cbUnicodeSort.Size = new System.Drawing.Size(97, 21);
+            this.cbUnicodeSort.TabIndex = 9;
+            this.cbUnicodeSort.SelectedIndexChanged += new System.EventHandler(this.cbUnicodeSort_SelectedIndexChanged);
             // 
             // lblUnicode
             // 
@@ -228,36 +251,36 @@
             this.lbUnicodes.TabIndex = 6;
             this.lbUnicodes.SelectedIndexChanged += new System.EventHandler(this.lbUnicodes_SelectedIndexChanged);
             // 
-            // cbUnicodeSort
+            // lblStringIDNumber
             // 
-            this.cbUnicodeSort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbUnicodeSort.FormattingEnabled = true;
-            this.cbUnicodeSort.Items.AddRange(new object[] {
+            this.lblStringIDNumber.AutoSize = true;
+            this.lblStringIDNumber.Location = new System.Drawing.Point(223, 7);
+            this.lblStringIDNumber.Name = "lblStringIDNumber";
+            this.lblStringIDNumber.Size = new System.Drawing.Size(58, 13);
+            this.lblStringIDNumber.TabIndex = 16;
+            this.lblStringIDNumber.Text = "String ID #";
+            // 
+            // cbSIDSort
+            // 
+            this.cbSIDSort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSIDSort.FormattingEnabled = true;
+            this.cbSIDSort.Items.AddRange(new object[] {
             "Name",
             "Offset"});
-            this.cbUnicodeSort.Location = new System.Drawing.Point(445, 6);
-            this.cbUnicodeSort.Name = "cbUnicodeSort";
-            this.cbUnicodeSort.Size = new System.Drawing.Size(97, 21);
-            this.cbUnicodeSort.TabIndex = 9;
-            this.cbUnicodeSort.SelectedIndexChanged += new System.EventHandler(this.cbUnicodeSort_SelectedIndexChanged);
+            this.cbSIDSort.Location = new System.Drawing.Point(445, 3);
+            this.cbSIDSort.Name = "cbSIDSort";
+            this.cbSIDSort.Size = new System.Drawing.Size(97, 21);
+            this.cbSIDSort.TabIndex = 9;
+            this.cbSIDSort.SelectedIndexChanged += new System.EventHandler(this.cbSIDSort_SelectedIndexChanged);
             // 
-            // lblUnicodeSort
+            // lblSIDSort
             // 
-            this.lblUnicodeSort.AutoSize = true;
-            this.lblUnicodeSort.Location = new System.Drawing.Point(381, 9);
-            this.lblUnicodeSort.Name = "lblUnicodeSort";
-            this.lblUnicodeSort.Size = new System.Drawing.Size(58, 13);
-            this.lblUnicodeSort.TabIndex = 10;
-            this.lblUnicodeSort.Text = "Sort Order:";
-            // 
-            // lblUnicodePosition
-            // 
-            this.lblUnicodePosition.AutoSize = true;
-            this.lblUnicodePosition.Location = new System.Drawing.Point(237, 11);
-            this.lblUnicodePosition.Name = "lblUnicodePosition";
-            this.lblUnicodePosition.Size = new System.Drawing.Size(57, 13);
-            this.lblUnicodePosition.TabIndex = 11;
-            this.lblUnicodePosition.Text = "Unicode #";
+            this.lblSIDSort.AutoSize = true;
+            this.lblSIDSort.Location = new System.Drawing.Point(381, 6);
+            this.lblSIDSort.Name = "lblSIDSort";
+            this.lblSIDSort.Size = new System.Drawing.Size(58, 13);
+            this.lblSIDSort.TabIndex = 10;
+            this.lblSIDSort.Text = "Sort Order:";
             // 
             // MEStringsSelector
             // 
@@ -292,13 +315,15 @@
         private System.Windows.Forms.Label lblSelectStringIDs;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblUnicode;
         private System.Windows.Forms.CheckBox cbShowAllUnicodes;
         private System.Windows.Forms.ListBox lbUnicodes;
         private System.Windows.Forms.Label lblUnicodeSort;
         private System.Windows.Forms.ComboBox cbUnicodeSort;
         private System.Windows.Forms.Label lblUnicodePosition;
+        private System.Windows.Forms.Label lblStringIDNumber;
+        private System.Windows.Forms.Label lblSIDSort;
+        private System.Windows.Forms.ComboBox cbSIDSort;
 
     }
 }

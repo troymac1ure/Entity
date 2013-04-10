@@ -205,7 +205,7 @@ namespace HaloMap.RealTimeHalo
         /// </summary>
         /// <param name="Addr">The addr.</param>
         /// <param name="Data">The data.</param>
-        /// <param name="size">The size.</param>
+        /// <param name="size">The size in bits.</param>
         /// <remarks></remarks>
         //[DllImport("RthDLL.dll", CharSet = CharSet.Ansi)]
         public static void Poke(uint Addr, uint Data, int size)

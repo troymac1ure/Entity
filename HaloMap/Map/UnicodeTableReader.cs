@@ -303,11 +303,11 @@ namespace HaloMap.Map
             {
                 FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
                 BinaryReader br = new BinaryReader(fs);
-                Encoding decode = Encoding.Unicode;
+                Encoding decode = Encoding.UTF8;
                 for (int counter = 0; counter < count; counter++)
                 {
                     br.BaseStream.Position = this.tableOffset + US[counter].offset;
-                    byte[] temp = br.ReadBytes(US[counter].size + US[counter].size % 2);    // Round up to nearest even
+                    byte[] temp = br.ReadBytes(US[counter].size);
                     US[counter].uString = decode.GetString(temp);
                 }
                 br.Close();

@@ -266,7 +266,7 @@ namespace entity.Main
             cbLanguage.SelectedIndex = 0;
             loadMapNames(0, true);
             ofdLoadMap.Filter = "Map files (*.map)|*.map";
-            ofdLoadMap.InitialDirectory = Prefs.pathMapFolder;
+            ofdLoadMap.InitialDirectory = Prefs.pathMapsFolder;
             ofdLoadMap.Multiselect = true;
         }
 

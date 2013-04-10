@@ -164,7 +164,7 @@ namespace entity.Main
 
                 MapHeader LoadedMap = new MapHeader(data);
 
-                string[] filePaths = Directory.GetFiles(Globals.Prefs.pathMapFolder, "*.map");
+                string[] filePaths = Directory.GetFiles(Globals.Prefs.pathMapsFolder, "*.map");
 
                 tslblDebugStatus.Text = "[Comparing Maps...]";
                 foreach (string filename in filePaths)

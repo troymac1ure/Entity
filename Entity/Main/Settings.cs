@@ -42,9 +42,9 @@ namespace entity.Main
             tbSPSharedFile.Text = Prefs.pathSPShared;
             tbBitmapsFile.Text = Prefs.pathBitmaps;
 
-            tbMapsFolder.Text = Prefs.pathMapFolder;
+            tbMapsFolder.Text = Prefs.pathMapsFolder;
+            tbFontsFolder.Text = Prefs.pathFontsFolder;
             tbCleanMapsFolder.Text = Prefs.pathCleanMaps;
-            tbMapsFolder.Text = Prefs.pathMapFolder;
             tbPluginFolder.Text = Prefs.pathPluginsFolder;
             tbBitmapsFolder.Text = Prefs.pathBitmapsFolder;
             tbExtractsFolder.Text = Prefs.pathExtractsFolder;
@@ -188,6 +188,16 @@ namespace entity.Main
         }
 
         /// <summary>
+        /// Used to locate the Fonts Folder
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnFontsFolder_Click(object sender, EventArgs e)
+        {
+            tbFontsFolder.Text = FindDirectory(tbFontsFolder.Text, "Fonts Directory");
+        }
+
+        /// <summary>
         /// The btn patch folder_ click.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -232,7 +242,8 @@ namespace entity.Main
             Prefs.pathShared = tbSharedFile.Text;
             Prefs.pathSPShared = tbSPSharedFile.Text;
             Prefs.pathBitmaps = tbBitmapsFile.Text;
-            Prefs.pathMapFolder = tbMapsFolder.Text;
+            Prefs.pathMapsFolder = tbMapsFolder.Text;
+            Prefs.pathFontsFolder = tbFontsFolder.Text;
             Prefs.pathCleanMaps = tbCleanMapsFolder.Text;
             Prefs.pathPluginsFolder = tbPluginFolder.Text;
             Prefs.pathBitmapsFolder = tbBitmapsFolder.Text;

@@ -135,17 +135,15 @@ namespace entity.MetaEditor2
  
         private void SIDLoader_DropDownClose(object sender, EventArgs e)
         {
-            /*
             if (this.comboBox1.SelectedIndex != -1)
             try
             {
-                sidIndexer = sidIndexerList[this.comboBox1.SelectedIndex];
+                sidIndexer = this.comboBox1.SelectedIndex;
             }
             catch
             {
                 sidIndexer = 0;
             }
-            */
         }
 
         void comboBox1_TextChanged(object sender, System.EventArgs e)

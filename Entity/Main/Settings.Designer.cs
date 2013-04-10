@@ -74,6 +74,9 @@
             this.updateFrequencyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.lblFontsFolder = new System.Windows.Forms.Label();
+            this.tbFontsFolder = new System.Windows.Forms.TextBox();
+            this.btnFontsFolder = new System.Windows.Forms.Button();
             this.gbExternalPaths.SuspendLayout();
             this.gbOther.SuspendLayout();
             this.gbOptions.SuspendLayout();
@@ -108,7 +111,7 @@
             this.gbExternalPaths.Controls.Add(this.lblMainMenuFile);
             this.gbExternalPaths.Location = new System.Drawing.Point(2, 2);
             this.gbExternalPaths.Name = "gbExternalPaths";
-            this.gbExternalPaths.Size = new System.Drawing.Size(416, 121);
+            this.gbExternalPaths.Size = new System.Drawing.Size(490, 121);
             this.gbExternalPaths.TabIndex = 0;
             this.gbExternalPaths.TabStop = false;
             this.gbExternalPaths.Text = "External Map Paths";
@@ -116,7 +119,7 @@
             // btnBitmapsFile
             // 
             this.btnBitmapsFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBitmapsFile.Location = new System.Drawing.Point(376, 93);
+            this.btnBitmapsFile.Location = new System.Drawing.Point(450, 93);
             this.btnBitmapsFile.Name = "btnBitmapsFile";
             this.btnBitmapsFile.Size = new System.Drawing.Size(33, 22);
             this.btnBitmapsFile.TabIndex = 12;
@@ -127,7 +130,7 @@
             // btnSPSharedFile
             // 
             this.btnSPSharedFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSPSharedFile.Location = new System.Drawing.Point(376, 69);
+            this.btnSPSharedFile.Location = new System.Drawing.Point(450, 69);
             this.btnSPSharedFile.Name = "btnSPSharedFile";
             this.btnSPSharedFile.Size = new System.Drawing.Size(33, 22);
             this.btnSPSharedFile.TabIndex = 9;
@@ -138,7 +141,7 @@
             // btnSharedFile
             // 
             this.btnSharedFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSharedFile.Location = new System.Drawing.Point(376, 45);
+            this.btnSharedFile.Location = new System.Drawing.Point(450, 45);
             this.btnSharedFile.Name = "btnSharedFile";
             this.btnSharedFile.Size = new System.Drawing.Size(33, 22);
             this.btnSharedFile.TabIndex = 6;
@@ -149,7 +152,7 @@
             // btnMainmenuFile
             // 
             this.btnMainmenuFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMainmenuFile.Location = new System.Drawing.Point(376, 21);
+            this.btnMainmenuFile.Location = new System.Drawing.Point(450, 21);
             this.btnMainmenuFile.Name = "btnMainmenuFile";
             this.btnMainmenuFile.Size = new System.Drawing.Size(33, 22);
             this.btnMainmenuFile.TabIndex = 3;
@@ -163,7 +166,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tbBitmapsFile.Location = new System.Drawing.Point(74, 94);
             this.tbBitmapsFile.Name = "tbBitmapsFile";
-            this.tbBitmapsFile.Size = new System.Drawing.Size(296, 20);
+            this.tbBitmapsFile.Size = new System.Drawing.Size(370, 20);
             this.tbBitmapsFile.TabIndex = 11;
             // 
             // tbSPSharedFile
@@ -172,7 +175,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tbSPSharedFile.Location = new System.Drawing.Point(74, 71);
             this.tbSPSharedFile.Name = "tbSPSharedFile";
-            this.tbSPSharedFile.Size = new System.Drawing.Size(296, 20);
+            this.tbSPSharedFile.Size = new System.Drawing.Size(370, 20);
             this.tbSPSharedFile.TabIndex = 8;
             // 
             // tbSharedFile
@@ -181,7 +184,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tbSharedFile.Location = new System.Drawing.Point(74, 47);
             this.tbSharedFile.Name = "tbSharedFile";
-            this.tbSharedFile.Size = new System.Drawing.Size(296, 20);
+            this.tbSharedFile.Size = new System.Drawing.Size(370, 20);
             this.tbSharedFile.TabIndex = 5;
             // 
             // tbMainmenuFile
@@ -190,7 +193,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tbMainmenuFile.Location = new System.Drawing.Point(74, 23);
             this.tbMainmenuFile.Name = "tbMainmenuFile";
-            this.tbMainmenuFile.Size = new System.Drawing.Size(296, 20);
+            this.tbMainmenuFile.Size = new System.Drawing.Size(370, 20);
             this.tbMainmenuFile.TabIndex = 2;
             // 
             // lblBitmapsFile
@@ -243,12 +246,15 @@
             this.gbOther.Controls.Add(this.lblPatchFolder);
             this.gbOther.Controls.Add(this.btnPatchFolder);
             this.gbOther.Controls.Add(this.tbPatchFolder);
+            this.gbOther.Controls.Add(this.btnFontsFolder);
             this.gbOther.Controls.Add(this.btnMapsFolder);
+            this.gbOther.Controls.Add(this.tbFontsFolder);
+            this.gbOther.Controls.Add(this.lblFontsFolder);
             this.gbOther.Controls.Add(this.tbMapsFolder);
             this.gbOther.Controls.Add(this.lblMapFolder);
             this.gbOther.Location = new System.Drawing.Point(2, 126);
             this.gbOther.Name = "gbOther";
-            this.gbOther.Size = new System.Drawing.Size(416, 171);
+            this.gbOther.Size = new System.Drawing.Size(490, 189);
             this.gbOther.TabIndex = 13;
             this.gbOther.TabStop = false;
             this.gbOther.Text = "Other Folders";
@@ -257,7 +263,7 @@
             // 
             this.lblBitmapsFolder.AutoSize = true;
             this.lblBitmapsFolder.BackColor = System.Drawing.Color.Transparent;
-            this.lblBitmapsFolder.Location = new System.Drawing.Point(0, 98);
+            this.lblBitmapsFolder.Location = new System.Drawing.Point(0, 116);
             this.lblBitmapsFolder.Name = "lblBitmapsFolder";
             this.lblBitmapsFolder.Size = new System.Drawing.Size(71, 13);
             this.lblBitmapsFolder.TabIndex = 23;
@@ -266,7 +272,7 @@
             // btnBitmapFolder
             // 
             this.btnBitmapFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBitmapFolder.Location = new System.Drawing.Point(376, 93);
+            this.btnBitmapFolder.Location = new System.Drawing.Point(450, 111);
             this.btnBitmapFolder.Name = "btnBitmapFolder";
             this.btnBitmapFolder.Size = new System.Drawing.Size(33, 22);
             this.btnBitmapFolder.TabIndex = 25;
@@ -278,16 +284,16 @@
             // 
             this.tbBitmapsFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbBitmapsFolder.Location = new System.Drawing.Point(74, 95);
+            this.tbBitmapsFolder.Location = new System.Drawing.Point(74, 113);
             this.tbBitmapsFolder.Name = "tbBitmapsFolder";
-            this.tbBitmapsFolder.Size = new System.Drawing.Size(296, 20);
+            this.tbBitmapsFolder.Size = new System.Drawing.Size(370, 20);
             this.tbBitmapsFolder.TabIndex = 24;
             // 
             // lblExtractsFolder
             // 
             this.lblExtractsFolder.AutoSize = true;
             this.lblExtractsFolder.BackColor = System.Drawing.Color.Transparent;
-            this.lblExtractsFolder.Location = new System.Drawing.Point(-1, 124);
+            this.lblExtractsFolder.Location = new System.Drawing.Point(-1, 140);
             this.lblExtractsFolder.Name = "lblExtractsFolder";
             this.lblExtractsFolder.Size = new System.Drawing.Size(72, 13);
             this.lblExtractsFolder.TabIndex = 26;
@@ -296,7 +302,7 @@
             // btnExtractFolder
             // 
             this.btnExtractFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExtractFolder.Location = new System.Drawing.Point(376, 119);
+            this.btnExtractFolder.Location = new System.Drawing.Point(450, 135);
             this.btnExtractFolder.Name = "btnExtractFolder";
             this.btnExtractFolder.Size = new System.Drawing.Size(33, 22);
             this.btnExtractFolder.TabIndex = 28;
@@ -308,15 +314,15 @@
             // 
             this.tbExtractsFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbExtractsFolder.Location = new System.Drawing.Point(74, 121);
+            this.tbExtractsFolder.Location = new System.Drawing.Point(74, 137);
             this.tbExtractsFolder.Name = "tbExtractsFolder";
-            this.tbExtractsFolder.Size = new System.Drawing.Size(296, 20);
+            this.tbExtractsFolder.Size = new System.Drawing.Size(370, 20);
             this.tbExtractsFolder.TabIndex = 27;
             // 
             // btnPluginFolder
             // 
             this.btnPluginFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPluginFolder.Location = new System.Drawing.Point(376, 67);
+            this.btnPluginFolder.Location = new System.Drawing.Point(450, 87);
             this.btnPluginFolder.Name = "btnPluginFolder";
             this.btnPluginFolder.Size = new System.Drawing.Size(33, 22);
             this.btnPluginFolder.TabIndex = 22;
@@ -328,16 +334,16 @@
             // 
             this.tbPluginFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbPluginFolder.Location = new System.Drawing.Point(74, 69);
+            this.tbPluginFolder.Location = new System.Drawing.Point(74, 89);
             this.tbPluginFolder.Name = "tbPluginFolder";
-            this.tbPluginFolder.Size = new System.Drawing.Size(296, 20);
+            this.tbPluginFolder.Size = new System.Drawing.Size(370, 20);
             this.tbPluginFolder.TabIndex = 21;
             // 
             // lblPluginFolder
             // 
             this.lblPluginFolder.AutoSize = true;
             this.lblPluginFolder.BackColor = System.Drawing.Color.Transparent;
-            this.lblPluginFolder.Location = new System.Drawing.Point(3, 72);
+            this.lblPluginFolder.Location = new System.Drawing.Point(3, 92);
             this.lblPluginFolder.Name = "lblPluginFolder";
             this.lblPluginFolder.Size = new System.Drawing.Size(68, 13);
             this.lblPluginFolder.TabIndex = 20;
@@ -346,7 +352,7 @@
             // btnCleanMapsFolder
             // 
             this.btnCleanMapsFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCleanMapsFolder.Location = new System.Drawing.Point(376, 41);
+            this.btnCleanMapsFolder.Location = new System.Drawing.Point(450, 63);
             this.btnCleanMapsFolder.Name = "btnCleanMapsFolder";
             this.btnCleanMapsFolder.Size = new System.Drawing.Size(33, 22);
             this.btnCleanMapsFolder.TabIndex = 19;
@@ -358,16 +364,16 @@
             // 
             this.tbCleanMapsFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbCleanMapsFolder.Location = new System.Drawing.Point(74, 43);
+            this.tbCleanMapsFolder.Location = new System.Drawing.Point(74, 65);
             this.tbCleanMapsFolder.Name = "tbCleanMapsFolder";
-            this.tbCleanMapsFolder.Size = new System.Drawing.Size(296, 20);
+            this.tbCleanMapsFolder.Size = new System.Drawing.Size(370, 20);
             this.tbCleanMapsFolder.TabIndex = 18;
             // 
             // lblCleanMapsFolder
             // 
             this.lblCleanMapsFolder.AutoSize = true;
             this.lblCleanMapsFolder.BackColor = System.Drawing.Color.Transparent;
-            this.lblCleanMapsFolder.Location = new System.Drawing.Point(8, 46);
+            this.lblCleanMapsFolder.Location = new System.Drawing.Point(8, 68);
             this.lblCleanMapsFolder.Name = "lblCleanMapsFolder";
             this.lblCleanMapsFolder.Size = new System.Drawing.Size(63, 13);
             this.lblCleanMapsFolder.TabIndex = 17;
@@ -378,7 +384,7 @@
             this.lblPatchFolder.AutoSize = true;
             this.lblPatchFolder.BackColor = System.Drawing.Color.Transparent;
             this.lblPatchFolder.Enabled = false;
-            this.lblPatchFolder.Location = new System.Drawing.Point(6, 148);
+            this.lblPatchFolder.Location = new System.Drawing.Point(6, 164);
             this.lblPatchFolder.Name = "lblPatchFolder";
             this.lblPatchFolder.Size = new System.Drawing.Size(67, 13);
             this.lblPatchFolder.TabIndex = 29;
@@ -388,7 +394,7 @@
             // 
             this.btnPatchFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPatchFolder.Enabled = false;
-            this.btnPatchFolder.Location = new System.Drawing.Point(376, 143);
+            this.btnPatchFolder.Location = new System.Drawing.Point(450, 159);
             this.btnPatchFolder.Name = "btnPatchFolder";
             this.btnPatchFolder.Size = new System.Drawing.Size(33, 22);
             this.btnPatchFolder.TabIndex = 31;
@@ -401,15 +407,15 @@
             this.tbPatchFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tbPatchFolder.Enabled = false;
-            this.tbPatchFolder.Location = new System.Drawing.Point(74, 145);
+            this.tbPatchFolder.Location = new System.Drawing.Point(74, 161);
             this.tbPatchFolder.Name = "tbPatchFolder";
-            this.tbPatchFolder.Size = new System.Drawing.Size(296, 20);
+            this.tbPatchFolder.Size = new System.Drawing.Size(370, 20);
             this.tbPatchFolder.TabIndex = 30;
             // 
             // btnMapsFolder
             // 
             this.btnMapsFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMapsFolder.Location = new System.Drawing.Point(376, 15);
+            this.btnMapsFolder.Location = new System.Drawing.Point(450, 15);
             this.btnMapsFolder.Name = "btnMapsFolder";
             this.btnMapsFolder.Size = new System.Drawing.Size(33, 22);
             this.btnMapsFolder.TabIndex = 16;
@@ -423,7 +429,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tbMapsFolder.Location = new System.Drawing.Point(74, 17);
             this.tbMapsFolder.Name = "tbMapsFolder";
-            this.tbMapsFolder.Size = new System.Drawing.Size(296, 20);
+            this.tbMapsFolder.Size = new System.Drawing.Size(370, 20);
             this.tbMapsFolder.TabIndex = 15;
             // 
             // lblMapFolder
@@ -444,7 +450,7 @@
             this.useDefaultMaps.Checked = true;
             this.useDefaultMaps.CheckState = System.Windows.Forms.CheckState.Checked;
             this.useDefaultMaps.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.useDefaultMaps.Location = new System.Drawing.Point(69, 19);
+            this.useDefaultMaps.Location = new System.Drawing.Point(143, 19);
             this.useDefaultMaps.Name = "useDefaultMaps";
             this.useDefaultMaps.Size = new System.Drawing.Size(332, 17);
             this.useDefaultMaps.TabIndex = 32;
@@ -469,9 +475,9 @@
             this.gbOptions.Controls.Add(this.lblAutoUpdate);
             this.gbOptions.Controls.Add(this.checkUpdates);
             this.gbOptions.Controls.Add(this.useDefaultMaps);
-            this.gbOptions.Location = new System.Drawing.Point(2, 303);
+            this.gbOptions.Location = new System.Drawing.Point(2, 321);
             this.gbOptions.Name = "gbOptions";
-            this.gbOptions.Size = new System.Drawing.Size(416, 119);
+            this.gbOptions.Size = new System.Drawing.Size(490, 119);
             this.gbOptions.TabIndex = 14;
             this.gbOptions.TabStop = false;
             this.gbOptions.Text = "Options";
@@ -480,7 +486,7 @@
             // 
             this.btnClearRegistry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClearRegistry.Enabled = false;
-            this.btnClearRegistry.Location = new System.Drawing.Point(115, 37);
+            this.btnClearRegistry.Location = new System.Drawing.Point(189, 37);
             this.btnClearRegistry.Name = "btnClearRegistry";
             this.btnClearRegistry.Size = new System.Drawing.Size(145, 22);
             this.btnClearRegistry.TabIndex = 34;
@@ -495,7 +501,7 @@
             this.cbUseRegistry.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.cbUseRegistry.Checked = true;
             this.cbUseRegistry.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbUseRegistry.Location = new System.Drawing.Point(266, 42);
+            this.cbUseRegistry.Location = new System.Drawing.Point(340, 42);
             this.cbUseRegistry.Name = "cbUseRegistry";
             this.cbUseRegistry.Size = new System.Drawing.Size(135, 17);
             this.cbUseRegistry.TabIndex = 33;
@@ -507,7 +513,7 @@
             // 
             this.lblAutoUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblAutoUpdate.AutoSize = true;
-            this.lblAutoUpdate.Location = new System.Drawing.Point(168, 90);
+            this.lblAutoUpdate.Location = new System.Drawing.Point(242, 90);
             this.lblAutoUpdate.Name = "lblAutoUpdate";
             this.lblAutoUpdate.Size = new System.Drawing.Size(106, 13);
             this.lblAutoUpdate.TabIndex = 35;
@@ -519,7 +525,7 @@
             this.checkUpdates.DataSource = this.updateFrequencyBindingSource;
             this.checkUpdates.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.checkUpdates.FormattingEnabled = true;
-            this.checkUpdates.Location = new System.Drawing.Point(280, 87);
+            this.checkUpdates.Location = new System.Drawing.Point(354, 87);
             this.checkUpdates.Name = "checkUpdates";
             this.checkUpdates.Size = new System.Drawing.Size(121, 21);
             this.checkUpdates.TabIndex = 36;
@@ -527,17 +533,17 @@
             // updateFrequencyBindingSource
             // 
             this.updateFrequencyBindingSource.DataSource = new Globals.Prefs.updateFrequency[] {
-        Globals.Prefs.updateFrequency.Always,
-        Globals.Prefs.updateFrequency.Daily,
-        Globals.Prefs.updateFrequency.Weekly,
-        Globals.Prefs.updateFrequency.Monthly,
-        Globals.Prefs.updateFrequency.Never};
+            Globals.Prefs.updateFrequency.Always,
+            Globals.Prefs.updateFrequency.Daily,
+            Globals.Prefs.updateFrequency.Weekly,
+            Globals.Prefs.updateFrequency.Monthly,
+            Globals.Prefs.updateFrequency.Never};
             this.updateFrequencyBindingSource.Position = 0;
             // 
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Location = new System.Drawing.Point(324, 428);
+            this.btnSave.Location = new System.Drawing.Point(398, 446);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(94, 25);
             this.btnSave.TabIndex = 38;
@@ -548,7 +554,7 @@
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(224, 428);
+            this.btnCancel.Location = new System.Drawing.Point(298, 446);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(94, 25);
             this.btnCancel.TabIndex = 37;
@@ -556,11 +562,41 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // lblFontsFolder
+            // 
+            this.lblFontsFolder.AutoSize = true;
+            this.lblFontsFolder.BackColor = System.Drawing.Color.Transparent;
+            this.lblFontsFolder.Location = new System.Drawing.Point(8, 44);
+            this.lblFontsFolder.Name = "lblFontsFolder";
+            this.lblFontsFolder.Size = new System.Drawing.Size(65, 13);
+            this.lblFontsFolder.TabIndex = 14;
+            this.lblFontsFolder.Text = "Fonts Folder";
+            // 
+            // tbFontsFolder
+            // 
+            this.tbFontsFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbFontsFolder.Location = new System.Drawing.Point(74, 41);
+            this.tbFontsFolder.Name = "tbFontsFolder";
+            this.tbFontsFolder.Size = new System.Drawing.Size(370, 20);
+            this.tbFontsFolder.TabIndex = 15;
+            // 
+            // btnFontsFolder
+            // 
+            this.btnFontsFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFontsFolder.Location = new System.Drawing.Point(450, 39);
+            this.btnFontsFolder.Name = "btnFontsFolder";
+            this.btnFontsFolder.Size = new System.Drawing.Size(33, 22);
+            this.btnFontsFolder.TabIndex = 16;
+            this.btnFontsFolder.Text = "...";
+            this.btnFontsFolder.UseVisualStyleBackColor = true;
+            this.btnFontsFolder.Click += new System.EventHandler(this.btnFontsFolder_Click);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(423, 457);
+            this.ClientSize = new System.Drawing.Size(497, 475);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.gbOptions);
@@ -625,5 +661,8 @@
         private System.Windows.Forms.Label lblExtractsFolder;
         private System.Windows.Forms.Button btnExtractFolder;
         private System.Windows.Forms.TextBox tbExtractsFolder;
+        private System.Windows.Forms.Button btnFontsFolder;
+        private System.Windows.Forms.TextBox tbFontsFolder;
+        private System.Windows.Forms.Label lblFontsFolder;
     }
 }

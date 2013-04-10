@@ -69,7 +69,14 @@ namespace entity.MetaEditor2
             System.IO.BinaryWriter bw = new System.IO.BinaryWriter(meta.MS);
             if (((WinMetaEditor)this.ParentForm).checkSelectionInCurrentTag())
                 bw.BaseStream.Position = this.offsetInMap - meta.offset;
-            this.value = this.comboBox1.SelectedIndex;
+            try
+            {
+                this.value = int.Parse(this.comboBox1.Text);
+            }
+            catch
+            {
+                this.value = this.comboBox1.SelectedIndex;
+            }
             switch (this.enumType)
             {
                 case 8:

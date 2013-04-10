@@ -23,7 +23,7 @@ namespace entity.MetaFuncs
     public partial class MEStringsSelector : Form
     {
         #region private classes
-        class StringID
+        public class StringID
         {
             public string name { get; set; }
             public int id { get; set; }
@@ -57,7 +57,7 @@ namespace entity.MetaFuncs
             }
         }
 
-        class Unicode
+        public class Unicode
         {
             public int offset { get; set; }
             public int position { get; set; }
@@ -69,11 +69,6 @@ namespace entity.MetaFuncs
             /// </summary>
             public StringID stringID { get; set; }
 
-            /// <summary>
-            /// Holds a list of all loaded unicode codes
-            /// </summary>
-            public static List<Encode> encodes { get; set; }
-
             public Unicode(int Position, string Unicode, int TextLength, int Offset, StringID StringID)
             {
                 this.position = Position;
@@ -82,87 +77,11 @@ namespace entity.MetaFuncs
                 this.offset = Offset;
                 this.stringID = StringID;
 
-                // Decode unicode value
-                System.Text.Encoding decode = System.Text.Encoding.ASCII;
-                byte[] tempbytes = System.Text.Encoding.Unicode.GetBytes(this.unicode);
+                byte[] tempbytes = System.Text.Encoding.UTF8.GetBytes(this.unicode);
                 int change = tempbytes.Length;
-                tempbytes = replaceCodes(tempbytes);
+                tempbytes = replaceCodes(tempbytes, true);
                 change = tempbytes.Length - change;     // Account for string length changes
-                this.text = decode.GetString(tempbytes).Substring(0, Math.Min(this.textLength + change, tempbytes.Length));
-            }
-
-            private byte[] replaceCode(byte[] bytes, byte[] code, string decode)
-            {
-                List<byte> bs = new List<byte>(bytes);
-                for (int i = 0; i < bytes.Length; i++)
-                    for (int ii = 0; ii < code.Length; ii++)
-                    {
-                        if (bytes[i+ii] != code[ii])
-                            break;
-                        // Found
-                        if (ii == code.Length - 1)
-                        {
-                            bs.RemoveRange(i, code.Length);
-                            bs.InsertRange(i, System.Text.Encoding.ASCII.GetBytes(decode));
-                        }
-                    }
-                
-
-                return (bs.ToArray());
-            }
-
-            private byte[] replaceCodes(byte[] bytes)
-            {
-                byte[] temp = bytes;
-                temp = replaceCode(temp, new byte[] { 13, 10 }, "\\r\\n");
-                
-                for (int i = 0; i < encodes.Count; i++)
-                {
-                    temp = replaceCode( temp, encodes[i].codes, encodes[i].definition );
-                }
-
-                #region old code listing (now stored externally)
-                /*
-                temp = replaceCode(temp, new byte[] { 226, 128, 153 }, "'");
-
-                temp = replaceCode(temp, new byte[] { 238, 128, 144 }, "??");    // ??
-                temp = replaceCode(temp, new byte[] { 238, 128, 253 }, "(WHITE)");    // ??
-                temp = replaceCode(temp, new byte[] { 238, 128, 254 }, "(BLACK)");    // ??
-
-                temp = replaceCode(temp, new byte[] { 238, 132, 128 }, "(A)"); // ??
-                temp = replaceCode(temp, new byte[] { 238, 132, 129 }, "(B)"); // ??
-                temp = replaceCode(temp, new byte[] { 238, 132, 130 }, "(A)"); // ??
-                temp = replaceCode(temp, new byte[] { 238, 132, 154 }, "[MP]");         // mp
-                temp = replaceCode(temp, new byte[] { 238, 132, 155 }, "[NEEDLER]");    // nd
-                temp = replaceCode(temp, new byte[] { 238, 132, 156 }, "[]");           //
-                temp = replaceCode(temp, new byte[] { 238, 132, 157 }, "[PP]");         // pp
-                temp = replaceCode(temp, new byte[] { 238, 132, 158 }, "[PR]");         // pr
-                temp = replaceCode(temp, new byte[] { 238, 132, 159 }, "[]");
-                temp = replaceCode(temp, new byte[] { 238, 132, 160 }, "[]");
-                temp = replaceCode(temp, new byte[] { 238, 132, 161 }, "[]");
-                temp = replaceCode(temp, new byte[] { 238, 132, 162 }, "[SMG]");        // smg
-                temp = replaceCode(temp, new byte[] { 238, 132, 170 }, "[BPR]");        // bpr                
-
-                temp = replaceCode(temp, new byte[] { 238, 144, 136 }, "<map name>");
-                temp = replaceCode(temp, new byte[] { 238, 144, 138 }, "<game type>");
-                temp = replaceCode(temp, new byte[] { 238, 144, 147 }, "<timer>");
-                temp = replaceCode(temp, new byte[] { 238, 144, 148 }, "<other player>");
-                temp = replaceCode(temp, new byte[] { 238, 144, 150 }, "<leader>");
-                temp = replaceCode(temp, new byte[] { 238, 144, 164 }, "<gamertag>");
-                temp = replaceCode(temp, new byte[] { 238, 144, 177 }, "<profile>");
-                // In-game ??
-                temp = replaceCode(temp, new byte[] { 238, 145, 135 }, "(A)");          // ?? 
-                temp = replaceCode(temp, new byte[] { 238, 145, 136 }, "(X)");
-                temp = replaceCode(temp, new byte[] { 238, 145, 137 }, "(Y)");
-                temp = replaceCode(temp, new byte[] { 238, 145, 138 }, "(B)");
-                temp = replaceCode(temp, new byte[] { 238, 145, 139 }, "(BACK)");      // ?? eg. hold to talk to entire team
-                temp = replaceCode(temp, new byte[] { 238, 145, 141 }, "(RT)");        // ?? eg. hold to lock on rocket
-
-                temp = replaceCode(temp, new byte[] { 238, 145, 157 }, "(percent)");        // ?? eg. hold to lock on rocket
-                */
-                #endregion
-
-                return temp;
+                this.text = System.Text.Encoding.ASCII.GetString(tempbytes).Substring(0, Math.Min(this.textLength + change, tempbytes.Length));
             }
 
             public override string ToString()
@@ -178,7 +97,7 @@ namespace entity.MetaFuncs
         /// <summary>
         /// The location of the Unicode decoding file
         /// </summary>
-        string unicodeFile;
+        static string unicodeFile;
 
         /// <summary>
         /// The _selected id.
@@ -202,6 +121,11 @@ namespace entity.MetaFuncs
         List<Unicode> unicodes = new List<Unicode>();               // List of all Unicodes
         List<Unicode> searchUnicodes = new List<Unicode>();         // List of searched Unicodes
 
+        /// <summary>
+        /// Holds a list of all loaded unicode codes
+        /// </summary>
+        static List<Encode> encodes { get; set; }
+
         #endregion
 
         #region Constructors and Destructors
@@ -216,14 +140,17 @@ namespace entity.MetaFuncs
         {
             InitializeComponent();
 
-            // load any listed unicode codes
-            Unicode.encodes = new List<Encode>();
-            try
+            if (encodes == null)
             {
-                Unicode.encodes = loadUnicodes();
-            }
-            catch
-            {
+                // load any listed unicode codes
+                try
+                {
+                    encodes = loadUnicodes();
+                }
+                catch
+                {
+                    encodes = new List<Encode>();
+                }
             }
 
             // Select ALL
@@ -260,6 +187,8 @@ namespace entity.MetaFuncs
             lbStringIDs.DataSource = stringIDs;
             lbUnicodes.DataSource = unicodes;
 
+            // Set default sort method and apply sort to lists
+            cbSIDSort.SelectedIndex = 0;
             cbUnicodeSort.SelectedIndex = 0;
             
             List<string> ss = new List<string>();
@@ -355,7 +284,10 @@ namespace entity.MetaFuncs
             {
                 if (stringIDs[i].id == ID)
                 {
+                    // We need to disable as it will randomly throw faults if the unicode is updated before the selectedItem is fully changed
+                    lbStringIDs.Enabled = false;
                     lbStringIDs.SelectedItem = stringIDs[i];
+                    lbStringIDs.Enabled = true;
                     updateUnicodeFromStringID();
                     _selectedID = stringIDs[i].id;
                     _selectedIndex = lbStringIDs.SelectedIndex;
@@ -376,11 +308,133 @@ namespace entity.MetaFuncs
             */
         }
 
+        public Unicode[] getUnicodesFromID(int ID)
+        {
+            List<Unicode> ul = new List<Unicode>();
+            for (int i = 0; i < stringIDs.Count; i++)
+            {
+                if (stringIDs[i].id == ID)
+                {
+                    ul = stringIDs[i].unicodes;
+                    break;
+                }
+            }
+            return ul.ToArray();
+        }
+
+        /// <summary>
+        /// Replaces special unicode entries to a ASCII readable version
+        /// </summary>
+        /// <param name="text">The unicode text to replace</param>
+        /// <param name="allCodes">If true does all codes. If false does just the internal codes (such as "GamerTag")</param>
+        /// <returns></returns>
+        public static string ReplaceCodes(string text, bool allCodes)
+        {
+            byte[] tempbytes = System.Text.Encoding.UTF8.GetBytes(text);
+            tempbytes = replaceCodes(tempbytes, allCodes);
+            text = System.Text.Encoding.UTF8.GetString(tempbytes);
+                
+            return text;
+        }
+
         #endregion
 
         #region Methods
 
-        private List<Encode> loadUnicodes()
+        private static byte[] replaceCode(byte[] bytes, byte[] code, string decode)
+        {
+            List<byte> bs = new List<byte>(bytes);
+            int change = 0;
+            for (int i = 0; i < bytes.Length; i++)
+                for (int ii = 0; ii < code.Length; ii++)
+                {
+                    if (bytes[i + ii] != code[ii])
+                        break;
+                    // Found
+                    if (ii == code.Length - 1)
+                    {
+                        bs.RemoveRange(i - change, code.Length);
+                        bs.InsertRange(i - change, System.Text.Encoding.ASCII.GetBytes(decode));
+                        change += (code.Length - System.Text.Encoding.ASCII.GetBytes(decode).Length);
+                    }
+                }
+
+
+            return (bs.ToArray());
+        }
+
+        private static byte[] replaceCodes(byte[] bytes, bool allCodes)
+        {
+            if (encodes == null)
+            {
+                try
+                {
+                    encodes = loadUnicodes();
+                }
+                catch
+                {
+                    encodes = new List<Encode>();
+                }
+            }
+
+            byte[] temp = bytes;
+            temp = replaceCode(temp, new byte[] { 13, 10 }, "\n");
+
+            for (int i = 0; i < encodes.Count; i++)
+            {
+                if (!allCodes)  // The following are codes contained in the font files
+                    if ((encodes[i].codes[0] == 238 && encodes[i].codes[1] == 128) ||
+                        (encodes[i].codes[0] == 238 && encodes[i].codes[1] == 132) ||
+                        (encodes[i].codes[0] == 238 && encodes[i].codes[1] == 145))
+                        continue;
+                temp = replaceCode(temp, encodes[i].codes, encodes[i].definition);
+            }
+
+            #region old code listing (now stored externally)
+            /*
+                temp = replaceCode(temp, new byte[] { 226, 128, 153 }, "'");
+
+                temp = replaceCode(temp, new byte[] { 238, 128, 144 }, "??");    // ??
+                temp = replaceCode(temp, new byte[] { 238, 128, 253 }, "(WHITE)");    // ??
+                temp = replaceCode(temp, new byte[] { 238, 128, 254 }, "(BLACK)");    // ??
+
+                temp = replaceCode(temp, new byte[] { 238, 132, 128 }, "(A)"); // ??
+                temp = replaceCode(temp, new byte[] { 238, 132, 129 }, "(B)"); // ??
+                temp = replaceCode(temp, new byte[] { 238, 132, 130 }, "(A)"); // ??
+                temp = replaceCode(temp, new byte[] { 238, 132, 154 }, "[MP]");         // mp
+                temp = replaceCode(temp, new byte[] { 238, 132, 155 }, "[NEEDLER]");    // nd
+                temp = replaceCode(temp, new byte[] { 238, 132, 156 }, "[]");           //
+                temp = replaceCode(temp, new byte[] { 238, 132, 157 }, "[PP]");         // pp
+                temp = replaceCode(temp, new byte[] { 238, 132, 158 }, "[PR]");         // pr
+                temp = replaceCode(temp, new byte[] { 238, 132, 159 }, "[]");
+                temp = replaceCode(temp, new byte[] { 238, 132, 160 }, "[]");
+                temp = replaceCode(temp, new byte[] { 238, 132, 161 }, "[]");
+                temp = replaceCode(temp, new byte[] { 238, 132, 162 }, "[SMG]");        // smg
+                temp = replaceCode(temp, new byte[] { 238, 132, 170 }, "[BPR]");        // bpr                
+
+                temp = replaceCode(temp, new byte[] { 238, 144, 136 }, "<map name>");
+                temp = replaceCode(temp, new byte[] { 238, 144, 138 }, "<game type>");
+                temp = replaceCode(temp, new byte[] { 238, 144, 147 }, "<timer>");
+                temp = replaceCode(temp, new byte[] { 238, 144, 148 }, "<other player>");
+                temp = replaceCode(temp, new byte[] { 238, 144, 150 }, "<leader>");
+                temp = replaceCode(temp, new byte[] { 238, 144, 164 }, "<gamertag>");
+                temp = replaceCode(temp, new byte[] { 238, 144, 177 }, "<profile>");
+                // In-game ??
+                temp = replaceCode(temp, new byte[] { 238, 145, 135 }, "(A)");          // ?? 
+                temp = replaceCode(temp, new byte[] { 238, 145, 136 }, "(X)");
+                temp = replaceCode(temp, new byte[] { 238, 145, 137 }, "(Y)");
+                temp = replaceCode(temp, new byte[] { 238, 145, 138 }, "(B)");
+                temp = replaceCode(temp, new byte[] { 238, 145, 139 }, "(BACK)");      // ?? eg. hold to talk to entire team
+                temp = replaceCode(temp, new byte[] { 238, 145, 141 }, "(RT)");        // ?? eg. hold to lock on rocket
+
+                temp = replaceCode(temp, new byte[] { 238, 145, 157 }, "(percent)");        // ?? eg. hold to lock on rocket
+                */
+            #endregion
+
+            return temp;
+        }
+
+        private static List<Encode> loadUnicodes()
         {
             List<Encode> encodes = new List<Encode>();
             unicodeFile = Application.StartupPath + "\\unicodes.txt";
@@ -423,10 +477,32 @@ namespace entity.MetaFuncs
             return encodes;
         }
 
-        private void sortLists()
+        private void sortStringIDLists()
         {
-            stringIDs = stringIDs.OrderBy(StringID => StringID.name).ToList();
+            object o = lbStringIDs.SelectedItem;
+            List<StringID> list = (List<StringID>)lbStringIDs.DataSource;
+            switch (cbSIDSort.SelectedIndex)
+            {
+                case 0:
+                    list = stringIDs.OrderBy(StringID => StringID.name).ToList();
+                    break;
+                case 1:
+                    list = stringIDs.OrderBy(StringID => StringID.id).ToList();
+                    break;
+            }
+            lbStringIDs.DataSource = list;
+            ((CurrencyManager)lbStringIDs.BindingContext[lbStringIDs.DataSource]).Refresh();
+            try
+            {
+                lbStringIDs.SelectedItem = o;
+            }
+            catch
+            {
+            }
+        }
 
+        private void sortUnicodeLists()
+        {
             object o = lbUnicodes.SelectedItem;
             List<Unicode> list = (List<Unicode>)lbUnicodes.DataSource;
             switch (cbUnicodeSort.SelectedIndex)
@@ -463,6 +539,7 @@ namespace entity.MetaFuncs
             Application.DoEvents();
             lbStringIDs.SelectedIndex = _selectedIndex;
             lbStringIDs.TopIndex = _selectedIndex;
+
             textBox1.Text = string.Empty;
             textBox1.Focus();
             
@@ -473,9 +550,14 @@ namespace entity.MetaFuncs
             listBox1_DoubleClick(this, null);
         }
 
+        private void cbSIDSort_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            sortStringIDLists();
+        }
+
         private void cbUnicodeSort_SelectedIndexChanged(object sender, EventArgs e)
         {
-            sortLists();
+            sortUnicodeLists();
         }
 
         /// <summary>
@@ -530,7 +612,10 @@ namespace entity.MetaFuncs
                         }
                     }
                 }
+                //searchStringIDs = searchStringIDs.OrderBy(StringID => StringID.id).ToList();
                 lbStringIDs.DataSource = searchStringIDs;
+
+                
                 if (selection != -1)
                     lbStringIDs.SelectedItem = SIDs[selection];
             }
@@ -594,6 +679,13 @@ namespace entity.MetaFuncs
                 lblUnicodePosition.Text = "Unicode #" + ((Unicode)lbUnicodes.SelectedItem).position + " / " + unicodes.Count;
             else
                 lblUnicodePosition.Text = string.Empty;
+            try
+            {
+                lblStringIDNumber.Text = "String ID #" + ((StringID)lbStringIDs.SelectedItem).id.ToString() + " (Total: " + lbStringIDs.Items.Count + ")";
+            }
+            catch
+            {}
+
         }
 
         private void lbUnicodes_SelectedIndexChanged(object sender, EventArgs e)
@@ -601,7 +693,13 @@ namespace entity.MetaFuncs
             if (!lbUnicodes.Enabled)
                 return;
             updateStringIDFromUnicode();
-            lblUnicodePosition.Text = "Unicode #" + ((Unicode)lbUnicodes.SelectedItem).position + " / " + unicodes.Count;
+            if (lbUnicodes.SelectedIndex == -1 && lbUnicodes.Items.Count > 0)
+            {
+                lbUnicodes.SelectedIndex = 0;
+            }
+            if (lbUnicodes.SelectedItem != null)
+                lblUnicodePosition.Text = "Unicode #" + ((Unicode)lbUnicodes.SelectedItem).position + " / " + unicodes.Count;
+            
         }
 
         /// <summary>
@@ -657,7 +755,7 @@ namespace entity.MetaFuncs
             catch
             {
             }
-            sortLists();
+            sortUnicodeLists();
         }
 
         private List<StringID> getlbStringsIDDataSource()
@@ -676,6 +774,7 @@ namespace entity.MetaFuncs
 
         private void setlbStringsIDDataSource()
         {
+            object o = lbStringIDs.SelectedItem;
             switch (cbSelectStringIDs.SelectedIndex)
             {
                 case 0:
@@ -688,6 +787,15 @@ namespace entity.MetaFuncs
                     lbStringIDs.DataSource = stringIDsNoUnicode;
                     break;
             }
+            try
+            {
+                if (o != null)
+                    lbStringIDs.SelectedItem = o;
+                // Make sure selection # & count is up to date
+                lblStringIDNumber.Text = "String ID #" + ((StringID)lbStringIDs.SelectedItem).id.ToString() + " (Total: " + lbStringIDs.Items.Count + ")";
+            }
+            catch
+            { }
             listBoxUpdate = true;
         }
 
@@ -847,6 +955,8 @@ namespace entity.MetaFuncs
             else
             {
                 lbUnicodes.DataSource = SID.unicodes;
+                // Sometimes it doesn't properly select a default item and throws errors, so refresh to fix
+                ((CurrencyManager)lbUnicodes.BindingContext[lbUnicodes.DataSource]).Refresh();
 
 #if DEBUG
                 /*

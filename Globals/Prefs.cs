@@ -37,7 +37,7 @@ namespace Globals
         public static string pathBitmaps = "bitmap.map";
 
         /// <summary>
-        /// The path clean maps.
+        /// The H2 clean maps folder.
         /// </summary>
         public static string pathCleanMaps = Global.StartupPath + "\\CleanMaps";
 
@@ -74,9 +74,14 @@ namespace Globals
         public static string pathMainmenu = "mainmenu.map";
 
         /// <summary>
-        /// The path map folder.
+        /// The H2 Maps folder.
         /// </summary>
-        public static string pathMapFolder = Global.StartupPath;
+        public static string pathMapsFolder = Global.StartupPath;
+
+        /// <summary>
+        /// The H2 Fonts Folder
+        /// </summary>
+        public static string pathFontsFolder = Global.StartupPath + @"\Fonts\";
 
         /// <summary>
         /// The path patch folder.
@@ -244,6 +249,10 @@ namespace Globals
         /// <summary>
         /// 
         /// </summary>
+        private const string XML_NODE_FONTSFOLDER = "fontsDir";
+        /// <summary>
+        /// 
+        /// </summary>
         private const string XML_NODE_CLEANMAPSFOLDER = "cleanmapsDir";
         /// <summary>
         /// 
@@ -396,7 +405,7 @@ namespace Globals
 
                             case XML_NODE_MAPSFOLDER:
                                 {
-                                    pathMapFolder = node.InnerText;
+                                    pathMapsFolder = node.InnerText;
                                     break;
                                 }
                             case XML_NODE_CLEANMAPSFOLDER:
@@ -549,7 +558,9 @@ namespace Globals
                         tempS = Reg.getValue(RegistryAccess.RegNames.BitmapsFile);
                         if (tempS != null) Prefs.pathBitmaps = tempS;
                         tempS = Reg.getValue(RegistryAccess.RegNames.MapsPath);
-                        if (tempS != null) Prefs.pathMapFolder = tempS;
+                        if (tempS != null) Prefs.pathMapsFolder = tempS;
+                        tempS = Reg.getValue(RegistryAccess.RegNames.FontsPath);
+                        if (tempS != null) Prefs.pathFontsFolder = tempS;
                         tempS = Reg.getValue(RegistryAccess.RegNames.BitmapsPath);
                         if (tempS != null) Prefs.pathBitmapsFolder = tempS;
                         tempS = Reg.getValue(RegistryAccess.RegNames.ExtractsPath);
@@ -665,7 +676,8 @@ namespace Globals
             writer.WriteElementString(XML_NODE_SPSHAREDFILE, pathSPShared);
             writer.WriteElementString(XML_NODE_BITMAPSFILE, pathBitmaps);
 
-            writer.WriteElementString(XML_NODE_MAPSFOLDER, pathMapFolder);
+            writer.WriteElementString(XML_NODE_MAPSFOLDER, pathMapsFolder);
+            writer.WriteElementString(XML_NODE_FONTSFOLDER, pathFontsFolder);
             writer.WriteElementString(XML_NODE_CLEANMAPSFOLDER, pathCleanMaps);
             writer.WriteElementString(XML_NODE_PLUGINSFOLDER, pathPluginsFolder);
             writer.WriteElementString(XML_NODE_BITMAPSFOLDER, pathBitmapsFolder);
@@ -728,7 +740,8 @@ namespace Globals
                 RegistryAccess.setValue(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2Paths, RegistryAccess.RegNames.SharedFile, Prefs.pathShared);
                 RegistryAccess.setValue(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2Paths, RegistryAccess.RegNames.SinglePlayerSharedFile, Prefs.pathSPShared);
                 RegistryAccess.setValue(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2Paths, RegistryAccess.RegNames.BitmapsFile, Prefs.pathBitmaps);
-                RegistryAccess.setValue(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2Paths, RegistryAccess.RegNames.MapsPath, Prefs.pathMapFolder);
+                RegistryAccess.setValue(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2Paths, RegistryAccess.RegNames.MapsPath, Prefs.pathMapsFolder);
+                RegistryAccess.setValue(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2Paths, RegistryAccess.RegNames.FontsPath, Prefs.pathFontsFolder);
                 RegistryAccess.setValue(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2Paths, RegistryAccess.RegNames.CleanMapsPath, Prefs.pathCleanMaps);
                 RegistryAccess.setValue(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2Paths, RegistryAccess.RegNames.PluginsPath, Prefs.pathPluginsFolder);
                 RegistryAccess.setValue(Registry.CurrentUser, RegistryAccess.RegPaths.Halo2Paths, RegistryAccess.RegNames.BitmapsPath, Prefs.pathBitmapsFolder);

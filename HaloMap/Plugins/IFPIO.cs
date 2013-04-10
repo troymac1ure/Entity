@@ -223,7 +223,9 @@ namespace HaloMap.Plugins
             /// <summary>
             /// The text box.
             /// </summary>
-            TextBox
+            TextBox,
+
+            ARGB_Color
         }
 
         #endregion
@@ -1133,6 +1135,66 @@ namespace HaloMap.Plugins
                                         offset += 256;
                                         break;
                                     }
+                                case "rgb_color":
+                                    {
+                                        IFPElements.Add(
+                                            new IFPColor(
+                                                xtr.GetAttribute("name"),
+                                                visible,
+                                                false,
+                                                ObjectEnum.Int,
+                                                offset,
+                                                xtr.LineNumber,
+                                                -1,
+                                                -1));
+                                        offset += 12;
+                                        break;
+                                    }
+                                case "argb_color":
+                                    {
+                                        IFPElements.Add(
+                                            new IFPColor(
+                                                xtr.GetAttribute("name"),
+                                                visible,
+                                                true,
+                                                ObjectEnum.Int,
+                                                offset,
+                                                xtr.LineNumber,
+                                                -1,
+                                                -1));
+                                        offset += 16;
+                                        break;
+                                    }
+                                case "real_rgb_color":
+                                    {
+                                        IFPElements.Add(
+                                            new IFPColor(
+                                                xtr.GetAttribute("name"),
+                                                visible,
+                                                false,
+                                                ObjectEnum.Float,
+                                                offset,
+                                                xtr.LineNumber,
+                                                -1,
+                                                -1));
+                                        offset += 12;
+                                        break;
+                                    }
+                                case "real_argb_color":
+                                    {
+                                        IFPElements.Add(
+                                            new IFPColor(
+                                                xtr.GetAttribute("name"),
+                                                visible,
+                                                true,
+                                                ObjectEnum.Float,
+                                                offset,
+                                                xtr.LineNumber,
+                                                -1,
+                                                -1));
+                                        offset += 16;
+                                        break;
+                                    }
 
                                 default:
                                     MessageBox.Show(
@@ -1992,6 +2054,66 @@ namespace HaloMap.Plugins
                                         offset += 4;
                                         break;
                                     }
+                                case "rgb_color":
+                                    {
+                                        ENTElements.Add(
+                                            new IFPColor(
+                                                xtr.GetAttribute("name"),
+                                                visible,
+                                                false,
+                                                ObjectEnum.Int,
+                                                offset,
+                                                xtr.LineNumber,
+                                                parent,
+                                                sibling));
+                                        offset += 12;
+                                        break;
+                                    }
+                                case "argb_color":
+                                    {
+                                        ENTElements.Add(
+                                            new IFPColor(
+                                                xtr.GetAttribute("name"),
+                                                visible,
+                                                true,
+                                                ObjectEnum.Int,
+                                                offset,
+                                                xtr.LineNumber,
+                                                parent,
+                                                sibling));
+                                        offset += 16;
+                                        break;
+                                    }
+                                case "real_rgb_color":
+                                    {
+                                        ENTElements.Add(
+                                            new IFPColor(
+                                                xtr.GetAttribute("name"),
+                                                visible,
+                                                false,
+                                                ObjectEnum.Float,
+                                                offset,
+                                                xtr.LineNumber,
+                                                parent,
+                                                sibling));
+                                        offset += 12;
+                                        break;
+                                    }
+                                case "real_argb_color":
+                                    {
+                                        ENTElements.Add(
+                                            new IFPColor(
+                                                xtr.GetAttribute("name"),
+                                                visible,
+                                                true,
+                                                ObjectEnum.Float,
+                                                offset,
+                                                xtr.LineNumber,
+                                                parent,
+                                                sibling));
+                                        offset += 16;
+                                        break;
+                                    }
 
                                 default:
                                     MessageBox.Show(
@@ -2611,6 +2733,52 @@ namespace HaloMap.Plugins
                 this.parent = entparent;
                 this.lineNumber = entlineNumber;
                 this.ObjectType = ObjectEnum.TextBox;
+                this.offset = ifpOffset;
+                this.name = ifpName;
+                this.visible = ifpVisible;
+            }
+
+            #endregion
+        }
+
+        public class IFPColor : BaseObject
+        {
+            #region Constants and Fields
+
+            /// <summary>
+            /// Defines whether this is a ARGB or RGB color
+            /// </summary>
+            public bool hasAlpha;
+
+            /// <summary>
+            /// The data type shown in the text boxes (usually float or int).
+            /// </summary>
+            public IFPIO.ObjectEnum type;
+
+            #endregion
+
+            #region Constructors and Destructors
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="ifpName"></param>
+            /// <param name="ifpVisible"></param>
+            /// <param name="hasAlphaChannel"></param>
+            /// <param name="type"></param>
+            /// <param name="ifpOffset"></param>
+            /// <param name="entlineNumber"></param>
+            /// <param name="entparent"></param>
+            /// <param name="entPrevSibling"></param>
+            public IFPColor(
+                string ifpName, bool ifpVisible, bool hasAlphaChannel, IFPIO.ObjectEnum type, int ifpOffset, int entlineNumber, int entparent, int entPrevSibling)
+            {
+                this.siblingPrevious = entPrevSibling;
+                this.parent = entparent;
+                this.lineNumber = entlineNumber;
+                this.ObjectType = ObjectEnum.ARGB_Color;
+                this.hasAlpha = hasAlphaChannel;
+                this.type = type;
                 this.offset = ifpOffset;
                 this.name = ifpName;
                 this.visible = ifpVisible;

@@ -125,12 +125,6 @@
     <Compile Include="Main\MainMenuEdit.Designer.cs">
       <DependentUpon>MainMenuEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Main\MainmenuVisualEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Main\MainmenuVisualEdit.Designer.cs">
-      <DependentUpon>MainmenuVisualEdit.cs</DependentUpon>
-    </Compile>
     <Compile Include="Main\MapWizard.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,12 +150,19 @@
     <Compile Include="Main\SkinOptions.Designer.cs">
       <DependentUpon>SkinOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Main\Skin.cs" />
+    <Compile Include="Main\VisualEditor\Skin.cs" />
     <Compile Include="Main\VideoSettings.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Main\VideoSettings.Designer.cs">
       <DependentUpon>VideoSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main\VisualEditor\H2FontClass.cs" />
+    <Compile Include="Main\VisualEditor\MainmenuVisualEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\VisualEditor\MainmenuVisualEdit.Designer.cs">
+      <DependentUpon>MainmenuVisualEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="MapForms\BitmapControl.cs">
       <SubType>UserControl</SubType>
@@ -222,6 +223,20 @@
     </Compile>
     <Compile Include="MetaEditor2\Bitmask.Designer.cs">
       <DependentUpon>Bitmask.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\ColorFields\ColorChangedEventArgs.cs" />
+    <Compile Include="MetaEditor2\ColorFields\ColorHandler.cs" />
+    <Compile Include="MetaEditor2\ColorFields\ColorWheel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\ColorFields\ColorWheel.Designer.cs">
+      <DependentUpon>ColorWheel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MetaEditor2\ColorFields\rgb_color.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\ColorFields\rgb_color.Designer.cs">
+      <DependentUpon>rgb_color.cs</DependentUpon>
     </Compile>
     <Compile Include="MetaEditor2\RestoreSelections.cs">
       <SubType>Form</SubType>
@@ -375,9 +390,6 @@
     <EmbeddedResource Include="Main\MainMenuEdit.resx">
       <DependentUpon>MainMenuEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Main\MainmenuVisualEdit.resx">
-      <DependentUpon>MainmenuVisualEdit.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Main\MapWizard.resx">
       <DependentUpon>MapWizard.cs</DependentUpon>
     </EmbeddedResource>
@@ -394,6 +406,9 @@
     <EmbeddedResource Include="Main\VideoSettings.resx">
       <DependentUpon>VideoSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\VisualEditor\MainmenuVisualEdit.resx">
+      <DependentUpon>MainmenuVisualEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MapForms\BitmapControl.resx">
       <DependentUpon>BitmapControl.cs</DependentUpon>
@@ -422,6 +437,13 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MetaEditor2\Bitmask.resx">
       <DependentUpon>Bitmask.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\ColorFields\ColorWheel.resx">
+      <DependentUpon>ColorWheel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\ColorFields\rgb_color.resx">
+      <DependentUpon>rgb_color.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MetaEditor2\RestoreSelections.resx">
       <DependentUpon>RestoreSelections.cs</DependentUpon>

@@ -246,13 +246,13 @@ namespace entity.Main
             // show a dialog if null filename
             if (mapFileName == null)
             {
-                openmapdialog.InitialDirectory = Prefs.pathMapFolder;
+                openmapdialog.InitialDirectory = Prefs.pathMapsFolder;
                 // if the user cancels out the dialog, no map to open
                 if (openmapdialog.ShowDialog() == DialogResult.Cancel)
                 {
                     return null;
                 }
-                Prefs.pathMapFolder = openmapdialog.InitialDirectory;
+                Prefs.pathMapsFolder = openmapdialog.InitialDirectory;
 
                 // set the file name to user chosen file
                 mapFileName = openmapdialog.FileName;

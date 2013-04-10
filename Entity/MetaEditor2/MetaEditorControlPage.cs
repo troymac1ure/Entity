@@ -574,6 +574,7 @@ namespace entity.MetaEditor2
                             foreach (Control cntl in tempbitmask.Controls[0].Controls)
                             {
                                 cntl.GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
+                                toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << int.Parse(cntl.Tag.ToString())).ToString() + ")");
                             }
                             break;
                         }
@@ -589,6 +590,7 @@ namespace entity.MetaEditor2
                             foreach (Control cntl in tempbitmask.Controls[0].Controls)
                             {
                                 cntl.GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
+                                toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << int.Parse(cntl.Tag.ToString())).ToString() + ")");
                             }
                             break;
                         }
@@ -605,6 +607,7 @@ namespace entity.MetaEditor2
                             foreach (Control cntl in tempbitmask.Controls[0].Controls)
                             {
                                 cntl.GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
+                                toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << int.Parse(cntl.Tag.ToString())).ToString() + ")");
                             }
                             break;
                         }
@@ -660,6 +663,17 @@ namespace entity.MetaEditor2
                             toolTip1.IsBalloon = true;
                             break;
                         }
+                    case IFPIO.ObjectEnum.ARGB_Color:
+                        {
+                            if (MetaEditor.MetaEditor.ShowFloats == false)
+                                break;
+                            argb_color tempARGBColor = new argb_color(meta, ctl.name, map, ctl.offset, ((IFPIO.IFPColor)ctl).hasAlpha, ((IFPIO.IFPColor)ctl).type, ctl.lineNumber);
+                            tempARGBColor.TabIndex = tabIndex;
+                            if (enabled) tempARGBColor.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                            panelMetaEditor.Controls.Add(tempARGBColor);
+                            tempARGBColor.BringToFront();
+                            break;
+                        }
                     default:
                         break;
                 }
@@ -689,10 +703,27 @@ namespace entity.MetaEditor2
                     if (ctl.ObjectType == IFPIO.ObjectEnum.Ident)
                         temp -= 4;
 
-                    toolTip1.SetToolTip(panelMetaEditor.Controls[0].Controls[0],
+                    string tip = 
                             "offset in reflexive: " + (temp).ToString() + " (" + toHex(temp) + ")" +
                             "\n         offset in tag: " + (rd.baseOffset + temp).ToString() + " (" + toHex(rd.baseOffset + temp) + ")" +
-                            "\n        offset in map: " + (rd.baseOffset + meta.offset + temp).ToString() + " (" + toHex(rd.baseOffset + meta.offset + temp) + ")");
+                            "\n        offset in map: " + (rd.baseOffset + meta.offset + temp).ToString() + " (" + toHex(rd.baseOffset + meta.offset + temp) + ")";
+
+                    if (panelMetaEditor.Controls[0] is Bitmask)
+                    {                        
+                        Bitmask tempbitmask = ((Bitmask)panelMetaEditor.Controls[0]);
+                        int bitValue = int.Parse(tempbitmask.Value);
+                        string s = " = 0x" + bitValue.ToString("X4") + " (" + tempbitmask.Value + ")";
+                        for (int i = 0; i < 32; i++)
+                        {
+                            s = ((1 << i & bitValue) == 0 ? "0" : "1") + s;
+                            if (i % 4 == 3)
+                                s = " " + s;
+                        }
+                        tip += "\n\nBITMASK VALUE:\n" + s;
+                    }
+
+                    toolTip1.SetToolTip(panelMetaEditor.Controls[0].Controls[0], tip);                            
+
                 }
 
             }
@@ -1121,6 +1152,11 @@ namespace entity.MetaEditor2
                         }
                     case "entity.MetaEditor2.StringBox":
                         break;
+                    case "entity.MetaEditor2.argb_color":
+                        {
+                            ((argb_color)this.panelMetaEditor.Controls[counter]).Populate(offset, rd.inTagNumber == meta.TagIndex);
+                            break;
+                        }
                     default:
                         throw new Exception("Unhandled type: " + this.panelMetaEditor.Controls[counter].GetType().ToString());
                         break;
@@ -1140,18 +1176,29 @@ namespace entity.MetaEditor2
 
                 try
                 {
+                    string tip =
+                            "offset in reflexive: " + (((BaseField)this.panelMetaEditor.Controls[counter]).chunkOffset).ToString() + " (" + toHex(((BaseField)this.panelMetaEditor.Controls[counter]).chunkOffset) + ")" +
+                            "\noffset in tag: " + (temp - map.MetaInfo.Offset[tagnum]).ToString() + " (" + toHex(temp - map.MetaInfo.Offset[tagnum]) + ")" +
+                            "\noffset in map: " + (temp).ToString() + " (" + toHex(temp) + ")";
                     if (tagnum == meta.TagIndex)
-                        if (tagnum == meta.TagIndex)
-                            toolTip1.SetToolTip(panelMetaEditor.Controls[counter].Controls[0],
-                                "reflexive base offset: " + (rd.reflexive.offset).ToString() + " (" + toHex(rd.reflexive.offset) + ")" +
-                                "\noffset in reflexive: " + (((BaseField)this.panelMetaEditor.Controls[counter]).chunkOffset).ToString() + " (" + toHex(((BaseField)this.panelMetaEditor.Controls[counter]).chunkOffset) + ")" +
-                                "\noffset in tag: " + (temp - map.MetaInfo.Offset[tagnum]).ToString() + " (" + toHex(temp - map.MetaInfo.Offset[tagnum]) + ")" +
-                                "\noffset in map: " + (temp).ToString() + " (" + toHex(temp) + ")");
-                        else
-                            toolTip1.SetToolTip(panelMetaEditor.Controls[counter].Controls[0],
-                                "offset in reflexive: " + (((BaseField)this.panelMetaEditor.Controls[counter]).chunkOffset).ToString() + " (" + toHex(((BaseField)this.panelMetaEditor.Controls[counter]).chunkOffset) + ")" +
-                                "\noffset in tag: " + (temp - map.MetaInfo.Offset[tagnum]).ToString() + " (" + toHex(temp - map.MetaInfo.Offset[tagnum]) + ")" +
-                                "\noffset in map: " + (temp).ToString() + " (" + toHex(temp) + ")");
+                        tip = "reflexive base offset: " + (rd.reflexive.offset).ToString() + " (" + toHex(rd.reflexive.offset) + ")\n" + tip;
+
+
+                    if (panelMetaEditor.Controls[counter] is Bitmask)
+                    {
+                        Bitmask tempbitmask = ((Bitmask)panelMetaEditor.Controls[counter]);
+                        int bitValue = int.Parse(tempbitmask.Value);
+                        string s = " = 0x" + bitValue.ToString("X4") + " (" + tempbitmask.Value + ")";
+                        for (int i = 0; i < 32; i++)
+                        {
+                            s = ((1 << i & bitValue) == 0 ? "0" : "1") + s;
+                            if (i % 4 == 3)
+                                s = " " + s;
+                        }
+                        tip += "\n\nBITMASK VALUE:\n" + s;
+                    }
+
+                    toolTip1.SetToolTip(panelMetaEditor.Controls[counter].Controls[0], tip);
                 }
                 catch
                 {
@@ -1488,10 +1535,13 @@ namespace entity.MetaEditor2
                             // Stop it from running ReloadMetaForSameReflexive() since we just loaded it
                             ((ToolStripComboBox)tsNavigation.Items[2]).Enabled = false;
                             ((ToolStripComboBox)tsNavigation.Items[2]).SelectedIndex = rd.chunkSelected;
-                            ((ToolStripComboBox)tsNavigation.Items[2]).Enabled = true;
                         }
                         catch
                         {
+                        }
+                        finally
+                        {
+                            ((ToolStripComboBox)tsNavigation.Items[2]).Enabled = true;
                         }
                     }
 

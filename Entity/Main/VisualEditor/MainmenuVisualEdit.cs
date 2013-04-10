@@ -123,6 +123,17 @@ namespace entity.Main
         /// For StringID editing/selection
         /// </summary>
         entity.MetaFuncs.MEStringsSelector sSwap;
+
+        #region Default Header Font Data
+        /// <summary>
+        /// The default font used for headers text (ui\\shared_globals, offset #352)
+        /// </summary>
+        short defaultHeaderFont;
+        /// <summary>
+        /// The default location of the header fonr text
+        /// </summary>
+        Rectangle defaultHeaderPos;
+        #endregion
         #endregion
 
         #region Constructors and Destructors
@@ -130,8 +141,31 @@ namespace entity.Main
         {
             InitializeComponent();
 
+            #region If H2 fonts have not been setup, ask to locate now
+            if (!Directory.Exists(Prefs.pathFontsFolder))
+            {
+                if (MessageBox.Show("H2 fonts directory has not been setup yet.\nIf you cancel, a default set of windows fonts will be used.\nDo you wish to locate the fonts now?", "Locate H2 Fonts", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                {
+                    FolderBrowserDialog fbd = new FolderBrowserDialog();
+                    fbd.Description = "Select location of Halo 2 Fonts to display actual fonts";
+                    fbd.SelectedPath = Prefs.pathMapsFolder;
+                    if (fbd.ShowDialog() == DialogResult.OK)
+                    {
+                        Prefs.pathFontsFolder = fbd.SelectedPath;
+                        Prefs.Save();
+                    }
+                }
+
+            }
+            if (!Prefs.pathFontsFolder.EndsWith("\\"))
+                Prefs.pathFontsFolder += "\\";
+            #endregion
+
             btnMainmenuFile.Text = Prefs.pathMainmenu;
-            loadMainMenuData(btnMainmenuFile.Text);
+            if (!loadMainMenuData(btnMainmenuFile.Text))
+            {
+                btnMainmenuFile_Click(this, null);
+            }
         }
         #endregion
 
@@ -140,11 +174,16 @@ namespace entity.Main
         private void btnMainmenuFile_Click(object sender, EventArgs e)
         {
             openFileDialog1.InitialDirectory = btnMainmenuFile.Text;
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            do
             {
-                btnMainmenuFile.Text = openFileDialog1.FileName;
-                loadMainMenuData(Prefs.pathMainmenu);
-            }
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    btnMainmenuFile.Text = openFileDialog1.FileName;
+                    loadMainMenuData(btnMainmenuFile.Text);
+                }
+                else
+                    btnMainmenuFile.Text = string.Empty;
+            } while (map == null);
         }
 
         private void btnRestoreAll_Click(object sender, EventArgs e)
@@ -299,7 +338,12 @@ namespace entity.Main
             if (cbLBSkinIdent.SelectedIndex == -1)
                 return;
 
-            createSkin();
+            int i = Math.Min(((paneData)lbPanes.SelectedItem).listBlocks[0].visibleItemCount, currentScreen.strings.Count);
+            int selection = 1;
+            if (lbPanes.Items.Count > 0)
+                selection = lbPanes.SelectedIndex;
+            //createSkin(i > 0 ? (i < 2 ? 0 : 2) : 1);
+            createSkin( selection );
         }
 
         private void chSort_CheckedChanged(object sender, EventArgs e)
@@ -384,7 +428,10 @@ namespace entity.Main
         {
             if (lbPanes.Focused)
                 writePaneToMemory();
-            
+
+            if (lbPanes.SelectedIndex == -1)
+                return;
+
             paneData pd = (paneData)lbPanes.SelectedItem;
             br = new BinaryReader(pd.meta.MS);
 
@@ -497,7 +544,8 @@ namespace entity.Main
             #region List Blocks
             // Clear the list of List Blocks
             pd.listBlocks.Clear();
-            br.BaseStream.Position = pd.offset + 12;
+            // Always use the first panes Data for list blocks
+            br.BaseStream.Position = ((paneData)lbPanes.Items[0]).offset + 12;
             int listBlockCount = br.ReadInt32();
             int listBlockOffset = br.ReadInt32() - map.SecondaryMagic;
 
@@ -557,7 +605,7 @@ namespace entity.Main
                     textBlockData tb = new textBlockData(textBlock);
                     br2.BaseStream.Position = tb.offset = textBlockOffset + textBlock * 44;
                     tb.Read(br2);
-                    tb.title = textBlock.ToString("0:");
+                    tb.title = textBlock.ToString("0: ") + sSwap.getStringFromID(tb.stringID.sidIndexer);
 
                     pd.textBlocks.Add(tb);
                 }
@@ -613,20 +661,7 @@ namespace entity.Main
             #region Set the bitmap list box to display our data in pd.bitmaps
             lbBitmaps.DataSource = pd.bitmaps;
             #endregion
-            #region Set the text block list box to display our data in pd.textBlocks
-            lbTBTextBlocks.DataSource = pd.textBlocks;
-
-            foreach (textBlockData td in pd.textBlocks)
-            {
-                List<bitmapData> lbd = new List<bitmapData>();
-                
-                // Create bitmap from Text
-
-                td.link = lbd;
-            }
-
-            #endregion
-
+            
             #region Set the skin combo box to display the current skin
             if (pd.listBlocks.Count > 0)
             {
@@ -640,6 +675,43 @@ namespace entity.Main
                 cbLBSkinIdent.Enabled = false;
                 cbLBSkinIdent.SelectedIndex = -1;
             }
+            #endregion
+
+            #region Set the text block list box to display our data in pd.textBlocks
+            lbTBTextBlocks.DataSource = pd.textBlocks;
+
+            foreach (textBlockData td in pd.textBlocks)
+            {
+                List<bitmapData> lbd = new List<bitmapData>();
+
+                entity.MetaFuncs.MEStringsSelector.Unicode[] ul = sSwap.getUnicodesFromID(td.stringID.sidIndexer);
+
+                screenData sd = ((screenData)lbScreensList.SelectedItem);
+                // Default to first
+                string s = ul.Length > 0 ? ul[0].unicode : string.Empty;
+                for (int i = 0; i < ul.Length; i++)
+                {
+                    foreach (entity.MetaFuncs.MEStringsSelector.Unicode uni in sd.strings)
+                        if (ul[i].position == uni.position)
+                        {
+                            s = ul[i].unicode;
+                            i = ul.Length;
+                            break;
+                        }
+                }
+
+
+                // Create bitmap from Text
+                if (s != string.Empty)
+                {
+                    bitmapData bd = Skin.createText(map, td, s, true);
+                    if (bd != null)
+                        lbd.Add(bd);
+                }
+                
+                td.link = lbd;
+            }
+
             #endregion
 
             // Transfer List Box Data to text boxes, etc
@@ -722,13 +794,16 @@ namespace entity.Main
                     pd.title += lbScreensList.SelectedItem.ToString();
                 currentScreen.panes.Add(pd);
             }
-
+            
             lbPanes.DataSource = currentScreen.panes;
             // Actually update ListBox with data source
             ((CurrencyManager)lbPanes.BindingContext[lbPanes.DataSource]).Refresh();
 
             if (lbPanes.Items.Count > 0)
+            {
+                lbPanes.SelectedIndex = -1; // force it to reload, even if same pane is selected
                 lbPanes.SelectedIndex = ((baseData)lbScreensList.SelectedItem).offset;
+            }
         }
 
         private void lbTBTextBlocks_SelectedIndexChanged(object sender, EventArgs e)
@@ -811,6 +886,31 @@ namespace entity.Main
                         break;
                 }
             }
+            else
+            {
+                int mx = e.X - pictureBox1.Image.Width / 2;
+                int my = pictureBox1.Image.Height / 2 - e.Y;
+                paneData pd = (paneData)lbPanes.SelectedItem;
+                for (int i = 0; i < pd.listBlocks.Count; i++)
+                {
+                    int foundActive = lbPanes.SelectedIndex;
+                    List<bitmapData> bds = (List<bitmapData>)pd.listBlocks[i].link;
+                    for (int ii = 0; ii < bds.Count; ii++)
+                    {    
+                        bitmapData bd = bds[ii];
+                        Bitmap b = ((Bitmap)bd.link);
+                        if (mx >= bd.left && my <= bd.top &&
+                            mx <= (bd.left + b.Width) &&
+                            my >= (bd.top - b.Height))
+                        {
+                            int count = Math.Min(pd.listBlocks[0].visibleItemCount, currentScreen.strings.Count);
+                            foundActive = ii * count / bds.Count;
+                            break;
+                        }
+                    }
+                    createSkin(foundActive);
+                }
+            }
         }
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
@@ -868,11 +968,15 @@ namespace entity.Main
         private void timer1_Tick(object sender, EventArgs e)
         {
             tickTimer += timer1.Interval;
+            if (this.Visible && map == null)
+                this.Dispose();
             drawBitmap();
         }
 
         private void MainmenuVisualEdit_Activated(object sender, EventArgs e)
         {
+            if (map == null && btnMainmenuFile.Text == string.Empty)
+                this.Dispose();
             timer1.Enabled = true;
         }
 
@@ -898,19 +1002,21 @@ namespace entity.Main
 
         private void MainmenuVisualEdit_Load(object sender, EventArgs e)
         {
-
+            // Load all unicodes
+            this.sSwap = new entity.MetaFuncs.MEStringsSelector(map, this);
         }
         
         #endregion
 
         #region Functions
 
-        private void createSkin()
+        private void createSkin(int selection)
         {
             // Create the menu and save it as a Bitmap to be drawn in the drawBitmap() function
 
             skinData sd = (skinData)cbLBSkinIdent.SelectedItem;
             paneData pd = ((paneData)lbPanes.SelectedItem);
+            screenData scrData = ((screenData)lbScreensList.SelectedItem);
 
             // Get trial bitmap for sizing purposes
             //Rectangle bTrial = sd.skin.getMenuSize();
@@ -918,11 +1024,44 @@ namespace entity.Main
 
             List<bitmapData> lbd = new List<bitmapData>(); 
 
-            for (int i = 0; i < Math.Min(pd.listBlocks[0].visibleItemCount, currentScreen.strings.Count); i++)
+            // Skip first entry as it is used for headers (always?)
+            int start = scrData.headerStringID.sidIndexer + scrData.headerStringID.length > 0 ? 1 : 0;
+            if (start > 0 && currentScreen.strings.Count > 0 && pd.textBlocks.Count > 0)
             {
-                int selection = i > 0 ? i < 2 ? 0 : 2 : 1;
-
-                List<bitmapData> bds = sd.skin.getMenuSelection(currentScreen.strings[i], selection);
+                string header = currentScreen.strings[0].unicode;
+                textBlockData tbd = (textBlockData)pd.textBlocks[0].Clone();
+                tbd.customFont = defaultHeaderFont;
+                int height = 40;
+                int width = 300;
+                switch (scrData.shapeGroup)
+                {
+                    case 0:
+                        //tbd.bottom = 93;
+                        //tbd.left = -150;
+                        tbd.left = (short)(defaultHeaderPos.Left + 18);
+                        tbd.bottom = (short)(defaultHeaderPos.Bottom - 25);
+                        tbd.right = (short)(tbd.left + width);
+                        tbd.top = (short)(tbd.bottom + height);
+                        tbd.leftAligned = true;
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                    default:
+                        tbd.top = (short)defaultHeaderPos.Top;
+                        tbd.left = (short)defaultHeaderPos.Left;
+                        tbd.bottom = (short)defaultHeaderPos.Bottom;
+                        tbd.right = (short)defaultHeaderPos.Right;
+                        tbd.leftAligned = true;
+                        break;
+                }
+                // Wrap text draw the text from the top down instead of bottom down (menu lists)
+                lbd.Add(entity.Main.Skin.createText(map, tbd, header, true));
+            }
+            for (int i = 0; i < Math.Min(pd.listBlocks[0].visibleItemCount, currentScreen.strings.Count - start); i++)
+            {
+                // *** List by SID index, not unicode index
+                List<bitmapData> bds = sd.skin.getMenuSelection(currentScreen.strings[i + start].unicode, i < selection ? 1 : i == selection ? 0 : 2);
                 int height = 0;
                 for (int ii = 0; ii < bds.Count; ii++)
                     if (((Bitmap)bds[ii].link).Height > height && !bds[ii].ignoreForMenuSpacing)
@@ -949,10 +1088,11 @@ namespace entity.Main
                 pictureBox1.Image.Dispose();
                 pictureBox1.Image = null;
             }
-
+            if (!splitContainer1.Panel2.Enabled || map == null)
+                return;
             // List used to hold all bitmaps to be processed
             List<bitmapData> bitmaps = new List<bitmapData>();
-
+            
             #region Add backgrounds & menu items to list & sort into depth rendering order
             #region add lbBitmaps to list (background images)
             if (lbBitmaps.Items.Count > 1)
@@ -974,11 +1114,12 @@ namespace entity.Main
                 {
                     List<bitmapData> bds = (List<bitmapData>)pd.listBlocks[i].link;
                     foreach (bitmapData bd in bds)
-                    {
+                    {                        
                         int step = 0;
-                        while (step < bitmaps.Count && bd.renderDepth > bitmaps[step].renderDepth)
+                        //  renderDepth >= ( as opposed to just > ) so text takes upper priority
+                        while (step < bitmaps.Count && bd.renderDepth >= bitmaps[step].renderDepth)
                             step++;
-                        bitmaps.Insert(step, bd);
+                        bitmaps.Insert(step, bd);                        
                     }
                 }
             #endregion
@@ -990,7 +1131,8 @@ namespace entity.Main
                     foreach (bitmapData bd in bds)
                     {
                         int step = 0;
-                        while (step < bitmaps.Count && bd.renderDepth > bitmaps[step].renderDepth)
+                        //  renderDepth >= ( as opposed to just > ) so text takes upper priority
+                        while (step < bitmaps.Count && bd.renderDepth >= bitmaps[step].renderDepth)
                             step++;
                         bitmaps.Insert(step, bd);
                     }
@@ -1000,7 +1142,7 @@ namespace entity.Main
 
             // create a bitmap to hold the combined image
             Bitmap finalImage = new Bitmap(pictureBox1.Width, pictureBox1.Height); // (1024, 512) (602, 480) ???
-
+            
             // get a graphics object from the image so we can draw on it
             using (Graphics g = Graphics.FromImage(finalImage))
             {
@@ -1110,12 +1252,12 @@ namespace entity.Main
                     if (lbTBTextBlocks.SelectedIndex >= 0)
                     {
                         textBlockData td = (textBlockData)lbTBTextBlocks.SelectedItem;
-                        int origLeft = finalImage.Width / 2 + td.left;
+                        int origLeft = finalImage.Width / 2 + td.left - 1;
                         int left = origLeft > 0 ? origLeft : 1;
-                        int origTop = finalImage.Height / 2 - td.top;
+                        int origTop = finalImage.Height / 2 - td.top - 1;
                         int top = origTop > 0 ? origTop : 1;
-                        int width = finalImage.Width / 2 + td.right - (left - origLeft);
-                        int height = finalImage.Height / 2 - td.bottom - (top - origTop);
+                        int width = finalImage.Width / 2 + td.right - (left) + 2;
+                        int height = finalImage.Height / 2 - td.bottom - (top - origTop) + 2;
                         g.DrawRectangle(
                             new Pen(Color.Red, 2.0f),
                             new Rectangle(
@@ -1134,8 +1276,8 @@ namespace entity.Main
             // Perform garbage collection or memory usage can quickly raise to > 1Gb until collection is performed
             GC.Collect();
         }
-       
-        private void loadMainMenuData(string mainmenuFileName)
+
+        private bool loadMainMenuData(string mainmenuFileName)
         {
             this.Cursor = Cursors.WaitCursor;
             if (map != null)
@@ -1146,8 +1288,9 @@ namespace entity.Main
             map = Map.LoadFromFile(mainmenuFileName);
             if (map == null)
             {
-                MessageBox.Show("Load failed!\n" + mainmenuFileName);
-                return;
+                this.Cursor = Cursors.Arrow;
+                MessageBox.Show("Load failed! Map not found or inaccessible.\n" + mainmenuFileName);
+                return false;
             }
 
             cbBitmapIdent.DataSource = null;
@@ -1166,13 +1309,48 @@ namespace entity.Main
                 }
             }
 
-            // Get the tag index for [wgzt] ui\\main_menu
-            int tagIndex = map.Functions.ForMeta.FindByNameAndTagType("wgtz", "ui\\main_menu");
+            Meta meta;
+            
+            // Get the tag index for [matg] globals\\globals
+            int matgIndex = map.Functions.ForMeta.FindByNameAndTagType("matg", "globals\\globals");
+            meta = Map.GetMetaFromTagIndex(matgIndex, map, false, true);
+            br = new BinaryReader(meta.MS);
+
+            br.BaseStream.Position = 272;
+            int interfaceItemCount = br.ReadInt32();
+            int interfaceItemOffset = br.ReadInt32() - map.SecondaryMagic - meta.offset;
+
+            br.BaseStream.Position = interfaceItemOffset + 128;
+            // Mainmenu Menus (Exists in Mainmenu.map)
+            char[] wgtzMMTag = br.ReadChars(4);
+            int wgtzMMIdent = br.ReadInt32();
+            // Single Player Menus (Exists in Shared / SPShared.map)
+            char[] wgtzSPTag = br.ReadChars(4);
+            int wgtzSPIdent = br.ReadInt32();
+            // Multiplayer Menus (Exists in Shared / SPShared.map)
+            char[] wgtzMPTag = br.ReadChars(4);
+            int wgtzMPIdent = br.ReadInt32();
+
+            int tagIndex = -1;
+            // Get the tag index for [wgtz] ui\\main_menu
+            if (wgtzMMIdent != -1)
+                tagIndex = (int)map.MetaInfo.identHT[wgtzMMIdent];
+            else if (wgtzSPIdent != -1)
+                tagIndex = (int)map.MetaInfo.identHT[wgtzSPIdent];
+            else if (wgtzMPIdent != -1)
+                tagIndex = (int)map.MetaInfo.identHT[wgtzMPIdent];
+            //int tagIndex = map.Functions.ForMeta.FindByNameAndTagType("wgtz", "ui\\main_menu");
             if (tagIndex == -1)
-                return;
+            {
+                map.CloseMap();
+                map = null;
+                this.Cursor = Cursors.Arrow;
+                MessageBox.Show("Load failed! Not a MAINMENU.MAP / SHARED.MAP / SPSHARED.MAP file.\n" + mainmenuFileName);
+                return false;
+            }
 
             // [wgzt] ui\\main_menu meta
-            Meta meta = Map.GetMetaFromTagIndex(tagIndex, map, false, true);
+            meta = Map.GetMetaFromTagIndex(tagIndex, map, false, true);
             br = new BinaryReader(meta.MS);
 
             #region Skins List Loading Section
@@ -1184,6 +1362,20 @@ namespace entity.Main
             int tagNum = (int)map.MetaInfo.identHT[wiglIdent];
             Meta metaSG = Map.GetMetaFromTagIndex(tagNum, map, false, true);
             BinaryReader brSG = new BinaryReader(metaSG.MS);
+
+            // Get the default header font number
+            brSG.BaseStream.Position = 352;
+            defaultHeaderFont = brSG.ReadInt16();
+            
+            // Get the default position of the header text
+            brSG.BaseStream.Position = 376;
+            short dhTop = brSG.ReadInt16();
+            short dhLeft = brSG.ReadInt16();
+            short dhBottom = brSG.ReadInt16();
+            short dhRight = brSG.ReadInt16();
+            defaultHeaderPos = new Rectangle(dhLeft, dhTop, dhRight-dhLeft, dhBottom-dhTop);
+
+            // Get the skin data
             brSG.BaseStream.Position = 312;
             int listItemCount = brSG.ReadInt32();
             int listItemOffset = brSG.ReadInt32() - map.SecondaryMagic - metaSG.offset;
@@ -1266,6 +1458,7 @@ namespace entity.Main
             //br.Close();        
 
             this.Cursor = Cursors.Arrow;
+            return true;
         }
 
         private void showListBoxData()
