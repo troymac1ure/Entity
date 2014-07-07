@@ -409,14 +409,14 @@
             // 
             this.tsExternalReferenceAdd.Name = "tsExternalReferenceAdd";
             this.tsExternalReferenceAdd.Size = new System.Drawing.Size(223, 22);
-            this.tsExternalReferenceAdd.Text = "Add to external references";
+            this.tsExternalReferenceAdd.Text = "Add to external references list";
             this.tsExternalReferenceAdd.Click += new System.EventHandler(this.tsExternalReferenceAdd_Click);
             // 
             // tsExternalReferencePoint
             // 
             this.tsExternalReferencePoint.Name = "tsExternalReferencePoint";
             this.tsExternalReferencePoint.Size = new System.Drawing.Size(223, 22);
-            this.tsExternalReferencePoint.Text = "Reference external reflexive";
+            this.tsExternalReferencePoint.Text = "Reference external reflexive from list";
             this.tsExternalReferencePoint.Click += new System.EventHandler(this.tsExternalReferencePoint_Click);
             // 
             // MetaEditorControlPage

@@ -329,6 +329,7 @@ namespace entity.MapForms
             this.extractPRTMOBJToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBitmapDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.showAnimatedBitmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.treeviewcontext.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -861,28 +862,29 @@ namespace entity.MapForms
             this.saveBitmapToolStripMenuItem,
             this.injectBitmapToolStripMenuItem,
             this.convertToBumpMapToolStripMenuItem,
-            this.bitmapEditorToolStripMenuItem});
+            this.bitmapEditorToolStripMenuItem,
+            this.showAnimatedBitmapsToolStripMenuItem});
             this.BitmapContextStrip.Name = "contextMenuStrip1";
-            this.BitmapContextStrip.Size = new System.Drawing.Size(189, 92);
+            this.BitmapContextStrip.Size = new System.Drawing.Size(200, 136);
             // 
             // saveBitmapToolStripMenuItem
             // 
             this.saveBitmapToolStripMenuItem.Name = "saveBitmapToolStripMenuItem";
-            this.saveBitmapToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.saveBitmapToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.saveBitmapToolStripMenuItem.Text = "Save Bitmap";
             this.saveBitmapToolStripMenuItem.Click += new System.EventHandler(this.saveBitmapToolStripMenuItem_Click);
             // 
             // injectBitmapToolStripMenuItem
             // 
             this.injectBitmapToolStripMenuItem.Name = "injectBitmapToolStripMenuItem";
-            this.injectBitmapToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.injectBitmapToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.injectBitmapToolStripMenuItem.Text = "Inject Bitmap";
             this.injectBitmapToolStripMenuItem.Click += new System.EventHandler(this.injectBitmapToolStripMenuItem_Click);
             // 
             // convertToBumpMapToolStripMenuItem
             // 
             this.convertToBumpMapToolStripMenuItem.Name = "convertToBumpMapToolStripMenuItem";
-            this.convertToBumpMapToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.convertToBumpMapToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.convertToBumpMapToolStripMenuItem.Text = "Convert To BumpMap";
             this.convertToBumpMapToolStripMenuItem.Click += new System.EventHandler(this.convertToBumpMapToolStripMenuItem_Click);
             // 
@@ -890,7 +892,7 @@ namespace entity.MapForms
             // 
             this.bitmapEditorToolStripMenuItem.Name = "bitmapEditorToolStripMenuItem";
             this.bitmapEditorToolStripMenuItem.ShortcutKeyDisplayString = "F9";
-            this.bitmapEditorToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.bitmapEditorToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.bitmapEditorToolStripMenuItem.Text = "Bitmap Editor";
             this.bitmapEditorToolStripMenuItem.Click += new System.EventHandler(this.bitmapEditorToolStripMenuItem_Click);
             // 
@@ -1815,6 +1817,16 @@ namespace entity.MapForms
             this.timer1.Interval = 80;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // showAnimatedBitmapsToolStripMenuItem
+            // 
+            this.showAnimatedBitmapsToolStripMenuItem.Checked = true;
+            this.showAnimatedBitmapsToolStripMenuItem.CheckOnClick = true;
+            this.showAnimatedBitmapsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showAnimatedBitmapsToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.showAnimatedBitmapsToolStripMenuItem.Name = "showAnimatedBitmapsToolStripMenuItem";
+            this.showAnimatedBitmapsToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.showAnimatedBitmapsToolStripMenuItem.Text = "Show Animated Bitmaps";
+            // 
             // MapForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -1878,6 +1890,7 @@ namespace entity.MapForms
         private Timer timer1;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem StringEditorToolStripMenuItem;
+        private ToolStripMenuItem showAnimatedBitmapsToolStripMenuItem;
     }
 }
 

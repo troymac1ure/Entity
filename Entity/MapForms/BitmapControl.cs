@@ -41,11 +41,6 @@ namespace entity.MapForms
         public ParsedBitmap pm;
 
         /// <summary>
-        /// The bitm ptr.
-        /// </summary>
-        private IntPtr bitmPtr = IntPtr.Zero; // Data pointer for the "editor" bitmap
-
-        /// <summary>
         /// The currently selected bitmap.
         /// </summary>
         private int currBitm;
@@ -128,11 +123,6 @@ namespace entity.MapForms
         /// <remarks></remarks>
         public void DisplayBitmap(int bitmap, int chunk, int mipmap)
         {
-            if (bitmPtr != IntPtr.Zero)
-            {
-                Marshal.FreeHGlobal(bitmPtr);
-            }
-
             pictureBox1.Image = pm.FindChunkAndDecode(
                 bitmap, chunk, mipmap, ref map.SelectedMeta, map, chunk, 0);
 
@@ -206,7 +196,10 @@ namespace entity.MapForms
             }
 
             trackBar1.Value = temp;
-            DisplayBitmap(currBitm, currChunk, currMipMap);
+            pictureBox1.Width = (pictureBox1.Image.Width * trackBar1.Value) / 2;
+            pictureBox1.Height = (pictureBox1.Image.Height * trackBar1.Value) / 2;
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            //DisplayBitmap(currBitm, currChunk, currMipMap);
         }
 
         /// <summary>
@@ -250,21 +243,15 @@ namespace entity.MapForms
 
             DisplayBitmap(currBitm, currChunk, currMipMap);
 
-            // Wow. That's alot of parents. o SHOULD be type MapForm
-            // object o = this.Parent.Parent.Parent.Parent.Parent.Parent;
             object o = ((Form)this.TopLevelControl).ActiveMdiChild;
             if (o is MapForm)
             {
                 MapForm mf = (MapForm)o;
                 Meta meta = map.SelectedMeta;
                 ParsedBitmap pm = new ParsedBitmap(ref meta, map);
-                //if (mf.bitmMainPtr != IntPtr.Zero)
-                //{
-                //    Marshal.FreeHGlobal(mf.bitmMainPtr);
-                //}
 
                 Bitmap b = pm.FindChunkAndDecode(currBitm, currChunk, currMipMap, ref meta, map, 0, 0);
-                mf.pictureBox = (Bitmap)pictureBox1.Image;
+                mf.pictureBox = (Bitmap)pictureBox1.Image.Clone();
                 mf.statusBarText = (Math.Max(pm.Properties[currBitm].width >> currChunk >> currMipMap,1)).ToString().PadLeft(4) + " X " +
                                    (Math.Max(pm.Properties[currBitm].height >> currChunk >> currMipMap,1)).ToString().PadRight(4) + "X " +
                                    (Math.Max(pm.Properties[currBitm].depth >> currChunk >> currMipMap,1)).ToString().PadRight(4) + " " +

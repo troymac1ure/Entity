@@ -346,889 +346,1011 @@ namespace HaloMap.Render
             //map.CloseMap();
             int bipdmodeltag = map.Functions.FindModelByBaseClass(tempbipdtag);
 
-            // Find objective models
-            //map.OpenMap(MapTypes.Internal);
-            map.BR.BaseStream.Position =
-                map.MetaInfo.Offset[
-                    map.Functions.ForMeta.FindByNameAndTagType("mulg", "multiplayer\\multiplayer_globals")] + 12;
-            tempr = map.BR.ReadInt32();
             int ctfmodeltag = -1;
             int ballmodeltag = -1;
             int juggernautdmodeltag = -1;
             int assultmodeltag = -1;
-            if (tempr != 0)
+
+            #region  //// Find objective models ////
+
+            try
             {
-                tempr -= map.SecondaryMagic;
-                map.BR.BaseStream.Position = tempr + 4;
-                int tempCtftag = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                map.BR.BaseStream.Position = tempr + 12;
-                int tempBalltag = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-
-                map.BR.BaseStream.Position = tempr + 36;
-                int tempHillShader = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-
-                // I believe the Hill Shader above is not used, but just in case. Otherwise, load the usual one below
-                if (tempHillShader == -1)
+                //map.OpenMap(MapTypes.Internal);
+                map.BR.BaseStream.Position =
+                    map.MetaInfo.Offset[
+                        map.Functions.ForMeta.FindByNameAndTagType("mulg", "multiplayer\\multiplayer_globals")] + 12;
+                tempr = map.BR.ReadInt32();
+                if (tempr != 0)
                 {
-                    map.BR.BaseStream.Position = tempr + 1332;
-                    int tempr2 = map.BR.ReadInt32();
-                    if (tempr2 != 0)
+                    tempr -= map.SecondaryMagic;
+                    map.BR.BaseStream.Position = tempr + 4;
+                    int tempCtftag = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    map.BR.BaseStream.Position = tempr + 12;
+                    int tempBalltag = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+
+                    map.BR.BaseStream.Position = tempr + 36;
+                    int tempHillShader = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+
+                    // I believe the Hill Shader above is not used, but just in case. Otherwise, load the usual one below
+                    if (tempHillShader == -1)
                     {
-                        tempr2 -= map.SecondaryMagic;
-                        map.BR.BaseStream.Position = tempr2 + 196;
-                        tempHillShader = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                        map.BR.BaseStream.Position = tempr + 1332;
+                        int tempr2 = map.BR.ReadInt32();
+                        if (tempr2 != 0)
+                        {
+                            tempr2 -= map.SecondaryMagic;
+                            map.BR.BaseStream.Position = tempr2 + 196;
+                            tempHillShader = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                        }
                     }
+
+                    map.BR.BaseStream.Position = tempr + 52;
+                    int tempJuggernauttag = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    map.BR.BaseStream.Position = tempr + 60;
+                    int tempAssaulttag = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    //map.CloseMap();
+
+                    ctfmodeltag = map.Functions.FindModelByBaseClass(tempCtftag);
+                    ballmodeltag = map.Functions.FindModelByBaseClass(tempBalltag);
+
+                    // *** This is not right. It's a shader, not a model. But I don't know how to display a shader...
+                    hillshadertag = map.Functions.ForMeta.FindMetaByID(tempHillShader);
+
+                    juggernautdmodeltag = map.Functions.FindModelByBaseClass(tempJuggernauttag);
+                    assultmodeltag = map.Functions.FindModelByBaseClass(tempAssaulttag);
                 }
-
-                map.BR.BaseStream.Position = tempr + 52;
-                int tempJuggernauttag = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                map.BR.BaseStream.Position = tempr + 60;
-                int tempAssaulttag = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                //map.CloseMap();
-
-                ctfmodeltag = map.Functions.FindModelByBaseClass(tempCtftag);
-                ballmodeltag = map.Functions.FindModelByBaseClass(tempBalltag);
-
-                // *** This is not right. It's a shader, not a model. But I don't know how to display a shader...
-                hillshadertag = map.Functions.ForMeta.FindMetaByID(tempHillShader);
-
-                juggernautdmodeltag = map.Functions.FindModelByBaseClass(tempJuggernauttag);
-                assultmodeltag = map.Functions.FindModelByBaseClass(tempAssaulttag);
             }
+            catch (Exception e)
+            {
+               System.Windows.Forms.MessageBox.Show("Error loading an objective model (CTF/Juggernaut/Assault/Bomb)\n" + e.Message);
+            }
+            
+            #endregion
 
             #region //// Player Spawns ////
 
-            //map.OpenMap(MapTypes.Internal);
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 256;
-            int tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < tempc; x++)
+            try
             {
-                map.BR.BaseStream.Position = tempr + (52 * x);
+                //map.OpenMap(MapTypes.Internal);
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 256;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < tempc; x++)
+                {
+                    map.BR.BaseStream.Position = tempr + (52 * x);
 
-                PlayerSpawn ps = new PlayerSpawn();
-                ps.offset = tempr + (52 * x);
-                ps.X = map.BR.ReadSingle();
-                ps.Y = map.BR.ReadSingle();
-                ps.Z = map.BR.ReadSingle();
-                ps.RotationDirection = map.BR.ReadSingle();
-                ps.ModelTagNumber = bipdmodeltag;
-                ps.ModelName = map.FileNames.Name[ps.ModelTagNumber];
+                    PlayerSpawn ps = new PlayerSpawn();
+                    ps.offset = tempr + (52 * x);
+                    ps.X = map.BR.ReadSingle();
+                    ps.Y = map.BR.ReadSingle();
+                    ps.Z = map.BR.ReadSingle();
+                    ps.RotationDirection = map.BR.ReadSingle();
+                    ps.ModelTagNumber = bipdmodeltag;
+                    ps.ModelName = map.FileNames.Name[ps.ModelTagNumber];
 
-                Spawn.Add(ps);
+                    Spawn.Add(ps);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error loading player spawns", e);
             }
 
             #endregion
 
             #region //// death zones ////
 
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 264;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < tempc; x++)
+            try
             {
-                DeathZone ps = new DeathZone();
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 264;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < tempc; x++)
+                {
+                    DeathZone ps = new DeathZone();
 
-                // Load the deathzone name
-                map.BR.BaseStream.Position = tempr + (68 * x);
-                ps.Name = map.Strings.Name[map.BR.ReadInt16()];
+                    // Load the deathzone name
+                    map.BR.BaseStream.Position = tempr + (68 * x);
+                    ps.Name = map.Strings.Name[map.BR.ReadInt16()];
 
-                // We set the offset to 36 b/c we don't care about saving the name... right now anyways.
-                ps.offset = tempr + (68 * x) + 36;
+                    // We set the offset to 36 b/c we don't care about saving the name... right now anyways.
+                    ps.offset = tempr + (68 * x) + 36;
 
-                // Load the deathzone coordinates
-                map.BR.BaseStream.Position = tempr + (68 * x) + 36;
-                ps.X = map.BR.ReadSingle();
-                ps.Y = map.BR.ReadSingle();
-                ps.Z = map.BR.ReadSingle();
-                
-                // Use ABS() to make sure our sizes are always positive
-                ps.width = Math.Abs(map.BR.ReadSingle());
-                ps.height = Math.Abs(map.BR.ReadSingle());
-                ps.length = Math.Abs(map.BR.ReadSingle());
+                    // Load the deathzone coordinates
+                    map.BR.BaseStream.Position = tempr + (68 * x) + 36;
+                    ps.X = map.BR.ReadSingle();
+                    ps.Y = map.BR.ReadSingle();
+                    ps.Z = map.BR.ReadSingle();
 
-                // Deathzones are saved with a centre point and Width, Length, Height
-                ps.X += ps.width / 2;
-                ps.Y += ps.height / 2;
-                ps.Z += ps.length / 2;
+                    // Use ABS() to make sure our sizes are always positive
+                    ps.width = Math.Abs(map.BR.ReadSingle());
+                    ps.height = Math.Abs(map.BR.ReadSingle());
+                    ps.length = Math.Abs(map.BR.ReadSingle());
 
-                Spawn.Add(ps);
+                    // Deathzones are saved with a centre point and Width, Length, Height
+                    ps.X += ps.width / 2;
+                    ps.Y += ps.height / 2;
+                    ps.Z += ps.length / 2;
+
+                    Spawn.Add(ps);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error loading death zones", e);
             }
 
             #endregion
 
             #region //// lights ////
-
-            //// palette ////
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 240;
-            int[] temppalette = new int[map.BR.ReadInt32()];
-            int[] temppalette2 = new int[temppalette.Length];
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < temppalette.Length; x++)
+            
+            try
             {
-                map.BR.BaseStream.Position = tempr + (x * 40) + 4;
-                int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                temppalette2[x] = tempbase;
-                temppalette[x] = tempbase;
+                //// palette ////
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 240;
+                int[] temppalette = new int[map.BR.ReadInt32()];
+                int[] temppalette2 = new int[temppalette.Length];
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < temppalette.Length; x++)
+                {
+                    map.BR.BaseStream.Position = tempr + (x * 40) + 4;
+                    int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    temppalette2[x] = tempbase;
+                    temppalette[x] = tempbase;
+                }
+
+                //// placement ////
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 232;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < tempc; x++)
+                {
+                    map.BR.BaseStream.Position = tempr + (108 * x);
+                    short tempshort = map.BR.ReadInt16();
+
+                    if (tempshort == -1)
+                    {
+                        continue;
+                    }
+
+                    map.BR.BaseStream.Position = tempr + (108 * x) + 8;
+                    LightSpawn vs = new LightSpawn();
+                    vs.offset = tempr + (108 * x) + 8;
+                    vs.X = map.BR.ReadSingle();
+                    vs.Y = map.BR.ReadSingle();
+                    vs.Z = map.BR.ReadSingle();
+                    vs.Roll = map.BR.ReadSingle();
+                    vs.Pitch = map.BR.ReadSingle();
+                    vs.Yaw = map.BR.ReadSingle();
+                    vs.Scale = map.BR.ReadSingle();
+
+                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
+                    vs.ModelTagNumber = temppalette[tempshort];
+                    if (vs.ModelTagNumber == -1)
+                    {
+                        continue;
+                    }
+
+                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                    Spawn.Add(vs);
+                }
             }
-
-            //// placement ////
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 232;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < tempc; x++)
+            catch (Exception e)
             {
-                map.BR.BaseStream.Position = tempr + (108 * x);
-                short tempshort = map.BR.ReadInt16();
-
-                if (tempshort == -1)
-                {
-                    continue;
-                }
-
-                map.BR.BaseStream.Position = tempr + (108 * x) + 8;
-                LightSpawn vs = new LightSpawn();
-                vs.offset = tempr + (108 * x) + 8;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-                vs.Roll = map.BR.ReadSingle();
-                vs.Pitch = map.BR.ReadSingle();
-                vs.Yaw = map.BR.ReadSingle();
-                vs.Scale = map.BR.ReadSingle();
-
-                vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                vs.ModelTagNumber = temppalette[tempshort];
-                if (vs.ModelTagNumber == -1)
-                {
-                    continue;
-                }
-
-                vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                Spawn.Add(vs);
+                throw new Exception("Error loading Lights", e);
             }
 
             #endregion
 
             #region //// sounds ////
 
-            //// Sound Scenery palette ////
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 224;
-
-            // temppalette variables declared in Lights section above
-            temppalette = new int[map.BR.ReadInt32()];
-            temppalette2 = new int[temppalette.Length];
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < temppalette.Length; x++)
+            try
             {
-                map.BR.BaseStream.Position = tempr + (x * 40) + 4;
-                int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                temppalette2[x] = tempbase;
-                temppalette[x] = tempbase;
+                //// Sound Scenery palette ////
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 224;
+
+                int[] temppalette = new int[map.BR.ReadInt32()];
+                int[] temppalette2 = new int[temppalette.Length];
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < temppalette.Length; x++)
+                {
+                    map.BR.BaseStream.Position = tempr + (x * 40) + 4;
+                    int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    temppalette2[x] = tempbase;
+                    temppalette[x] = tempbase;
+                }
+
+                //// placement ////
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 216;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < tempc; x++)
+                {
+                    map.BR.BaseStream.Position = tempr + (80 * x);
+                    short tempshort = map.BR.ReadInt16();
+
+                    if (tempshort == -1)
+                    {
+                        continue;
+                    }
+
+                    SoundSpawn vs = new SoundSpawn();
+
+                    map.BR.BaseStream.Position = tempr + (80 * x) + 8;
+                    vs.offset = tempr + (80 * x) + 8;
+                    vs.X = map.BR.ReadSingle();
+                    vs.Y = map.BR.ReadSingle();
+                    vs.Z = map.BR.ReadSingle();
+                    vs.Roll = map.BR.ReadSingle();
+                    vs.Pitch = map.BR.ReadSingle();
+                    vs.Yaw = map.BR.ReadSingle();
+                    vs.Scale = map.BR.ReadSingle();
+
+                    map.BR.BaseStream.Position = tempr + (80 * x) + 54;
+                    vs.VolumeType = map.BR.ReadInt16();
+                    vs.Height = map.BR.ReadSingle();
+                    vs.DistanceBoundsLower = map.BR.ReadSingle();
+                    vs.DistanceBoundsUpper = map.BR.ReadSingle();
+                    vs.ConeAngleLower = map.BR.ReadSingle();
+                    vs.ConeAngleUpper = map.BR.ReadSingle();
+                    vs.OuterConeGain = map.BR.ReadSingle();
+
+                    if (temppalette2[tempshort] == -1)
+                    {
+                        vs.TagPath = "Nulled Out";
+                    }
+                    else
+                    {
+                        vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
+                    }
+
+                    vs.ModelTagNumber = temppalette[tempshort];
+                    if (vs.ModelTagNumber == -1)
+                    {
+                        // { continue; }
+                        vs.ModelName = null;
+                    }
+                    else
+                    {
+                        vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                    }
+
+                    Spawn.Add(vs);
+                }
+
             }
-
-            //// placement ////
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 216;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < tempc; x++)
+            catch (Exception e)
             {
-                map.BR.BaseStream.Position = tempr + (80 * x);
-                short tempshort = map.BR.ReadInt16();
-
-                if (tempshort == -1)
-                {
-                    continue;
-                }
-
-                SoundSpawn vs = new SoundSpawn();
-
-                map.BR.BaseStream.Position = tempr + (80 * x) + 8;
-                vs.offset = tempr + (80 * x) + 8;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-                vs.Roll = map.BR.ReadSingle();
-                vs.Pitch = map.BR.ReadSingle();
-                vs.Yaw = map.BR.ReadSingle();
-                vs.Scale = map.BR.ReadSingle();
-
-                map.BR.BaseStream.Position = tempr + (80 * x) + 54;
-                vs.VolumeType = map.BR.ReadInt16();
-                vs.Height = map.BR.ReadSingle();
-                vs.DistanceBoundsLower = map.BR.ReadSingle();
-                vs.DistanceBoundsUpper = map.BR.ReadSingle();
-                vs.ConeAngleLower = map.BR.ReadSingle();
-                vs.ConeAngleUpper = map.BR.ReadSingle();
-                vs.OuterConeGain = map.BR.ReadSingle();
-
-                if (temppalette2[tempshort] == -1)
-                {
-                    vs.TagPath = "Nulled Out";
-                }
-                else
-                {
-                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                }
-
-                vs.ModelTagNumber = temppalette[tempshort];
-                if (vs.ModelTagNumber == -1)
-                {
-                    // { continue; }
-                    vs.ModelName = null;
-                }
-                else
-                {
-                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                }
-
-                Spawn.Add(vs);
+                throw new Exception("Error loading sounds", e);
             }
 
             #endregion
 
             #region //// objectives ////
 
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 280;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < tempc; x++)
+            try
             {
-                ObjectiveSpawn ps = new ObjectiveSpawn();
-                ps.offset = tempr + (32 * x);
-                map.BR.BaseStream.Position = tempr + (32 * x);
-                ps.X = map.BR.ReadSingle();
-                ps.Y = map.BR.ReadSingle();
-                ps.Z = map.BR.ReadSingle();
-                ps.RotationDirection = map.BR.ReadSingle();
-                ps.ObjectiveType = (ObjectiveSpawn.ObjectiveTypeEnum)map.BR.ReadInt16();
-                ps.Team = (ObjectiveSpawn.TeamType)map.BR.ReadInt16();
-                ps.number = map.BR.ReadInt16();
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 280;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < tempc; x++)
+                {
+                    ObjectiveSpawn ps = new ObjectiveSpawn();
+                    ps.offset = tempr + (32 * x);
+                    map.BR.BaseStream.Position = tempr + (32 * x);
+                    ps.X = map.BR.ReadSingle();
+                    ps.Y = map.BR.ReadSingle();
+                    ps.Z = map.BR.ReadSingle();
+                    ps.RotationDirection = map.BR.ReadSingle();
+                    ps.ObjectiveType = (ObjectiveSpawn.ObjectiveTypeEnum)map.BR.ReadInt16();
+                    ps.Team = (ObjectiveSpawn.TeamType)map.BR.ReadInt16();
+                    ps.number = map.BR.ReadInt16();
 
-                if (ps.ObjectiveType == ObjectiveSpawn.ObjectiveTypeEnum.OddballSpawn && ballmodeltag != -1)
-                {
-                    ps.ModelTagNumber = ballmodeltag;
-                }
-                else if (ps.ObjectiveType == ObjectiveSpawn.ObjectiveTypeEnum.CTFRespawn && ctfmodeltag != -1)
-                {
-                    ps.ModelTagNumber = ctfmodeltag;
-                }
-                else if (
-                    ps.ObjectiveType.ToString().StartsWith(
-                        ObjectiveSpawn.ObjectiveTypeEnum.KingOfTheHill_1.ToString().Substring(0, 13)) &&
-                    ctfmodeltag != -1)
-                {
-                    ps.ModelTagNumber = ctfmodeltag;
-                }
-                else if (ps.ObjectiveType == ObjectiveSpawn.ObjectiveTypeEnum.AssaultRespawn && assultmodeltag != -1)
-                {
-                    ps.ModelTagNumber = assultmodeltag;
-                }
-                else
-                {
-                    ps.ModelTagNumber = bipdmodeltag;
-                }
+                    if (ps.ObjectiveType == ObjectiveSpawn.ObjectiveTypeEnum.OddballSpawn && ballmodeltag != -1)
+                    {
+                        ps.ModelTagNumber = ballmodeltag;
+                    }
+                    else if (ps.ObjectiveType == ObjectiveSpawn.ObjectiveTypeEnum.CTFRespawn && ctfmodeltag != -1)
+                    {
+                        ps.ModelTagNumber = ctfmodeltag;
+                    }
+                    else if (
+                        ps.ObjectiveType.ToString().StartsWith(
+                            ObjectiveSpawn.ObjectiveTypeEnum.KingOfTheHill_1.ToString().Substring(0, 13)) &&
+                        ctfmodeltag != -1)
+                    {
+                        ps.ModelTagNumber = ctfmodeltag;
+                    }
+                    else if (ps.ObjectiveType == ObjectiveSpawn.ObjectiveTypeEnum.AssaultRespawn && assultmodeltag != -1)
+                    {
+                        ps.ModelTagNumber = assultmodeltag;
+                    }
+                    else
+                    {
+                        ps.ModelTagNumber = bipdmodeltag;
+                    }
 
-                ps.ModelName = map.FileNames.Name[ps.ModelTagNumber];
-                Spawn.Add(ps);
+                    ps.ModelName = map.FileNames.Name[ps.ModelTagNumber];
+                    Spawn.Add(ps);
+                }
             }
-
+            catch (Exception e)
+            {
+                throw new Exception("Error loading lights", e);
+            }
             #endregion
 
             #region //// vehicles ////
 
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 120;
-            temppalette = new int[map.BR.ReadInt32()];
-            temppalette2 = new int[temppalette.Length];
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < temppalette.Length; x++)
+            try
             {
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 120;
+                int[] temppalette = new int[map.BR.ReadInt32()];
+                int[] temppalette2 = new int[temppalette.Length];
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < temppalette.Length; x++)
+                {
+                    //map.OpenMap(MapTypes.Internal);
+                    map.BR.BaseStream.Position = tempr + (x * 40) + 4;
+                    int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    //map.CloseMap();
+                    temppalette2[x] = tempbase;
+                    temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                }
+
                 //map.OpenMap(MapTypes.Internal);
-                map.BR.BaseStream.Position = tempr + (x * 40) + 4;
-                int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                //map.CloseMap();
-                temppalette2[x] = tempbase;
-                temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 112;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+
+                for (int x = 0; x < tempc; x++)
+                {
+                    map.BR.BaseStream.Position = tempr + (84 * x);
+                    short tempshort = map.BR.ReadInt16();
+
+                    if (tempshort == -1)
+                    {
+                        continue;
+                    }
+
+                    map.BR.BaseStream.Position = tempr + (84 * x) + 8;
+                    VehicleSpawn vs = new VehicleSpawn();
+                    vs.offset = tempr + (84 * x) + 8;
+                    vs.X = map.BR.ReadSingle();
+                    vs.Y = map.BR.ReadSingle();
+                    vs.Z = map.BR.ReadSingle();
+                    vs.Roll = map.BR.ReadSingle();
+                    vs.Pitch = map.BR.ReadSingle();
+                    vs.Yaw = map.BR.ReadSingle();
+                    vs.Scale = map.BR.ReadSingle();
+
+                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
+                    vs.ModelTagNumber = temppalette[tempshort];
+                    if (vs.ModelTagNumber == -1)
+                    {
+                        continue;
+                    }
+
+                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                    Spawn.Add(vs);
+                }
             }
-
-            //map.OpenMap(MapTypes.Internal);
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 112;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-
-            for (int x = 0; x < tempc; x++)
+            catch (Exception e)
             {
-                map.BR.BaseStream.Position = tempr + (84 * x);
-                short tempshort = map.BR.ReadInt16();
-
-                if (tempshort == -1)
-                {
-                    continue;
-                }
-
-                map.BR.BaseStream.Position = tempr + (84 * x) + 8;
-                VehicleSpawn vs = new VehicleSpawn();
-                vs.offset = tempr + (84 * x) + 8;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-                vs.Roll = map.BR.ReadSingle();
-                vs.Pitch = map.BR.ReadSingle();
-                vs.Yaw = map.BR.ReadSingle();
-                vs.Scale = map.BR.ReadSingle();
-
-                vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                vs.ModelTagNumber = temppalette[tempshort];
-                if (vs.ModelTagNumber == -1)
-                {
-                    continue;
-                }
-
-                vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                Spawn.Add(vs);
+                throw new Exception("Error loading vehicles", e);
             }
 
             #endregion
 
             #region //// equipment ////
 
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 136;
-            temppalette = new int[map.BR.ReadInt32()];
-            temppalette2 = new int[temppalette.Length];
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < temppalette.Length; x++)
+            try
             {
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 136;
+                int[] temppalette = new int[map.BR.ReadInt32()];
+                int[] temppalette2 = new int[temppalette.Length];
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < temppalette.Length; x++)
+                {
+                    //map.OpenMap(MapTypes.Internal);
+                    map.BR.BaseStream.Position = tempr + (x * 40) + 4;
+                    int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    //map.CloseMap();
+                    temppalette2[x] = tempbase;
+                    temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                }
+
                 //map.OpenMap(MapTypes.Internal);
-                map.BR.BaseStream.Position = tempr + (x * 40) + 4;
-                int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                //map.CloseMap();
-                temppalette2[x] = tempbase;
-                temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 128;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+
+                for (int x = 0; x < tempc; x++)
+                {
+                    map.BR.BaseStream.Position = tempr + (56 * x);
+                    short tempshort = map.BR.ReadInt16();
+
+                    if (tempshort == -1)
+                    {
+                        continue;
+                    }
+
+                    map.BR.BaseStream.Position = tempr + (56 * x) + 8;
+                    EquipmentSpawn vs = new EquipmentSpawn();
+                    vs.offset = tempr + (56 * x) + 8;
+                    vs.X = map.BR.ReadSingle();
+                    vs.Y = map.BR.ReadSingle();
+                    vs.Z = map.BR.ReadSingle();
+
+                    // vs.RotationDirection = map.BR.ReadSingle();
+                    vs.Roll = map.BR.ReadSingle();
+                    vs.Pitch = map.BR.ReadSingle();
+                    vs.Yaw = map.BR.ReadSingle();
+                    vs.Scale = map.BR.ReadSingle();
+
+                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
+                    vs.ModelTagNumber = temppalette[tempshort];
+                    if (vs.ModelTagNumber == -1)
+                    {
+                        continue;
+                    }
+
+                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                    Spawn.Add(vs);
+                }
             }
-
-            //map.OpenMap(MapTypes.Internal);
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 128;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-
-            for (int x = 0; x < tempc; x++)
+            catch (Exception e)
             {
-                map.BR.BaseStream.Position = tempr + (56 * x);
-                short tempshort = map.BR.ReadInt16();
-
-                if (tempshort == -1)
-                {
-                    continue;
-                }
-
-                map.BR.BaseStream.Position = tempr + (56 * x) + 8;
-                EquipmentSpawn vs = new EquipmentSpawn();
-                vs.offset = tempr + (56 * x) + 8;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-
-                // vs.RotationDirection = map.BR.ReadSingle();
-                vs.Roll = map.BR.ReadSingle();
-                vs.Pitch = map.BR.ReadSingle();
-                vs.Yaw = map.BR.ReadSingle();
-                vs.Scale = map.BR.ReadSingle();
-
-                vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                vs.ModelTagNumber = temppalette[tempshort];
-                if (vs.ModelTagNumber == -1)
-                {
-                    continue;
-                }
-
-                vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                Spawn.Add(vs);
+                throw new Exception("Error loading equipment", e);
             }
-
+            
             #endregion
 
             #region //// bipeds ////
 
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 104;
-            temppalette = new int[map.BR.ReadInt32()];
-            temppalette2 = new int[temppalette.Length];
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < temppalette.Length; x++)
+            try
             {
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 104;
+                int[] temppalette = new int[map.BR.ReadInt32()];
+                int[] temppalette2 = new int[temppalette.Length];
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < temppalette.Length; x++)
+                {
+                    //map.OpenMap(MapTypes.Internal);
+                    map.BR.BaseStream.Position = tempr + (x * 40) + 4;
+                    int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    //map.CloseMap();
+                    temppalette2[x] = tempbase;
+                    temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                }
+
                 //map.OpenMap(MapTypes.Internal);
-                map.BR.BaseStream.Position = tempr + (x * 40) + 4;
-                int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                //map.CloseMap();
-                temppalette2[x] = tempbase;
-                temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 96;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+
+                for (int x = 0; x < tempc; x++)
+                {
+                    map.BR.BaseStream.Position = tempr + (84 * x);
+                    short tempshort = map.BR.ReadInt16();
+
+                    if (tempshort == -1)
+                    {
+                        continue;
+                    }
+
+                    map.BR.BaseStream.Position = tempr + (84 * x) + 8;
+                    BipedSpawn vs = new BipedSpawn();
+                    vs.offset = tempr + (84 * x) + 8;
+                    vs.X = map.BR.ReadSingle();
+                    vs.Y = map.BR.ReadSingle();
+                    vs.Z = map.BR.ReadSingle();
+                    vs.Roll = map.BR.ReadSingle();
+                    vs.Pitch = map.BR.ReadSingle();
+                    vs.Yaw = map.BR.ReadSingle();
+                    vs.Scale = map.BR.ReadSingle();
+
+                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
+                    vs.ModelTagNumber = temppalette[tempshort];
+                    if (vs.ModelTagNumber == -1)
+                    {
+                        continue;
+                    }
+
+                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                    Spawn.Add(vs);
+                }
             }
-
-            //map.OpenMap(MapTypes.Internal);
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 96;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-
-            for (int x = 0; x < tempc; x++)
+            catch (Exception e)
             {
-                map.BR.BaseStream.Position = tempr + (84 * x);
-                short tempshort = map.BR.ReadInt16();
-
-                if (tempshort == -1)
-                {
-                    continue;
-                }
-
-                map.BR.BaseStream.Position = tempr + (84 * x) + 8;
-                BipedSpawn vs = new BipedSpawn();
-                vs.offset = tempr + (84 * x) + 8;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-                vs.Roll = map.BR.ReadSingle();
-                vs.Pitch = map.BR.ReadSingle();
-                vs.Yaw = map.BR.ReadSingle();
-                vs.Scale = map.BR.ReadSingle();
-
-                vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                vs.ModelTagNumber = temppalette[tempshort];
-                if (vs.ModelTagNumber == -1)
-                {
-                    continue;
-                }
-
-                vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                Spawn.Add(vs);
+                throw new Exception("Error loading Bipeds", e);
             }
 
             #endregion
 
             #region //// control ////
 
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 192;
-            temppalette = new int[map.BR.ReadInt32()];
-            temppalette2 = new int[temppalette.Length];
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < temppalette.Length; x++)
+            try
             {
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 192;
+                int[] temppalette = new int[map.BR.ReadInt32()];
+                int[] temppalette2 = new int[temppalette.Length];
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < temppalette.Length; x++)
+                {
+                    //map.OpenMap(MapTypes.Internal);
+                    map.BR.BaseStream.Position = tempr + (x * 40) + 4;
+                    int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    //map.CloseMap();
+                    temppalette2[x] = tempbase;
+                    temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                }
+
                 //map.OpenMap(MapTypes.Internal);
-                map.BR.BaseStream.Position = tempr + (x * 40) + 4;
-                int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                //map.CloseMap();
-                temppalette2[x] = tempbase;
-                temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 184;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+
+                for (int x = 0; x < tempc; x++)
+                {
+                    map.BR.BaseStream.Position = tempr + (68 * x);
+                    short tempshort = map.BR.ReadInt16();
+
+                    if (tempshort == -1)
+                    {
+                        continue;
+                    }
+
+                    map.BR.BaseStream.Position = tempr + (68 * x) + 8;
+                    ControlSpawn vs = new ControlSpawn();
+                    vs.offset = tempr + (68 * x) + 8;
+                    vs.X = map.BR.ReadSingle();
+                    vs.Y = map.BR.ReadSingle();
+                    vs.Z = map.BR.ReadSingle();
+
+                    // vs.RotationDirection = map.BR.ReadSingle();
+                    vs.Roll = map.BR.ReadSingle();
+                    vs.Pitch = map.BR.ReadSingle();
+                    vs.Yaw = map.BR.ReadSingle();
+                    vs.Scale = map.BR.ReadSingle();
+
+                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
+                    vs.ModelTagNumber = temppalette[tempshort];
+                    if (vs.ModelTagNumber == -1)
+                    {
+                        continue;
+                    }
+
+                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                    Spawn.Add(vs);
+                }
             }
-
-            //map.OpenMap(MapTypes.Internal);
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 184;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-
-            for (int x = 0; x < tempc; x++)
+            catch (Exception e)
             {
-                map.BR.BaseStream.Position = tempr + (68 * x);
-                short tempshort = map.BR.ReadInt16();
-
-                if (tempshort == -1)
-                {
-                    continue;
-                }
-
-                map.BR.BaseStream.Position = tempr + (68 * x) + 8;
-                ControlSpawn vs = new ControlSpawn();
-                vs.offset = tempr + (68 * x) + 8;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-
-                // vs.RotationDirection = map.BR.ReadSingle();
-                vs.Roll = map.BR.ReadSingle();
-                vs.Pitch = map.BR.ReadSingle();
-                vs.Yaw = map.BR.ReadSingle();
-                vs.Scale = map.BR.ReadSingle();
-
-                vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                vs.ModelTagNumber = temppalette[tempshort];
-                if (vs.ModelTagNumber == -1)
-                {
-                    continue;
-                }
-
-                vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                Spawn.Add(vs);
+                throw new Exception("Error loading Control", e);
             }
 
             #endregion
 
             #region //// machines ////
 
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 176;
-            temppalette = new int[map.BR.ReadInt32()];
-            temppalette2 = new int[temppalette.Length];
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < temppalette.Length; x++)
+            try
             {
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 176;
+                int[] temppalette = new int[map.BR.ReadInt32()];
+                int[] temppalette2 = new int[temppalette.Length];
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < temppalette.Length; x++)
+                {
+                    //map.OpenMap(MapTypes.Internal);
+                    map.BR.BaseStream.Position = tempr + (x * 40) + 4;
+                    int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    //map.CloseMap();
+                    temppalette2[x] = tempbase;
+                    temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                }
+
                 //map.OpenMap(MapTypes.Internal);
-                map.BR.BaseStream.Position = tempr + (x * 40) + 4;
-                int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                //map.CloseMap();
-                temppalette2[x] = tempbase;
-                temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 168;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+
+                for (int x = 0; x < tempc; x++)
+                {
+                    map.BR.BaseStream.Position = tempr + (72 * x);
+                    short tempshort = map.BR.ReadInt16();
+
+                    if (tempshort == -1)
+                    {
+                        continue;
+                    }
+
+                    map.BR.BaseStream.Position = tempr + (72 * x) + 8;
+                    MachineSpawn vs = new MachineSpawn();
+                    vs.offset = tempr + (72 * x) + 8;
+                    vs.X = map.BR.ReadSingle();
+                    vs.Y = map.BR.ReadSingle();
+                    vs.Z = map.BR.ReadSingle();
+                    vs.Roll = map.BR.ReadSingle();
+                    vs.Pitch = map.BR.ReadSingle();
+                    vs.Yaw = map.BR.ReadSingle();
+                    vs.Scale = map.BR.ReadSingle();
+
+                    if (temppalette2[tempshort] == -1 || temppalette[tempshort] == -1)
+                    {
+                        continue;
+                    }
+
+                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
+                    vs.ModelTagNumber = temppalette[tempshort];
+                    if (vs.ModelTagNumber == -1)
+                    {
+                        continue;
+                    }
+
+                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                    Spawn.Add(vs);
+                }
             }
-
-            //map.OpenMap(MapTypes.Internal);
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 168;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-
-            for (int x = 0; x < tempc; x++)
+            catch (Exception e)
             {
-                map.BR.BaseStream.Position = tempr + (72 * x);
-                short tempshort = map.BR.ReadInt16();
-
-                if (tempshort == -1)
-                {
-                    continue;
-                }
-
-                map.BR.BaseStream.Position = tempr + (72 * x) + 8;
-                MachineSpawn vs = new MachineSpawn();
-                vs.offset = tempr + (72 * x) + 8;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-                vs.Roll = map.BR.ReadSingle();
-                vs.Pitch = map.BR.ReadSingle();
-                vs.Yaw = map.BR.ReadSingle();
-                vs.Scale = map.BR.ReadSingle();
-
-                if (temppalette2[tempshort] == -1 || temppalette[tempshort] == -1)
-                {
-                    continue;
-                }
-
-                vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                vs.ModelTagNumber = temppalette[tempshort];
-                if (vs.ModelTagNumber == -1)
-                {
-                    continue;
-                }
-
-                vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                Spawn.Add(vs);
+                throw new Exception("Error loading Machines", e);
             }
 
             #endregion
 
             #region //// scenery ////
 
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 88;
-            temppalette = new int[map.BR.ReadInt32()];
-            temppalette2 = new int[temppalette.Length];
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < temppalette.Length; x++)
+            try
             {
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 88;
+                int[] temppalette = new int[map.BR.ReadInt32()];
+                int[] temppalette2 = new int[temppalette.Length];
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < temppalette.Length; x++)
+                {
+                    //map.OpenMap(MapTypes.Internal);
+                    map.BR.BaseStream.Position = tempr + (x * 40) + 4;
+                    int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    //map.CloseMap();
+                    temppalette2[x] = tempbase;
+                    temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                }
+
                 //map.OpenMap(MapTypes.Internal);
-                map.BR.BaseStream.Position = tempr + (x * 40) + 4;
-                int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                //map.CloseMap();
-                temppalette2[x] = tempbase;
-                temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 80;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+
+                for (int x = 0; x < tempc; x++)
+                {
+                    map.BR.BaseStream.Position = tempr + (92 * x);
+                    short tempshort = map.BR.ReadInt16();
+
+                    if (tempshort == -1)
+                    {
+                        continue;
+                    }
+
+                    map.BR.BaseStream.Position = tempr + (92 * x) + 8;
+                    ScenerySpawn vs = new ScenerySpawn();
+                    vs.offset = tempr + (92 * x) + 8;
+                    vs.X = map.BR.ReadSingle();
+                    vs.Y = map.BR.ReadSingle();
+                    vs.Z = map.BR.ReadSingle();
+                    vs.Roll = map.BR.ReadSingle();
+                    vs.Pitch = map.BR.ReadSingle();
+                    vs.Yaw = map.BR.ReadSingle();
+                    vs.Scale = map.BR.ReadSingle();
+
+                    if (temppalette2[tempshort] == -1 || temppalette[tempshort] == -1)
+                    {
+                        continue;
+                    }
+
+                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
+                    vs.ModelTagNumber = temppalette[tempshort];
+                    if (vs.ModelTagNumber == -1)
+                    {
+                        continue;
+                    }
+
+                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                    Spawn.Add(vs);
+                }
             }
-
-            //map.OpenMap(MapTypes.Internal);
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 80;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-
-            for (int x = 0; x < tempc; x++)
+            catch (Exception e)
             {
-                map.BR.BaseStream.Position = tempr + (92 * x);
-                short tempshort = map.BR.ReadInt16();
-
-                if (tempshort == -1)
-                {
-                    continue;
-                }
-
-                map.BR.BaseStream.Position = tempr + (92 * x) + 8;
-                ScenerySpawn vs = new ScenerySpawn();
-                vs.offset = tempr + (92 * x) + 8;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-                vs.Roll = map.BR.ReadSingle();
-                vs.Pitch = map.BR.ReadSingle();
-                vs.Yaw = map.BR.ReadSingle();
-                vs.Scale = map.BR.ReadSingle();
-
-                if (temppalette2[tempshort] == -1 || temppalette[tempshort] == -1)
-                {
-                    continue;
-                }
-
-                vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                vs.ModelTagNumber = temppalette[tempshort];
-                if (vs.ModelTagNumber == -1)
-                {
-                    continue;
-                }
-
-                vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                Spawn.Add(vs);
+                throw new Exception("Error loading Scenery", e);
             }
 
             #endregion
 
             #region //// weapons ////
 
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 152;
-            temppalette = new int[map.BR.ReadInt32()];
-            temppalette2 = new int[temppalette.Length];
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < temppalette.Length; x++)
+            try
             {
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 152;
+                int[] temppalette = new int[map.BR.ReadInt32()];
+                int[] temppalette2 = new int[temppalette.Length];
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < temppalette.Length; x++)
+                {
+                    //map.OpenMap(MapTypes.Internal);
+                    map.BR.BaseStream.Position = tempr + (x * 40) + 4;
+                    int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    //map.CloseMap();
+                    temppalette2[x] = tempbase;
+                    temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                }
+
                 //map.OpenMap(MapTypes.Internal);
-                map.BR.BaseStream.Position = tempr + (x * 40) + 4;
-                int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                //map.CloseMap();
-                temppalette2[x] = tempbase;
-                temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 144;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+
+                for (int x = 0; x < tempc; x++)
+                {
+                    map.BR.BaseStream.Position = tempr + (84 * x);
+                    short tempshort = map.BR.ReadInt16();
+
+                    if (tempshort == -1)
+                    {
+                        continue;
+                    }
+
+                    map.BR.BaseStream.Position = tempr + (84 * x) + 8;
+                    WeaponSpawn vs = new WeaponSpawn();
+                    vs.offset = tempr + (84 * x) + 8;
+                    vs.X = map.BR.ReadSingle();
+                    vs.Y = map.BR.ReadSingle();
+                    vs.Z = map.BR.ReadSingle();
+                    vs.Roll = map.BR.ReadSingle();
+                    vs.Pitch = map.BR.ReadSingle();
+                    vs.Yaw = map.BR.ReadSingle();
+                    vs.Scale = map.BR.ReadSingle();
+
+                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
+                    vs.ModelTagNumber = temppalette[tempshort];
+                    if (vs.ModelTagNumber == -1)
+                    {
+                        continue;
+                    }
+
+                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                    Spawn.Add(vs);
+                }
             }
-
-            //map.OpenMap(MapTypes.Internal);
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 144;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-
-            for (int x = 0; x < tempc; x++)
+            catch (Exception e)
             {
-                map.BR.BaseStream.Position = tempr + (84 * x);
-                short tempshort = map.BR.ReadInt16();
-
-                if (tempshort == -1)
-                {
-                    continue;
-                }
-
-                map.BR.BaseStream.Position = tempr + (84 * x) + 8;
-                WeaponSpawn vs = new WeaponSpawn();
-                vs.offset = tempr + (84 * x) + 8;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-                vs.Roll = map.BR.ReadSingle();
-                vs.Pitch = map.BR.ReadSingle();
-                vs.Yaw = map.BR.ReadSingle();
-                vs.Scale = map.BR.ReadSingle();
-
-                vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                vs.ModelTagNumber = temppalette[tempshort];
-                if (vs.ModelTagNumber == -1)
-                {
-                    continue;
-                }
-
-                vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                Spawn.Add(vs);
+                throw new Exception("Error loading Weapons", e);
             }
 
             #endregion
 
             #region //// obstacles ////
 
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 816;
-            temppalette = new int[map.BR.ReadInt32()];
-            temppalette2 = new int[temppalette.Length];
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < temppalette.Length; x++)
+            try
             {
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 816;
+                int[] temppalette = new int[map.BR.ReadInt32()];
+                int[] temppalette2 = new int[temppalette.Length];
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < temppalette.Length; x++)
+                {
+                    //map.OpenMap(MapTypes.Internal);
+                    map.BR.BaseStream.Position = tempr + (x * 40) + 4;
+                    int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    //map.CloseMap();
+                    temppalette2[x] = tempbase;
+                    temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                }
+
                 //map.OpenMap(MapTypes.Internal);
-                map.BR.BaseStream.Position = tempr + (x * 40) + 4;
-                int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                //map.CloseMap();
-                temppalette2[x] = tempbase;
-                temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 808;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+
+                for (int x = 0; x < tempc; x++)
+                {
+                    map.BR.BaseStream.Position = tempr + (76 * x);
+                    short tempshort = map.BR.ReadInt16();
+
+                    if (tempshort == -1)
+                    {
+                        continue;
+                    }
+
+                    map.BR.BaseStream.Position = tempr + (76 * x) + 8;
+                    ObstacleSpawn vs = new ObstacleSpawn();
+                    vs.offset = tempr + (76 * x) + 8;
+                    vs.X = map.BR.ReadSingle();
+                    vs.Y = map.BR.ReadSingle();
+                    vs.Z = map.BR.ReadSingle();
+                    vs.Roll = map.BR.ReadSingle();
+                    vs.Pitch = map.BR.ReadSingle();
+                    vs.Yaw = map.BR.ReadSingle();
+                    vs.Scale = map.BR.ReadSingle();
+
+                    if (temppalette2[tempshort] == -1)
+                    {
+                        continue;
+                    }
+
+                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
+                    vs.ModelTagNumber = temppalette[tempshort];
+                    if (vs.ModelTagNumber == -1)
+                    {
+                        continue;
+                    }
+
+                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                    Spawn.Add(vs);
+                }
             }
-
-            //map.OpenMap(MapTypes.Internal);
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 808;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-
-            for (int x = 0; x < tempc; x++)
+            catch (Exception e)
             {
-                map.BR.BaseStream.Position = tempr + (76 * x);
-                short tempshort = map.BR.ReadInt16();
-
-                if (tempshort == -1)
-                {
-                    continue;
-                }
-
-                map.BR.BaseStream.Position = tempr + (76 * x) + 8;
-                ObstacleSpawn vs = new ObstacleSpawn();
-                vs.offset = tempr + (76 * x) + 8;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-                vs.Roll = map.BR.ReadSingle();
-                vs.Pitch = map.BR.ReadSingle();
-                vs.Yaw = map.BR.ReadSingle();
-                vs.Scale = map.BR.ReadSingle();
-
-                if (temppalette2[tempshort] == -1)
-                {
-                    continue;
-                }
-
-                vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                vs.ModelTagNumber = temppalette[tempshort];
-                if (vs.ModelTagNumber == -1)
-                {
-                    continue;
-                }
-
-                vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                Spawn.Add(vs);
+                throw new Exception("Error loading Obstacles", e);
             }
 
             #endregion
 
             #region //// collections ////
 
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 288;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-
-            for (int x = 0; x < tempc; x++)
+            try
             {
-                //map.OpenMap(MapTypes.Internal);
-                Collection vs = new Collection();
-                map.BR.BaseStream.Position = tempr + (144 * x) + 4;
-                vs.SpawnsInMode = (Collection.SpawnsInEnum)map.BR.ReadInt32();
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 288;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
 
-                // Why do they make the offset + 64? That just confuses stuff!!
-                map.BR.BaseStream.Position = tempr + (144 * x) + 64;
-                vs.offset = tempr + (144 * x) + 64;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-                vs.Roll = map.BR.ReadSingle();
-                vs.Pitch = map.BR.ReadSingle();
-                vs.Yaw = map.BR.ReadSingle();
-
-                // test
-                // if (vs.Pitch > 0) { vs.Pitch = -vs.Pitch; vs.isWeird = true; } else { vs.isWeird = false; }
-                map.BR.BaseStream.Position = tempr + (144 * x) + 88;
-
-                // ID Type
-                char[] c = map.BR.ReadChars(4);
-                vs.TagType = c[3].ToString() + c[2] + c[1] + c[0];
-
-                // Tag Path ID
-                int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                if (tempbase == -1)
+                for (int x = 0; x < tempc; x++)
                 {
-                    continue;
-                }
+                    //map.OpenMap(MapTypes.Internal);
+                    Collection vs = new Collection();
+                    map.BR.BaseStream.Position = tempr + (144 * x) + 4;
+                    vs.SpawnsInMode = (Collection.SpawnsInEnum)map.BR.ReadInt32();
 
-                //map.CloseMap();
-                vs.TagPath = map.FileNames.Name[tempbase];
-                vs.ModelTagNumber = map.Functions.FindModelByBaseClass(tempbase);
-                if (vs.ModelTagNumber == -1)
-                {
-                    continue;
-                }
+                    // Why do they make the offset + 64? That just confuses stuff!!
+                    map.BR.BaseStream.Position = tempr + (144 * x) + 64;
+                    vs.offset = tempr + (144 * x) + 64;
+                    vs.X = map.BR.ReadSingle();
+                    vs.Y = map.BR.ReadSingle();
+                    vs.Z = map.BR.ReadSingle();
+                    vs.Roll = map.BR.ReadSingle();
+                    vs.Pitch = map.BR.ReadSingle();
+                    vs.Yaw = map.BR.ReadSingle();
 
-                vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                Spawn.Add(vs);
+                    // test
+                    // if (vs.Pitch > 0) { vs.Pitch = -vs.Pitch; vs.isWeird = true; } else { vs.isWeird = false; }
+                    map.BR.BaseStream.Position = tempr + (144 * x) + 88;
+
+                    // ID Type
+                    char[] c = map.BR.ReadChars(4);
+                    vs.TagType = c[3].ToString() + c[2] + c[1] + c[0];
+
+                    // Tag Path ID
+                    int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    if (tempbase == -1)
+                    {
+                        continue;
+                    }
+
+                    //map.CloseMap();
+                    vs.TagPath = map.FileNames.Name[tempbase];
+                    vs.ModelTagNumber = map.Functions.FindModelByBaseClass(tempbase);
+                    if (vs.ModelTagNumber == -1)
+                    {
+                        continue;
+                    }
+
+                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                    Spawn.Add(vs);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error loading Collections", e);
             }
 
             #endregion
 
             #region //// cameras ////
 
-            //map.OpenMap(MapTypes.Internal);
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 488;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-
-            for (int x = 0; x < tempc; x++)
+            try
             {
                 //map.OpenMap(MapTypes.Internal);
-                CameraSpawn vs = new CameraSpawn();
-                map.BR.BaseStream.Position = tempr + (64 * x) + 36;
-                vs.offset = tempr + (64 * x) + 36;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-                vs.Roll = map.BR.ReadSingle();
-                vs.Pitch = map.BR.ReadSingle();
-                vs.Yaw = map.BR.ReadSingle();
-                vs.fov = map.BR.ReadSingle();
-                vs.ModelTagNumber = -1;
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 488;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
 
-                Spawn.Add(vs);
+                for (int x = 0; x < tempc; x++)
+                {
+                    //map.OpenMap(MapTypes.Internal);
+                    CameraSpawn vs = new CameraSpawn();
+                    map.BR.BaseStream.Position = tempr + (64 * x) + 36;
+                    vs.offset = tempr + (64 * x) + 36;
+                    vs.X = map.BR.ReadSingle();
+                    vs.Y = map.BR.ReadSingle();
+                    vs.Z = map.BR.ReadSingle();
+                    vs.Roll = map.BR.ReadSingle();
+                    vs.Pitch = map.BR.ReadSingle();
+                    vs.Yaw = map.BR.ReadSingle();
+                    vs.fov = map.BR.ReadSingle();
+                    vs.ModelTagNumber = -1;
+
+                    Spawn.Add(vs);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error loading Collections", e);
             }
 
             #endregion
 
             #region //// AI_Squads ////
 
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 376;
-            temppalette = new int[map.BR.ReadInt32()];
-            temppalette2 = new int[temppalette.Length];
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-            for (int x = 0; x < temppalette.Length; x++)
+            try
             {
-                map.BR.BaseStream.Position = tempr + (x * 8) + 4;
-                int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                temppalette2[x] = tempbase;
-                temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
-            }
-
-            // Reading ai squads reflexive
-            map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 352;
-            tempc = map.BR.ReadInt32();
-            tempr = map.BR.ReadInt32() - map.SecondaryMagic;
-
-            for (int x = 0; x < tempc; x++)
-            {
-                // Reads AI Squad palette chunk
-                map.BR.BaseStream.Position = tempr + (x * 116) + 54;
-                short charNum = map.BR.ReadInt16();
-
-                // Reading locations sub reflexive
-                map.BR.BaseStream.Position = tempr + 72;
-                int locc = map.BR.ReadInt32();
-                int locr = map.BR.ReadInt32() - map.SecondaryMagic;
-
-                AI_Squads vs = new AI_Squads();
-
-                // chunk size * x and starting position
-                map.BR.BaseStream.Position = locr + (100 * x);
-                vs.offset = tempr + (100 * x);
-                vs.ModelName = map.Strings.Name[(Int16)map.BR.ReadInt32()];
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-
-                // facing direction
-                map.BR.BaseStream.Position = locr + (100 * x) + 20;
-                vs.RotationDirection = map.BR.ReadSingle();
-
-                if (charNum != -1)
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 376;
+                int[] temppalette = new int[map.BR.ReadInt32()];
+                int[] temppalette2 = new int[temppalette.Length];
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+                for (int x = 0; x < temppalette.Length; x++)
                 {
-                    vs.TagPath = map.FileNames.Name[temppalette2[charNum]];
-                    vs.ModelTagNumber = temppalette[charNum];
-                    if (vs.ModelTagNumber == -1)
-                    {
-                        continue;
-                    }
-
-                    // vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                    Spawn.Add(vs);
+                    map.BR.BaseStream.Position = tempr + (x * 8) + 4;
+                    int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                    temppalette2[x] = tempbase;
+                    temppalette[x] = map.Functions.FindModelByBaseClass(tempbase);
                 }
+
+                // Reading ai squads reflexive
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 352;
+                int tempc = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+
+                for (int x = 0; x < tempc; x++)
+                {
+                    // Reads AI Squad palette chunk
+                    map.BR.BaseStream.Position = tempr + (x * 116) + 54;
+                    short charNum = map.BR.ReadInt16();
+
+                    // Reading locations sub reflexive
+                    map.BR.BaseStream.Position = tempr + 72;
+                    int locc = map.BR.ReadInt32();
+                    int locr = map.BR.ReadInt32() - map.SecondaryMagic;
+
+                    AI_Squads vs = new AI_Squads();
+
+                    // chunk size * x and starting position
+                    map.BR.BaseStream.Position = locr + (100 * x);
+                    vs.offset = tempr + (100 * x);
+                    vs.ModelName = map.Strings.Name[(Int16)map.BR.ReadInt32()];
+                    vs.X = map.BR.ReadSingle();
+                    vs.Y = map.BR.ReadSingle();
+                    vs.Z = map.BR.ReadSingle();
+
+                    // facing direction
+                    map.BR.BaseStream.Position = locr + (100 * x) + 20;
+                    vs.RotationDirection = map.BR.ReadSingle();
+
+                    if (charNum != -1)
+                    {
+                        vs.TagPath = map.FileNames.Name[temppalette2[charNum]];
+                        vs.ModelTagNumber = temppalette[charNum];
+                        if (vs.ModelTagNumber == -1)
+                        {
+                            continue;
+                        }
+
+                        // vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                        Spawn.Add(vs);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error loading AI Squads", e);
             }
 
             #endregion

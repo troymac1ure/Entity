@@ -170,7 +170,6 @@ namespace entity
                         case "file":                            
                             string fname;
                             string fmd5;
-                            string fsize;
 
                             // Must have filename
                             try

@@ -108,7 +108,7 @@ namespace Globals
                 the_Reg.SetValue(valueName, value);
                 the_Reg.Close();
             }
-            catch (Exception e)
+            catch
             {
                 return false;
             }

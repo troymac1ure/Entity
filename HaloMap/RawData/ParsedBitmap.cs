@@ -499,25 +499,27 @@ namespace HaloMap.RawData
             }
             #endregion
 
+            /*
+            // This creates a memory leaks from HGlobal
             IntPtr intPtr = Marshal.AllocHGlobal(bitmBytes.Length);
             RtlMoveMemory(intPtr, bitmBytes, bitmBytes.Length);
             Bitmap temp = new Bitmap(width, height, stride, PixelFormat.Format32bppArgb, intPtr);
-
-            // This almost works, but some (stretched) bitmaps have 'blackouts' (ex. map floors)
-            // Bitmap final = new Bitmap(temp);
-            /*
-            Bitmap final = new System.Drawing.Bitmap(temp.Width, temp.Height);
-            //get a graphics object from the image so we can draw on it
-            using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(final))
-            {
-                //set background color
-                //g.Clear(System.Drawing.Color.Empty);
-                g.DrawImage(temp, new System.Drawing.Rectangle(0, 0, temp.Width, temp.Height));
-            }
+            temp.Tag = intPtr; // This NEEDS to be released when disposed
             */
-            // ******************* This is a huge memory leak! *************************//
-            // Marshal.FreeHGlobal(ptr);
-            // ******************* This is a huge memory leak! *************************//
+
+            Bitmap temp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            Rectangle rect = new Rectangle( 0, 0, width, height);
+            BitmapData data = null;
+            try
+            {                
+                data = temp.LockBits(rect, ImageLockMode.WriteOnly, temp.PixelFormat);
+                System.Runtime.InteropServices.Marshal.Copy(bitmBytes, 0, data.Scan0, Math.Min(bitmBytes.Length, data.Width * data.Height * 4));
+            }
+            finally
+            {
+                if (data != null)
+                    temp.UnlockBits(data);
+            }            
             return temp;
         }
 
@@ -871,10 +873,14 @@ namespace HaloMap.RawData
                     width = Math.Max(width >> mipmap, 1);
                     height = Math.Max(height >> mipmap, 1);
                     depth = Math.Max(depth >> mipmap, 1);
-
+                    
                     int widthPad = 0;
-                    if (this.Properties[bitmap].width % 16 != 0 && width % 16 != 0)
-                        widthPad += 16 - (width % 16);
+
+                    // 2D AY8 bitmaps are 64 byte padded?
+                    int padding = (this.Properties[bitmap].formatname == BitmapFormat.BITM_FORMAT_AY8)
+                                ? 64 : 16;
+                    if (this.Properties[bitmap].width % padding != 0 && width % padding != 0)
+                        widthPad += padding - (width % padding);
 
                     Bitmap b;
                     try
@@ -1279,23 +1285,10 @@ namespace HaloMap.RawData
                     for (int e = 0; e < poolength; e++)
                     {
                         int r = e * 4;
-                        tempData[r + 0] = (byte)(((fart[e] & 0xF0) >> 4) * 255 / 15);
-                        tempData[r + 1] = (byte)(((fart[e] & 0xF0) >> 4) * 255 / 15);
-                        tempData[r + 2] = (byte)(((fart[e] & 0xF0) >> 4) * 255 / 15);
-                        tempData[r + 3] = (byte)((fart[e] & 0x0F) * 255 / 15);
-
-                        /*
-                        // I think this is the order, looking at rasterizer\distance_attenuation
-                        tempData[r + 0] = (byte)((fart[e] & 0x0F) * 255 / 15);
-                        tempData[r + 1] = (byte)((fart[e] & 0x0F) * 255 / 15);
-                        tempData[r + 2] = (byte)((fart[e] & 0x0F) * 255 / 15);
-                        tempData[r + 3] = (byte)(((fart[e] & 0xF0) >> 4) * 255 / 15);
-                        /*
-                        if (fart[e] == 0)
-                            tempData[r + 3] = 0;
-                        else
-                            tempData[r + 3] = 255;
-                        */
+                        tempData[r + 0] = (byte)(fart[e]);
+                        tempData[r + 1] = (byte)(fart[e]);
+                        tempData[r + 2] = (byte)(fart[e]);
+                        tempData[r + 3] = (byte)(fart[e] == 0 ? 0 : 255);
                     }
 
                     fart = tempData;

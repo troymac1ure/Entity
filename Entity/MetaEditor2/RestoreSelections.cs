@@ -150,7 +150,6 @@ namespace entity.MetaEditor2
         {
             System.Collections.Generic.List<TreeNode> tnc = new System.Collections.Generic.List<TreeNode>();
             //TreeNode[] tnc = new TreeNode[ifps.Length];
-            int count = 0;
             for (int x = 0; x < ifps.Length; x++)
             {
                 IFPIO.BaseObject ifpObj = (IFPIO.BaseObject)ifps[x];

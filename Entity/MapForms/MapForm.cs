@@ -373,6 +373,7 @@ namespace entity.MapForms
                     break;
                 case EditorModes.MetaEditor2:
                     c = MetaEditor2Panel;
+                    MetaEditor2Panel.Tag = "New";
                     break;
                 case EditorModes.PluginViewer:
                     c = LibraryPanel;
@@ -521,6 +522,7 @@ namespace entity.MapForms
                 // Raw.ParsedBitmap.BitmapInfo bmInfo = new Entity.Raw.ParsedBitmap.BitmapInfo(pm.Properties[0].formatname, pm.Properties[0].swizzle);
                 // b = DDS_Convert.DecodeDDS( DDS_Convert.EncodeDDS(b, ref bmInfo), bmInfo );
                 pictureBox1.Image = b;
+                pictureBox1.Tag = 0;
                 statusbar.Text = pm.Properties[0].width.ToString().PadLeft(4) + " X " +
                                  pm.Properties[0].height.ToString().PadRight(4) + " " +
                                  ("(" + pm.Properties[0].typename.ToString().Remove(0, 10) + ") ").PadRight(10) +
@@ -626,9 +628,10 @@ namespace entity.MapForms
                         }
                         // If we are not switching from a different editor mode (on MetaEditor2) and
                         // we already have the current tag loaded in the editor, then we can load a duplicate
-                        wME.addNewTab(map.SelectedMeta, getEditorMode() == EditorModes.MetaEditor2 &&
+                        wME.addNewTab(map.SelectedMeta, MetaEditor2Panel.Tag != null &&
                                                         wME.tabs.Tabs.Count > 0 &&
                                                         wME.tabs.SelectedTab.Text == ("[" + map.SelectedMeta.type + "] " + map.SelectedMeta.name.Substring(map.SelectedMeta.name.LastIndexOf('\\') + 1)));
+                        MetaEditor2Panel.Tag = null;
                         wME.Dock = DockStyle.Fill;
                     }
                     break;
@@ -1475,7 +1478,6 @@ namespace entity.MapForms
             for (int x = 0; x < references.SelectedIndices.Count; x++)
             {
                 int d = references.SelectedIndices[x];
-                int tempcount = 0;
 
                 // Tag contains the position value of the item in SelectedMeta.Items
                 int selectedIndex = (int)formFuncs.ListItems[d].Tag;
@@ -5338,18 +5340,86 @@ namespace entity.MapForms
                 timer1.Stop();
                 return;
             }
+            if (!showAnimatedBitmapsToolStripMenuItem.Checked)
+                return;
 
             ParsedBitmap pm = new ParsedBitmap(ref map.SelectedMeta, map);
-            if (pm.Properties[0].typename != ParsedBitmap.BitmapType.BITM_TYPE_3D)
+
+            // Show next frame of 3D images
+            if (pm.Properties[0].typename == ParsedBitmap.BitmapType.BITM_TYPE_3D)
+            #region 3D images
             {
-                timer1.Stop();
+                pictureBox1.Image.Dispose();
+                // For 3D images, bitmapCount = pm.Properties[0].depth + 1 because index 0 is an overview
+                if (bitmapCount > pm.Properties[0].depth)
+                    bitmapCount = 1;
+                Bitmap b = pm.FindChunkAndDecode(0, 0, 0, ref map.SelectedMeta, map, bitmapCount++, 0);
+                pictureBox1.Image = b;
                 return;
             }
-            Bitmap b = pm.FindChunkAndDecode(0, 0, 0, ref map.SelectedMeta, map, bitmapCount++, 0);
-            pictureBox1.Image = b;
-            if (bitmapCount > pm.Properties[0].depth)
-                bitmapCount = 1;
+            #endregion
+            // For Sequenced images, show next sprite
+            else
+            #region 2D Sequenced Images
+            {
+                int sprites = 1;
+                BinaryReader br = new BinaryReader(map.SelectedMeta.MS);
+                br.BaseStream.Seek(60, SeekOrigin.Begin);
+                int seqCount = br.ReadInt32();
+                int seqOffset = br.ReadInt32() - map.SelectedMeta.magic - map.SelectedMeta.offset;
+                if (seqCount > 0)
+                {
+                    // Allows the animated picture to cycle through different animations every 6 seconds
+                    int sequenceSelect = (DateTime.Now.Minute * 60 + DateTime.Now.Second) /    6     % seqCount;
+                    br.BaseStream.Seek(seqOffset + sequenceSelect * 60 + 32, SeekOrigin.Begin);
+                    int bitmIndex = br.ReadInt16(); // Always 0?
+                    int bitmCount = br.ReadInt16(); // Always 0?
+#if DEBUG
+                    if (bitmIndex + bitmCount > 0)
+                    {
+                        //MessageBox.Show("DEBUG ONLY: Found a Bitmap with Index or Count > 0");
+                    }
+#endif
+                    br.BaseStream.Seek(seqOffset + sequenceSelect * 60 + 52, SeekOrigin.Begin);
+                    int sprCount = br.ReadInt32();
+                    int sprOffset = br.ReadInt32() - map.SelectedMeta.magic - map.SelectedMeta.offset;
+                    if (sprCount != 0)
+                    {
+                        if (pictureBox1.Tag == null)
+                            pictureBox1.Tag = 0;
+                        int currentSprite = (int)pictureBox1.Tag;
+                        pictureBox1.Tag = currentSprite = (currentSprite + 1) % sprCount;
+                        // Each sprite record is 32 bytes in length, values start at offset 8
+                        br.BaseStream.Seek(sprOffset + currentSprite * 32 + 8, SeekOrigin.Begin);
+                        // The following are ratios between 0 - 1)
+                        float Left = br.ReadSingle();
+                        float Right = br.ReadSingle();
+                        float Top = br.ReadSingle();
+                        float Bottom = br.ReadSingle();
+                        Bitmap b = pm.FindChunkAndDecode(bitmIndex, 0, 0, ref map.SelectedMeta, map, 0, 0);
+                        if (pictureBox1.Image != null)
+                        {
+                            ((IDisposable)pictureBox1.Image).Dispose();
+                            pictureBox1.Image = null;
+                        }
+                        pictureBox1.Image = b.Clone( new RectangleF(
+                                    Left * b.Width,
+                                    Top * b.Height,
+                                    (Right - Left) * b.Width,
+                                    (Bottom - Top) * b.Height),
+                                    b.PixelFormat);
+                        if (b.Tag != null)
+                            Marshal.FreeHGlobal((IntPtr)b.Tag);
+                        
+                        b.Dispose();
+                        return;
+                    }
 
+                }
+            }
+            #endregion
+            // If it is neither, stop further image updates
+            //timer1.Stop();
         }
     }
 }

@@ -11,6 +11,21 @@
   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 <changelog>  
+  <fix version="2.1.21" section="Main">Fixed plugin updater to accept more generic FTP server return data</fix>
+  <fix version="2.1.21" section="Bitmap">Fixed bitmap bug: AY8 bitmaps pad to 64 bytes</fix>
+  <fix version="2.1.21" section="ME2">Rewrite of code to fix originally 0 count reflexives not showing and similar related bugs</fix>
+  <fix version="2.1.21" section="ME2">Rewrite of code to speed up showing unused reflexives and sort methods</fix>
+  <fix version="2.1.21" section="ME2">Fixed bug with BitMask32 overflow</fix>
+  <fix version="2.1.21" section="ME2">Fixed bug that would open two tabs when a external reflexive link was double-clicked</fix>
+  <fix version="2.1.21" section="ME2">Fixed bug that always opens new tab, even if tab already exists</fix>
+  <add version="2.1.21" section="ME2">Applied default Peek/Poke to "Value" (previously nothing was selected by default)</add>
+
+ *<fix version="2.1.20" section="Main">Fixed memory leak with bitmaps in general</fix>
+ *<fix version="2.1.20" section="Main">Fixed memory leak with 3D bitmap animations</fix>
+ *<fix version="2.1.20" section="Main">Fixed display of AY8 bitmaps</fix>
+ *<add version="2.1.20" section="Main">Added support for animated bitmaps</add>
+ *<add version="2.1.20" section="Main">Right-click menu option added to disable animated bitmaps</add>
+
  *<add version="2.1.15" section="main">Added right-click option to set active SCNR tag (after duplicating)</add> 
  *<fix version="2.1.15" section="main">Fixed: Floodfill swap changes incorrect values after sorting</fix> 
  *<add version="2.1.15" section="main">All panels can now be docked/undocked (References, ME1/2, Hex, Bitmap Viewer)</add> 

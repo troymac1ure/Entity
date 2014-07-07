@@ -37,11 +37,14 @@ namespace entity.MetaEditor2
         /// Memory stream from a debug box, used for peeking and mass poking
         /// </summary>
         MemoryStream msDebug;
-        Meta oldMeta = null;
         /// <summary>
         /// Keeps a list of any hidden reflexive nodes for quick show/hide of tree nodes
         /// </summary>
         TreeView tvHiddenNodes = new TreeView();
+        /// <summary>
+        /// The topmost "MAIN" reflexive pointer
+        /// </summary>
+        reflexiveData mainReflexive = null;
 
         /** Section for adding undo ability of external tag data
         private List<externalData> externalChanges = new List<externalData>();
@@ -87,29 +90,36 @@ namespace entity.MetaEditor2
             public int chunkSelected;
             public int inTagNumber;
             public TreeNode node;
+            public reflexiveData parent;
+            public reflexiveData[] children;
             public IFPIO.Reflexive reflexive;
             public ToolStripItem[] tsItems;
             #endregion
 
             #region Constructors and Destructors
-            public reflexiveData()
+            public reflexiveData(reflexiveData parentReflexive)
             {
-                node = null;
-                reflexive = null;
-                baseOffset = -1;
-                chunkCount = 0;
-                chunkSelected = -1;
-                inTagNumber = -1;
+                this.node = null;
+                this.reflexive = null;
+                this.baseOffset = -1;
+                this.chunkCount = 0;
+                this.chunkSelected = -1;
+                this.inTagNumber = -1;
+                this.parent = parentReflexive;
+                this.children = null;
             }
             #endregion
         }
-        List<reflexiveData> refData = new List<reflexiveData>();
         #endregion
 
         #region Constructors and Destructors
         public MetaEditorControlPage(Meta meta, MapForms.MapForm mapForm)
         {
             InitializeComponent();
+            
+            // Try to draw treeview nodes to "hide" "disabled" nodes; fail. Still leaves space where node is
+            //treeViewTagReflexives.DrawMode = TreeViewDrawMode.OwnerDrawAll;
+            //treeViewTagReflexives.DrawNode += new DrawTreeNodeEventHandler(myTreeView_DrawNode);
 
             this.MapForm = mapForm;
             this.map = mapForm.map;
@@ -119,10 +129,14 @@ namespace entity.MetaEditor2
             // Create a backup of the Tags memory stream, for restoring, comparing, etc
             msBackup = new MemoryStream(meta.MS.ToArray());
             msDebug = new MemoryStream((int)meta.MS.Length);
-                        
-            createTreeListing();            
+
+            mainReflexive = createReflexiveList();  // Done
+            refreshTreeListing(mainReflexive);      // Done
+
             this.treeViewTagReflexives.Sort();
             treeViewTagReflexives.SelectedNode = treeViewTagReflexives.Nodes[0];
+            // Default Peek/Poke to "Single Value"
+            this.tscbApplyTo.SelectedIndex = 0;
         }
         #endregion
 
@@ -188,75 +202,37 @@ namespace entity.MetaEditor2
             return (meta.TagIndex == ((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).inTagNumber);
         }
 
-        private void createTreeListing()
+        /// <summary>
+        /// Creates a "MAIN" reflexive and a complete list of all sub-reflexives.
+        /// </summary>
+        /// <returns>A Pointer to the topmost reflexive</returns>
+        private reflexiveData createReflexiveList()
         {
+            reflexiveData rd = new reflexiveData(null);
             try
             {
                 ifp = HaloMap.Plugins.IFPHashMap.GetIfp(meta.type, map.HaloVersion);
 
-                #region Save info about our current Selected Node
-                TreeNode node = treeViewTagReflexives.SelectedNode;
-                string tempS = string.Empty;
-                string[] path = new string[0];
-                if (node != null)
-                {
-                    while (node.Level > 0)
-                    {
-                        tempS = "\\" + ((reflexiveData)node.Tag).reflexive.offset.ToString() + tempS;
-                        node = node.Parent;
-                    }
-                    path = ("0" + tempS).Split('\\');
-                }
-                #endregion
-
-                treeViewTagReflexives.Nodes.Clear();
-                treeViewTagReflexives.Sorted = cbSortByName.Checked;
-                treeViewTagReflexives.Nodes.Add("0", ".:[ MAIN ]:.");
-                reflexiveData rd = new reflexiveData();
-                treeViewTagReflexives.Nodes[0].Tag = rd;
-                rd.node = treeViewTagReflexives.Nodes[0];
+                rd.node = new TreeNode(".:[ MAIN ]:.");
+                rd.node.Tag = rd;
                 rd.chunkCount = 1;
                 rd.chunkSelected = 0;
                 rd.baseOffset = 0; // meta.offset;
                 rd.inTagNumber = meta.TagIndex;
-                refData.Clear();
-                refData.Add(rd);
 
-                map.OpenMap(MapTypes.Internal);
+                // Load all the children reflexives for the Tag ("Main")
+                rd.children = loadReflexivesList(rd, meta.offset, ifp.items);
 
-                treeViewTagReflexives.Nodes[0].Nodes.AddRange(loadTreeReflexives(meta.offset, ifp.items, true));               
+                // Loads all chunk count, offset, etc data from MAIN down.
+                refreshReflexiveList(rd);
 
-                map.CloseMap();
-
-                //treeViewTagReflexives.ExpandAll();
-                treeViewTagReflexives.Nodes[0].Expand();
-
-                #region Re-Select our previously selected node
-                TreeNodeCollection nodes = treeViewTagReflexives.Nodes[0].Nodes;
-                treeViewTagReflexives.Enabled = false;
-                treeViewTagReflexives.SelectedNode = treeViewTagReflexives.Nodes[0];
-                for (int i = 1; i < path.Length; i++)
-                {
-                    foreach (TreeNode tn in nodes)
-                    {
-                        if (((reflexiveData)tn.Tag).reflexive.offset.ToString() == path[i])
-                        {
-                            treeViewTagReflexives.SelectedNode = tn;
-                            nodes = tn.Nodes;
-                            break;
-                        }
-                    }
-                }
-                // If we didn't get the right node, deselect all nodes
-                if (treeViewTagReflexives.SelectedNode.Level != path.Length - 1)
-                    treeViewTagReflexives.SelectedNode = null;
-                treeViewTagReflexives.Enabled = true;
-                #endregion
+                rd.node.Expand();
             }
             catch (Exception ex)
             {
                 Globals.Global.ShowErrorMsg(string.Empty, ex);
             }
+            return rd;
         }
 
         private TreeNode findNodeOffset(TreeNodeCollection tns, int offset)
@@ -337,24 +313,35 @@ namespace entity.MetaEditor2
             foreach (IFPIO.BaseObject ctl in o)
             {
                 tabIndex++;
-                switch (ctl.ObjectType)
+                try
                 {
-                    case IFPIO.ObjectEnum.Struct:
-                        {
-#if DEBUG
-                            if (((IFPIO.Reflexive)ctl).chunkSize == 1)
+                    switch (ctl.ObjectType)
+                    {
+                        case IFPIO.ObjectEnum.Struct:
                             {
-                                StringBox sb = new StringBox(meta, ctl.name + " (reflexive)", map, ctl.offset, ctl.lineNumber, 0);
-                                if (enabled) sb.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                                if (sb.size > 0)
+#if DEBUG
+                                if (((IFPIO.Reflexive)ctl).chunkSize == 1)
                                 {
-                                    panelMetaEditor.Controls.Add(sb);
-                                    sb.BringToFront();
+                                    System.IO.BinaryReader BR = new System.IO.BinaryReader(meta.MS);
+                                    BR.BaseStream.Position = ctl.offset + metaOffset;
+                                    int chunkCount = BR.ReadInt32();
+                                    if (chunkCount == 0)
+                                        continue;
+                                    int chunkOffset = BR.ReadInt32() - meta.magic;
+                                    int tagIndex = map.Functions.ForMeta.FindMetaByOffset(chunkOffset);
+
+                                    StringBox sb = new StringBox(meta, ctl.name + " (reflexive)", map, ctl.offset, ctl.lineNumber, 0);
+
+                                    if (enabled) sb.Populate(metaOffset, tagIndex == meta.TagIndex);
+                                    if (sb.size > 0)
+                                    {
+                                        panelMetaEditor.Controls.Add(sb);
+                                        sb.BringToFront();
+                                    }
+                                    //panelMetaEditor.Controls[0].Controls[2].GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
                                 }
-                                //panelMetaEditor.Controls[0].Controls[2].GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
-                            }
 #endif
-                            /*
+                                /*
                             if (Meta_Editor.MetaEditor.ShowReflexives == false)
                                 break;
                             // tempLabel is a blank space located above reflexives
@@ -384,346 +371,351 @@ namespace entity.MetaEditor2
                             }
                             break;
                             */
+                                continue;
+                            }
+                        case IFPIO.ObjectEnum.Block:
+                            {
+                                Ident tempident = new Ident(meta, ctl.name, map, ctl.offset + 4, true, ctl.lineNumber);
+                                tempident.Name = "ident";
+                                tempident.TabIndex = tabIndex;
+                                if (enabled) tempident.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                tempident.Tag = "[" + tempident.Controls[2].Text + "] "
+                                                + tempident.Controls[1].Text;
+                                //tempident.Controls[1].ContextMenuStrip = identContext;
+                                panelMetaEditor.Controls.Add(tempident);
+                                tempident.BringToFront();
+                                panelMetaEditor.Controls[0].Controls[2].GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
+                                tempident.ContextMenuStrip = cmIdent;
+                                break;
+                            }
+                        case IFPIO.ObjectEnum.TagType:
                             continue;
-                        }
-                    case IFPIO.ObjectEnum.Block:
-                        {
-                            Ident tempident = new Ident(meta, ctl.name, map, ctl.offset + 4, true, ctl.lineNumber);
-                            tempident.Name = "ident";
-                            tempident.TabIndex = tabIndex;
-                            if (enabled) tempident.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            tempident.Tag = "[" + tempident.Controls[2].Text + "] "
-                                            + tempident.Controls[1].Text;
-                            //tempident.Controls[1].ContextMenuStrip = identContext;
-                            panelMetaEditor.Controls.Add(tempident);
-                            tempident.BringToFront();
-                            panelMetaEditor.Controls[0].Controls[2].GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
-                            tempident.ContextMenuStrip = cmIdent;
-                            break;
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.TagType:
-                        continue;
-                    case IFPIO.ObjectEnum.Ident:
-                        {
-                            if (MetaEditor.MetaEditor.ShowIdents == false)
-                                break;
-                            Ident tempident = new Ident(meta, ctl.name, map, ctl.offset, ((IFPIO.Ident)ctl).hasTagType, ctl.lineNumber);
-                            tempident.Name = "ident";
-                            tempident.TabIndex = tabIndex;
-                            if (enabled) tempident.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            tempident.Tag = "[" + tempident.Controls[2].Text + "] "
-                                            + tempident.Controls[1].Text;
-                            //tempident.Controls[1].ContextMenuStrip = identContext;
-                            panelMetaEditor.Controls.Add(tempident);
-                            tempident.BringToFront();
-                            panelMetaEditor.Controls[0].Controls[1].MouseEnter += new EventHandler(cbIdent_MouseEnter);
-                            panelMetaEditor.Controls[0].Controls[1].MouseLeave += new EventHandler(cbIdent_MouseLeave);
-                            panelMetaEditor.Controls[0].Controls[2].GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
-                            tempident.ContextMenuStrip = cmIdent;
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.StringID:
-                        {
-                            if (MetaEditor.MetaEditor.ShowSIDs == false)
-                                break;
-                            SID tempSID = new SID(meta, ctl.name, map, ctl.offset, ctl.lineNumber);
-                            tempSID.Name = "sid";
-                            tempSID.TabIndex = tabIndex;
-                            if (enabled) tempSID.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            panelMetaEditor.Controls.Add(tempSID);
-                            tempSID.BringToFront();
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.Float:
-                        {
-                            if (MetaEditor.MetaEditor.ShowFloats == false)
-                                break;
-                            DataValues tempFloat = new DataValues(meta, ctl.name, map, ctl.offset, IFPIO.ObjectEnum.Float, ctl.lineNumber);
-                            tempFloat.TabIndex = tabIndex;
-                            if (enabled) tempFloat.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            panelMetaEditor.Controls.Add(tempFloat);
-                            tempFloat.BringToFront();
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.String32:
-                        {
-                            if (MetaEditor.MetaEditor.ShowString32s == false && ctl.ObjectType == IFPIO.ObjectEnum.String32)
-                                break;
-                            EntStrings tempstring = new EntStrings(meta, ctl.name, map, ctl.offset, ((IFPIO.IFPString)ctl).size, ((IFPIO.IFPString)ctl).type, ctl.lineNumber);
-                            tempstring.Name = "string";
-                            tempstring.TabIndex = tabIndex;
-                            panelMetaEditor.Controls.Add(tempstring);
-                            if (enabled) tempstring.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            tempstring.BringToFront();
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.UnicodeString256:
-                        {
-                            if (MetaEditor.MetaEditor.ShowUnicodeString256s == false)
-                                break;
-                            goto case IFPIO.ObjectEnum.String32;
-                        }
-                    case IFPIO.ObjectEnum.String256:
-                        {
-                            if (MetaEditor.MetaEditor.ShowString256s == false)
-                                break;
-                            goto case IFPIO.ObjectEnum.String32;
-                        }
-                    case IFPIO.ObjectEnum.UnicodeString64:
-                        {
-                            if (MetaEditor.MetaEditor.ShowUnicodeString64s == false)
-                                break;
-                            goto case IFPIO.ObjectEnum.String32;
-                        }
-                    case IFPIO.ObjectEnum.String:
-                        {
-                            if (MetaEditor.MetaEditor.ShowString32s == false && ctl.ObjectType == IFPIO.ObjectEnum.String32)
-                                break;
-                            EntStrings tempstring = new EntStrings(meta, ctl.name, map, ctl.offset, ((IFPIO.IFPString)ctl).size, ((IFPIO.IFPString)ctl).type, ctl.lineNumber);
-                            tempstring.Name = "string";
-                            tempstring.TabIndex = tabIndex;
-                            if (enabled) tempstring.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            panelMetaEditor.Controls.Add(tempstring);
-                            tempstring.BringToFront();
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.Byte:
-                        {
-                            if (((IFPIO.IFPByte)ctl).entIndex.nulled == true)
+                        case IFPIO.ObjectEnum.Ident:
                             {
-                                if (MetaEditor.MetaEditor.ShowBytes == false)
+                                if (MetaEditor.MetaEditor.ShowIdents == false)
                                     break;
-                                DataValues tempByte = new DataValues(meta, ctl.name, map, ctl.offset, IFPIO.ObjectEnum.Byte, ctl.lineNumber);
-                                tempByte.TabIndex = tabIndex;
-                                if (enabled) tempByte.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                                panelMetaEditor.Controls.Add(tempByte);
-                                tempByte.BringToFront();
+                                Ident tempident = new Ident(meta, ctl.name, map, ctl.offset, ((IFPIO.Ident)ctl).hasTagType, ctl.lineNumber);
+                                tempident.Name = "ident";
+                                tempident.TabIndex = tabIndex;
+                                if (enabled) tempident.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                tempident.Tag = "[" + tempident.Controls[2].Text + "] "
+                                                + tempident.Controls[1].Text;
+                                //tempident.Controls[1].ContextMenuStrip = identContext;
+                                panelMetaEditor.Controls.Add(tempident);
+                                tempident.BringToFront();
+                                panelMetaEditor.Controls[0].Controls[1].MouseEnter += new EventHandler(cbIdent_MouseEnter);
+                                panelMetaEditor.Controls[0].Controls[1].MouseLeave += new EventHandler(cbIdent_MouseLeave);
+                                panelMetaEditor.Controls[0].Controls[2].GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
+                                tempident.ContextMenuStrip = cmIdent;
+                                break;
                             }
-                            else
+                        case IFPIO.ObjectEnum.StringID:
                             {
-                                if (MetaEditor.MetaEditor.ShowBlockIndex8s == false)
+                                if (MetaEditor.MetaEditor.ShowSIDs == false)
                                     break;
-                                Indices tempDataValues = new Indices(meta, ctl.name, map, ctl.offset, ctl.ObjectType, ((IFPIO.IFPByte)ctl).entIndex);
-                                tempDataValues.TabIndex = tabIndex;
-                                panelMetaEditor.Controls.Add(tempDataValues);
-                                tempDataValues.BringToFront();
+                                SID tempSID = new SID(meta, ctl.name, map, ctl.offset, ctl.lineNumber);
+                                tempSID.Name = "sid";
+                                tempSID.TabIndex = tabIndex;
+                                if (enabled) tempSID.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                panelMetaEditor.Controls.Add(tempSID);
+                                tempSID.BringToFront();
+                                break;
                             }
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.Int:
-                        {
-                            if (((IFPIO.IFPInt)ctl).entIndex.nulled == true)
+                        case IFPIO.ObjectEnum.Float:
                             {
-                                if ((MetaEditor.MetaEditor.ShowInts == false && ctl.ObjectType == IFPIO.ObjectEnum.Int)
-                                    || (MetaEditor.MetaEditor.ShowShorts == false && ctl.ObjectType == IFPIO.ObjectEnum.Short)
-                                    || (MetaEditor.MetaEditor.ShowUshorts == false && ctl.ObjectType == IFPIO.ObjectEnum.UShort)
-                                    || (MetaEditor.MetaEditor.ShowUints == false && ctl.ObjectType == IFPIO.ObjectEnum.UInt))
+                                if (MetaEditor.MetaEditor.ShowFloats == false)
                                     break;
-                                DataValues tempdatavalues = new DataValues(meta, ctl.name, map, ctl.offset, ctl.ObjectType, ctl.lineNumber);
-                                tempdatavalues.TabIndex = tabIndex;
-                                if (enabled) tempdatavalues.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                                panelMetaEditor.Controls.Add(tempdatavalues);
-                                tempdatavalues.BringToFront();
+                                DataValues tempFloat = new DataValues(meta, ctl.name, map, ctl.offset, IFPIO.ObjectEnum.Float, ctl.lineNumber);
+                                tempFloat.TabIndex = tabIndex;
+                                if (enabled) tempFloat.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                panelMetaEditor.Controls.Add(tempFloat);
+                                tempFloat.BringToFront();
+                                break;
                             }
-                            else
+                        case IFPIO.ObjectEnum.String32:
                             {
-                                if ((MetaEditor.MetaEditor.ShowBlockIndex32s == false && (ctl.ObjectType == IFPIO.ObjectEnum.Int | ctl.ObjectType == IFPIO.ObjectEnum.UInt))
-                                    || (MetaEditor.MetaEditor.ShowBlockIndex16s == false && (ctl.ObjectType == IFPIO.ObjectEnum.Short | ctl.ObjectType == IFPIO.ObjectEnum.UShort))
-                                    || (MetaEditor.MetaEditor.ShowBlockIndex8s == false && ctl.ObjectType == IFPIO.ObjectEnum.Byte))
+                                if (MetaEditor.MetaEditor.ShowString32s == false && ctl.ObjectType == IFPIO.ObjectEnum.String32)
                                     break;
-                                Indices tempdatavalues = new Indices(meta, ctl.name, map, ctl.offset, ctl.ObjectType, ((IFPIO.IFPInt)ctl).entIndex);
-                                tempdatavalues.TabIndex = tabIndex;
-                                panelMetaEditor.Controls.Add(tempdatavalues);
-                                tempdatavalues.BringToFront();
+                                EntStrings tempstring = new EntStrings(meta, ctl.name, map, ctl.offset, ((IFPIO.IFPString)ctl).size, ((IFPIO.IFPString)ctl).type, ctl.lineNumber);
+                                tempstring.Name = "string";
+                                tempstring.TabIndex = tabIndex;
+                                panelMetaEditor.Controls.Add(tempstring);
+                                if (enabled) tempstring.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                tempstring.BringToFront();
+                                break;
                             }
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.Short:
-                        {
-                            goto case IFPIO.ObjectEnum.Int;
-                        }
-                    case IFPIO.ObjectEnum.UShort:
-                        {
-                            goto case IFPIO.ObjectEnum.Int;
-                        }
-                    case IFPIO.ObjectEnum.UInt:
-                        {
-                            goto case IFPIO.ObjectEnum.Int;
-                        }
-                    case IFPIO.ObjectEnum.Unknown:
-                        {
-                            if (MetaEditor.MetaEditor.ShowUndefineds == false)
-                                break;
-                            DataValues tempUnknown = new DataValues(meta, ctl.name, map, ctl.offset, IFPIO.ObjectEnum.Unknown, ctl.lineNumber);
-                            tempUnknown.TabIndex = tabIndex;
-                            if (enabled) tempUnknown.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            panelMetaEditor.Controls.Add(tempUnknown);
-                            tempUnknown.BringToFront();
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.Byte_Flags:
-                        {
-                            if (MetaEditor.MetaEditor.ShowBitmask8s == false)
-                                break;
-                            Bitmask tempbitmask = new Bitmask(meta, ctl.name, map, ctl.offset, ((IFPIO.Bitmask)ctl).bitmaskSize, ((IFPIO.Bitmask)ctl).options, ctl.lineNumber);
-                            tempbitmask.TabIndex = tabIndex;
-                            if (enabled) tempbitmask.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            panelMetaEditor.Controls.Add(tempbitmask);
-                            tempbitmask.BringToFront();
-                            foreach (Control cntl in tempbitmask.Controls[0].Controls)
+                        case IFPIO.ObjectEnum.UnicodeString256:
                             {
-                                cntl.GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
-                                toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << int.Parse(cntl.Tag.ToString())).ToString() + ")");
+                                if (MetaEditor.MetaEditor.ShowUnicodeString256s == false)
+                                    break;
+                                goto case IFPIO.ObjectEnum.String32;
                             }
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.Word_Flags:
-                        {
-                            if (MetaEditor.MetaEditor.ShowBitmask16s == false)
-                                break;
-                            Bitmask tempbitmask = new Bitmask(meta, ctl.name, map, ctl.offset, ((IFPIO.Bitmask)ctl).bitmaskSize, ((IFPIO.Bitmask)ctl).options, ctl.lineNumber);
-                            tempbitmask.TabIndex = tabIndex;
-                            if (enabled) tempbitmask.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            panelMetaEditor.Controls.Add(tempbitmask);
-                            tempbitmask.BringToFront();
-                            foreach (Control cntl in tempbitmask.Controls[0].Controls)
+                        case IFPIO.ObjectEnum.String256:
                             {
-                                cntl.GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
-                                toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << int.Parse(cntl.Tag.ToString())).ToString() + ")");
+                                if (MetaEditor.MetaEditor.ShowString256s == false)
+                                    break;
+                                goto case IFPIO.ObjectEnum.String32;
                             }
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.Long_Flags:
-                        {
-                            if (MetaEditor.MetaEditor.ShowBitmask32s == false)
+                        case IFPIO.ObjectEnum.UnicodeString64:
+                            {
+                                if (MetaEditor.MetaEditor.ShowUnicodeString64s == false)
+                                    break;
+                                goto case IFPIO.ObjectEnum.String32;
+                            }
+                        case IFPIO.ObjectEnum.String:
+                            {
+                                if (MetaEditor.MetaEditor.ShowString32s == false && ctl.ObjectType == IFPIO.ObjectEnum.String32)
+                                    break;
+                                EntStrings tempstring = new EntStrings(meta, ctl.name, map, ctl.offset, ((IFPIO.IFPString)ctl).size, ((IFPIO.IFPString)ctl).type, ctl.lineNumber);
+                                tempstring.Name = "string";
+                                tempstring.TabIndex = tabIndex;
+                                if (enabled) tempstring.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                panelMetaEditor.Controls.Add(tempstring);
+                                tempstring.BringToFront();
                                 break;
-                            Bitmask tempbitmask = new Bitmask(meta, ctl.name, map, ctl.offset, ((IFPIO.Bitmask)ctl).bitmaskSize, ((IFPIO.Bitmask)ctl).options, ctl.lineNumber);
-                            tempbitmask.TabIndex = tabIndex;
-                            if (enabled) tempbitmask.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            panelMetaEditor.Controls.Add(tempbitmask);
-                            tempbitmask.BringToFront();
+                            }
+                        case IFPIO.ObjectEnum.Byte:
+                            {
+                                if (((IFPIO.IFPByte)ctl).entIndex.nulled == true)
+                                {
+                                    if (MetaEditor.MetaEditor.ShowBytes == false)
+                                        break;
+                                    DataValues tempByte = new DataValues(meta, ctl.name, map, ctl.offset, IFPIO.ObjectEnum.Byte, ctl.lineNumber);
+                                    tempByte.TabIndex = tabIndex;
+                                    if (enabled) tempByte.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                    panelMetaEditor.Controls.Add(tempByte);
+                                    tempByte.BringToFront();
+                                }
+                                else
+                                {
+                                    if (MetaEditor.MetaEditor.ShowBlockIndex8s == false)
+                                        break;
+                                    Indices tempDataValues = new Indices(meta, ctl.name, map, ctl.offset, ctl.ObjectType, ((IFPIO.IFPByte)ctl).entIndex);
+                                    tempDataValues.TabIndex = tabIndex;
+                                    panelMetaEditor.Controls.Add(tempDataValues);
+                                    tempDataValues.BringToFront();
+                                }
+                                break;
+                            }
+                        case IFPIO.ObjectEnum.Int:
+                            {
+                                if (((IFPIO.IFPInt)ctl).entIndex.nulled == true)
+                                {
+                                    if ((MetaEditor.MetaEditor.ShowInts == false && ctl.ObjectType == IFPIO.ObjectEnum.Int)
+                                        || (MetaEditor.MetaEditor.ShowShorts == false && ctl.ObjectType == IFPIO.ObjectEnum.Short)
+                                        || (MetaEditor.MetaEditor.ShowUshorts == false && ctl.ObjectType == IFPIO.ObjectEnum.UShort)
+                                        || (MetaEditor.MetaEditor.ShowUints == false && ctl.ObjectType == IFPIO.ObjectEnum.UInt))
+                                        break;
+                                    DataValues tempdatavalues = new DataValues(meta, ctl.name, map, ctl.offset, ctl.ObjectType, ctl.lineNumber);
+                                    tempdatavalues.TabIndex = tabIndex;
+                                    if (enabled) tempdatavalues.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                    panelMetaEditor.Controls.Add(tempdatavalues);
+                                    tempdatavalues.BringToFront();
+                                }
+                                else
+                                {
+                                    if ((MetaEditor.MetaEditor.ShowBlockIndex32s == false && (ctl.ObjectType == IFPIO.ObjectEnum.Int | ctl.ObjectType == IFPIO.ObjectEnum.UInt))
+                                        || (MetaEditor.MetaEditor.ShowBlockIndex16s == false && (ctl.ObjectType == IFPIO.ObjectEnum.Short | ctl.ObjectType == IFPIO.ObjectEnum.UShort))
+                                        || (MetaEditor.MetaEditor.ShowBlockIndex8s == false && ctl.ObjectType == IFPIO.ObjectEnum.Byte))
+                                        break;
+                                    Indices tempdatavalues = new Indices(meta, ctl.name, map, ctl.offset, ctl.ObjectType, ((IFPIO.IFPInt)ctl).entIndex);
+                                    tempdatavalues.TabIndex = tabIndex;
+                                    panelMetaEditor.Controls.Add(tempdatavalues);
+                                    tempdatavalues.BringToFront();
+                                }
+                                break;
+                            }
+                        case IFPIO.ObjectEnum.Short:
+                            {
+                                goto case IFPIO.ObjectEnum.Int;
+                            }
+                        case IFPIO.ObjectEnum.UShort:
+                            {
+                                goto case IFPIO.ObjectEnum.Int;
+                            }
+                        case IFPIO.ObjectEnum.UInt:
+                            {
+                                goto case IFPIO.ObjectEnum.Int;
+                            }
+                        case IFPIO.ObjectEnum.Unknown:
+                            {
+                                if (MetaEditor.MetaEditor.ShowUndefineds == false)
+                                    break;
+                                DataValues tempUnknown = new DataValues(meta, ctl.name, map, ctl.offset, IFPIO.ObjectEnum.Unknown, ctl.lineNumber);
+                                tempUnknown.TabIndex = tabIndex;
+                                if (enabled) tempUnknown.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                panelMetaEditor.Controls.Add(tempUnknown);
+                                tempUnknown.BringToFront();
+                                break;
+                            }
+                        case IFPIO.ObjectEnum.Byte_Flags:
+                            {
+                                if (MetaEditor.MetaEditor.ShowBitmask8s == false)
+                                    break;
+                                Bitmask tempbitmask = new Bitmask(meta, ctl.name, map, ctl.offset, ((IFPIO.Bitmask)ctl).bitmaskSize, ((IFPIO.Bitmask)ctl).options, ctl.lineNumber);
+                                tempbitmask.TabIndex = tabIndex;
+                                if (enabled) tempbitmask.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                panelMetaEditor.Controls.Add(tempbitmask);
+                                tempbitmask.BringToFront();
+                                foreach (Control cntl in tempbitmask.Controls[0].Controls)
+                                {
+                                    cntl.GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
+                                    toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << int.Parse(cntl.Tag.ToString())).ToString() + ")");
+                                }
+                                break;
+                            }
+                        case IFPIO.ObjectEnum.Word_Flags:
+                            {
+                                if (MetaEditor.MetaEditor.ShowBitmask16s == false)
+                                    break;
+                                Bitmask tempbitmask = new Bitmask(meta, ctl.name, map, ctl.offset, ((IFPIO.Bitmask)ctl).bitmaskSize, ((IFPIO.Bitmask)ctl).options, ctl.lineNumber);
+                                tempbitmask.TabIndex = tabIndex;
+                                if (enabled) tempbitmask.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                panelMetaEditor.Controls.Add(tempbitmask);
+                                tempbitmask.BringToFront();
+                                foreach (Control cntl in tempbitmask.Controls[0].Controls)
+                                {
+                                    cntl.GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
+                                    toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << int.Parse(cntl.Tag.ToString())).ToString() + ")");
+                                }
+                                break;
+                            }
+                        case IFPIO.ObjectEnum.Long_Flags:
+                            {
+                                if (MetaEditor.MetaEditor.ShowBitmask32s == false)
+                                    break;
+                                Bitmask tempbitmask = new Bitmask(meta, ctl.name, map, ctl.offset, ((IFPIO.Bitmask)ctl).bitmaskSize, ((IFPIO.Bitmask)ctl).options, ctl.lineNumber);
+                                tempbitmask.TabIndex = tabIndex;
+                                if (enabled) tempbitmask.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                panelMetaEditor.Controls.Add(tempbitmask);
+                                tempbitmask.BringToFront();
 
-                            foreach (Control cntl in tempbitmask.Controls[0].Controls)
-                            {
-                                cntl.GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
-                                toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << int.Parse(cntl.Tag.ToString())).ToString() + ")");
+                                foreach (Control cntl in tempbitmask.Controls[0].Controls)
+                                {
+                                    cntl.GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
+                                    toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << int.Parse(cntl.Tag.ToString())).ToString() + ")");
+                                }
+                                break;
                             }
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.Char_Enum:
-                        {
-                            if (MetaEditor.MetaEditor.ShowEnum8s == false)
+                        case IFPIO.ObjectEnum.Char_Enum:
+                            {
+                                if (MetaEditor.MetaEditor.ShowEnum8s == false)
+                                    break;
+                                Enums tempenum = new Enums(meta, ctl.name, map, ctl.offset, ((IFPIO.IFPEnum)ctl).enumSize, ((IFPIO.IFPEnum)ctl).options, ctl.lineNumber);
+                                tempenum.TabIndex = tabIndex;
+                                if (enabled) tempenum.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                panelMetaEditor.Controls.Add(tempenum);
+                                tempenum.BringToFront();
                                 break;
-                            Enums tempenum = new Enums(meta, ctl.name, map, ctl.offset, ((IFPIO.IFPEnum)ctl).enumSize, ((IFPIO.IFPEnum)ctl).options, ctl.lineNumber);
-                            tempenum.TabIndex = tabIndex;
-                            if (enabled) tempenum.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            panelMetaEditor.Controls.Add(tempenum);
-                            tempenum.BringToFront();
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.Enum:
-                        {
-                            if (MetaEditor.MetaEditor.ShowEnum16s == false)
+                            }
+                        case IFPIO.ObjectEnum.Enum:
+                            {
+                                if (MetaEditor.MetaEditor.ShowEnum16s == false)
+                                    break;
+                                Enums tempenum = new Enums(meta, ctl.name, map, ctl.offset, ((IFPIO.IFPEnum)ctl).enumSize, ((IFPIO.IFPEnum)ctl).options, ctl.lineNumber);
+                                tempenum.TabIndex = tabIndex;
+                                if (enabled) tempenum.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                panelMetaEditor.Controls.Add(tempenum);
+                                tempenum.BringToFront();
                                 break;
-                            Enums tempenum = new Enums(meta, ctl.name, map, ctl.offset, ((IFPIO.IFPEnum)ctl).enumSize, ((IFPIO.IFPEnum)ctl).options, ctl.lineNumber);
-                            tempenum.TabIndex = tabIndex;
-                            if (enabled) tempenum.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            panelMetaEditor.Controls.Add(tempenum);
-                            tempenum.BringToFront();
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.Long_Enum:
-                        {
-                            if (MetaEditor.MetaEditor.ShowEnum32s == false)
+                            }
+                        case IFPIO.ObjectEnum.Long_Enum:
+                            {
+                                if (MetaEditor.MetaEditor.ShowEnum32s == false)
+                                    break;
+                                Enums tempenum = new Enums(meta, ctl.name, map, ctl.offset, ((IFPIO.IFPEnum)ctl).enumSize, ((IFPIO.IFPEnum)ctl).options, ctl.lineNumber);
+                                tempenum.TabIndex = tabIndex;
+                                if (enabled) tempenum.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                panelMetaEditor.Controls.Add(tempenum);
+                                tempenum.BringToFront();
                                 break;
-                            Enums tempenum = new Enums(meta, ctl.name, map, ctl.offset, ((IFPIO.IFPEnum)ctl).enumSize, ((IFPIO.IFPEnum)ctl).options, ctl.lineNumber);
-                            tempenum.TabIndex = tabIndex;
-                            if (enabled) tempenum.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            panelMetaEditor.Controls.Add(tempenum);
-                            tempenum.BringToFront();
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.Unused:
-                        {
-                            DataValues tempUnknown = new DataValues(meta, ctl.name, map, ctl.offset, IFPIO.ObjectEnum.Unused, ctl.lineNumber);
-                            tempUnknown.size = ((IFPIO.Unused)ctl).size;
-                            tempUnknown.TabIndex = tabIndex;
-                            if (enabled) tempUnknown.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            if (tempUnknown.ValueType == IFPIO.ObjectEnum.Unused)
-                                tempUnknown.textBox1.Text = "unused (size " + tempUnknown.size + ")";
-                            panelMetaEditor.Controls.Add(tempUnknown);
-                            tempUnknown.BringToFront();
+                            }
+                        case IFPIO.ObjectEnum.Unused:
+                            {
+                                DataValues tempUnknown = new DataValues(meta, ctl.name, map, ctl.offset, IFPIO.ObjectEnum.Unused, ctl.lineNumber);
+                                tempUnknown.size = ((IFPIO.Unused)ctl).size;
+                                tempUnknown.TabIndex = tabIndex;
+                                if (enabled) tempUnknown.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                if (tempUnknown.ValueType == IFPIO.ObjectEnum.Unused)
+                                    tempUnknown.textBox1.Text = "unused (size " + tempUnknown.size + ")";
+                                panelMetaEditor.Controls.Add(tempUnknown);
+                                tempUnknown.BringToFront();
 
-                            tempUnknown.meta.MS.Position = metaOffset + ctl.offset;
-                            byte[] tempB = new byte[((IFPIO.Unused)ctl).size];
-                            tempUnknown.meta.MS.Read(tempB, 0, tempB.Length);
-                            toolTip1.SetToolTip(tempUnknown.Controls[1], toHex(tempB));
-                            toolTip1.SetToolTip(tempUnknown.Controls[1], BitConverter.ToString(tempB).Replace('-', ' '));
-                            toolTip1.IsBalloon = true;
-                            break;
-                        }
-                    case IFPIO.ObjectEnum.ARGB_Color:
-                        {
-                            if (MetaEditor.MetaEditor.ShowFloats == false)
+                                tempUnknown.meta.MS.Position = metaOffset + ctl.offset;
+                                byte[] tempB = new byte[((IFPIO.Unused)ctl).size];
+                                tempUnknown.meta.MS.Read(tempB, 0, tempB.Length);
+                                toolTip1.SetToolTip(tempUnknown.Controls[1], toHex(tempB));
+                                toolTip1.SetToolTip(tempUnknown.Controls[1], BitConverter.ToString(tempB).Replace('-', ' '));
+                                toolTip1.IsBalloon = true;
                                 break;
-                            argb_color tempARGBColor = new argb_color(meta, ctl.name, map, ctl.offset, ((IFPIO.IFPColor)ctl).hasAlpha, ((IFPIO.IFPColor)ctl).type, ctl.lineNumber);
-                            tempARGBColor.TabIndex = tabIndex;
-                            if (enabled) tempARGBColor.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-                            panelMetaEditor.Controls.Add(tempARGBColor);
-                            tempARGBColor.BringToFront();
+                            }
+                        case IFPIO.ObjectEnum.ARGB_Color:
+                            {
+                                if (MetaEditor.MetaEditor.ShowFloats == false)
+                                    break;
+                                argb_color tempARGBColor = new argb_color(meta, ctl.name, map, ctl.offset, ((IFPIO.IFPColor)ctl).hasAlpha, ((IFPIO.IFPColor)ctl).type, ctl.lineNumber);
+                                tempARGBColor.TabIndex = tabIndex;
+                                if (enabled) tempARGBColor.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
+                                panelMetaEditor.Controls.Add(tempARGBColor);
+                                tempARGBColor.BringToFront();
+                                break;
+                            }
+                        default:
                             break;
-                        }
-                    default:
-                        break;
-                }
+                    }
 
 #if DEBUG
-                if (((BaseField)panelMetaEditor.Controls[0]).size == 0)
-                {
-                    string s = panelMetaEditor.Controls[0].GetType().ToString();
-                    switch (panelMetaEditor.Controls[0].GetType().ToString())
+                    if (((BaseField)panelMetaEditor.Controls[0]).size == 0)
                     {
-                        case "entity.MetaEditor2.DataValues":
-                            if (((DataValues)panelMetaEditor.Controls[0]).ValueType != IFPIO.ObjectEnum.Unused)
-                                MessageBox.Show("WARNING: 0 Sized control: " + ((DataValues)panelMetaEditor.Controls[0]).ValueType);
-                            break;
-                        default:
-                            MessageBox.Show("WARNING: 0 Sized control: " + panelMetaEditor.Controls[0].Name);
-                            break;
+                        string s = panelMetaEditor.Controls[0].GetType().ToString();
+                        switch (panelMetaEditor.Controls[0].GetType().ToString())
+                        {
+                            case "entity.MetaEditor2.DataValues":
+                                if (((DataValues)panelMetaEditor.Controls[0]).ValueType != IFPIO.ObjectEnum.Unused)
+                                    MessageBox.Show("WARNING: 0 Sized control: " + ((DataValues)panelMetaEditor.Controls[0]).ValueType);
+                                break;
+                            default:
+                                MessageBox.Show("WARNING: 0 Sized control: " + panelMetaEditor.Controls[0].Name);
+                                break;
+                        }
                     }
-                }
 #endif
 
-                panelMetaEditor.Controls[0].Controls[1].GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
-                if (ctl.ObjectType != IFPIO.ObjectEnum.Struct)
-                {
-                    int temp = ctl.offset;
-                    // Take into account that idents actually start at -4 due to tags preceding
-                    if (ctl.ObjectType == IFPIO.ObjectEnum.Ident)
-                        temp -= 4;
+                    panelMetaEditor.Controls[0].Controls[1].GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
+                    if (ctl.ObjectType != IFPIO.ObjectEnum.Struct)
+                    {
+                        int temp = ctl.offset;
+                        // Take into account that idents actually start at -4 due to tags preceding
+                        if (ctl.ObjectType == IFPIO.ObjectEnum.Ident)
+                            temp -= 4;
 
-                    string tip = 
-                            "offset in reflexive: " + (temp).ToString() + " (" + toHex(temp) + ")" +
-                            "\n         offset in tag: " + (rd.baseOffset + temp).ToString() + " (" + toHex(rd.baseOffset + temp) + ")" +
-                            "\n        offset in map: " + (rd.baseOffset + meta.offset + temp).ToString() + " (" + toHex(rd.baseOffset + meta.offset + temp) + ")";
+                        string tip =
+                                "offset in reflexive: " + (temp).ToString() + " (" + toHex(temp) + ")" +
+                                "\n         offset in tag: " + (rd.baseOffset + temp).ToString() + " (" + toHex(rd.baseOffset + temp) + ")" +
+                                "\n        offset in map: " + (rd.baseOffset + meta.offset + temp).ToString() + " (" + toHex(rd.baseOffset + meta.offset + temp) + ")";
 
-                    if (panelMetaEditor.Controls[0] is Bitmask)
-                    {                        
-                        Bitmask tempbitmask = ((Bitmask)panelMetaEditor.Controls[0]);
-                        int bitValue = int.Parse(tempbitmask.Value);
-                        string s = " = 0x" + bitValue.ToString("X4") + " (" + tempbitmask.Value + ")";
-                        for (int i = 0; i < 32; i++)
+                        if (panelMetaEditor.Controls[0] is Bitmask)
                         {
-                            s = ((1 << i & bitValue) == 0 ? "0" : "1") + s;
-                            if (i % 4 == 3)
-                                s = " " + s;
+                            Bitmask tempbitmask = ((Bitmask)panelMetaEditor.Controls[0]);
+                            uint bitValue = uint.Parse(tempbitmask.Value);
+                            string s = " = 0x" + bitValue.ToString("X4") + " (" + tempbitmask.Value + ")";
+                            for (int i = 0; i < 32; i++)
+                            {
+                                s = ((1 << i & bitValue) == 0 ? "0" : "1") + s;
+                                if (i % 4 == 3)
+                                    s = " " + s;
+                            }
+                            tip += "\n\nBITMASK VALUE:\n" + s;
                         }
-                        tip += "\n\nBITMASK VALUE:\n" + s;
+
+                        toolTip1.SetToolTip(panelMetaEditor.Controls[0].Controls[0], tip);
+
                     }
+                }
+                catch (Exception ex)
+                {
 
-                    toolTip1.SetToolTip(panelMetaEditor.Controls[0].Controls[0], tip);                            
-
+                    throw new Exception(ex.Message + "\nField Offset: " +ctl.offset + "\nName: " + ctl.name +"\nMeta Offset: " + metaOffset, ex);
                 }
 
             }
@@ -940,31 +932,160 @@ namespace entity.MetaEditor2
                     default:
                         throw new Exception("Whoops! Forgot to code in \"" + bo.ObjectType.ToString() + "\" data type for labels!\n" +
                                             "Slap the programmer and tell him about this message!");
-                        return new string[rd.chunkCount];
                 }
                 ls.Add(s);
             }
             return ls.ToArray();
         }
 
-        public TreeNode[] loadTreeReflexives(int metaOffset, object[] items, bool enabled)
+        /// <summary>
+        /// Uses recursion to create a structured reflexiveData listing. Call "refreshReflexiveList()" afterwards.
+        /// </summary>
+        /// <param name="parentReflexive">The starting reflexive to start at. (Usually "MAIN")</param>
+        /// <param name="metaOffset">The offset to the meta</param>
+        /// <param name="items">IFPIO item listing</param>
+        /// <returns>A list of children reflexiveData</returns>
+        public reflexiveData[] loadReflexivesList(reflexiveData parentReflexive, int metaOffset, object[] items)
         {
-            List<TreeNode> tns = new List<TreeNode>();
+            List<reflexiveData> rds = new List<reflexiveData>();
             foreach (object o in items)
             {
                 if (o is IFPIO.Reflexive)
                 {
                     IFPIO.Reflexive IFPR = (IFPIO.Reflexive)o;
-                    TreeNode tn = new TreeNode(IFPR.name);
-                    reflexiveData rd = new reflexiveData();
-                    tn.Tag = rd;
-                    rd.node = tn;
+                    reflexiveData rd = new reflexiveData(parentReflexive);
+                    rd.node = new TreeNode(IFPR.name);
+                    rd.node.Name = rd.node.Text;
+                    rd.node.Tag = rd;
                     rd.reflexive = IFPR;
-                    tn.ForeColor = Color.LightGray;
-                    tn.Name = IFPR.name;
-                    tn.ToolTipText = "Offset: " + rd.reflexive.offset.ToString();
+                    rd.chunkSelected = 0;
 
-                    if (enabled)
+                    // Add if non-existant, otherwise update Text
+                    if (rd.inTagNumber == meta.TagIndex)
+                        rd.children = loadReflexivesList(rd, meta.offset + rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize, IFPR.items);
+                    else
+                        rd.children = loadReflexivesList(rd, rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize, IFPR.items);
+
+                    rds.Add(rd);
+                }
+            }
+            return rds.ToArray();
+        }
+
+        // public reflexiveData[] loadTreeReflexives(reflexiveData parentReflexive, int metaOffset, object[] items, bool enabled)
+        /// <summary>
+        /// Scans from the given reflexive through all children and updates counts, offsets, etc
+        /// </summary>
+        /// <param name="parentReflexive">The reflexive to start scanning at</param>
+        public void refreshReflexiveList(reflexiveData parentReflexive)
+        {
+            map.OpenMap(MapTypes.Internal);
+
+            if (parentReflexive.parent != null)
+            {
+                // Update information for currently selected reflexive
+                if (parentReflexive.inTagNumber != meta.TagIndex && parentReflexive.parent.inTagNumber != meta.TagIndex)
+                {
+                    map.OpenMap(MapTypes.Internal);
+                    BR = map.BR;
+                }
+                else
+                {
+                    BR = new BinaryReader(meta.MS);
+                }
+                BR.BaseStream.Position = parentReflexive.parent.baseOffset + parentReflexive.reflexive.offset;
+                parentReflexive.chunkCount = BR.ReadInt32();
+                parentReflexive.baseOffset = BR.ReadInt32() - meta.magic + parentReflexive.chunkSelected * parentReflexive.reflexive.chunkSize;
+
+                parentReflexive.inTagNumber = map.Functions.ForMeta.FindMetaByOffset(parentReflexive.baseOffset);
+                if (parentReflexive.inTagNumber == meta.TagIndex)
+                {
+                    parentReflexive.baseOffset -= meta.offset;
+                    parentReflexive.node.ForeColor = Color.Black;
+                    parentReflexive.node.ToolTipText = "Offset: " + parentReflexive.reflexive.offset.ToString();
+                }
+                else
+                {
+                    map.CloseMap();
+                    if (parentReflexive.inTagNumber != -1)
+                    {
+                        parentReflexive.node.ForeColor = Color.Red;
+                        parentReflexive.node.ToolTipText = "Data Source Located in:\n[" + map.MetaInfo.TagType[parentReflexive.inTagNumber].ToLower() +
+                                        "] " + map.FileNames.Name[parentReflexive.inTagNumber].ToLower();
+                    }
+                }
+                
+                // Update all information for children
+                refreshReflexiveListRecursive(
+                parentReflexive,
+                meta.offset
+                + parentReflexive.baseOffset
+                + parentReflexive.chunkSelected * parentReflexive.reflexive.chunkSize
+                );
+            }
+            else
+            {
+                refreshReflexiveListRecursive(
+                parentReflexive,
+                meta.offset
+                );
+            }
+
+            map.CloseMap();
+        }
+
+        private void refreshReflexiveListRecursive(reflexiveData parentReflexive, int metaOffset)
+        {
+            foreach (reflexiveData rd in parentReflexive.children)
+            {
+                // If parent reflexive is 0 count, make sure to 0 count all children as well
+                if (parentReflexive.baseOffset >= 0)
+                {
+                    map.BR.BaseStream.Position = rd.reflexive.offset + metaOffset;
+                    rd.chunkCount = map.BR.ReadInt32();
+                }
+                else
+                {
+                    rd.chunkCount = 0;
+                }
+
+                // If reflexive has a count
+                if (rd.chunkCount > 0)
+                {
+                    rd.chunkSelected = 0;
+                    rd.baseOffset = map.BR.ReadInt32() - meta.magic;
+                    // Some listings are actually in other tags!
+                    // Check [BLOC] "objects\\vehicles\\wraith\\garbage\\wing_boost\\wing_boost"
+                    //   > attachments[0] = [BLOC] "objects\\vehicles\\ghost\\garbage\\seat\\seat"
+                    rd.inTagNumber = map.Functions.ForMeta.FindMetaByOffset(rd.baseOffset);
+                    if (rd.inTagNumber == -1)
+                    {
+                        rd.chunkCount = 0;
+                        rd.chunkSelected = -1;
+                        continue;
+                    }
+                    if (rd.inTagNumber == meta.TagIndex)
+                        rd.baseOffset -= meta.offset;
+                }
+                else
+                {
+                    rd.chunkSelected = -1;
+                    rd.baseOffset = -1;
+                    rd.inTagNumber = -1;
+                }
+                if (rd.inTagNumber == meta.TagIndex)
+                    refreshReflexiveListRecursive(rd, meta.offset + rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize);
+                else
+                    refreshReflexiveListRecursive(rd, rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize);
+
+            }
+        }
+
+        /*
+        private void refreshReflexiveListRecursive(reflexiveData parentReflexive)
+        {
+
+                    if (parentReflexive.chunkCount != 0)
                     {
                         map.BR.BaseStream.Position = IFPR.offset + metaOffset;
                         rd.chunkCount = map.BR.ReadInt32();
@@ -997,94 +1118,129 @@ namespace entity.MetaEditor2
                     }
                     tn.Text += " [" + rd.chunkCount.ToString() + "]";
 
-                    refData.Add(rd);
-
                     // Add if non-existant, otherwise update Text
                     if (rd.inTagNumber == meta.TagIndex)
-                        tn.Nodes.AddRange(loadTreeReflexives(meta.offset + rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize, IFPR.items, rd.chunkCount != 0));
+                        rd.children = loadTreeReflexives(rd, meta.offset + rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize, IFPR.items, rd.chunkCount != 0);
                     else
-                        tn.Nodes.AddRange(loadTreeReflexives(rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize, IFPR.items, rd.chunkCount != 0));
-                    
-                    if (rd.chunkCount != 0 | !cbHideUnused.Checked)
-                        tns.Add(tn);
+                        rd.children = loadTreeReflexives(rd, rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize, IFPR.items, rd.chunkCount != 0);
+
+                    //if (rd.chunkCount != 0 | !cbHideUnused.Checked)
+                    rds.Add(rd);
                 }
             }
-            return tns.ToArray();
+            return rds.ToArray();
         }
+        */
 
-        private void refreshTreeListing(TreeNode parent)
+        private void refreshTreeListing(reflexiveData parentReflexive)
         {
-            if (((reflexiveData)parent.Tag).chunkCount == 0)
-                return;
-
-            treeViewTagReflexives.SuspendLayout();
-            // See if we are in the MAIN of the tag
-            if (parent != treeViewTagReflexives.Nodes[0])
+            TreeNode parentNode = parentReflexive.node;
+            if (parentReflexive.chunkCount == 0 && cbHideUnused.Checked)
             {
-                reflexiveData rd = (reflexiveData)parent.Tag;
-                if (rd.inTagNumber != meta.TagIndex && ((reflexiveData)parent.Parent.Tag).inTagNumber != meta.TagIndex)
+                // If a reflexive was listed, but no longer contains a count, remove it from the tree
+                if (parentReflexive.parent.node.Nodes.Contains(parentReflexive.node))
+                    parentReflexive.parent.node.Nodes.Remove(parentReflexive.node);
+                return;
+            }
+
+            // See if we are in the MAIN of the tag
+            if (parentReflexive != mainReflexive)
+            {
+                if (parentReflexive.inTagNumber == meta.TagIndex)
+                {
+                    parentNode.ForeColor = Color.Black;
+                    parentNode.ToolTipText = "Offset: " + parentReflexive.reflexive.offset.ToString();
+                }
+                else
+                {
+                    if (parentReflexive.inTagNumber != -1)
+                    {
+                        parentNode.ForeColor = Color.Red;
+                        parentNode.ToolTipText = "Data Source Located in:\n[" + map.MetaInfo.TagType[parentReflexive.inTagNumber].ToLower() +
+                                        "] " + map.FileNames.Name[parentReflexive.inTagNumber].ToLower();
+                    }
+                }
+                #region old unused code
+                /*
+                if (parentReflexive.inTagNumber != meta.TagIndex && parentReflexive.parent.inTagNumber != meta.TagIndex)
                 {
                     map.OpenMap(MapTypes.Internal);
                     BR = map.BR;
-                    BR.BaseStream.Position = ((reflexiveData)parent.Parent.Tag).baseOffset + rd.reflexive.offset;
+                    BR.BaseStream.Position = ((reflexiveData)parentNode.Parent.Tag).baseOffset + parentReflexive.reflexive.offset;
                 }
                 else
                 {
                     BR = new BinaryReader(meta.MS);
-                    BR.BaseStream.Position = ((reflexiveData)parent.Parent.Tag).baseOffset + rd.reflexive.offset;
+                    BR.BaseStream.Position = parentReflexive.parent.baseOffset + parentReflexive.reflexive.offset;
                 }
-                rd.chunkCount = BR.ReadInt32();
-                rd.baseOffset = BR.ReadInt32() - meta.magic + rd.chunkSelected * rd.reflexive.chunkSize;                
+                parentReflexive.chunkCount = BR.ReadInt32();
+                parentReflexive.baseOffset = BR.ReadInt32() - meta.magic + parentReflexive.chunkSelected * parentReflexive.reflexive.chunkSize;
 
-                rd.inTagNumber = map.Functions.ForMeta.FindMetaByOffset(rd.baseOffset);
-                if (rd.inTagNumber == meta.TagIndex)
+                parentReflexive.inTagNumber = map.Functions.ForMeta.FindMetaByOffset(parentReflexive.baseOffset);
+                if (parentReflexive.inTagNumber == meta.TagIndex)
                 {
-                    rd.baseOffset -= meta.offset;
-                    parent.ForeColor = Color.Black;
-                    parent.ToolTipText = "Offset: " + rd.reflexive.offset.ToString();
+                    parentReflexive.baseOffset -= meta.offset;
+                    parentNode.ForeColor = Color.Black;
+                    parentNode.ToolTipText = "Offset: " + parentReflexive.reflexive.offset.ToString();
                 }
                 else
                 {
                     map.CloseMap();
-                    if (rd.inTagNumber != -1)
+                    if (parentReflexive.inTagNumber != -1)
                     {
-                        parent.ForeColor = Color.Red;
-                        parent.ToolTipText = "Data Source Located in:\n[" + map.MetaInfo.TagType[rd.inTagNumber].ToLower() +
-                                        "] " + map.FileNames.Name[rd.inTagNumber].ToLower();
+                        parentNode.ForeColor = Color.Red;
+                        parentNode.ToolTipText = "Data Source Located in:\n[" + map.MetaInfo.TagType[parentReflexive.inTagNumber].ToLower() +
+                                        "] " + map.FileNames.Name[parentReflexive.inTagNumber].ToLower();
                     }
                 }
+                */
+                #endregion
             }
-            refreshTreeSubNodes(parent);
-            treeViewTagReflexives.ResumeLayout();
+            if (parentReflexive == mainReflexive)
+            {
+                if (!treeViewTagReflexives.Nodes.Contains(parentReflexive.node))
+                {
+                    treeViewTagReflexives.Nodes.Add(parentReflexive.node);
+                }
+            }
+            else
+            {
+                if (!parentReflexive.parent.node.Nodes.Contains(parentReflexive.node))
+                {
+                    parentReflexive.parent.node.Nodes.Add(parentReflexive.node);
+                }
+            }
+         
+            refreshTreeSubNodes(parentReflexive);
         }
 
-        private void refreshTreeSubNodes(TreeNode parent)
+        private void refreshTreeSubNodes(reflexiveData parent)
         {
-            foreach (TreeNode tn in parent.Nodes)
+            foreach (reflexiveData rd in parent.children)
             {
-                reflexiveData rd = (reflexiveData)tn.Tag;
+                TreeNode tn = rd.node;
+                /*
                 if (rd.inTagNumber != meta.TagIndex)
                 {
                     map.OpenMap(MapTypes.Internal);
                     BR = map.BR;
-                    BR.BaseStream.Position = ((reflexiveData)parent.Tag).baseOffset + rd.reflexive.offset;
-                    if (((reflexiveData)parent.Tag).inTagNumber == meta.TagIndex)
+                    BR.BaseStream.Position = parent.baseOffset + rd.reflexive.offset;
+                    if (parent.inTagNumber == meta.TagIndex)
                         BR.BaseStream.Position += meta.offset;
                 }
                 else
                 {
                     BR = new BinaryReader(meta.MS);
-                    BR.BaseStream.Position = ((reflexiveData)parent.Tag).baseOffset + rd.reflexive.offset;
+                    BR.BaseStream.Position = parent.baseOffset + rd.reflexive.offset;
                 }
                 rd.chunkCount = BR.ReadInt32();
                 rd.baseOffset = BR.ReadInt32() - meta.magic + rd.chunkSelected * rd.reflexive.chunkSize;
+                */
 
-                rd.inTagNumber = map.Functions.ForMeta.FindMetaByOffset(rd.baseOffset);
-                if (rd.inTagNumber == meta.TagIndex)
-                    rd.baseOffset -= meta.offset;
-                else
+                tn.ForeColor = (rd.chunkCount == 0 ? Color.LightGray : Color.Black);
+
+                if (rd.inTagNumber != meta.TagIndex)
                 {
-                    map.CloseMap();
                     if (rd.inTagNumber != -1)
                     {
                         tn.ForeColor = Color.Red;
@@ -1093,7 +1249,22 @@ namespace entity.MetaEditor2
                     }
                 }
                 tn.Text = tn.Name + " [" + rd.chunkCount.ToString() + "]";
-                refreshTreeListing(tn);
+                refreshTreeListing(rd);
+            }
+        }
+
+        // Create a node sorter that implements the IComparer interface. 
+        public class NodeSorter : System.Collections.IComparer
+        {
+            // Compare the length of the strings, or the strings 
+            // themselves, if they are the same length. 
+            public int Compare(object x, object y)
+            {
+                TreeNode tx = x as TreeNode;
+                TreeNode ty = y as TreeNode;
+                reflexiveData rx = (reflexiveData)tx.Tag;
+                reflexiveData ry = (reflexiveData)ty.Tag;
+                return rx.reflexive.offset - ry.reflexive.offset;
             }
         }
 
@@ -1159,7 +1330,6 @@ namespace entity.MetaEditor2
                         }
                     default:
                         throw new Exception("Unhandled type: " + this.panelMetaEditor.Controls[counter].GetType().ToString());
-                        break;
                 }
 
                 int temp = ((BaseField)this.panelMetaEditor.Controls[counter]).offsetInMap;
@@ -1273,7 +1443,7 @@ namespace entity.MetaEditor2
             WinMetaEditor wME = ((WinMetaEditor)this.ParentForm);
             Meta oldMeta = map.SelectedMeta;
             ((MapForms.MapForm)this.ParentForm.Owner).LoadMeta(((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).inTagNumber);
-            int tempTabNum = wME.addNewTab(map.SelectedMeta, true);
+            //int tempTabNum = wME.addNewTab(map.SelectedMeta, true);
             map.SelectedMeta = oldMeta;
             
             ((MetaEditorControlPage)this).gotoOffset(((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).baseOffset);
@@ -1411,13 +1581,25 @@ namespace entity.MetaEditor2
         }
 
         private void cbHideUnused_CheckedChanged(object sender, EventArgs e)
-        {
-            createTreeListing();
+        {            
+            refreshTreeListing(mainReflexive);
         }
 
         private void cbSortByName_CheckedChanged(object sender, EventArgs e)
         {
-            createTreeListing();
+            TreeNode tn = treeViewTagReflexives.SelectedNode;
+
+            // By disabling the TreeView, it will not call _AfterSelect(), therefore the data is not reloaded
+            treeViewTagReflexives.Enabled = false;
+
+            // Select default name sorting or custom offset sorting
+            if (cbSortByName.Checked)
+                treeViewTagReflexives.TreeViewNodeSorter = null;
+            else
+                treeViewTagReflexives.TreeViewNodeSorter = new NodeSorter();
+            this.treeViewTagReflexives.Sort();
+            treeViewTagReflexives.SelectedNode = tn;
+            treeViewTagReflexives.Enabled = true;
         }
 
         /// <summary>
@@ -1469,8 +1651,99 @@ namespace entity.MetaEditor2
         private void tmr_MEControlPage_Tick(object sender, EventArgs e)
         {
             panelInfoPane.Visible = false;
-            tmr_MEControlPage.Stop();    
+            tmr_MEControlPage.Stop();
         }
+
+        #region CustomTreeView Node Drawing [Disabled]
+        /*
+        // Create a Font object for the node tags.
+        Font tagFont = new Font("Helvetica", 8, FontStyle.Bold);
+
+        // Returns the bounds of the specified node, including the region  
+        // occupied by the node label and any node tag displayed. 
+        private Rectangle NodeBounds(TreeNode node)
+        {
+            // Set the return value to the normal node bounds.
+            Rectangle bounds = node.Bounds;
+            if (node.Tag != null)
+            {
+                // Retrieve a Graphics object from the TreeView handle 
+                // and use it to calculate the display width of the tag.
+                Graphics g = treeViewTagReflexives.CreateGraphics();
+                int tagWidth = (int)g.MeasureString
+                    (node.Tag.ToString(), tagFont).Width + 6;
+
+                // Adjust the node bounds using the calculated value.
+                bounds.Offset(tagWidth / 2, 0);
+                bounds = Rectangle.Inflate(bounds, tagWidth / 2, 0);
+                g.Dispose();
+            }
+
+            return bounds;
+
+        }
+
+        // Draws a node. 
+        private void myTreeView_DrawNode(
+            object sender, DrawTreeNodeEventArgs e)
+        {
+            // Draw the background and node text for a selected node. 
+            if ((e.State & TreeNodeStates.Selected) != 0)
+            {
+                // Draw the background of the selected node. The NodeBounds 
+                // method makes the highlight rectangle large enough to 
+                // include the text of a node tag, if one is present.
+                e.Graphics.FillRectangle(Brushes.Green, NodeBounds(e.Node));
+
+                // Retrieve the node font. If the node font has not been set, 
+                // use the TreeView font.
+                Font nodeFont = e.Node.NodeFont;
+                if (nodeFont == null) nodeFont = ((TreeView)sender).Font;
+
+                // Draw the node text.
+                e.Graphics.DrawString(e.Node.Text, nodeFont, Brushes.White,
+                    Rectangle.Inflate(e.Bounds, 2, 0));
+            }
+
+            // Use the default background and node text. 
+            else
+            {
+                if (e.Node.ForeColor != Color.LightGray)
+                    e.DrawDefault = true;
+                else
+                {
+                    e.DrawDefault = false;                    
+                }
+                // Draw the background of the selected node. The NodeBounds 
+                // method makes the highlight rectangle large enough to 
+                // include the text of a node tag, if one is present.
+                //e.Graphics.FillRectangle(Brushes.White, NodeBounds(e.Node));
+            }
+
+            // If a node tag is present, draw its string representation  
+            // to the right of the label text. 
+            if (e.Node.Tag != null)
+            {
+                e.Graphics.DrawString(e.Node.Tag.ToString(), tagFont,
+                    Brushes.Yellow, e.Bounds.Right + 2, e.Bounds.Top);
+            }
+
+            // If the node has focus, draw the focus rectangle large, making 
+            // it large enough to include the text of the node tag, if present. 
+            if ((e.State & TreeNodeStates.Focused) != 0)
+            {
+                using (Pen focusPen = new Pen(Color.Black))
+                {
+                    focusPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+                    Rectangle focusBounds = NodeBounds(e.Node);
+                    focusBounds.Size = new Size(focusBounds.Width - 1,
+                    focusBounds.Height - 1);
+                    e.Graphics.DrawRectangle(focusPen, focusBounds);
+                }
+            }
+        }
+        */
+        #endregion
 
         private void treeViewTagReflexives_AfterSelect(object sender, TreeViewEventArgs e)
         {
@@ -1639,9 +1912,9 @@ namespace entity.MetaEditor2
 
         void tsbc_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Did this to stop populating data twice on load, but stops external reflexives from loading data
-            //if (!((ToolStripItem)sender).Enabled)
-            //    return;
+            // Did this to stop populating data twice on load (NOTE said stops external reflexives from loading data?)
+            if (!((ToolStripItem)sender).Enabled)
+                return;
 
             #region Determine which comboBox was changed and modify related Reflexive Data accordingly
             ToolStripComboBox tscb = (ToolStripComboBox)sender;
@@ -1663,7 +1936,25 @@ namespace entity.MetaEditor2
 
             // Update sub-Combo Box listings for lead Combo Boxes that were changed
             //refreshTreeListing(treeViewTagReflexives.Nodes[0]);  // Slow to always refresh all!
-            refreshTreeListing(tn);
+            
+            // Trial area for reflexives(sub-nodes) that have a 0 count in reflexive[0], but not later on
+            /*
+            reflexiveData rd2 = (reflexiveData)tn.Tag;
+            TreeNode mn = (TreeNode)tn.Clone();
+            TreeNode[] tn2 = loadTreeReflexives(rd2.baseOffset, rd2.reflexive.items, false);
+            foreach (TreeNode ttn in tn.Nodes)
+            {
+                tn.Nodes.Remove(ttn);
+                mn.Nodes.Add(ttn);
+            }
+            tn.Nodes.AddRange(tn2);
+            */
+
+            refreshReflexiveList(rd);
+
+            treeViewTagReflexives.SuspendLayout();
+            refreshTreeListing(rd);
+            treeViewTagReflexives.ResumeLayout();
 
             // Update tree listings counters
             int levelsUp = treeViewTagReflexives.SelectedNode.Level - rd.node.Level;
@@ -1967,7 +2258,7 @@ namespace entity.MetaEditor2
                     rd.inTagNumber = r.tagIndex;
 
                     // Refresh the tree (to show black/internal or red/external and update tooltip)
-                    refreshTreeListing(tn);
+                    refreshTreeListing(rd);
                     // Reselect to update external tag lockout and warning box
                     treeViewTagReflexives_AfterSelect(this, new TreeViewEventArgs(tn));
                 }
@@ -2232,14 +2523,14 @@ namespace entity.MetaEditor2
                                 continue;
 
                             rd.chunkSelected = i;
-                            refreshTreeListing(rd.node);
+                            refreshTreeListing(rd);
                             debugPokeReflexive((reflexiveData)rd);
                         }
                     }
                     rd.chunkSelected = sel;
                     tscbApplyTo.Text = sel.ToString() + "...";
                     Application.DoEvents();
-                    refreshTreeListing(rd.node);
+                    refreshTreeListing(rd);
                     debugPokeReflexive((reflexiveData)rd);
                     panelMetaEditor.Enabled = true;
                     tsbtnPoke.Text = backupText;

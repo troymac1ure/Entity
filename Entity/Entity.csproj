@@ -238,6 +238,12 @@
     <Compile Include="MetaEditor2\ColorFields\rgb_color.Designer.cs">
       <DependentUpon>rgb_color.cs</DependentUpon>
     </Compile>
+    <Compile Include="MetaEditor2\MetaEditorControlPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\MetaEditorControlPage.Designer.cs">
+      <DependentUpon>MetaEditorControlPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="MetaEditor2\RestoreSelections.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -285,12 +291,6 @@
     </Compile>
     <Compile Include="MetaEditor2\MetaEditor.Designer.cs">
       <DependentUpon>MetaEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MetaEditor2\MetaEditorControlPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="MetaEditor2\MetaEditorControlPage.Designer.cs">
-      <DependentUpon>MetaEditorControlPage.cs</DependentUpon>
     </Compile>
     <Compile Include="MetaEditor2\SID.cs">
       <SubType>UserControl</SubType>
@@ -445,6 +445,9 @@
     <EmbeddedResource Include="MetaEditor2\ColorFields\rgb_color.resx">
       <DependentUpon>rgb_color.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\MetaEditorControlPage.resx">
+      <DependentUpon>MetaEditorControlPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MetaEditor2\RestoreSelections.resx">
       <DependentUpon>RestoreSelections.cs</DependentUpon>
     </EmbeddedResource>
@@ -468,9 +471,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MetaEditor2\MetaEditor.resx">
       <DependentUpon>MetaEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MetaEditor2\MetaEditorControlPage.resx">
-      <DependentUpon>MetaEditorControlPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MetaEditor2\SID.resx">
       <DependentUpon>SID.cs</DependentUpon>

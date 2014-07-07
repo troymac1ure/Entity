@@ -23,7 +23,6 @@ namespace entity.MetaEditor2
             public int inTagNumber;
             public TreeNode node;
             public IFPIO.Reflexive reflexive;
-            public ToolStripItem[] tsItems;
             #endregion
 
             #region Constructors and Destructors

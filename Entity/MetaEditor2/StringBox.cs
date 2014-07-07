@@ -44,10 +44,11 @@ namespace entity.MetaEditor2
 
         public override void BaseField_Leave(object sender, EventArgs e)
         {
+            /*
             System.IO.BinaryWriter bw = new System.IO.BinaryWriter(meta.MS);
             if (((WinMetaEditor)this.ParentForm).checkSelectionInCurrentTag())
                 bw.BaseStream.Position = this.offsetInMap - meta.offset;
-
+            
             bw.Write((short)this.sidIndexer);
             bw.Write((byte) 0);
             bw.Write((byte)map.Strings.Length[this.sidIndexer]);
@@ -138,18 +139,22 @@ namespace entity.MetaEditor2
             //set offsets
             BR.BaseStream.Position = iOffset + this.chunkOffset;
             this.size = BR.ReadInt32();
-            this.chunkOffset = BR.ReadInt32() - meta.magic - meta.offset;
-            BR.BaseStream.Position = this.chunkOffset;
-            this.offsetInMap = iOffset + this.chunkOffset;
+            this.chunkOffset = BR.ReadInt32() - meta.magic;
+
             // If we need to read / save tag info directly to file...
             if (!useMemoryStream)
             {
                 map.OpenMap(MapTypes.Internal);
                 BR = map.BR;
-                BR.BaseStream.Position = this.offsetInMap;
+                this.offsetInMap = this.chunkOffset;
             }
             else
-                this.offsetInMap += meta.offset;
+            {
+                this.chunkOffset -= meta.offset;
+                this.offsetInMap = iOffset + chunkOffset;
+            }
+
+            BR.BaseStream.Position = this.chunkOffset;
 
             byte[] b = BR.ReadBytes(this.size);
             string tempS = string.Empty;
