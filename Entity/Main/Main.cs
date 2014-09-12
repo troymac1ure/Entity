@@ -865,7 +865,8 @@ namespace entity.Main
             {
                 return;
             }
-
+            if (MessageBox.Show("Warning: This will overwrite any .ent plugins in the selected plugin set with ones created from .ifp/.ifp2 files. Continue?", "WARNING", MessageBoxButtons.YesNo) == DialogResult.No)
+                return;
             MiscFunctions.FormatIFPsInDirectory(folderBrowserDialog1.SelectedPath);
             MessageBox.Show("Converted IFP and IFP2 Files");
         }

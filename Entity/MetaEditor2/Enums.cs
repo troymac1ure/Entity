@@ -12,6 +12,13 @@ using HaloMap.RealTimeHalo;
 
 namespace entity.MetaEditor2
 {
+    /// <summary>
+    /// Enums are a list of string options, accessed through a number value.
+    /// <para>Example:</para>
+    /// <para>  0: None</para>
+    /// <para>  1: Negative</para>
+    /// <para>  2: Positive</para>
+    /// </summary>
     public partial class Enums : BaseField
     {
         #region Fields
@@ -24,10 +31,20 @@ namespace entity.MetaEditor2
         public int value;
         public int enumType;
         private bool isNulledOutReflexive = true;
-        public object[] Options;
+        public IFPIO.Option[] Options;
         #endregion
         #region Constructor
-        public Enums(Meta meta, string iEntName, Map map, int iOffsetInChunk, int iType, object[] ioptions, int iLineNumber)
+        /// <summary>
+        /// The Enums class
+        /// </summary>
+        /// <param name="meta">The controls meta data</param>
+        /// <param name="iEntName">The identifying name of the meta string</param>
+        /// <param name="map">The metas map file</param>
+        /// <param name="iOffsetInChunk">The offset to the string in the memory stream</param>
+        /// <param name="iType">8 for Enum8, 16 for Enum16, 32 for Enum32 types</param>
+        /// <param name="ioptions">The array of options available</param>
+        /// <param name="iLineNumber"></param>
+        public Enums(Meta meta, string iEntName, Map map, int iOffsetInChunk, int iType, IFPIO.Option[] ioptions, int iLineNumber)
         {
             this.meta = meta;
             this.LineNumber = iLineNumber;
@@ -108,7 +125,7 @@ namespace entity.MetaEditor2
             {
                 for (int counter = 0; counter < this.Options.Length; counter++)
                 {
-                    tempint.Add(((IFPIO.Option)this.Options[counter]).value);
+                    tempint.Add(this.Options[counter].value);
                 }
             }
             //see if the value in the map is in the list, if not, add it.
@@ -127,8 +144,8 @@ namespace entity.MetaEditor2
             {
                 for (int counter = 0; counter < this.Options.Length; counter++)
                 {
-                    if (tempint.IndexOf(((IFPIO.Option)this.Options[counter]).value) != -1)
-                        tempstring[tempint.IndexOf(((IFPIO.Option)this.Options[counter]).value)] += ": " + ((IFPIO.Option)this.Options[counter]).name.ToString();
+                    if (tempint.IndexOf(this.Options[counter].value) != -1)
+                        tempstring[tempint.IndexOf(this.Options[counter].value)] += ": " + this.Options[counter].name.ToString();
                 }
             }
             this.comboBox1.Items.Clear();

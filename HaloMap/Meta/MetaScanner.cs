@@ -501,6 +501,15 @@ namespace HaloMap.Meta
                                     // meta.MS.Write(tempbytes, 0, temppadsize);
                                     // meta.size += temppadsize;
                                     // }
+                                    if (tempreflex.paddingAlign != 0)
+                                    {
+                                        int temppadsize = meta.size % tempreflex.paddingAlign == 0 ? 0 : tempreflex.paddingAlign - (meta.size % tempreflex.paddingAlign);
+                                        meta.MS.SetLength((long)(meta.size + temppadsize));
+                                        byte[] tempbytes = new byte[temppadsize];
+                                        meta.MS.Write(tempbytes, 0, temppadsize);
+                                        meta.size += temppadsize;
+                                    }
+
                                     r.pointstoTagIndex = meta.TagIndex;
                                     r.pointstotagtype = meta.type;
                                     r.pointstotagname = meta.name;
@@ -576,7 +585,7 @@ namespace HaloMap.Meta
                             }
                             else
                             {
-                                if (i.ident != -1)
+                                if (i.ident > 0)
                                 {
                                     int off = i.mapOffset - meta.Map.MetaInfo.Offset[TagIndex];
 

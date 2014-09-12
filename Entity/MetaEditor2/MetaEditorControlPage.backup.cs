@@ -37,14 +37,11 @@ namespace entity.MetaEditor2
         /// Memory stream from a debug box, used for peeking and mass poking
         /// </summary>
         MemoryStream msDebug;
+        Meta oldMeta = null;
         /// <summary>
         /// Keeps a list of any hidden reflexive nodes for quick show/hide of tree nodes
         /// </summary>
         TreeView tvHiddenNodes = new TreeView();
-        /// <summary>
-        /// The topmost "MAIN" reflexive pointer
-        /// </summary>
-        reflexiveData mainReflexive = null;
 
         /** Section for adding undo ability of external tag data
         private List<externalData> externalChanges = new List<externalData>();
@@ -81,6 +78,34 @@ namespace entity.MetaEditor2
             return new byte[0];
         }
         */
+
+        public class reflexiveData
+        {
+            #region Constants and Fields
+            public int baseOffset;
+            public int chunkCount;
+            public int chunkSelected;
+            public int inTagNumber;
+            public TreeNode node;
+            public reflexiveData parent;
+            public IFPIO.Reflexive reflexive;
+            public ToolStripItem[] tsItems;
+            #endregion
+
+            #region Constructors and Destructors
+            public reflexiveData(reflexiveData parentReflexive)
+            {
+                node = null;
+                reflexive = null;
+                baseOffset = -1;
+                chunkCount = 0;
+                chunkSelected = -1;
+                inTagNumber = -1;
+                this.parent = parentReflexive;
+            }
+            #endregion
+        }
+        List<reflexiveData> refData = new List<reflexiveData>();
         #endregion
 
         #region Constructors and Destructors
@@ -100,14 +125,10 @@ namespace entity.MetaEditor2
             // Create a backup of the Tags memory stream, for restoring, comparing, etc
             msBackup = new MemoryStream(meta.MS.ToArray());
             msDebug = new MemoryStream((int)meta.MS.Length);
-
-            mainReflexive = createReflexiveList();  // Done
-            refreshTreeListing(mainReflexive);      // Done
-
+                        
+            createTreeListing();            
             this.treeViewTagReflexives.Sort();
             treeViewTagReflexives.SelectedNode = treeViewTagReflexives.Nodes[0];
-            // Default Peek/Poke to "Single Value"
-            this.tscbApplyTo.SelectedIndex = 0;
         }
         #endregion
 
@@ -173,37 +194,75 @@ namespace entity.MetaEditor2
             return (meta.TagIndex == ((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).inTagNumber);
         }
 
-        /// <summary>
-        /// Creates a "MAIN" reflexive and a complete list of all sub-reflexives.
-        /// </summary>
-        /// <returns>A Pointer to the topmost reflexive</returns>
-        private reflexiveData createReflexiveList()
+        private void createTreeListing()
         {
-            reflexiveData rd = new reflexiveData(null);
             try
             {
                 ifp = HaloMap.Plugins.IFPHashMap.GetIfp(meta.type, map.HaloVersion);
 
-                rd.node = new TreeNode(".:[ MAIN ]:.");
-                rd.node.Tag = rd;
+                #region Save info about our current Selected Node
+                TreeNode node = treeViewTagReflexives.SelectedNode;
+                string tempS = string.Empty;
+                string[] path = new string[0];
+                if (node != null)
+                {
+                    while (node.Level > 0)
+                    {
+                        tempS = "\\" + ((reflexiveData)node.Tag).reflexive.offset.ToString() + tempS;
+                        node = node.Parent;
+                    }
+                    path = ("0" + tempS).Split('\\');
+                }
+                #endregion
+
+                treeViewTagReflexives.Nodes.Clear();
+                treeViewTagReflexives.Sorted = cbSortByName.Checked;
+                treeViewTagReflexives.Nodes.Add("0", ".:[ MAIN ]:.");
+                reflexiveData rd = new reflexiveData(null);
+                treeViewTagReflexives.Nodes[0].Tag = rd;
+                rd.node = treeViewTagReflexives.Nodes[0];
                 rd.chunkCount = 1;
                 rd.chunkSelected = 0;
                 rd.baseOffset = 0; // meta.offset;
                 rd.inTagNumber = meta.TagIndex;
+                refData.Clear();
+                refData.Add(rd);
 
-                // Load all the children reflexives for the Tag ("Main")
-                rd.children = loadReflexivesList(rd, meta.offset, ifp.items);
+                map.OpenMap(MapTypes.Internal);
 
-                // Loads all chunk count, offset, etc data from MAIN down.
-                refreshReflexiveList(rd);
+                treeViewTagReflexives.Nodes[0].Nodes.AddRange(loadTreeReflexives(meta.offset, ifp.items, true));
 
-                rd.node.Expand();
+                map.CloseMap();
+
+                //treeViewTagReflexives.ExpandAll();
+                treeViewTagReflexives.Nodes[0].Expand();
+
+                #region Re-Select our previously selected node
+                TreeNodeCollection nodes = treeViewTagReflexives.Nodes[0].Nodes;
+                treeViewTagReflexives.Enabled = false;
+                treeViewTagReflexives.SelectedNode = treeViewTagReflexives.Nodes[0];
+                for (int i = 1; i < path.Length; i++)
+                {
+                    foreach (TreeNode tn in nodes)
+                    {
+                        if (((reflexiveData)tn.Tag).reflexive.offset.ToString() == path[i])
+                        {
+                            treeViewTagReflexives.SelectedNode = tn;
+                            nodes = tn.Nodes;
+                            break;
+                        }
+                    }
+                }
+                // If we didn't get the right node, deselect all nodes
+                if (treeViewTagReflexives.SelectedNode.Level != path.Length - 1)
+                    treeViewTagReflexives.SelectedNode = null;
+                treeViewTagReflexives.Enabled = true;
+                #endregion
             }
             catch (Exception ex)
             {
                 Globals.Global.ShowErrorMsg(string.Empty, ex);
             }
-            return rd;
         }
 
         private TreeNode findNodeOffset(TreeNodeCollection tns, int offset)
@@ -273,7 +332,6 @@ namespace entity.MetaEditor2
             // Should be empty, but clear anyways.
             panel.Controls.Clear();
 
-
             Object[] o;
             if (rd.reflexive == null)
                 o = ifp.items;
@@ -282,19 +340,6 @@ namespace entity.MetaEditor2
 
             bool labelFound = false;
             int tabIndex = 0;
-            // These are used to detect color fields and replace with a ColorWheel control
-            // Stores the control for an Alpha Color value
-            DataValues alphaControl = null;
-            // Stores the control for a blue Color value
-            DataValues blueControl = null;
-            // Stores the control for a green Color value
-            DataValues greenControl = null;
-            // Stores the control for a red Color value
-            DataValues redControl = null;
-            // Keeps track of how many controls are between fields; Colors need to be adjacent
-            int colorSpaceCount = 4;
-
-
             foreach (IFPIO.BaseObject ctl in o)
             {
                 tabIndex++;
@@ -307,15 +352,12 @@ namespace entity.MetaEditor2
 #if DEBUG
                                 if (((IFPIO.Reflexive)ctl).chunkSize == 1)
                                 {
+                                    StringBox sb = new StringBox(meta, ctl.name + " (reflexive)", map, ctl.offset, ctl.lineNumber, 0);
+
                                     System.IO.BinaryReader BR = new System.IO.BinaryReader(meta.MS);
-                                    BR.BaseStream.Position = ctl.offset + metaOffset;
-                                    int chunkCount = BR.ReadInt32();
-                                    if (chunkCount == 0)
-                                        continue;
+                                    BR.BaseStream.Position = ctl.offset + metaOffset + 4;
                                     int chunkOffset = BR.ReadInt32() - meta.magic;
                                     int tagIndex = map.Functions.ForMeta.FindMetaByOffset(chunkOffset);
-
-                                    StringBox sb = new StringBox(meta, ctl.name + " (reflexive)", map, ctl.offset, ctl.lineNumber, 0);
 
                                     if (enabled) sb.Populate(metaOffset, tagIndex == meta.TagIndex);
                                     if (sb.size > 0)
@@ -372,6 +414,7 @@ namespace entity.MetaEditor2
                                 panelMetaEditor.Controls[0].Controls[2].GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
                                 tempident.ContextMenuStrip = cmIdent;
                                 break;
+                                break;
                             }
                         case IFPIO.ObjectEnum.TagType:
                             continue;
@@ -385,17 +428,13 @@ namespace entity.MetaEditor2
                                 if (enabled) tempident.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
                                 tempident.Tag = "[" + tempident.Controls[2].Text + "] "
                                                 + tempident.Controls[1].Text;
+                                //tempident.Controls[1].ContextMenuStrip = identContext;
                                 panelMetaEditor.Controls.Add(tempident);
                                 tempident.BringToFront();
                                 panelMetaEditor.Controls[0].Controls[1].MouseEnter += new EventHandler(cbIdent_MouseEnter);
                                 panelMetaEditor.Controls[0].Controls[1].MouseLeave += new EventHandler(cbIdent_MouseLeave);
                                 panelMetaEditor.Controls[0].Controls[2].GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
                                 tempident.ContextMenuStrip = cmIdent;
-                                // Hide the Mass Field Editor for Idents in the parent node
-                                if (treeViewTagReflexives.SelectedNode.Parent == null)
-                                    tsIdentOpenMassFieldEdit.Enabled = false;
-                                else
-                                    tsIdentOpenMassFieldEdit.Enabled = true;
                                 break;
                             }
                         case IFPIO.ObjectEnum.StringID:
@@ -509,7 +548,6 @@ namespace entity.MetaEditor2
                                         break;
                                     Indices tempdatavalues = new Indices(meta, ctl.name, map, ctl.offset, ctl.ObjectType, ((IFPIO.IFPInt)ctl).entIndex);
                                     tempdatavalues.TabIndex = tabIndex;
-                                    if (enabled) tempdatavalues.Populate(metaOffset, rd.parent.baseOffset);
                                     panelMetaEditor.Controls.Add(tempdatavalues);
                                     tempdatavalues.BringToFront();
                                 }
@@ -550,15 +588,7 @@ namespace entity.MetaEditor2
                                 foreach (Control cntl in tempbitmask.Controls[0].Controls)
                                 {
                                     cntl.GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
-                                    // Control mouse in/out for extra description popup box
-                                    cntl.MouseEnter += new EventHandler(cntl_MouseEnter);
-                                    cntl.MouseLeave += new EventHandler(cntl_MouseLeave);
-
-                                    int optionNum = int.Parse(cntl.Tag.ToString());
-                                    if (optionNum < tempbitmask.Options.Length && tempbitmask.Options[optionNum].description != null)
-                                        cntl.ForeColor = Color.DarkGoldenrod;
-
-                                    toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << optionNum).ToString() + ")");
+                                    toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << int.Parse(cntl.Tag.ToString())).ToString() + ")");
                                 }
                                 break;
                             }
@@ -574,14 +604,7 @@ namespace entity.MetaEditor2
                                 foreach (Control cntl in tempbitmask.Controls[0].Controls)
                                 {
                                     cntl.GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
-                                    // Control mouse in/out for extra description popup box
-                                    cntl.MouseEnter += new EventHandler(cntl_MouseEnter);
-                                    cntl.MouseLeave += new EventHandler(cntl_MouseLeave);
-                                    
-                                    int optionNum = int.Parse(cntl.Tag.ToString());
-                                    if (optionNum < tempbitmask.Options.Length && tempbitmask.Options[optionNum].description != null)
-                                        cntl.ForeColor = Color.DarkGoldenrod;
-                                    toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << optionNum).ToString() + ")");
+                                    toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << int.Parse(cntl.Tag.ToString())).ToString() + ")");
                                 }
                                 break;
                             }
@@ -598,14 +621,7 @@ namespace entity.MetaEditor2
                                 foreach (Control cntl in tempbitmask.Controls[0].Controls)
                                 {
                                     cntl.GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
-                                    // Control mouse in/out for extra description popup box
-                                    cntl.MouseEnter += new EventHandler(cntl_MouseEnter);
-                                    cntl.MouseLeave += new EventHandler(cntl_MouseLeave);
-
-                                    int optionNum = int.Parse(cntl.Tag.ToString());
-                                    if (optionNum < tempbitmask.Options.Length && tempbitmask.Options[optionNum].description != null)
-                                        cntl.ForeColor = Color.DarkGoldenrod;
-                                    toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << optionNum).ToString() + ")");
+                                    toolTip1.SetToolTip(cntl, "Bit " + cntl.Tag.ToString() + " (Value = " + (1 << int.Parse(cntl.Tag.ToString())).ToString() + ")");
                                 }
                                 break;
                             }
@@ -692,31 +708,8 @@ namespace entity.MetaEditor2
                         }
                     }
 #endif
-                    // Should always be true, but for safety
-                    if (panelMetaEditor.Controls[0] is BaseField)
-                    {
-                        // Set extra description text for control if it exists
-                        if (ctl.description != null)
-                        {
-                            ((BaseField)panelMetaEditor.Controls[0]).description = ctl.description;
-                            //((BaseField)panelMetaEditor.Controls[0]).Controls[0].Text += "*";// +((BaseField)panelMetaEditor.Controls[0]).Controls[0].Text;
-                            ((BaseField)panelMetaEditor.Controls[0]).Controls[0].ForeColor = Color.DarkGoldenrod;
-                        }
-                    }
 
-                    // Control mouse in/out for extra description popup box
-                    panelMetaEditor.Controls[0].Controls[0].MouseEnter += new EventHandler(cntl_MouseEnter);
-                    panelMetaEditor.Controls[0].Controls[0].MouseLeave += new EventHandler(cntl_MouseLeave);
-                    
-                    // Control when a control receives focus
                     panelMetaEditor.Controls[0].Controls[1].GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
-
-                    // Make sure we are in a reflexive and that we don't already have a menustrip
-                    if (treeViewTagReflexives.SelectedNode.Parent != null && panelMetaEditor.Controls[0].ContextMenuStrip == null)
-                    {
-                        panelMetaEditor.Controls[0].Controls[1].ContextMenuStrip = cmMassField;
-                    }
-
                     if (ctl.ObjectType != IFPIO.ObjectEnum.Struct)
                     {
                         int temp = ctl.offset;
@@ -729,104 +722,6 @@ namespace entity.MetaEditor2
                                 "\n         offset in tag: " + (rd.baseOffset + temp).ToString() + " (" + toHex(rd.baseOffset + temp) + ")" +
                                 "\n        offset in map: " + (rd.baseOffset + meta.offset + temp).ToString() + " (" + toHex(rd.baseOffset + meta.offset + temp) + ")";
 
-                        #region Change A,R,G,B color fields to ARGB_color control
-                        if (panelMetaEditor.Controls.Count > 0 && panelMetaEditor.Controls[0] is DataValues)
-                        {
-                            // if (((ctl.name.ToLower().Contains(" a") & ctl.name[ctl.name.ToLower().IndexOf(" a")]) ||
-                            // ctl.name.ToLower().Contains("alpha"))& alphaControl == null)
-                            if (ColorWheel.checkForColor(ctl.name, alphaControl, " a", "alpha"))
-                            {
-                                alphaControl = (DataValues)panelMetaEditor.Controls[0];
-                                colorSpaceCount = 0;
-                            }
-
-                                // if (ctl.name.ToLower().Contains(" r") & redControl == null)
-                            else if (ColorWheel.checkForColor(ctl.name, redControl, " r", "red"))
-                            {
-                                redControl = (DataValues)panelMetaEditor.Controls[0];
-                                colorSpaceCount = 0;
-                            }
-
-                                // if (ctl.name.ToLower().Contains(" g") & greenControl == null)
-                            else if (ColorWheel.checkForColor(ctl.name, greenControl, " g", "green"))
-                            {
-                                greenControl = (DataValues)panelMetaEditor.Controls[0];
-                                colorSpaceCount = 0;
-                            }
-
-                                // if (ctl.name.ToLower().Contains(" b") & blueControl == null)
-                            else if (ColorWheel.checkForColor(ctl.name, blueControl, " b", "blue"))
-                            {
-                                blueControl = (DataValues)panelMetaEditor.Controls[0];
-                                colorSpaceCount = 0;
-                            }
-                            else
-                            {
-                                colorSpaceCount++;
-                                if (colorSpaceCount == 1)
-                                {
-                                    alphaControl = null;
-                                    redControl = null;
-                                    greenControl = null;
-                                    blueControl = null;
-                                }
-                            }
-
-                            if (redControl != null & greenControl != null & blueControl != null)
-                            {
-                                // Create the new argb_color class
-                                argb_color tempARGBColor = new argb_color(
-                                    meta, 
-                                    redControl.EntName.ToUpper().Replace(" R", string.Empty).Replace("RED",string.Empty), 
-                                    map, 
-                                    alphaControl != null ? alphaControl.chunkOffset : redControl.chunkOffset,
-                                    alphaControl != null, 
-                                    ctl.ObjectType,
-                                    alphaControl != null ? alphaControl.LineNumber : redControl.LineNumber
-                                    );
-                                tempARGBColor.TabIndex = tabIndex;
-                                if (enabled) tempARGBColor.Populate(metaOffset, rd.inTagNumber == meta.TagIndex);
-
-                                // Remove the DataField controls & dispose of them
-                                if (alphaControl != null)
-                                {
-                                    // Retrieve the first tooltip for the control from the alphaControl
-                                    tip = toolTip1.GetToolTip(alphaControl);
-                                    panelMetaEditor.Controls.Remove(alphaControl);
-                                    alphaControl.Dispose();
-                                }
-                                else
-                                    // Retrieve the first tooltip for the control from the redControl
-                                    tip = toolTip1.GetToolTip(redControl);
-
-                                panelMetaEditor.Controls.Remove(redControl);
-                                redControl.Dispose();
-                                panelMetaEditor.Controls.Remove(greenControl);
-                                greenControl.Dispose();
-                                panelMetaEditor.Controls.Remove(blueControl);
-                                blueControl.Dispose();
-                                
-                                // Add the argb_color control to the panel
-                                panelMetaEditor.Controls.Add(tempARGBColor);
-
-                                tempARGBColor.BringToFront();
-
-
-                                // Reset for next batch
-                                colorSpaceCount++;
-                                alphaControl = null;
-                                redControl = null;
-                                greenControl = null;
-                                blueControl = null;
-                            }
-                        }
-                        else
-                        {
-                            colorSpaceCount++;
-                        }
-                        #endregion
-
-                        #region Bitmask tooltip offsets
                         if (panelMetaEditor.Controls[0] is Bitmask)
                         {
                             Bitmask tempbitmask = ((Bitmask)panelMetaEditor.Controls[0]);
@@ -840,7 +735,6 @@ namespace entity.MetaEditor2
                             }
                             tip += "\n\nBITMASK VALUE:\n" + s;
                         }
-                        #endregion
 
                         toolTip1.SetToolTip(panelMetaEditor.Controls[0].Controls[0], tip);
 
@@ -857,42 +751,6 @@ namespace entity.MetaEditor2
             panel.Visible = true;
         }
 
-        void cntl_MouseEnter(object sender, EventArgs e)
-        {
-            string desc = string.Empty;
-            Control mainControl = (Control)sender;
-            Control cntl = mainControl;
-            while ((cntl != null) && !(cntl is BaseField))
-                cntl = cntl.Parent;
-            if (cntl == null)
-                return;
-            // Set description for control
-            desc = ((BaseField)cntl).description;
-
-            // If control is checkbox, see if there is an individual checkbox description.
-            if (mainControl is CheckBox)
-            {
-                int bit = int.Parse(mainControl.Tag.ToString());
-                switch (cntl.Name.ToString())
-                {
-                    case "Bitmask":
-                        string temp = ((Bitmask)cntl).Options[bit].description;
-                        desc = temp;
-                        break;
-                }
-            }
-            if (desc != null && desc != string.Empty)
-                showInfoBox(mainControl.Text.ToUpper() + ":" + Environment.NewLine + desc, 0);
-        }
-
-        void cntl_MouseLeave(object sender, EventArgs e)
-        {            
-            if (panelInfoPane.Visible)
-            {
-                showInfoBox(panelInfoPane.Text, 40);
-            }
-        }
-
 
         /// <summary>
         /// Loads all the labels into the dropdown selection box.
@@ -902,22 +760,15 @@ namespace entity.MetaEditor2
             List<string> ls = new List<string>();
             IFPIO.BaseObject bo = null;
 
-            if (rd.reflexive.label == "" || rd.reflexive.label == null)
+            if (rd.reflexive.label == "")
                 return new string[rd.chunkCount];
-
-            try
+            for (int i = 0; i <= rd.reflexive.items.Length; i++)
             {
-                for (int i = 0; i <= rd.reflexive.items.Length; i++)
+                if (rd.reflexive.label == ((IFPIO.BaseObject)rd.reflexive.items[i]).name)
                 {
-                    if (rd.reflexive.label == ((IFPIO.BaseObject)rd.reflexive.items[i]).name)
-                    {
-                        bo = (IFPIO.BaseObject)rd.reflexive.items[i];
-                        break;
-                    }
+                    bo = (IFPIO.BaseObject)rd.reflexive.items[i];
+                    break;
                 }
-            }
-            catch
-            {
             }
 
             // If label does not exist, then return an empty array
@@ -1081,9 +932,6 @@ namespace entity.MetaEditor2
                     case IFPIO.ObjectEnum.Int:
                         s += BR.ReadInt32().ToString();
                         break;
-                    case IFPIO.ObjectEnum.Unused:
-                        s += BitConverter.ToString(BR.ReadBytes(((IFPIO.Unused)bo).size), 0);
-                        break;
                     #endregion
                     #region String ID Labels
                     case IFPIO.ObjectEnum.StringID:
@@ -1099,188 +947,44 @@ namespace entity.MetaEditor2
                     case IFPIO.ObjectEnum.UnicodeString256:
                     case IFPIO.ObjectEnum.UnicodeString64:
                         Encoding decode = Encoding.Unicode;
-                        try
-                        {
-                            byte[] tempbytes = BR.ReadBytes(((IFPIO.IFPString)bo).size);
-                            s += decode.GetString(tempbytes);
-                            s = s.TrimEnd('\0');
-                        }
-                        catch
-                        {
-                            s = "UNICODE ERROR";
-                        }
+                        byte[] tempbytes = BR.ReadBytes(((IFPIO.IFPString)bo).size);
+                        s += decode.GetString(tempbytes);
+                        s = s.TrimEnd('\0');
                         break;
-                    case IFPIO.ObjectEnum.String:
                     case IFPIO.ObjectEnum.String32:
                     case IFPIO.ObjectEnum.String256:
-                        try
-                        {
-                            s += new string(BR.ReadChars(((IFPIO.IFPString)bo).size));
-                            s = s.TrimEnd('\0');
-                        }
-                        catch
-                        {
-                            s = "LABEL ERROR";
-                        }
+                        s += new string(BR.ReadChars(((IFPIO.IFPString)bo).size));
+                        s = s.TrimEnd('\0');
                         break;
                     #endregion
                     default:
                         throw new Exception("Whoops! Forgot to code in \"" + bo.ObjectType.ToString() + "\" data type for labels!\n" +
                                             "Slap the programmer and tell him about this message!");
-                        break;
+                        return new string[rd.chunkCount];
                 }
                 ls.Add(s);
             }
             return ls.ToArray();
         }
 
-        /// <summary>
-        /// Uses recursion to create a structured reflexiveData listing. Call "refreshReflexiveList()" afterwards.
-        /// </summary>
-        /// <param name="parentReflexive">The starting reflexive to start at. (Usually "MAIN")</param>
-        /// <param name="metaOffset">The offset to the meta</param>
-        /// <param name="items">IFPIO item listing</param>
-        /// <returns>A list of children reflexiveData</returns>
-        public reflexiveData[] loadReflexivesList(reflexiveData parentReflexive, int metaOffset, object[] items)
+        public TreeNode[] loadTreeReflexives(int metaOffset, object[] items, bool enabled)
         {
-            List<reflexiveData> rds = new List<reflexiveData>();
+            List<TreeNode> tns = new List<TreeNode>();
             foreach (object o in items)
             {
                 if (o is IFPIO.Reflexive)
                 {
                     IFPIO.Reflexive IFPR = (IFPIO.Reflexive)o;
-                    reflexiveData rd = new reflexiveData(parentReflexive);
-                    rd.node = new TreeNode(IFPR.name);
-                    rd.node.Name = rd.node.Text;
-                    rd.node.Tag = rd;
+                    TreeNode tn = new TreeNode(IFPR.name);
+                    reflexiveData rd = new reflexiveData();
+                    tn.Tag = rd;
+                    rd.node = tn;
                     rd.reflexive = IFPR;
-                    rd.chunkSelected = 0;
+                    tn.ForeColor = Color.LightGray;
+                    tn.Name = IFPR.name;
+                    tn.ToolTipText = "Offset: " + rd.reflexive.offset.ToString();
 
-                    // Add if non-existant, otherwise update Text
-                    if (rd.inTagNumber == meta.TagIndex)
-                        rd.children = loadReflexivesList(rd, meta.offset + rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize, IFPR.items);
-                    else
-                        rd.children = loadReflexivesList(rd, rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize, IFPR.items);
-
-                    rds.Add(rd);
-                }
-            }
-            return rds.ToArray();
-        }
-
-        // public reflexiveData[] loadTreeReflexives(reflexiveData parentReflexive, int metaOffset, object[] items, bool enabled)
-        /// <summary>
-        /// Scans from the given reflexive through all children and updates counts, offsets, etc
-        /// </summary>
-        /// <param name="parentReflexive">The reflexive to start scanning at</param>
-        public void refreshReflexiveList(reflexiveData parentReflexive)
-        {
-            map.OpenMap(MapTypes.Internal);
-
-            if (parentReflexive.parent != null)
-            {
-                // Update information for currently selected reflexive
-                if (parentReflexive.inTagNumber != meta.TagIndex && parentReflexive.parent.inTagNumber != meta.TagIndex)
-                {
-                    map.OpenMap(MapTypes.Internal);
-                    BR = map.BR;
-                }
-                else
-                {
-                    BR = new BinaryReader(meta.MS);
-                }
-                BR.BaseStream.Position = parentReflexive.parent.baseOffset + parentReflexive.reflexive.offset;
-                parentReflexive.chunkCount = BR.ReadInt32();
-                parentReflexive.baseOffset = BR.ReadInt32() - meta.magic + parentReflexive.chunkSelected * parentReflexive.reflexive.chunkSize;
-
-                parentReflexive.inTagNumber = map.Functions.ForMeta.FindMetaByOffset(parentReflexive.baseOffset);
-                if (parentReflexive.inTagNumber == meta.TagIndex)
-                {
-                    parentReflexive.baseOffset -= meta.offset;
-                    parentReflexive.node.ForeColor = Color.Black;
-                    parentReflexive.node.ToolTipText = "Offset: " + parentReflexive.reflexive.offset.ToString();
-                }
-                else
-                {
-                    map.CloseMap();
-                    if (parentReflexive.inTagNumber != -1)
-                    {
-                        parentReflexive.node.ForeColor = Color.Red;
-                        parentReflexive.node.ToolTipText = "Data Source Located in:\n[" + map.MetaInfo.TagType[parentReflexive.inTagNumber].ToLower() +
-                                        "] " + map.FileNames.Name[parentReflexive.inTagNumber].ToLower();
-                    }
-                }
-                
-                // Update all information for children
-                refreshReflexiveListRecursive(
-                parentReflexive,
-                meta.offset
-                + parentReflexive.baseOffset
-                );
-            }
-            else
-            {
-                refreshReflexiveListRecursive(
-                parentReflexive,
-                meta.offset
-                );
-            }
-
-            map.CloseMap();
-        }
-
-        private void refreshReflexiveListRecursive(reflexiveData parentReflexive, int metaOffset)
-        {
-            foreach (reflexiveData rd in parentReflexive.children)
-            {
-                // If parent reflexive is 0 count, make sure to 0 count all children as well
-                if (parentReflexive.baseOffset >= 0)
-                {
-                    map.BR.BaseStream.Position = rd.reflexive.offset + metaOffset;
-                    rd.chunkCount = map.BR.ReadInt32();
-                }
-                else
-                {
-                    rd.chunkCount = 0;
-                }
-
-                // If reflexive has a count
-                if (rd.chunkCount > 0)
-                {
-                    rd.chunkSelected = 0;
-                    rd.baseOffset = map.BR.ReadInt32() - meta.magic;
-                    // Some listings are actually in other tags!
-                    // Check [BLOC] "objects\\vehicles\\wraith\\garbage\\wing_boost\\wing_boost"
-                    //   > attachments[0] = [BLOC] "objects\\vehicles\\ghost\\garbage\\seat\\seat"
-                    rd.inTagNumber = map.Functions.ForMeta.FindMetaByOffset(rd.baseOffset);
-                    if (rd.inTagNumber == -1)
-                    {
-                        rd.chunkCount = 0;
-                        rd.chunkSelected = -1;
-                        continue;
-                    }
-                    if (rd.inTagNumber == meta.TagIndex)
-                        rd.baseOffset -= meta.offset;
-                }
-                else
-                {
-                    rd.chunkSelected = -1;
-                    rd.baseOffset = -1;
-                    rd.inTagNumber = -1;
-                }
-                if (rd.inTagNumber == meta.TagIndex)
-                    refreshReflexiveListRecursive(rd, meta.offset + rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize);
-                else
-                    refreshReflexiveListRecursive(rd, rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize);
-
-            }
-        }
-
-        /*
-        private void refreshReflexiveListRecursive(reflexiveData parentReflexive)
-        {
-
-                    if (parentReflexive.chunkCount != 0)
+                    if (enabled)
                     {
                         map.BR.BaseStream.Position = IFPR.offset + metaOffset;
                         rd.chunkCount = map.BR.ReadInt32();
@@ -1313,129 +1017,99 @@ namespace entity.MetaEditor2
                     }
                     tn.Text += " [" + rd.chunkCount.ToString() + "]";
 
+                    refData.Add(rd);
+
                     // Add if non-existant, otherwise update Text
                     if (rd.inTagNumber == meta.TagIndex)
-                        rd.children = loadTreeReflexives(rd, meta.offset + rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize, IFPR.items, rd.chunkCount != 0);
+                        tn.Nodes.AddRange(loadTreeReflexives(meta.offset + rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize, IFPR.items, rd.chunkCount != 0));
                     else
-                        rd.children = loadTreeReflexives(rd, rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize, IFPR.items, rd.chunkCount != 0);
-
-                    //if (rd.chunkCount != 0 | !cbHideUnused.Checked)
-                    rds.Add(rd);
+                        tn.Nodes.AddRange(loadTreeReflexives(rd.baseOffset + rd.chunkSelected * rd.reflexive.chunkSize, IFPR.items, rd.chunkCount != 0));
+                    
+                    if (rd.chunkCount != 0 | !cbHideUnused.Checked)
+                        tns.Add(tn);
                 }
             }
-            return rds.ToArray();
+            return tns.ToArray();
         }
-        */
 
-        private void refreshTreeListing(reflexiveData parentReflexive)
+        private void refreshTreeListing(TreeNode parent)
         {
-            TreeNode parentNode = parentReflexive.node;
-            if (parentReflexive.chunkCount == 0 && cbHideUnused.Checked)
-            {
-                // If a reflexive was listed, but no longer contains a count, remove it from the tree
-                if (parentReflexive.parent.node.Nodes.Contains(parentReflexive.node))
-                    parentReflexive.parent.node.Nodes.Remove(parentReflexive.node);
+            if (((reflexiveData)parent.Tag).chunkCount == 0)
                 return;
-            }
 
+            treeViewTagReflexives.SuspendLayout();
             // See if we are in the MAIN of the tag
-            if (parentReflexive != mainReflexive)
+            if (parent != treeViewTagReflexives.Nodes[0])
             {
-                if (parentReflexive.inTagNumber == meta.TagIndex)
-                {
-                    parentNode.ForeColor = Color.Black;
-                    parentNode.ToolTipText = "Offset: " + parentReflexive.reflexive.offset.ToString();
-                }
-                else
-                {
-                    if (parentReflexive.inTagNumber != -1)
-                    {
-                        parentNode.ForeColor = Color.Red;
-                        parentNode.ToolTipText = "Data Source Located in:\n[" + map.MetaInfo.TagType[parentReflexive.inTagNumber].ToLower() +
-                                        "] " + map.FileNames.Name[parentReflexive.inTagNumber].ToLower();
-                    }
-                }
-                #region old unused code
-                /*
-                if (parentReflexive.inTagNumber != meta.TagIndex && parentReflexive.parent.inTagNumber != meta.TagIndex)
+                reflexiveData rd = (reflexiveData)parent.Tag;
+                if (rd.inTagNumber != meta.TagIndex && ((reflexiveData)parent.Parent.Tag).inTagNumber != meta.TagIndex)
                 {
                     map.OpenMap(MapTypes.Internal);
                     BR = map.BR;
-                    BR.BaseStream.Position = ((reflexiveData)parentNode.Parent.Tag).baseOffset + parentReflexive.reflexive.offset;
+                    BR.BaseStream.Position = ((reflexiveData)parent.Parent.Tag).baseOffset + rd.reflexive.offset;
                 }
                 else
                 {
                     BR = new BinaryReader(meta.MS);
-                    BR.BaseStream.Position = parentReflexive.parent.baseOffset + parentReflexive.reflexive.offset;
+                    BR.BaseStream.Position = ((reflexiveData)parent.Parent.Tag).baseOffset + rd.reflexive.offset;
                 }
-                parentReflexive.chunkCount = BR.ReadInt32();
-                parentReflexive.baseOffset = BR.ReadInt32() - meta.magic + parentReflexive.chunkSelected * parentReflexive.reflexive.chunkSize;
+                rd.chunkCount = BR.ReadInt32();
+                rd.baseOffset = BR.ReadInt32() - meta.magic + rd.chunkSelected * rd.reflexive.chunkSize;
 
-                parentReflexive.inTagNumber = map.Functions.ForMeta.FindMetaByOffset(parentReflexive.baseOffset);
-                if (parentReflexive.inTagNumber == meta.TagIndex)
+                rd.inTagNumber = map.Functions.ForMeta.FindMetaByOffset(rd.baseOffset);
+                if (rd.inTagNumber == meta.TagIndex)
                 {
-                    parentReflexive.baseOffset -= meta.offset;
-                    parentNode.ForeColor = Color.Black;
-                    parentNode.ToolTipText = "Offset: " + parentReflexive.reflexive.offset.ToString();
+                    rd.baseOffset -= meta.offset;
+                    parent.ForeColor = Color.Black;
+                    parent.ToolTipText = "Offset: " + rd.reflexive.offset.ToString();
                 }
                 else
                 {
                     map.CloseMap();
-                    if (parentReflexive.inTagNumber != -1)
+                    if (rd.inTagNumber != -1)
                     {
-                        parentNode.ForeColor = Color.Red;
-                        parentNode.ToolTipText = "Data Source Located in:\n[" + map.MetaInfo.TagType[parentReflexive.inTagNumber].ToLower() +
-                                        "] " + map.FileNames.Name[parentReflexive.inTagNumber].ToLower();
+                        parent.ForeColor = Color.Red;
+                        parent.ToolTipText = "Data Source Located in:\n[" + map.MetaInfo.TagType[rd.inTagNumber].ToLower() +
+                                        "] " + map.FileNames.Name[rd.inTagNumber].ToLower();
                     }
                 }
-                */
-                #endregion
             }
-            if (parentReflexive == mainReflexive)
-            {
-                if (!treeViewTagReflexives.Nodes.Contains(parentReflexive.node))
-                {
-                    treeViewTagReflexives.Nodes.Add(parentReflexive.node);
-                }
-            }
-            else
-            {
-                if (!parentReflexive.parent.node.Nodes.Contains(parentReflexive.node))
-                {
-                    parentReflexive.parent.node.Nodes.Add(parentReflexive.node);
-                }
-            }
-         
-            refreshTreeSubNodes(parentReflexive);
+            refreshTreeSubNodes(parent);
+            treeViewTagReflexives.ResumeLayout();
         }
 
-        private void refreshTreeSubNodes(reflexiveData parent)
+        private void refreshTreeSubNodes(TreeNode parent)
         {
-            foreach (reflexiveData rd in parent.children)
+            foreach (TreeNode tn in parent.Nodes)
             {
-                TreeNode tn = rd.node;
-                /*
+                reflexiveData rd = (reflexiveData)tn.Tag;
                 if (rd.inTagNumber != meta.TagIndex)
                 {
                     map.OpenMap(MapTypes.Internal);
                     BR = map.BR;
-                    BR.BaseStream.Position = parent.baseOffset + rd.reflexive.offset;
-                    if (parent.inTagNumber == meta.TagIndex)
+                    BR.BaseStream.Position = ((reflexiveData)parent.Tag).baseOffset + rd.reflexive.offset;
+                    if (((reflexiveData)parent.Tag).inTagNumber == meta.TagIndex)
                         BR.BaseStream.Position += meta.offset;
                 }
                 else
                 {
                     BR = new BinaryReader(meta.MS);
-                    BR.BaseStream.Position = parent.baseOffset + rd.reflexive.offset;
+                    BR.BaseStream.Position = ((reflexiveData)parent.Tag).baseOffset + rd.reflexive.offset;
                 }
                 rd.chunkCount = BR.ReadInt32();
                 rd.baseOffset = BR.ReadInt32() - meta.magic + rd.chunkSelected * rd.reflexive.chunkSize;
-                */
 
-                tn.ForeColor = (rd.chunkCount == 0 ? Color.LightGray : Color.Black);
-
-                if (rd.inTagNumber != meta.TagIndex)
+                if (rd.chunkCount == 0)
                 {
+                    tn.ForeColor = Color.LightGray;                    
+                }
+
+                rd.inTagNumber = map.Functions.ForMeta.FindMetaByOffset(rd.baseOffset);
+                if (rd.inTagNumber == meta.TagIndex)
+                    rd.baseOffset -= meta.offset;
+                else
+                {
+                    map.CloseMap();
                     if (rd.inTagNumber != -1)
                     {
                         tn.ForeColor = Color.Red;
@@ -1444,22 +1118,7 @@ namespace entity.MetaEditor2
                     }
                 }
                 tn.Text = tn.Name + " [" + rd.chunkCount.ToString() + "]";
-                refreshTreeListing(rd);
-            }
-        }
-
-        // Create a node sorter that implements the IComparer interface. 
-        public class NodeSorter : System.Collections.IComparer
-        {
-            // Compare the length of the strings, or the strings 
-            // themselves, if they are the same length. 
-            public int Compare(object x, object y)
-            {
-                TreeNode tx = x as TreeNode;
-                TreeNode ty = y as TreeNode;
-                reflexiveData rx = (reflexiveData)tx.Tag;
-                reflexiveData ry = (reflexiveData)ty.Tag;
-                return rx.reflexive.offset - ry.reflexive.offset;
+                refreshTreeListing(tn);
             }
         }
 
@@ -1504,16 +1163,6 @@ namespace entity.MetaEditor2
                     case "entity.MetaEditor2.DataValues":
                         {
                             ((DataValues)this.panelMetaEditor.Controls[counter]).Populate(offset, rd.inTagNumber == meta.TagIndex);
-                            if (((DataValues)this.panelMetaEditor.Controls[counter]).ValueType == IFPIO.ObjectEnum.Unused)
-                            {
-                                DataValues dv = (DataValues )(this.panelMetaEditor.Controls[counter]);
-                                this.meta.MS.Position = offset + dv.chunkOffset;
-                                byte[] tempB = new byte[dv.size];
-                                this.meta.MS.Read(tempB, 0, tempB.Length);
-                                toolTip1.SetToolTip(dv.Controls[1], toHex(tempB));
-                                toolTip1.SetToolTip(dv.Controls[1], BitConverter.ToString(tempB).Replace('-', ' '));
-                                toolTip1.IsBalloon = true;
-                            }
                             break;
                         }
                     case "entity.MetaEditor2.Enums":
@@ -1535,6 +1184,7 @@ namespace entity.MetaEditor2
                         }
                     default:
                         throw new Exception("Unhandled type: " + this.panelMetaEditor.Controls[counter].GetType().ToString());
+                        break;
                 }
 
                 int temp = ((BaseField)this.panelMetaEditor.Controls[counter]).offsetInMap;
@@ -1648,14 +1298,10 @@ namespace entity.MetaEditor2
             WinMetaEditor wME = ((WinMetaEditor)this.ParentForm);
             Meta oldMeta = map.SelectedMeta;
             ((MapForms.MapForm)this.ParentForm.Owner).LoadMeta(((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).inTagNumber);
-            //int tempTabNum = wME.addNewTab(map.SelectedMeta, true);
+            int tempTabNum = wME.addNewTab(map.SelectedMeta, true);
             map.SelectedMeta = oldMeta;
-
-            if (wME.tabs.SelectedTab.AttachedControl.Controls[0] is MetaEditorControlPage)
-            {
-                MetaEditorControlPage ActiveMECP = (MetaEditorControlPage)wME.tabs.SelectedTab.AttachedControl.Controls[0];
-                ActiveMECP.gotoOffset(((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).baseOffset);
-            }
+            
+            ((MetaEditorControlPage)this).gotoOffset(((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).baseOffset);
 
             wME.Show();
             wME.Focus();
@@ -1790,25 +1436,13 @@ namespace entity.MetaEditor2
         }
 
         private void cbHideUnused_CheckedChanged(object sender, EventArgs e)
-        {            
-            refreshTreeListing(mainReflexive);
+        {
+            createTreeListing();
         }
 
         private void cbSortByName_CheckedChanged(object sender, EventArgs e)
         {
-            TreeNode tn = treeViewTagReflexives.SelectedNode;
-
-            // By disabling the TreeView, it will not call _AfterSelect(), therefore the data is not reloaded
-            treeViewTagReflexives.Enabled = false;
-
-            // Select default name sorting or custom offset sorting
-            if (cbSortByName.Checked)
-                treeViewTagReflexives.TreeViewNodeSorter = null;
-            else
-                treeViewTagReflexives.TreeViewNodeSorter = new NodeSorter();
-            this.treeViewTagReflexives.Sort();
-            treeViewTagReflexives.SelectedNode = tn;
-            treeViewTagReflexives.Enabled = true;
+            createTreeListing();
         }
 
         /// <summary>
@@ -1954,17 +1588,12 @@ namespace entity.MetaEditor2
         */
         #endregion
 
-        /// <summary>
-        /// Updates the current meta with the selected node.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void treeViewTagReflexives_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (!treeViewTagReflexives.Enabled)
                 return;
 
-            TreeNode tn = treeViewTagReflexives.SelectedNode;
+            TreeNode tn = e.Node;
 
             // Show a wait cursor while the selected reflexive is loading
             this.Cursor = Cursors.WaitCursor;
@@ -2126,9 +1755,9 @@ namespace entity.MetaEditor2
 
         void tsbc_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Did this to stop populating data twice on load (NOTE said stops external reflexives from loading data?)
-            if (!((ToolStripItem)sender).Enabled)
-                return;
+            // Did this to stop populating data twice on load, but stops external reflexives from loading data
+            //if (!((ToolStripItem)sender).Enabled)
+            //    return;
 
             #region Determine which comboBox was changed and modify related Reflexive Data accordingly
             ToolStripComboBox tscb = (ToolStripComboBox)sender;
@@ -2163,12 +1792,8 @@ namespace entity.MetaEditor2
             }
             tn.Nodes.AddRange(tn2);
             */
-
-            refreshReflexiveList(rd);
-
-            treeViewTagReflexives.SuspendLayout();
-            refreshTreeListing(rd);
-            treeViewTagReflexives.ResumeLayout();
+            
+            refreshTreeListing(tn);
 
             // Update tree listings counters
             int levelsUp = treeViewTagReflexives.SelectedNode.Level - rd.node.Level;
@@ -2288,8 +1913,7 @@ namespace entity.MetaEditor2
             meta.MS.Write(b, 0, b.Length);
 
             ReloadMetaForSameReflexive(((reflexiveData)treeViewTagReflexives.SelectedNode.Tag).baseOffset);
-            if (CurrentControl != null) 
-                CurrentControl.Focus();
+            CurrentControl.Focus();
             this.showInfoBox("All values in all chunks of current reflexive reset to last save / original values", 5200);
         }
 
@@ -2473,7 +2097,7 @@ namespace entity.MetaEditor2
                     rd.inTagNumber = r.tagIndex;
 
                     // Refresh the tree (to show black/internal or red/external and update tooltip)
-                    refreshTreeListing(rd);
+                    refreshTreeListing(tn);
                     // Reselect to update external tag lockout and warning box
                     treeViewTagReflexives_AfterSelect(this, new TreeViewEventArgs(tn));
                 }
@@ -2738,14 +2362,14 @@ namespace entity.MetaEditor2
                                 continue;
 
                             rd.chunkSelected = i;
-                            refreshTreeListing(rd);
+                            refreshTreeListing(rd.node);
                             debugPokeReflexive((reflexiveData)rd);
                         }
                     }
                     rd.chunkSelected = sel;
                     tscbApplyTo.Text = sel.ToString() + "...";
                     Application.DoEvents();
-                    refreshTreeListing(rd);
+                    refreshTreeListing(rd.node);
                     debugPokeReflexive((reflexiveData)rd);
                     panelMetaEditor.Enabled = true;
                     tsbtnPoke.Text = backupText;
@@ -2782,40 +2406,6 @@ namespace entity.MetaEditor2
                     tsbtnPeek_CheckedChanged(sender, null);
                     break;
             }
-        }
-
-        private void tsOpenMassFieldEdit_Click(object sender, EventArgs e)
-        {
-            // The following is due to using two ContextMenuStrips:
-            // The owner of our MenuStripItem is our ContextMenuStrip
-            ContextMenuStrip cms = ((ContextMenuStrip)((ToolStripItem)sender).Owner);
-            // The ContextMenuStrip's source control will be a text box or combo box. It's parent will be a BaseField Control, except for 
-            // Idents, which will be the control itself, not a sub-control.
-            BaseField bf = null;
-            if (cms.SourceControl is BaseField)
-                bf = (BaseField)cms.SourceControl;
-            else
-                bf = (BaseField)cms.SourceControl.Parent;
-
-            if (bf is BaseField)
-            {
-
-                MassFieldChanger MFC = new MassFieldChanger(
-                    bf,
-                    (reflexiveData)treeViewTagReflexives.SelectedNode.Tag
-                    );
-                // DialogResult.Yes means that changes were saved to the memory stream
-                if (MFC.ShowDialog(this) == DialogResult.Yes)
-                {
-                    // Update current reflexive chunk from memory stream
-                    treeViewTagReflexives_AfterSelect(null, null);
-                }
-            }
-            else
-            {
-                MessageBox.Show("This control cannot use the Mass Field Editor");
-            }
-
         }
 
     }

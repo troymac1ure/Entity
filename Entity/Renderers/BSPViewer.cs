@@ -364,15 +364,21 @@ namespace entity.Renderers
 
             foreach (string s in strings)
             {
-                // Add the type the the CheckListBox
-                checkedListBox1.Items.Add(s);
-
                 // Add the type to the treeview
                 TreeNode tn = new TreeNode();
+                bool SpawnFound = false;
                 for (int i = 0; i < bsp.Spawns.Spawn.Count; i++)
                 {
                     if (s == bsp.Spawns.Spawn[i].Type.ToString())
                     {
+                        // Only add spawns that exist on our map
+                        if (!SpawnFound)
+                        {
+                            // Add the type the the CheckListBox
+                            checkedListBox1.Items.Add(s);
+                            SpawnFound = true;
+                        }
+
                         TreeNode tn2 = new TreeNode();
                         tn2.Text = string.Empty;
                         tn2.ToolTipText = " X: " + bsp.Spawns.Spawn[i].X.ToString("#0.0##").PadRight(9) + "  Y: " +
@@ -434,6 +440,21 @@ namespace entity.Renderers
                         {
                             tn2.Text = bsp.Spawns.Spawn[i].Type + " {" + PlayerCount + "}";
                             PlayerCount += 1;
+                        }
+                        else if (bsp.Spawns.Spawn[i].Type.ToString() == "AI_Squads")
+                        {
+                            string[] temps = bsp.Spawns.Spawn[i].TagPath.Split('\\');
+                            tn2.Text = "Squad " + ((HaloMap.Render.SpawnInfo.AI_Squads)bsp.Spawns.Spawn[i]).squadNumber
+                                + ": " + temps[temps.Length - 1];
+                        }
+                        else if (bsp.Spawns.Spawn[i].Type.ToString() == "SpawnZone")
+                        {
+                            SpawnInfo.SpawnZone tempSpawnZone = (SpawnInfo.SpawnZone)bsp.Spawns.Spawn[i];
+                            if (tempSpawnZone.Name == string.Empty)
+                                tn2.Text = "(" + tempSpawnZone.ZoneType.ToString() + ") Spawn Zone";
+                            else
+                                tn2.Text = "(" + tempSpawnZone.ZoneType.ToString() + ") " + tempSpawnZone.Name;
+
                         }
                         else
                         {
@@ -934,6 +955,14 @@ namespace entity.Renderers
                 if (bsp.Spawns.Spawn[x] is SpawnInfo.SoundSpawn)
                 {
                     BoundingBoxModel[x] = loadSoundSpawn(bsp.Spawns.Spawn[x]);
+                    continue;
+                }
+                #endregion
+
+                #region SpawnZone
+                if (bsp.Spawns.Spawn[x] is SpawnInfo.SpawnZone)
+                {
+                    BoundingBoxModel[x] = loadSpawnZone(bsp.Spawns.Spawn[x]);
                     continue;
                 }
                 #endregion
@@ -1551,6 +1580,7 @@ namespace entity.Renderers
                     case SpawnInfo.SpawnType.DeathZone:
                     case SpawnInfo.SpawnType.Light:
                     case SpawnInfo.SpawnType.Sound:
+                    case SpawnInfo.SpawnType.SpawnZone:
                         tempcount = 1;
                         useboundingbox = true;
                         break;
@@ -1836,7 +1866,7 @@ namespace entity.Renderers
                         int tempcount = SpawnModel[spawnmodelindex[x]].Display.Chunk.Count;
                         bool useboundingbox = false;
 
-                        #region Make Cameras, DeathZones, Sounds And Lights Use BoundingBoxes
+                        #region Make Cameras, DeathZones, Sounds Spawmn Zones And Lights Use BoundingBoxes
 
                         switch (bsp.Spawns.Spawn[x].Type)
                         {
@@ -1844,6 +1874,7 @@ namespace entity.Renderers
                             case SpawnInfo.SpawnType.DeathZone:
                             case SpawnInfo.SpawnType.Light:
                             case SpawnInfo.SpawnType.Sound:
+                            case SpawnInfo.SpawnType.SpawnZone:
                                 tempcount = 1;
                                 useboundingbox = true;
                                 break;
@@ -2835,6 +2866,7 @@ namespace entity.Renderers
 
             for (int x = 0; x < bsp.Spawns.Spawn.Count; x++)
             {
+                // Skip any Spawns that are invisible.
                 if (((int)bsp.Spawns.Spawn[x].Type & visibleSpawnsBitMask) == 0)
                 {
                     continue;
@@ -3003,6 +3035,37 @@ namespace entity.Renderers
 
                 #endregion
 
+                #region DrawBoundingCylinder_SpawnZone
+
+                if (bsp.Spawns.Spawn[x] is SpawnInfo.SpawnZone)
+                {
+                    render.device.Material = NeutralMaterial;
+                    render.device.SetTexture(0, null);
+                    render.device.RenderState.AlphaBlendEnable = true;
+                    render.device.RenderState.AlphaTestEnable = true;
+                    render.device.RenderState.DestinationBlend = Blend.DestinationAlpha;
+                    render.device.RenderState.SourceBlend = Blend.SourceAlpha;
+                    render.device.RenderState.FillMode = FillMode.Solid;
+                    
+                    // Adjust center position of Bounding Boxes to proper offset
+                    Matrix mat = Matrix.Identity;
+                    mat = Matrix.Add(
+                        mat,
+                        Matrix.Translation(
+                            bsp.Spawns.Spawn[x].bbXDiff,
+                            bsp.Spawns.Spawn[x].bbYDiff,
+                            bsp.Spawns.Spawn[x].bbZDiff));
+                    render.device.Transform.World = mat * TranslationMatrix[x];
+
+                    BoundingBoxModel[x].DrawSubset(0);
+
+                    render.device.Material = GreenMaterial;
+                    drawModel = false;
+                }
+
+                #endregion
+
+
                 /*
                  * // Add support for particles somewhere, this shows a box at least
                 #region ObstacleSpawn
@@ -3015,6 +3078,7 @@ namespace entity.Renderers
                 }
                 #endregion
                 */
+
                 #region DrawBoxOnSelections
 
                 for (int i = 0; i < SelectedSpawn.Count; i++)
@@ -3083,7 +3147,7 @@ namespace entity.Renderers
                 */
 
                 if (drawModel)
-                {
+                {                    
                     // Store old cull mode
                     Cull cm = render.device.RenderState.CullMode;
                     render.device.RenderState.CullMode = Cull.None;
@@ -3204,125 +3268,21 @@ namespace entity.Renderers
             map.OpenMap(MapTypes.Internal);
             for (int i = 0; i < bsp.Spawns.Spawn.Count; i++)
             {
-                map.BW.BaseStream.Position = bsp.Spawns.Spawn[i].offset;
-                if (bsp.Spawns.Spawn[i].Type == SpawnInfo.SpawnType.DeathZone)
-                {
-                    SpawnInfo.BoundingBoxSpawn tempbox;
-                    tempbox = bsp.Spawns.Spawn[i] as SpawnInfo.BoundingBoxSpawn;
 
-                    // Deathzones are saved as a midpoint and width, length & height, so save as midpoint
-                    map.BW.Write(tempbox.X - tempbox.width / 2);
-                    map.BW.Write(tempbox.Y - tempbox.height / 2);
-                    map.BW.Write(tempbox.Z - tempbox.length / 2);
-                }
-                else
-                {
-                    map.BW.Write(bsp.Spawns.Spawn[i].X);
-                    map.BW.Write(bsp.Spawns.Spawn[i].Y);
-                    map.BW.Write(bsp.Spawns.Spawn[i].Z);
-                }
-
+                // Now handles all (???) data types. Some code kept below because I'm not
+                // sure if it is handled here. Need to look into it more.
+                bsp.Spawns.Spawn[i].Write(map);
                 
-
-                #region RotationOneDirection
-
-                if (bsp.Spawns.Spawn[i] is SpawnInfo.RotateDirectionBaseSpawn)
-                {
-                    SpawnInfo.RotateDirectionBaseSpawn tempspawn =
-                        bsp.Spawns.Spawn[i] as SpawnInfo.RotateDirectionBaseSpawn;
-                    map.BW.Write(tempspawn.RotationDirection);
-                }
-
-                    #endregion
-                    #region RotationYawPitchRoll
-                else if (bsp.Spawns.Spawn[i] is SpawnInfo.RotateYawPitchRollBaseSpawn)
-                {
-                    SpawnInfo.RotateYawPitchRollBaseSpawn tempspawn =
-                        bsp.Spawns.Spawn[i] as SpawnInfo.RotateYawPitchRollBaseSpawn;
-                    if (map.HaloVersion == HaloVersionEnum.Halo2 ||
-                        map.HaloVersion == HaloVersionEnum.Halo2Vista)
-                    {
-                        map.BW.Write(tempspawn.Roll);
-
-                        // if (tempspawn.isWeird == true) { tempspawn.Pitch = -tempspawn.Pitch; }
-                        map.BW.Write(tempspawn.Pitch);
-                        map.BW.Write(tempspawn.Yaw);
-                        if (bsp.Spawns.Spawn[i] is SpawnInfo.ScaleRotateYawPitchRollSpawn)
-                        {
-                            SpawnInfo.ScaleRotateYawPitchRollSpawn tspawn =
-                                bsp.Spawns.Spawn[i] as SpawnInfo.ScaleRotateYawPitchRollSpawn;
-                            map.BW.Write(tspawn.Scale);
-                        }
-                    }
-                    else
-                    {
-                        map.BW.Write(Renderer.RadianToDegree(tempspawn.Yaw));
-                        map.BW.Write(Renderer.RadianToDegree(tempspawn.Pitch));
-                        map.BW.Write(Renderer.RadianToDegree(tempspawn.Roll));
-                    }
-                }
-
-                #endregion
-
                 
-
-                #region ObjectiveSpawn
-
-                if (bsp.Spawns.Spawn[i] is SpawnInfo.ObjectiveSpawn)
-                {
-                    SpawnInfo.ObjectiveSpawn os;
-                    os = bsp.Spawns.Spawn[i] as SpawnInfo.ObjectiveSpawn;
-                    map.BW.BaseStream.Position = bsp.Spawns.Spawn[i].offset + 16;
-                    map.BW.Write((short)os.ObjectiveType);
-                    map.BW.Write((short)os.Team);
-                    map.BW.Write(os.number);
-                }
-
-                    #endregion
-                    #region Collection
-                else if (bsp.Spawns.Spawn[i] is SpawnInfo.Collection)
-                {
-                    // Spawn[].offset doesn't point to the start, but to the X Position, 64 bytes into the section??
-                    SpawnInfo.Collection os;
-                    os = bsp.Spawns.Spawn[i] as SpawnInfo.Collection;
-                    map.BW.BaseStream.Position = bsp.Spawns.Spawn[i].offset - 60;
-                    map.BW.Write((int)os.SpawnsInMode);
-
-                    // offset 24 = collection TAG/ID
-                    map.BW.BaseStream.Position = bsp.Spawns.Spawn[i].offset + 24;
-
-                    // reverse tag type (CMTI, IHEV, etc)
-                    char[] c = new char[4];
-                    c[0] = os.TagType[3];
-                    c[1] = os.TagType[2];
-                    c[2] = os.TagType[1];
-                    c[3] = os.TagType[0];
-                    int TagNum = map.Functions.ForMeta.FindByNameAndTagType(os.TagType, os.TagPath);
-                    if (TagNum == -1)
-                    {
-                        MessageBox.Show("Error finding [" + os.TagType + "] " + os.TagPath);
-                    }
-                    else
-                    {
-                        map.BW.Write(c);
-                        map.BW.Write(map.MetaInfo.Ident[TagNum]);
-                    }
-
-                    // My hampsters programming contribution -> " h 6"
-                }
-
-                    #endregion
-                    #region Obstacle
-                else if (bsp.Spawns.Spawn[i] is SpawnInfo.ObstacleSpawn)
+                #region Obstacle
+                if (bsp.Spawns.Spawn[i] is SpawnInfo.ObstacleSpawn)
                 {
                     if (ObstacleList == null)
                     {
                         continue;
                     }
 
-                    // Spawn[].offset doesn't point to the start, but to the X Position, 8 bytes in
-                    SpawnInfo.ObstacleSpawn os;
-                    os = bsp.Spawns.Spawn[i] as SpawnInfo.ObstacleSpawn;
+                    SpawnInfo.ObstacleSpawn os = bsp.Spawns.Spawn[i] as SpawnInfo.ObstacleSpawn;
 
                     // Base of SCNR tag, Pointer to Crates/Obstacles (+808)
                     map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 808;
@@ -3344,10 +3304,15 @@ namespace entity.Renderers
                     }
                 }
 
-                    #endregion
-                    #region Scenery
+                #endregion
+                #region Scenery
                 else if (bsp.Spawns.Spawn[i] is SpawnInfo.ScenerySpawn && SceneryList != null)
                 {
+                    if (SceneryList == null)
+                    {
+                        continue;
+                    }
+
                     // Spawn[].offset doesn't point to the start, but to the X Position, 8 bytes in
                     SpawnInfo.ScenerySpawn os;
                     os = bsp.Spawns.Spawn[i] as SpawnInfo.ScenerySpawn;
@@ -3387,24 +3352,6 @@ namespace entity.Renderers
                         int aaa = map.Functions.Meta.FindMetaByID(aa, map);
                     }
                     ****/
-                }
-
-                    #endregion
-                    #region Sound
-                else if (bsp.Spawns.Spawn[i] is SpawnInfo.SoundSpawn)
-                {
-                    // Spawn[].offset doesn't point to the start, but to the X Position, 8 bytes in
-                    SpawnInfo.SoundSpawn os;
-                    os = bsp.Spawns.Spawn[i] as SpawnInfo.SoundSpawn;
-
-                    map.BW.BaseStream.Position = bsp.Spawns.Spawn[i].offset + 54 - 8;
-                    map.BW.Write((short)os.VolumeType);
-                    map.BW.Write(os.Height);
-                    map.BW.Write(os.DistanceBoundsLower);
-                    map.BW.Write(os.DistanceBoundsUpper);
-                    map.BW.Write(os.ConeAngleLower);
-                    map.BW.Write(os.ConeAngleUpper);
-                    map.BW.Write(os.OuterConeGain);
                 }
 
                 #endregion
@@ -4510,17 +4457,16 @@ namespace entity.Renderers
         /// <remarks></remarks>
         private float makeDigitsOnly(ToolStripTextBox tb)
         {
-            string t = tb.Text;
             try
             {
-                float.Parse(t);
+                float.Parse(tb.Text);
             }
             catch
             {
                 int i = 0;
-                while (i < t.Length)
+                while (i < tb.Text.Length)
                 {
-                    if (!char.IsDigit(t[i]) && !char.IsPunctuation(tb.Text[i]))
+                    if (!char.IsDigit(tb.Text[i]) && !char.IsPunctuation(tb.Text[i]))
                     {
                         tb.Text = tb.Text.Remove(i, 1);
                     }

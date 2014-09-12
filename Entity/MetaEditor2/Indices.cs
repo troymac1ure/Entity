@@ -11,6 +11,9 @@ using HaloMap.Plugins;
 
 namespace entity.MetaEditor2
 {
+    /// <summary>
+    /// Indices types are a number value that is an index to data in a different refelxive/field.
+    /// </summary>
     public partial class Indices : BaseField
     {        
         #region Fields
@@ -21,16 +24,36 @@ namespace entity.MetaEditor2
         //public string EntName = "Error in getting plugin element name";
 
         public int Value;
-        private IFPIO.Index EntIndex;
-        private List<string> tempvalue;
+        private IFPIO.Index _EntIndex;
+        public IFPIO.Index EntIndex { get { return _EntIndex; } }
+        private List<string> _IndicesList;
+        public List<string> IndicesList { get { return _IndicesList; } }
         private string selectionBoxValueString;
-        private int indexedReflexiveChunkCount;
-        private int indexedReflexiveTranslatedOffset;
-        private IFPIO.ObjectEnum ItemType;
-        public IFPIO.ObjectEnum ValueType;
-        private int indexedReflexiveOffset;
+        private int _IndexedReflexiveChunkCount;
+        public int IndexedReflexiveChunkCount { get { return _IndexedReflexiveChunkCount; } } 
+        private int _IndexedReflexiveTranslatedOffset;
+        public int IndexedReflexiveTranslatedOffset { get { return _IndexedReflexiveTranslatedOffset; } } 
+        private int _IndexedReflexiveOffset;
+        public int IndexedReflexiveOffset { get { return _IndexedReflexiveOffset; } } 
+        private IFPIO.ObjectEnum _ItemType;
+        public IFPIO.ObjectEnum ItemType { get { return _ItemType; } }
+        private IFPIO.ObjectEnum _ValueType;
+        public IFPIO.ObjectEnum ValueType { get { return _ValueType; } }
         private bool isNulledOutReflexive = true;
         #endregion
+        /// <summary>
+        /// The Indices class
+        /// </summary>
+        /// <param name="meta">The controls meta data</param>
+        /// <param name="iEntName">The identifying name of the meta string</param>
+        /// <param name="map">The metas map file</param>
+        /// <param name="iOffsetInChunk">The offset to the string in the memory stream</param>
+        /// <param name="iValueType">The value type associated with the Indices
+        /// <para>Available types are:</para>
+        /// <para>  Byte, Short, UShort, Int, UInt, Float, Unknown</para></param>
+        /// <param name="iIndex">The type of data that the value points to
+        /// <para>Available types are:</para>
+        /// <para>  Ident, StringID, Float, Short, UShort, Int, UInt, String32, UnicodeString64, String256, UnicodeString256</para></param>
         public Indices(Meta meta, string iEntName, Map map, int iOffsetInChunk, IFPIO.ObjectEnum iValueType, IFPIO.Index iIndex)
         {
             this.meta = meta;
@@ -55,68 +78,69 @@ namespace entity.MetaEditor2
             }
             this.chunkOffset = iOffsetInChunk;
             this.EntName = iEntName;
-            this.EntIndex = iIndex;
-            this.tempvalue = new List<string>(0);
+            this._EntIndex = iIndex;
+            this._IndicesList = new List<string>(0);
             #region Set Block Indice Reference Type
-            switch (this.EntIndex.ItemType.ToLower())
+            switch (this._EntIndex.ItemType.ToLower())
             {
                 case "ident":
                     {
-                        this.ItemType = IFPIO.ObjectEnum.Ident; // entity.MetaEditor.DataValues.ENTType.ident;
+                        this._ItemType = IFPIO.ObjectEnum.Ident; // entity.MetaEditor.DataValues.ENTType.ident;
                         break;
                     }
                 case "stringid":
                     {
-                        this.ItemType = IFPIO.ObjectEnum.StringID; // entity.MetaEditor.DataValues.ENTType.sid;
+                        this._ItemType = IFPIO.ObjectEnum.StringID; // entity.MetaEditor.DataValues.ENTType.sid;
                         break;
                     }
                 case "float":
                     {
-                        this.ItemType = IFPIO.ObjectEnum.Float; // entity.MetaEditor.DataValues.ENTType.Float;
+                        this._ItemType = IFPIO.ObjectEnum.Float; // entity.MetaEditor.DataValues.ENTType.Float;
                         break;
                     }
                 case "short":
                     {
-                        this.ItemType = IFPIO.ObjectEnum.Short; // entity.MetaEditor.DataValues.ENTType.Int16;
+                        this._ItemType = IFPIO.ObjectEnum.Short; // entity.MetaEditor.DataValues.ENTType.Int16;
                         break;
                     }
                 case "ushort":
                     {
-                        this.ItemType = IFPIO.ObjectEnum.UShort; // entity.MetaEditor.DataValues.ENTType.Uint16;
+                        this._ItemType = IFPIO.ObjectEnum.UShort; // entity.MetaEditor.DataValues.ENTType.Uint16;
                         break;
                     }
                 case "int":
                     {
-                        this.ItemType = IFPIO.ObjectEnum.Int; // entity.MetaEditor.DataValues.ENTType.Int32;
+                        this._ItemType = IFPIO.ObjectEnum.Int; // entity.MetaEditor.DataValues.ENTType.Int32;
                         break;
                     }
                 case "uint":
                     {
-                        this.ItemType = IFPIO.ObjectEnum.UInt; // entity.MetaEditor.DataValues.ENTType.UInt32;
+                        this._ItemType = IFPIO.ObjectEnum.UInt; // entity.MetaEditor.DataValues.ENTType.UInt32;
                         break;
                     }
                 case "string32":
                     {
-                        this.ItemType = IFPIO.ObjectEnum.String32; // entity.MetaEditor.DataValues.ENTType.string32;
+                        this._ItemType = IFPIO.ObjectEnum.String32; // entity.MetaEditor.DataValues.ENTType.string32;
                         break;
                     }
                 case "unicodestring64":
                     {
-                        this.ItemType = IFPIO.ObjectEnum.UnicodeString64; // entity.MetaEditor.DataValues.ENTType.unicodestring64;
+                        this._ItemType = IFPIO.ObjectEnum.UnicodeString64; // entity.MetaEditor.DataValues.ENTType.unicodestring64;
                         break;
                     }
                 case "string256":
                     {
-                        this.ItemType = IFPIO.ObjectEnum.String256; // entity.MetaEditor.DataValues.ENTType.string256;
+                        this._ItemType = IFPIO.ObjectEnum.String256; // entity.MetaEditor.DataValues.ENTType.string256;
                         break;
                     }
                 case "unicodestring256":
                     {
-                        goto case "string256";
+                        this._ItemType = IFPIO.ObjectEnum.UnicodeString256; // entity.MetaEditor.DataValues.ENTType.unicodestring64;
+                        break;
                     }
                 default:
                     {
-                        this.ItemType = IFPIO.ObjectEnum.Unknown; // entity.MetaEditor.DataValues.ENTType.nothing;
+                        this._ItemType = IFPIO.ObjectEnum.Unknown; // entity.MetaEditor.DataValues.ENTType.nothing;
                         break;
                     }                
             }
@@ -127,43 +151,43 @@ namespace entity.MetaEditor2
                 case IFPIO.ObjectEnum.Short:
                     {
                         this.label1.Text = "Int16 Block Index";
-                        this.ValueType = IFPIO.ObjectEnum.Short;
+                        this._ValueType = IFPIO.ObjectEnum.Short;
                         break;
                     }
                 case IFPIO.ObjectEnum.Int:
                     {
                         this.label1.Text = "Int32 Block Index";
-                        this.ValueType = IFPIO.ObjectEnum.Int;
+                        this._ValueType = IFPIO.ObjectEnum.Int;
                         break;
                     }
                 case IFPIO.ObjectEnum.UShort:
                     {
                         this.label1.Text = "Uint16 Block Index";
-                        this.ValueType = IFPIO.ObjectEnum.UShort;
+                        this._ValueType = IFPIO.ObjectEnum.UShort;
                         break;
                     }
                 case IFPIO.ObjectEnum.UInt:
                     {
                         this.label1.Text = "Uint32 Block Index";
-                        this.ValueType = IFPIO.ObjectEnum.UInt;
+                        this._ValueType = IFPIO.ObjectEnum.UInt;
                         break;
                     }
                 case IFPIO.ObjectEnum.Byte:
                     {
                         this.label1.Text = "Byte Block Index";
-                        this.ValueType = IFPIO.ObjectEnum.Byte;
+                        this._ValueType = IFPIO.ObjectEnum.Byte;
                         break;
                     }
             }
             this.label2.Text = this.EntName;
-            if (this.EntIndex.reflexiveTagType + this.EntIndex.reflexiveTagName != string.Empty)
+            if (this._EntIndex.reflexiveTagType + this._EntIndex.reflexiveTagName != string.Empty)
             {
                 System.Windows.Forms.ToolTip toolTip1 = new ToolTip();
                 toolTip1.IsBalloon = true;
                 toolTip1.AutoPopDelay = 10000;
                 toolTip1.SetToolTip(
                     this.comboBox1, 
-                    "Label located in [" + this.EntIndex.reflexiveTagType + "] " + this.EntIndex.reflexiveTagName);
+                    "Label located in [" + this._EntIndex.reflexiveTagType + "] " + this._EntIndex.reflexiveTagName);
             }
         }
 
@@ -192,7 +216,7 @@ namespace entity.MetaEditor2
             }
             try
             {
-                switch (ValueType)
+                switch (_ValueType)
                 {
                     case IFPIO.ObjectEnum.Short:
                         {
@@ -233,7 +257,7 @@ namespace entity.MetaEditor2
             }
             catch
             {
-                MessageBox.Show("Something is wrong with this " + this.ValueType.ToString() + this.EntName + " Offset " + this.chunkOffset.ToString());
+                MessageBox.Show("Something is wrong with this " + this._ValueType.ToString() + this.EntName + " Offset " + this.chunkOffset.ToString());
             }
         }
 
@@ -244,9 +268,9 @@ namespace entity.MetaEditor2
 
             int mapMetaOffset = meta.offset;
 
-            if (this.EntIndex.reflexiveTagType + this.EntIndex.reflexiveTagName != string.Empty)
+            if (this._EntIndex.reflexiveTagType + this._EntIndex.reflexiveTagName != string.Empty)
             {
-                int tagNum = map.Functions.ForMeta.FindByNameAndTagType(this.EntIndex.reflexiveTagType, this.EntIndex.reflexiveTagName);
+                int tagNum = map.Functions.ForMeta.FindByNameAndTagType(this._EntIndex.reflexiveTagType, this._EntIndex.reflexiveTagName);
                 if (tagNum != -1)
                 {
                     Meta meta2 = new Meta(map);
@@ -254,14 +278,14 @@ namespace entity.MetaEditor2
                     meta2.ReadMetaFromMap(tagNum, true);
                     map.CloseMap();
                     mapMetaOffset = meta2.offset;
-                    this.EntIndex.reflexiveLayer = "root";
+                    this._EntIndex.reflexiveLayer = "root";
                 }
             }
 
-            if (this.EntIndex.reflexiveLayer.ToLower() == "root")
-                this.indexedReflexiveOffset = mapMetaOffset + this.EntIndex.ReflexiveOffset;
-            else if (this.EntIndex.reflexiveLayer.ToLower() == "oneup")
-                this.indexedReflexiveOffset = iIndexedReflexiveOffset + this.EntIndex.ReflexiveOffset;
+            if (this._EntIndex.reflexiveLayer.ToLower() == "root")
+                this._IndexedReflexiveOffset = mapMetaOffset + this._EntIndex.ReflexiveOffset;
+            else if (this._EntIndex.reflexiveLayer.ToLower() == "oneup")
+                this._IndexedReflexiveOffset = iIndexedReflexiveOffset + this._EntIndex.ReflexiveOffset;
             
             /*
             bool openedMap = false;
@@ -275,7 +299,7 @@ namespace entity.MetaEditor2
             BR.BaseStream.Position = iOffset + this.chunkOffset;
             this.offsetInMap = meta.offset + iOffset + this.chunkOffset;
 
-            switch (ValueType)
+            switch (_ValueType)
             {
                 case IFPIO.ObjectEnum.Short:
                     {
@@ -309,14 +333,15 @@ namespace entity.MetaEditor2
                 map.CloseMap();
             */
         }
-        private void UpdateSelectionList(bool readAll)
+
+        public void UpdateSelectionList(bool readAll)
         {
             this.ReadReflexive();
             this.GetItems(readAll);
             this.comboBox1.Items.Clear();
-            this.comboBox1.Items.AddRange(tempvalue.ToArray());
+            this.comboBox1.Items.AddRange(_IndicesList.ToArray());
 
-            if (this.Value >= this.indexedReflexiveChunkCount)
+            if (this.Value >= this._IndexedReflexiveChunkCount)
             {
                 this.comboBox1.Items.Add(this.Value.ToString() + " : Value is Too Large To Be The Indexer");
                 this.comboBox1.SelectedIndex = this.comboBox1.Items.Count - 1;
@@ -331,7 +356,7 @@ namespace entity.MetaEditor2
                 if (readAll == false)
                     this.comboBox1.Text = "nulled";
                 else
-                    this.comboBox1.SelectedIndex = this.indexedReflexiveChunkCount;
+                    this.comboBox1.SelectedIndex = this._IndexedReflexiveChunkCount;
             }
             else
             {
@@ -349,18 +374,18 @@ namespace entity.MetaEditor2
                 map.OpenMap(MapTypes.Internal);
                 openedMap = true;
             }
-            map.BR.BaseStream.Position = this.indexedReflexiveOffset;
-            this.indexedReflexiveChunkCount = map.BR.ReadInt32();
-            this.indexedReflexiveTranslatedOffset = map.BR.ReadInt32() - meta.magic;
+            map.BR.BaseStream.Position = this._IndexedReflexiveOffset;
+            this._IndexedReflexiveChunkCount = map.BR.ReadInt32();
+            this._IndexedReflexiveTranslatedOffset = map.BR.ReadInt32() - meta.magic;
             if (openedMap == true)
                 map.CloseMap();
         }
         private void GetItems(bool readAll)
         {
-            this.tempvalue.Clear();
-            if (this.indexedReflexiveChunkCount < 0)
+            this._IndicesList.Clear();
+            if (this._IndexedReflexiveChunkCount < 0)
             {
-                tempvalue.Add("Index " + this.EntName + " Is Invalid. On Line " + this.EntIndex.lineNumber.ToString());
+                _IndicesList.Add("Index " + this.EntName + " Is Invalid. On Line " + this._EntIndex.lineNumber.ToString());
                 return;
             }
             bool openedMap = false;
@@ -370,7 +395,7 @@ namespace entity.MetaEditor2
                 openedMap = true;
             }            
             int countervalue = 0;
-            int maxcount = this.indexedReflexiveChunkCount;
+            int maxcount = this._IndexedReflexiveChunkCount;
             if (readAll == false && this.Value > -1)
             {
                 countervalue = this.Value;
@@ -386,8 +411,8 @@ namespace entity.MetaEditor2
             {
                 try
                 {
-                    map.BR.BaseStream.Position = this.indexedReflexiveTranslatedOffset + (this.EntIndex.ReflexiveSize * counter) + this.EntIndex.ItemOffset;
-                    switch (this.EntIndex.ItemType.ToLower())
+                    map.BR.BaseStream.Position = this._IndexedReflexiveTranslatedOffset + (this._EntIndex.ReflexiveSize * counter) + this._EntIndex.ItemOffset;
+                    switch (this._EntIndex.ItemType.ToLower())
                     {
                         case "short":
                             {
@@ -454,7 +479,7 @@ namespace entity.MetaEditor2
                             }
                         case "string32":
                             {
-                                Encoding decode = Encoding.UTF8;
+                                Encoding decode = Encoding.ASCII;
                                 byte[] tempbytes = map.BR.ReadBytes(32);
                                 tempValueString = counter.ToString() + " : " + decode.GetString(tempbytes);
                                 break;
@@ -468,27 +493,30 @@ namespace entity.MetaEditor2
                             }
                         case "string256":
                             {
-                                Encoding decode = Encoding.UTF8;
+                                Encoding decode = Encoding.ASCII;
                                 byte[] tempbytes = map.BR.ReadBytes(256);
                                 tempValueString = counter.ToString() + " : " + decode.GetString(tempbytes);
                                 break;
                             }
                         case "unicodestring256":
                             {
-                                goto case "string256";
+                                Encoding decode = Encoding.UTF8;
+                                byte[] tempbytes = map.BR.ReadBytes(256);
+                                tempValueString = counter.ToString() + " : " + decode.GetString(tempbytes);
+                                break;
                             }
 
                     }
                 }
                 catch
                 {
-                    tempValueString = counter.ToString() + " : Error with index on line number " + this.EntIndex.lineNumber.ToString();
+                    tempValueString = counter.ToString() + " : Error with index on line number " + this._EntIndex.lineNumber.ToString();
                 }
-                tempvalue.Add(tempValueString);
+                _IndicesList.Add(tempValueString);
                 if (counter == this.Value)
                     this.selectionBoxValueString = tempValueString;
             }
-            tempvalue.Add("nulled");
+            _IndicesList.Add("nulled");
             if (openedMap == true)
                 map.CloseMap();
         }
@@ -522,7 +550,7 @@ namespace entity.MetaEditor2
             try
             {
                 map.BW.BaseStream.Position = this.offsetInMap;
-                switch (ValueType)
+                switch (_ValueType)
                 {
                     case IFPIO.ObjectEnum.Short:
                         {
@@ -563,7 +591,7 @@ namespace entity.MetaEditor2
             }
             catch
             {
-                MessageBox.Show("Something is wrong with this " + this.ValueType.ToString() + this.EntName + " Offset " + this.chunkOffset.ToString());
+                MessageBox.Show("Something is wrong with this " + this._ValueType.ToString() + this.EntName + " Offset " + this.chunkOffset.ToString());
             }
             if (openedMap == true)
                 map.CloseMap();
@@ -590,7 +618,7 @@ namespace entity.MetaEditor2
                 this.Value = Convert.ToInt32(tempstring1.Substring(0, counter));
             }
             uint Address = (uint)(this.offsetInMap + meta.magic);
-            switch (ValueType)
+            switch (_ValueType)
             {
                 case IFPIO.ObjectEnum.Short:
                     {
@@ -634,7 +662,13 @@ namespace entity.MetaEditor2
         {
             //if (tempvalue.Count != ((ComboBox)sender).Items.Count)
             UpdateSelectionList(true);
-            this.comboBox1.SelectedIndex = this.Value;
+            try
+            {
+                this.comboBox1.SelectedIndex = this.Value;
+            }
+            catch
+            {
+            }
         }
         public void SetFocus(int LineToCheck)
         {

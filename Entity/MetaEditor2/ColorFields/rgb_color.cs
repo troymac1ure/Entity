@@ -74,14 +74,14 @@ namespace entity.MetaEditor2
             Red.BackColor = System.Drawing.Color.DarkRed;
             CW.setTextBox(Red.textBox1, Color.Red);
 
-            Blue = new DataValues(meta, "Blue", map, iOffsetInChunk + eachSize, valueType, iLineNumber);
+            Green = new DataValues(meta, "Green", map, iOffsetInChunk + eachSize, valueType, iLineNumber);
+            Green.BackColor = System.Drawing.Color.FromArgb(10, 80, 35);
+            CW.setTextBox(Green.textBox1, Color.Green);
+
+            Blue = new DataValues(meta, "Blue", map, iOffsetInChunk + eachSize * 2, valueType, iLineNumber);
             Blue.BackColor = System.Drawing.Color.DarkBlue;
             CW.setTextBox(Blue.textBox1, Color.Blue);
 
-            Green = new DataValues(meta, "Green", map, iOffsetInChunk + eachSize * 2, valueType, iLineNumber);
-            Green.BackColor = System.Drawing.Color.FromArgb(10, 80, 35);
-            CW.setTextBox(Green.textBox1, Color.Green);
-            
             if (hasAlpha)
             {
                 Alpha = new DataValues(meta, "Alpha", map, iOffsetInChunk + eachSize * 3, valueType, iLineNumber);
@@ -92,8 +92,8 @@ namespace entity.MetaEditor2
 
             gbRGBColor.Controls.Add(CW);
             CW.BringToFront();
-            gbRGBColor.Controls.Add(Green);
             gbRGBColor.Controls.Add(Blue);
+            gbRGBColor.Controls.Add(Green);
             gbRGBColor.Controls.Add(Red);
         }
 
@@ -171,8 +171,8 @@ namespace entity.MetaEditor2
             this.isNulledOutReflexive = false;
             
             Red.Populate(iOffset, useMemoryStream);
-            Blue.Populate(iOffset, useMemoryStream);
             Green.Populate(iOffset, useMemoryStream);
+            Blue.Populate(iOffset, useMemoryStream);
             if (hasAlpha)
                 Alpha.Populate(iOffset, useMemoryStream);
 

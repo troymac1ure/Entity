@@ -30,9 +30,9 @@ namespace HaloMap.Plugins
         #region Constants and Fields
 
         /// <summary>
-        /// The ent elements.
+        /// Contains all items including those in reflexives/structs in one level
         /// </summary>
-        public List<BaseObject> ENTElements; // Contains all items including those in reflexives/structs
+        public List<BaseObject> ENTElements; 
 
         /// <summary>
         /// The author.
@@ -50,17 +50,17 @@ namespace HaloMap.Plugins
         public int headerSize;
 
         /// <summary>
-        /// The items.
+        /// Contains all items in a tree structure
         /// </summary>
         public object[] items;
 
         /// <summary>
-        /// The revisions.
+        /// Plugin revision notes
         /// </summary>
         public string[] revisions;
 
         /// <summary>
-        /// The version.
+        /// The current plugin version.
         /// </summary>
         public string version;
 
@@ -98,31 +98,31 @@ namespace HaloMap.Plugins
 
             // Size 1
             /// <summary>
-            /// The byte_ flags.
+            /// Bitmask8
             /// </summary>
-            Byte_Flags = 100, // Bitmask8
+            Byte_Flags = 100, 
             /// <summary>
-            /// The byte.
+            /// Unsigned 1-byte value (0 to 255)
             /// </summary>
             Byte = 110, 
 
             /// <summary>
-            /// The char_ enum.
+            /// Enum8
             /// </summary>
-            Char_Enum = 120, // Enum8
+            Char_Enum = 120, 
 
             // Size 2
             /// <summary>
-            /// The enum.
+            /// Enum16
             /// </summary>
-            Enum = 200, // Enum16
+            Enum = 200, 
             /// <summary>
-            /// The short.
+            /// Signed 2-byte value (-32,768 to 32,767)
             /// </summary>
             Short = 210, 
 
             /// <summary>
-            /// The u short.
+            /// Unsigned 2-byte value (0 to 65,535)
             /// </summary>
             UShort = 220, 
 
@@ -133,7 +133,7 @@ namespace HaloMap.Plugins
 
             // Size 4
             /// <summary>
-            /// The float.
+            /// 4-byte Real value
             /// </summary>
             Float = 400, 
 
@@ -143,7 +143,7 @@ namespace HaloMap.Plugins
             Ident = 410, 
 
             /// <summary>
-            /// The int.
+            /// Signed 4-byte value (-2,147,483,648 to 2,147,483,647)
             /// </summary>
             Int = 420, 
 
@@ -161,7 +161,7 @@ namespace HaloMap.Plugins
             TagType = 450, 
 
             /// <summary>
-            /// The u int.
+            /// Unsigned 4-byte value (0 to 4,294,967,295)
             /// </summary>
             UInt = 460, 
 
@@ -172,11 +172,12 @@ namespace HaloMap.Plugins
 
             // Size 8
             /// <summary>
-            /// The block.
+            /// TagType / Ident combo
             /// </summary>
-            Block = 800, // TagType/Ident combo
+            Block = 800, 
+
             /// <summary>
-            /// The struct.
+            /// Reflexive Listing
             /// </summary>
             Struct = 810, 
 
@@ -225,6 +226,9 @@ namespace HaloMap.Plugins
             /// </summary>
             TextBox,
 
+            /// <summary>
+            /// (Alpha) Red, Green, Blue item
+            /// </summary>
             ARGB_Color
         }
 
@@ -741,6 +745,12 @@ namespace HaloMap.Plugins
                                         {
                                             temp = bool.Parse(i);
                                         }
+                                        int padAlign = 0;
+                                        i = xtr.GetAttribute("padalign");
+                                        if (i != null)
+                                        {
+                                            padAlign = int.Parse(i);
+                                        }
 
                                         IFPElements.Add(
                                             new Reflexive(
@@ -748,9 +758,11 @@ namespace HaloMap.Plugins
                                                 offset, 
                                                 visible, 
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 xtr.GetAttribute("label"), 
-                                                IFPReader(ref xtr), 
-                                                size, 
+                                                IFPReader(ref xtr),
+                                                size,
+                                                padAlign,
                                                 temp, 
                                                 -1, 
                                                 -1));
@@ -771,7 +783,7 @@ namespace HaloMap.Plugins
                                     {
                                         IFPElements.Add(
                                             new TagBlock(
-                                                xtr.GetAttribute("name"), visible, offset, xtr.LineNumber, -1, -1));
+                                                xtr.GetAttribute("name"), xtr.GetAttribute("description"), visible, offset, xtr.LineNumber, -1, -1));
                                         offset += 8;
                                         break;
                                     }
@@ -780,7 +792,7 @@ namespace HaloMap.Plugins
                                     {
                                         IFPElements.Add(
                                             new TagType(
-                                                offset, visible, xtr.GetAttribute("name"), xtr.LineNumber, -1, -1));
+                                                offset, visible, xtr.GetAttribute("name"), xtr.GetAttribute("description"), xtr.LineNumber, -1, -1));
                                         offset += 4;
                                         dependencyOffset = offset;
                                         break;
@@ -793,6 +805,7 @@ namespace HaloMap.Plugins
                                         IFPElements.Add(
                                             new Ident(
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 isDependency, 
@@ -807,7 +820,7 @@ namespace HaloMap.Plugins
                                 case "stringid":
                                     {
                                         IFPElements.Add(
-                                            new SID(xtr.GetAttribute("name"), visible, offset, xtr.LineNumber, -1, -1));
+                                            new SID(xtr.GetAttribute("name"), xtr.GetAttribute("description"), visible, offset, xtr.LineNumber, -1, -1));
                                         offset += 4;
                                         break;
                                     }
@@ -831,7 +844,7 @@ namespace HaloMap.Plugins
                                     {
                                         IFPElements.Add(
                                             new Unknown(
-                                                offset, visible, xtr.GetAttribute("name"), xtr.LineNumber, -1, -1));
+                                                offset, visible, xtr.GetAttribute("name"), xtr.GetAttribute("description"), xtr.LineNumber, -1, -1));
                                         offset += 4;
                                         break;
                                     }
@@ -841,7 +854,7 @@ namespace HaloMap.Plugins
                                     {
                                         IFPElements.Add(
                                             new IFPFloat(
-                                                offset, visible, xtr.GetAttribute("name"), xtr.LineNumber, -1, -1));
+                                                offset, visible, xtr.GetAttribute("name"), xtr.GetAttribute("description"), xtr.LineNumber, -1, -1));
                                         offset += 4;
                                         break;
                                     }
@@ -854,7 +867,8 @@ namespace HaloMap.Plugins
                                                 offset, 
                                                 ObjectEnum.Int, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 makeIndex(ref xtr, "int"), 
                                                 xtr.LineNumber, 
                                                 -1, 
@@ -872,6 +886,7 @@ namespace HaloMap.Plugins
                                                 ObjectEnum.UInt, 
                                                 visible, 
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 makeIndex(ref xtr, "uint"), 
                                                 xtr.LineNumber, 
                                                 -1, 
@@ -889,6 +904,7 @@ namespace HaloMap.Plugins
                                                 ObjectEnum.Short, 
                                                 visible, 
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 makeIndex(ref xtr, "short"), 
                                                 xtr.LineNumber, 
                                                 -1, 
@@ -906,6 +922,7 @@ namespace HaloMap.Plugins
                                                 ObjectEnum.UShort, 
                                                 visible, 
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 makeIndex(ref xtr, "ushort"), 
                                                 xtr.LineNumber, 
                                                 -1, 
@@ -922,6 +939,7 @@ namespace HaloMap.Plugins
                                                 offset, 
                                                 visible, 
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 makeIndex(ref xtr, "byte"), 
                                                 xtr.LineNumber, 
                                                 -1, 
@@ -945,6 +963,7 @@ namespace HaloMap.Plugins
                                                 offset, 
                                                 visible, 
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 xtr.IsEmptyElement == false ? Options(ref xtr) : null, 
                                                 32, 
                                                 xtr.LineNumber, 
@@ -962,6 +981,7 @@ namespace HaloMap.Plugins
                                                 offset, 
                                                 visible, 
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 xtr.IsEmptyElement == false ? Options(ref xtr) : null, 
                                                 16, 
                                                 xtr.LineNumber, 
@@ -977,7 +997,8 @@ namespace HaloMap.Plugins
                                             new Bitmask(
                                                 offset, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 xtr.IsEmptyElement == false ? Options(ref xtr) : null, 
                                                 8, 
                                                 xtr.LineNumber, 
@@ -1001,6 +1022,7 @@ namespace HaloMap.Plugins
                                                 offset, 
                                                 visible, 
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 xtr.IsEmptyElement == false ? Options(ref xtr) : null, 
                                                 32, 
                                                 xtr.LineNumber, 
@@ -1017,7 +1039,8 @@ namespace HaloMap.Plugins
                                             new IFPEnum(
                                                 offset, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 xtr.IsEmptyElement == false ? Options(ref xtr) : null, 
                                                 16, 
                                                 xtr.LineNumber, 
@@ -1033,7 +1056,8 @@ namespace HaloMap.Plugins
                                             new IFPEnum(
                                                 offset, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 xtr.IsEmptyElement == false ? Options(ref xtr) : null, 
                                                 8, 
                                                 xtr.LineNumber, 
@@ -1056,7 +1080,8 @@ namespace HaloMap.Plugins
 
                                         IFPElements.Add(
                                             new IFPString(
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 sizeOfString, 
@@ -1073,7 +1098,8 @@ namespace HaloMap.Plugins
                                     {
                                         IFPElements.Add(
                                             new IFPString(
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 32, 
@@ -1090,7 +1116,8 @@ namespace HaloMap.Plugins
                                     {
                                         IFPElements.Add(
                                             new IFPString(
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 256, 
@@ -1107,7 +1134,8 @@ namespace HaloMap.Plugins
                                     {
                                         IFPElements.Add(
                                             new IFPString(
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 64, 
@@ -1124,7 +1152,8 @@ namespace HaloMap.Plugins
                                     {
                                         IFPElements.Add(
                                             new IFPString(
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 256, 
@@ -1140,6 +1169,7 @@ namespace HaloMap.Plugins
                                         IFPElements.Add(
                                             new IFPColor(
                                                 xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"),
                                                 visible,
                                                 false,
                                                 ObjectEnum.Int,
@@ -1147,7 +1177,7 @@ namespace HaloMap.Plugins
                                                 xtr.LineNumber,
                                                 -1,
                                                 -1));
-                                        offset += 12;
+                                        offset += 3;
                                         break;
                                     }
                                 case "argb_color":
@@ -1155,6 +1185,7 @@ namespace HaloMap.Plugins
                                         IFPElements.Add(
                                             new IFPColor(
                                                 xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"),
                                                 visible,
                                                 true,
                                                 ObjectEnum.Int,
@@ -1162,7 +1193,7 @@ namespace HaloMap.Plugins
                                                 xtr.LineNumber,
                                                 -1,
                                                 -1));
-                                        offset += 16;
+                                        offset += 4;
                                         break;
                                     }
                                 case "real_rgb_color":
@@ -1170,6 +1201,7 @@ namespace HaloMap.Plugins
                                         IFPElements.Add(
                                             new IFPColor(
                                                 xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"),
                                                 visible,
                                                 false,
                                                 ObjectEnum.Float,
@@ -1185,6 +1217,7 @@ namespace HaloMap.Plugins
                                         IFPElements.Add(
                                             new IFPColor(
                                                 xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"),
                                                 visible,
                                                 true,
                                                 ObjectEnum.Float,
@@ -1616,16 +1649,24 @@ namespace HaloMap.Plugins
                                         {
                                             temp = bool.Parse(i);
                                         }
+                                        int padAlign = 0;
+                                        i = xtr.GetAttribute("padalign");
+                                        if (i != null)
+                                        {
+                                            padAlign = int.Parse(i);
+                                        }
 
                                         ENTElements.Add(
                                             new Reflexive(
                                                 xtr.LineNumber, 
                                                 offset, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 xtr.GetAttribute("label"), 
-                                                null, 
-                                                size, 
+                                                null,
+                                                size,
+                                                padAlign,
                                                 temp, 
                                                 parent, 
                                                 sibling));
@@ -1654,7 +1695,8 @@ namespace HaloMap.Plugins
                                     {
                                         ENTElements.Add(
                                             new TagBlock(
-                                                xtr.GetAttribute("name"), visible, offset, xtr.LineNumber, -1, -1));
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), visible, offset, xtr.LineNumber, -1, -1));
                                         offset += 8;
                                         break;
                                     }
@@ -1666,6 +1708,7 @@ namespace HaloMap.Plugins
                                                 offset, 
                                                 visible, 
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 xtr.LineNumber, 
                                                 parent, 
                                                 sibling));
@@ -1680,7 +1723,8 @@ namespace HaloMap.Plugins
                                         bool isDependency = dependencyOffset == offset ? true : false;
                                         ENTElements.Add(
                                             new Ident(
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 isDependency, 
@@ -1696,7 +1740,8 @@ namespace HaloMap.Plugins
                                     {
                                         ENTElements.Add(
                                             new SID(
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 xtr.LineNumber, 
@@ -1728,7 +1773,8 @@ namespace HaloMap.Plugins
                                             new Unknown(
                                                 offset, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 xtr.LineNumber, 
                                                 parent, 
                                                 sibling));
@@ -1744,6 +1790,7 @@ namespace HaloMap.Plugins
                                                 offset, 
                                                 visible, 
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 xtr.LineNumber, 
                                                 parent, 
                                                 sibling));
@@ -1759,7 +1806,8 @@ namespace HaloMap.Plugins
                                                 offset, 
                                                 ObjectEnum.Int, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 makeIndex(ref xtr, "int"), 
                                                 xtr.LineNumber, 
                                                 parent, 
@@ -1776,7 +1824,8 @@ namespace HaloMap.Plugins
                                                 offset, 
                                                 ObjectEnum.UInt, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 makeIndex(ref xtr, "uint"), 
                                                 xtr.LineNumber, 
                                                 parent, 
@@ -1794,6 +1843,7 @@ namespace HaloMap.Plugins
                                                 ObjectEnum.Short, 
                                                 visible, 
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 makeIndex(ref xtr, "short"), 
                                                 xtr.LineNumber, 
                                                 parent, 
@@ -1810,7 +1860,8 @@ namespace HaloMap.Plugins
                                                 offset, 
                                                 ObjectEnum.UShort, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 makeIndex(ref xtr, "ushort"), 
                                                 xtr.LineNumber, 
                                                 parent, 
@@ -1826,7 +1877,8 @@ namespace HaloMap.Plugins
                                             new IFPByte(
                                                 offset, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 makeIndex(ref xtr, "byte"), 
                                                 xtr.LineNumber, 
                                                 parent, 
@@ -1849,7 +1901,8 @@ namespace HaloMap.Plugins
                                             new Bitmask(
                                                 offset, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 xtr.IsEmptyElement == false ? Options(ref xtr) : null, 
                                                 32, 
                                                 xtr.LineNumber, 
@@ -1866,7 +1919,8 @@ namespace HaloMap.Plugins
                                             new Bitmask(
                                                 offset, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 xtr.IsEmptyElement == false ? Options(ref xtr) : null, 
                                                 16, 
                                                 xtr.LineNumber, 
@@ -1882,7 +1936,8 @@ namespace HaloMap.Plugins
                                             new Bitmask(
                                                 offset, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 xtr.IsEmptyElement == false ? Options(ref xtr) : null, 
                                                 8, 
                                                 xtr.LineNumber, 
@@ -1905,7 +1960,8 @@ namespace HaloMap.Plugins
                                             new IFPEnum(
                                                 offset, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 xtr.IsEmptyElement == false ? Options(ref xtr) : null, 
                                                 32, 
                                                 xtr.LineNumber, 
@@ -1922,7 +1978,8 @@ namespace HaloMap.Plugins
                                             new IFPEnum(
                                                 offset, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 xtr.IsEmptyElement == false ? Options(ref xtr) : null, 
                                                 16, 
                                                 xtr.LineNumber, 
@@ -1938,7 +1995,8 @@ namespace HaloMap.Plugins
                                             new IFPEnum(
                                                 offset, 
                                                 visible, 
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 xtr.IsEmptyElement == false ? Options(ref xtr) : null, 
                                                 8, 
                                                 xtr.LineNumber, 
@@ -1961,7 +2019,8 @@ namespace HaloMap.Plugins
 
                                         ENTElements.Add(
                                             new IFPString(
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 sizeOfString, 
@@ -1978,7 +2037,8 @@ namespace HaloMap.Plugins
                                     {
                                         ENTElements.Add(
                                             new IFPString(
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 32, 
@@ -1995,7 +2055,8 @@ namespace HaloMap.Plugins
                                     {
                                         ENTElements.Add(
                                             new IFPString(
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 256, 
@@ -2012,7 +2073,8 @@ namespace HaloMap.Plugins
                                     {
                                         ENTElements.Add(
                                             new IFPString(
-                                                xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 64, 
@@ -2030,6 +2092,7 @@ namespace HaloMap.Plugins
                                         ENTElements.Add(
                                             new IFPString(
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 256, 
@@ -2046,6 +2109,7 @@ namespace HaloMap.Plugins
                                         ENTElements.Add(
                                             new IFPTextBox(
                                                 xtr.GetAttribute("name"), 
+                                                xtr.GetAttribute("description"), 
                                                 visible, 
                                                 offset, 
                                                 xtr.LineNumber, 
@@ -2059,6 +2123,7 @@ namespace HaloMap.Plugins
                                         ENTElements.Add(
                                             new IFPColor(
                                                 xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"),
                                                 visible,
                                                 false,
                                                 ObjectEnum.Int,
@@ -2066,7 +2131,7 @@ namespace HaloMap.Plugins
                                                 xtr.LineNumber,
                                                 parent,
                                                 sibling));
-                                        offset += 12;
+                                        offset += 4;
                                         break;
                                     }
                                 case "argb_color":
@@ -2074,6 +2139,7 @@ namespace HaloMap.Plugins
                                         ENTElements.Add(
                                             new IFPColor(
                                                 xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"),
                                                 visible,
                                                 true,
                                                 ObjectEnum.Int,
@@ -2081,7 +2147,7 @@ namespace HaloMap.Plugins
                                                 xtr.LineNumber,
                                                 parent,
                                                 sibling));
-                                        offset += 16;
+                                        offset += 4;
                                         break;
                                     }
                                 case "real_rgb_color":
@@ -2089,6 +2155,7 @@ namespace HaloMap.Plugins
                                         ENTElements.Add(
                                             new IFPColor(
                                                 xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"),
                                                 visible,
                                                 false,
                                                 ObjectEnum.Float,
@@ -2104,6 +2171,7 @@ namespace HaloMap.Plugins
                                         ENTElements.Add(
                                             new IFPColor(
                                                 xtr.GetAttribute("name"),
+                                                xtr.GetAttribute("description"),
                                                 visible,
                                                 true,
                                                 ObjectEnum.Float,
@@ -2160,9 +2228,9 @@ namespace HaloMap.Plugins
         /// <param name="xtr">The xtr.</param>
         /// <returns></returns>
         /// <remarks></remarks>
-        private object[] Options(ref XmlTextReader xtr)
+        private Option[] Options(ref XmlTextReader xtr)
         {
-            ArrayList options = new ArrayList(0);
+            List<Option> options = new List<Option>();
             bool endElement = false;
             while (xtr.Read())
             {
@@ -2177,7 +2245,7 @@ namespace HaloMap.Plugins
                                     {
                                         options.Add(
                                             new Option(
-                                                xtr.GetAttribute("name"), xtr.GetAttribute("value"), xtr.LineNumber));
+                                                xtr.GetAttribute("name"), xtr.GetAttribute("description"), xtr.GetAttribute("value"), xtr.LineNumber));
                                         break;
                                     }
                             }
@@ -2251,8 +2319,7 @@ namespace HaloMap.Plugins
                 }
             }
 
-            object[] temp = options.ToArray();
-            return temp;
+            return options.ToArray();
         }
 
         /// <summary>
@@ -2330,6 +2397,11 @@ namespace HaloMap.Plugins
             /// </summary>
             public bool visible;
 
+            /// <summary>
+            /// Extended Description
+            /// </summary>
+            public string description;
+
             #endregion
         }
 
@@ -2352,7 +2424,7 @@ namespace HaloMap.Plugins
             /// <summary>
             /// The options.
             /// </summary>
-            public object[] options;
+            public IFPIO.Option[] options;
 
             #endregion
 
@@ -2373,8 +2445,9 @@ namespace HaloMap.Plugins
             public Bitmask(
                 int ifpoffset, 
                 bool ifpvisible, 
-                string ifpname, 
-                object[] ifpoptions, 
+                string ifpname,
+                string extendedDescription,
+                Option[] ifpoptions, 
                 int ifpsize, 
                 int entlineNumber, 
                 int entparent, 
@@ -2398,6 +2471,7 @@ namespace HaloMap.Plugins
 
                 this.offset = ifpoffset;
                 this.name = ifpname;
+                this.description = extendedDescription;
                 this.options = ifpoptions;
                 this.visible = ifpvisible;
                 this.bitmaskSize = ifpsize;
@@ -2437,7 +2511,8 @@ namespace HaloMap.Plugins
             public IFPByte(
                 int ifpoffset, 
                 bool ifpvisible, 
-                string ifpname, 
+                string ifpname,
+                string extendedDescription,
                 Index iIndex, 
                 int entlineNumber, 
                 int entparent, 
@@ -2451,6 +2526,7 @@ namespace HaloMap.Plugins
                 this.offset = ifpoffset;
                 this.visible = ifpvisible;
                 this.name = ifpname;
+                this.description = extendedDescription;
             }
 
             #endregion
@@ -2472,7 +2548,7 @@ namespace HaloMap.Plugins
             /// <summary>
             /// The options.
             /// </summary>
-            public object[] options;
+            public IFPIO.Option[] options;
 
             #endregion
 
@@ -2493,8 +2569,9 @@ namespace HaloMap.Plugins
             public IFPEnum(
                 int ifpoffset, 
                 bool ifpvisible, 
-                string ifpname, 
-                object[] ifpoptions, 
+                string ifpname,
+                string extendedDescription,
+                IFPIO.Option[] ifpoptions, 
                 int ifpsize, 
                 int entlineNumber, 
                 int entparent, 
@@ -2518,6 +2595,7 @@ namespace HaloMap.Plugins
 
                 this.offset = ifpoffset;
                 this.name = ifpname;
+                this.description = extendedDescription;
                 this.options = ifpoptions;
                 this.visible = ifpvisible;
                 this.enumSize = ifpsize;
@@ -2545,7 +2623,7 @@ namespace HaloMap.Plugins
             /// <param name="entPrevSibling">The ent prev sibling.</param>
             /// <remarks></remarks>
             public IFPFloat(
-                int ifpoffset, bool ifpvisible, string ifpname, int entlineNumber, int entparent, int entPrevSibling)
+                int ifpoffset, bool ifpvisible, string ifpname, string extendedDescription, int entlineNumber, int entparent, int entPrevSibling)
             {
                 this.siblingPrevious = entPrevSibling;
                 this.parent = entparent;
@@ -2554,6 +2632,7 @@ namespace HaloMap.Plugins
                 this.offset = ifpoffset;
                 this.visible = ifpvisible;
                 this.name = ifpname;
+                this.description = extendedDescription;
             }
 
             #endregion
@@ -2592,7 +2671,8 @@ namespace HaloMap.Plugins
                 int ifpoffset, 
                 ObjectEnum iType, 
                 bool ifpvisible, 
-                string ifpname, 
+                string ifpname,
+                string extendedDescription,
                 Index iIndex, 
                 int entlineNumber, 
                 int entparent, 
@@ -2606,6 +2686,7 @@ namespace HaloMap.Plugins
                 this.offset = ifpoffset;
                 this.visible = ifpvisible;
                 this.name = ifpname;
+                this.description = extendedDescription;
             }
 
             #endregion
@@ -2646,7 +2727,8 @@ namespace HaloMap.Plugins
             /// <param name="entPrevSibling">The ent prev sibling.</param>
             /// <remarks></remarks>
             public IFPString(
-                string ifpName, 
+                string ifpName,
+                string extendedDescription,
                 bool ifpVisible, 
                 int ifpOffset, 
                 int ifpSize, 
@@ -2700,6 +2782,7 @@ namespace HaloMap.Plugins
 
                 this.offset = ifpOffset;
                 this.name = ifpName;
+                this.description = extendedDescription;
                 this.visible = ifpVisible;
                 this.size = ifpSize;
                 this.type = ifpType;
@@ -2727,7 +2810,7 @@ namespace HaloMap.Plugins
             /// <param name="entPrevSibling">The ent prev sibling.</param>
             /// <remarks></remarks>
             public IFPTextBox(
-                string ifpName, bool ifpVisible, int ifpOffset, int entlineNumber, int entparent, int entPrevSibling)
+                string ifpName, string extendedDescription, bool ifpVisible, int ifpOffset, int entlineNumber, int entparent, int entPrevSibling)
             {
                 this.siblingPrevious = entPrevSibling;
                 this.parent = entparent;
@@ -2735,6 +2818,7 @@ namespace HaloMap.Plugins
                 this.ObjectType = ObjectEnum.TextBox;
                 this.offset = ifpOffset;
                 this.name = ifpName;
+                this.description = extendedDescription;
                 this.visible = ifpVisible;
             }
 
@@ -2771,7 +2855,15 @@ namespace HaloMap.Plugins
             /// <param name="entparent"></param>
             /// <param name="entPrevSibling"></param>
             public IFPColor(
-                string ifpName, bool ifpVisible, bool hasAlphaChannel, IFPIO.ObjectEnum type, int ifpOffset, int entlineNumber, int entparent, int entPrevSibling)
+                string ifpName, 
+                string extendedDescription,
+                bool ifpVisible, 
+                bool hasAlphaChannel, 
+                IFPIO.ObjectEnum type, 
+                int ifpOffset, 
+                int entlineNumber, 
+                int entparent, 
+                int entPrevSibling)
             {
                 this.siblingPrevious = entPrevSibling;
                 this.parent = entparent;
@@ -2781,6 +2873,7 @@ namespace HaloMap.Plugins
                 this.type = type;
                 this.offset = ifpOffset;
                 this.name = ifpName;
+                this.description = extendedDescription;
                 this.visible = ifpVisible;
             }
 
@@ -2816,7 +2909,8 @@ namespace HaloMap.Plugins
             /// <param name="entPrevSibling">The ent prev sibling.</param>
             /// <remarks></remarks>
             public Ident(
-                string ifpName, 
+                string ifpName,
+                string extendedDescription,
                 bool ifpVisible, 
                 int ifpOffset, 
                 bool ifpHasTagType, 
@@ -2830,6 +2924,7 @@ namespace HaloMap.Plugins
                 this.ObjectType = ObjectEnum.Ident;
                 this.offset = ifpOffset;
                 this.name = ifpName;
+                this.description = extendedDescription;
                 this.visible = ifpVisible;
                 this.hasTagType = ifpHasTagType;
             }
@@ -2916,7 +3011,7 @@ namespace HaloMap.Plugins
                 this.reflexiveTagType = TagType == null ? string.Empty : TagType;
                 this.reflexiveTagName = TagName == null ? string.Empty : TagName;
                 this.reflexiveLayer = Layer;
-                lineNumber = linenumber;
+                lineNumber = linenumber;               
                 if (ifpReflexiveOffset == null | ifpItemOffset == null | ifpReflexiveSize == null)
                 {
                     return;
@@ -2973,6 +3068,11 @@ namespace HaloMap.Plugins
             /// </summary>
             public int value;
 
+            /// <summary>
+            /// Extended option descriptions
+            /// </summary>
+            public string description;
+
             #endregion
 
             #region Constructors and Destructors
@@ -2984,11 +3084,12 @@ namespace HaloMap.Plugins
             /// <param name="ifpvalue">The ifpvalue.</param>
             /// <param name="entlineNumber">The entline number.</param>
             /// <remarks></remarks>
-            public Option(string ifpname, string ifpvalue, int entlineNumber)
+            public Option(string ifpname, string extendedDescription, string ifpvalue, int entlineNumber)
             {
                 this.lineNumber = entlineNumber;
                 this.ObjectType = ObjectEnum.Option;
                 this.name = ifpname;
+                this.description = extendedDescription;
                 if (ifpvalue.Length >= 2)
                 {
                     string tempx = ifpvalue.Substring(0, 2);
@@ -3016,6 +3117,11 @@ namespace HaloMap.Plugins
             /// The has count.
             /// </summary>
             public bool HasCount = true;
+
+            /// <summary>
+            /// What boundry this reflexive should be padded to
+            /// </summary>
+            public int paddingAlign;
 
             /// <summary>
             /// The chunk size.
@@ -3051,6 +3157,7 @@ namespace HaloMap.Plugins
             /// <param name="ifpLabel">The ifp label.</param>
             /// <param name="ifpitems">The ifpitems.</param>
             /// <param name="ifpChunkSize">Size of the ifp chunk.</param>
+            /// <param name="ifpPaddingAlignment">What the offset alignment should be padded to (0 for none).</param>
             /// <param name="hascount">if set to <c>true</c> [hascount].</param>
             /// <param name="entparent">The entparent.</param>
             /// <param name="entPrevSibling">The ent prev sibling.</param>
@@ -3059,10 +3166,12 @@ namespace HaloMap.Plugins
                 int entlineNumber, 
                 int ifpOffset, 
                 bool ifpVisible, 
-                string ifpName, 
+                string ifpName,
+                string extendedDescription,
                 string ifpLabel, 
                 object[] ifpitems, 
                 int ifpChunkSize, 
+                int ifpPaddingAlignment,
                 bool hascount, 
                 int entparent, 
                 int entPrevSibling)
@@ -3074,7 +3183,9 @@ namespace HaloMap.Plugins
                 this.offset = ifpOffset;
                 this.visible = ifpVisible;
                 this.chunkSize = ifpChunkSize;
+                this.paddingAlign = ifpPaddingAlignment;
                 this.name = ifpName;
+                this.description = extendedDescription;
                 this.label = ifpLabel;
                 this.items = ifpitems;
                 this.HasCount = hascount;
@@ -3102,7 +3213,7 @@ namespace HaloMap.Plugins
             /// <param name="entPrevSibling">The ent prev sibling.</param>
             /// <remarks></remarks>
             public SID(
-                string ifpName, bool ifpVisible, int ifpOffset, int entlineNumber, int entparent, int entPrevSibling)
+                string ifpName, string extendedDescription, bool ifpVisible, int ifpOffset, int entlineNumber, int entparent, int entPrevSibling)
             {
                 this.siblingPrevious = entPrevSibling;
                 this.parent = entparent;
@@ -3110,6 +3221,7 @@ namespace HaloMap.Plugins
                 this.ObjectType = ObjectEnum.StringID;
                 this.offset = ifpOffset;
                 this.name = ifpName;
+                this.description = extendedDescription;
                 this.visible = ifpVisible;
             }
 
@@ -3135,7 +3247,7 @@ namespace HaloMap.Plugins
             /// <param name="entPrevSibling">The ent prev sibling.</param>
             /// <remarks></remarks>
             public TagBlock(
-                string ifpName, bool ifpVisible, int ifpOffset, int entlineNumber, int entparent, int entPrevSibling)
+                string ifpName, string extendedDescription, bool ifpVisible, int ifpOffset, int entlineNumber, int entparent, int entPrevSibling)
             {
                 this.siblingPrevious = entPrevSibling;
                 this.parent = entparent;
@@ -3143,6 +3255,7 @@ namespace HaloMap.Plugins
                 this.ObjectType = ObjectEnum.Block;
                 this.offset = ifpOffset;
                 this.name = ifpName;
+                this.description = extendedDescription;
                 this.visible = ifpVisible;
             }
 
@@ -3168,7 +3281,7 @@ namespace HaloMap.Plugins
             /// <param name="entPrevSibling">The ent prev sibling.</param>
             /// <remarks></remarks>
             public TagType(
-                int ifpoffset, bool ifpvisible, string ifpname, int entlineNumber, int entparent, int entPrevSibling)
+                int ifpoffset, bool ifpvisible, string ifpname, string extendedDescription, int entlineNumber, int entparent, int entPrevSibling)
             {
                 this.siblingPrevious = entPrevSibling;
                 this.parent = entparent;
@@ -3177,6 +3290,7 @@ namespace HaloMap.Plugins
                 this.offset = ifpoffset;
                 this.visible = ifpvisible;
                 this.name = ifpname;
+                this.description = extendedDescription;
             }
 
             #endregion
@@ -3201,7 +3315,7 @@ namespace HaloMap.Plugins
             /// <param name="entPrevSibling">The ent prev sibling.</param>
             /// <remarks></remarks>
             public Unknown(
-                int ifpoffset, bool ifpvisible, string ifpname, int entlineNumber, int entparent, int entPrevSibling)
+                int ifpoffset, bool ifpvisible, string ifpname, string extendedDescription, int entlineNumber, int entparent, int entPrevSibling)
             {
                 this.siblingPrevious = entPrevSibling;
                 this.parent = entparent;
@@ -3210,6 +3324,7 @@ namespace HaloMap.Plugins
                 this.offset = ifpoffset;
                 this.visible = ifpvisible;
                 this.name = ifpname;
+                this.description = extendedDescription;
             }
 
             #endregion

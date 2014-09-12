@@ -101,10 +101,10 @@ namespace entity.HexEditor
             this.txtbInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtbInfo.Font = new System.Drawing.Font("Courier New", 8F);
             this.txtbInfo.Location = new System.Drawing.Point(0, 0);
-            this.txtbInfo.MaximumSize = new System.Drawing.Size(3000, 220);
+            this.txtbInfo.MaximumSize = new System.Drawing.Size(3000, 230);
             this.txtbInfo.Name = "txtbInfo";
             this.txtbInfo.ReadOnly = true;
-            this.txtbInfo.Size = new System.Drawing.Size(678, 207);
+            this.txtbInfo.Size = new System.Drawing.Size(673, 223);
             this.txtbInfo.TabIndex = 39;
             this.txtbInfo.Text = "";
             // 
@@ -118,7 +118,7 @@ namespace entity.HexEditor
             this.hexBox1.Location = new System.Drawing.Point(0, 0);
             this.hexBox1.Name = "hexBox1";
             this.hexBox1.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
-            this.hexBox1.Size = new System.Drawing.Size(678, 340);
+            this.hexBox1.Size = new System.Drawing.Size(673, 333);
             this.hexBox1.StringViewVisible = true;
             this.hexBox1.TabIndex = 37;
             this.hexBox1.UseFixedBytesPerLine = true;
@@ -128,10 +128,8 @@ namespace entity.HexEditor
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(2, 36);
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(5, 36);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -143,14 +141,12 @@ namespace entity.HexEditor
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.txtbInfo);
-            this.splitContainer1.Size = new System.Drawing.Size(678, 551);
-            this.splitContainer1.SplitterDistance = 340;
+            this.splitContainer1.Size = new System.Drawing.Size(673, 550);
+            this.splitContainer1.SplitterDistance = 333;
             this.splitContainer1.TabIndex = 41;
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Controls.Add(this.cbRawNumber);
             this.panel1.Controls.Add(this.lblRawView);
@@ -160,9 +156,10 @@ namespace entity.HexEditor
             this.panel1.Controls.Add(this.lblLocation);
             this.panel1.Controls.Add(this.btnGoto);
             this.panel1.Controls.Add(this.btnSaveChanges);
-            this.panel1.Location = new System.Drawing.Point(2, 3);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(5, 5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(678, 31);
+            this.panel1.Size = new System.Drawing.Size(673, 31);
             this.panel1.TabIndex = 42;
             // 
             // cbRawNumber
@@ -220,7 +217,7 @@ namespace entity.HexEditor
             // lblLocation
             // 
             this.lblLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblLocation.Location = new System.Drawing.Point(564, 2);
+            this.lblLocation.Location = new System.Drawing.Point(559, 2);
             this.lblLocation.Name = "lblLocation";
             this.lblLocation.Size = new System.Drawing.Size(107, 26);
             this.lblLocation.TabIndex = 3;
@@ -253,10 +250,10 @@ namespace entity.HexEditor
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkGray;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.panel1);
             this.Name = "HexView";
-            this.Padding = new System.Windows.Forms.Padding(10);
+            this.Padding = new System.Windows.Forms.Padding(4);
             this.Size = new System.Drawing.Size(683, 591);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.HexView_KeyDown);
             this.menuStrip1.ResumeLayout(false);

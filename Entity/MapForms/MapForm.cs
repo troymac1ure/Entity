@@ -107,6 +107,11 @@ namespace entity.MapForms
         /// </summary>
         private int bitmapCount = 0;
 
+        /// <summary>
+        /// Keeps track of the last edit mode used (mainly for stopping duplicate loading in ME2 when switching between modes)
+        /// </summary>
+        private EditorModes lastEditMode = EditorModes.LastMode;
+
         #endregion
 
         #region Constructors and Destructors
@@ -140,16 +145,28 @@ namespace entity.MapForms
                 this.recursiveCheckBox, 
                 "Utilizes all tags listed within the currently selected tag instead of just the root tag");
             toolTip.SetToolTip(
-                this.parsedCheckBox, "Calculates the actual data size of the tag instead of reading it from file");
+                this.parsedCheckBox, "Calculates tag sizes by reflexives instead of reading tag size from index\nDo NOT check when using meta editors!");
             toolTip.SetToolTip(this.soundsCheckBox, "Adds sounds into map when building");
             toolTip.SetToolTip(
                 this.scanbspwithifp, "Scans reflexives, idents & strings using plugins instead of scanning manually");
             toolTip.SetToolTip(this.saveMetaButton, "Exports tag data");
 
-            // Load Strings Table in a background process
+            #region Load Strings Table <not in a background process>
+            /*
             ThreadStart ts = delegate { LoadStringsBackgroundWorker(map); };
             Thread thr = new Thread(ts);
             thr.Start();
+            */
+            //var watch = System.Diagnostics.Stopwatch.StartNew();
+
+            sSwap = new MEStringsSelector(map, this);
+
+            //watch.Stop();
+            //MessageBox.Show("String loading took: " + watch.ElapsedMilliseconds.ToString() + "ms");
+
+            // Test results on my slow machine took ~550ms. Not worth the stream errors on faster machines using a seperate thread.
+
+            #endregion
 
             // attempt to load custom skin
             try
@@ -345,7 +362,7 @@ namespace entity.MapForms
             }
 
             // Only allow bitmaps to select Bitmap Viewer
-            if (editMode == EditorModes.BitmapViewer && map.SelectedMeta.type != "bitm")
+            if (editMode == EditorModes.BitmapViewer && map.SelectedMeta != null && map.SelectedMeta.type != "bitm")
             {
                 ltmpTools.Visible = true;
                 return;
@@ -412,7 +429,7 @@ namespace entity.MapForms
             {
                 LoadMeta(map.SelectedMeta.TagIndex);
             }
-
+            lastEditMode = editMode;
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -628,7 +645,7 @@ namespace entity.MapForms
                         }
                         // If we are not switching from a different editor mode (on MetaEditor2) and
                         // we already have the current tag loaded in the editor, then we can load a duplicate
-                        wME.addNewTab(map.SelectedMeta, MetaEditor2Panel.Tag != null &&
+                        wME.addNewTab(map.SelectedMeta, lastEditMode == getEditorMode() &&
                                                         wME.tabs.Tabs.Count > 0 &&
                                                         wME.tabs.SelectedTab.Text == ("[" + map.SelectedMeta.type + "] " + map.SelectedMeta.name.Substring(map.SelectedMeta.name.LastIndexOf('\\') + 1)));
                         MetaEditor2Panel.Tag = null;
@@ -2242,6 +2259,59 @@ namespace entity.MapForms
         }
 
         /// <summary>
+        /// Opens a form displaying header information and allows it to be edited
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void editHeaderButton_Click(object sender, EventArgs e)
+        {
+            // Create a dummy meta with the header info in it.
+            Meta headerMeta = new Meta(map);
+            #region Dummy meta info
+            headerMeta.ident = 0;
+            headerMeta.name = "Header";
+            headerMeta.offset = 0;
+            headerMeta.size = 2048;
+            headerMeta.TagIndex = 99999;
+            headerMeta.type = "HEAD";
+            map.OpenMap(MapTypes.Internal);
+            map.BR.BaseStream.Position = headerMeta.offset;
+            headerMeta.MS = new MemoryStream(headerMeta.size);
+            headerMeta.MS.Write(map.BR.ReadBytes(headerMeta.size), 0, headerMeta.size);
+            map.CloseMap();
+            #endregion
+
+            IFPHashMap.RemoveIfp("HEAD", map);
+            IFPIO ifp = IFPHashMap.GetIfp("HEAD", map.HaloVersion);
+            // New selected meta points to header
+            Meta backupMeta = map.SelectedMeta;
+            map.SelectedMeta = headerMeta;
+            
+            // Create a Meta Editor 2 form if it doesn't exist
+            if (wME == null || wME.IsDisposed)
+            {
+                wME = new entity.MetaEditor2.WinMetaEditor(this, map);
+                wME.BackgroundColor = this.LibraryPanel.BackColor;
+                wME.ForegroundColor = this.LibraryPanel.ForeColor;
+
+                wME.TopLevel = false;
+                this.MetaEditor2Panel.Controls.Add(wME);
+
+                MetaEditor2Panel.BringToFront();
+
+                wME.FormBorderStyle = FormBorderStyle.None;
+                wME.FormClosed += new FormClosedEventHandler(wME_FormClosed);
+            }
+
+            // Create a new tab for the header meta
+            wME.addNewTab(map.SelectedMeta, false);
+            MetaEditor2Panel.Tag = null;
+            wME.Dock = DockStyle.Fill;
+            wME.BringToFront();
+            map.SelectedMeta = backupMeta;
+        }
+
+        /// <summary>
         /// The expand mesh x 3 tool strip menu item_ click.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -3446,7 +3516,7 @@ namespace entity.MapForms
         /// <remarks></remarks>
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int extraSpace = map.FileNames.Offset[map.FileNames.Offset.Length - 1];
+            int extraSpace = map.FileNames.Offset[map.FileNames.Offset.Length - 1] + map.FileNames.Length[map.FileNames.Length.Length-1];
             extraSpace = map.MapHeader.offsetTofileIndex - map.MapHeader.offsetTofileNames - extraSpace - 1;
 
             newName = treeView1.SelectedNode.Text;
@@ -3490,11 +3560,12 @@ namespace entity.MapForms
                 int offset = map.FileNames.Offset[id];
                 int diff = newName.Length - treeView1.SelectedNode.Text.Length;
                 map.FileNames.Name[id] = newName;
+                map.FileNames.Length[id] = newName.Length;
                 map.OpenMap(MapTypes.Internal);
                 BinaryReader br = map.BR;
                 BinaryWriter bw = map.BW;
 
-                // If we are removing characters, null out data at end
+                // If we are removing characters, null out extra data at end of names block
                 if (diff < 0)
                 {
                     bw.BaseStream.Position = map.MapHeader.offsetTofileNames +
@@ -3504,24 +3575,30 @@ namespace entity.MapForms
                 }
 
                 // reposition filename within file and update the filename index
-                for (int x = map.FileNames.Offset.Length - 1; x >= 0; x--)
+                for (int x = map.FileNames.Offset.Length - 1; x >= id; x--)
                 {
-                    if (map.FileNames.Offset[x] >= offset)
+                    // Debugging
+                    /*
+                    if (map.FileNames.Offset[x] < 119400)
                     {
                         br.BaseStream.Position = map.MapHeader.offsetTofileIndex + x * 4;
                         int o = br.ReadInt32();
+                    }
+                    */
 
+                    // For all names AFTER our tag, adjust the offset
+                    if (map.FileNames.Offset[x] > offset)
                         map.FileNames.Offset[x] += diff;
-                        bw.BaseStream.Position = map.MapHeader.offsetTofileIndex + x * 4;
-                        bw.Write(map.FileNames.Offset[x]);
-                        bw.BaseStream.Position = map.MapHeader.offsetTofileNames + map.FileNames.Offset[x];
-                        bw.Write(map.FileNames.Name[x].ToCharArray());
-                        bw.Write((byte)0);
-                    }
-                    else
-                    {
-                        break;
-                    }
+
+                    // Write new offsets into index
+                    bw.BaseStream.Position = map.MapHeader.offsetTofileIndex + x * 4;
+                    bw.Write(map.FileNames.Offset[x]);
+
+                    // Write our new string to it's new position
+                    bw.BaseStream.Position = map.MapHeader.offsetTofileNames + map.FileNames.Offset[x];
+                    bw.Write(map.FileNames.Name[x].ToCharArray());
+                    // Remember to end the string with a null (0) character
+                    bw.Write((byte)0);
                 }
 
                 map.CloseMap();
@@ -4488,7 +4565,11 @@ namespace entity.MapForms
                     setActiveScnrToolStripMenuItem.Visible = false;
             }
 
-            if (treeView1.SelectedNode.Parent == treeView1.Nodes[0] || treeView1.SelectedNode.Parent == null)
+            // Don't allow duplication of Lightmap or SBSP tags
+            if (treeView1.SelectedNode.Parent == treeView1.Nodes[0] 
+                || treeView1.SelectedNode.Parent == null
+                || treeView1.SelectedNode.Parent.Text == "sbsp"
+                || treeView1.SelectedNode.Parent.Text == "ltmp")
             {
                 duplicateToolStripMenuItem.Visible = false;
                 duplicateRecursivelyToolStripMenuItem.Visible = false;
@@ -4959,6 +5040,7 @@ namespace entity.MapForms
                         currentNode = FindNode(currentNode, path);
                     }
 
+                    object o = currentDir[steps[steps.GetUpperBound(0)] + "." + map.MetaInfo.TagType[x]];
                     currentDir.Add(steps[steps.GetUpperBound(0)] + "." + map.MetaInfo.TagType[x], x);
                     TreeNode tn = FolderNode(
                         steps[steps.GetUpperBound(0)] + "." + map.MetaInfo.TagType[x],

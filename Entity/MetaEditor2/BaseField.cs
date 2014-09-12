@@ -21,6 +21,7 @@ namespace entity.MetaEditor2
         public int size;
         public string EntName = "Error in getting plugin element name";
         public Meta meta;
+        public string description = string.Empty;
         #endregion
 
         public BaseField()

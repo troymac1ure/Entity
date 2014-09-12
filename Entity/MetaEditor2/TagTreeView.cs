@@ -14,6 +14,7 @@ namespace entity.MetaEditor2
 {
     class TagTreeView : TreeView
     {
+        /* This is duplicate
         public class reflexiveData
         {
             #region Constants and Fields
@@ -37,6 +38,7 @@ namespace entity.MetaEditor2
             }
             #endregion
         }
+        */        
         List<reflexiveData> refData = new List<reflexiveData>();
 
         IFPIO ifp;
@@ -163,7 +165,7 @@ namespace entity.MetaEditor2
                 this.Nodes.Clear();
                 this.Sorted = sortByName;
                 this.Nodes.Add("0", ".:[ MAIN ]:.");
-                reflexiveData rd = new reflexiveData();
+                reflexiveData rd = new reflexiveData(null);
                 this.Nodes[0].Tag = rd;
                 rd.node = this.Nodes[0];
                 rd.chunkCount = 1;
@@ -216,7 +218,7 @@ namespace entity.MetaEditor2
                 if (o is IFPIO.Reflexive)
                 {
                     IFPIO.Reflexive IFPR = (IFPIO.Reflexive)o;
-                    reflexiveData rd = new reflexiveData();
+                    reflexiveData rd = new reflexiveData(tn.Parent == null ? null : (reflexiveData)tn.Parent.Tag);
                     tn.Tag = rd;
                     rd.node = tn;
                     rd.reflexive = IFPR;

@@ -136,8 +136,8 @@ namespace entity.Tools
             {
                 if (
                     MessageBox.Show(
-                        "This map is an external resource and updating it will effect all the other maps. Continue?", 
-                        string.Empty, 
+                        "This map is an external resource and updating it will effect all the other maps. Continue?",
+                        string.Empty,
                         MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                 {
                     return;
@@ -186,23 +186,29 @@ namespace entity.Tools
                 }
             }
 
-            
 
+            #region read ugh meta
             map.OpenMap(MapTypes.Internal);
             Meta ughmeta = new Meta(map);
             ughmeta.ReadMetaFromMap(map.IndexHeader.metaCount - 1, true);
+
+            map.BR.BaseStream.Position = ughmeta.offset + 84;
+            int oldUghRawInfoReflexiveStart = map.BR.ReadInt32() - map.SecondaryMagic;
+
             IFPIO ifp = IFPHashMap.GetIfp("ugh!", map.HaloVersion);
             ughmeta.rawType = RawDataContainerType.Empty;
             ughmeta.headersize = ifp.headerSize;
 
             ughmeta.scanner.ScanWithIFP(ref ifp);
+            #endregion
 
-            
 
             #region get model info
 
             int tempint = layout.FindByType(RawDataContainerType.Model);
             LayOutChunk loc = (LayOutChunk)layout.chunks[tempint];
+            LayOutChunk loc2 = null;
+            int oldModelRawStartOffset = loc.startoffset;
 
             #endregion
 
@@ -444,96 +450,105 @@ namespace entity.Tools
 
             #region bsp raw
 
-            tempint = layout.FindByType(RawDataContainerType.BSP);
-            loc = (LayOutChunk)layout.chunks[tempint];
-            loc.startoffset += totalshift;
-            int tempint2 = layout.FindByType(RawDataContainerType.BSPMeta);
-            LayOutChunk loc2 = (LayOutChunk)layout.chunks[tempint2];
-            uint bsprawsize = (uint)loc.size;
-            uint oldbspsize = (uint)loc.size;
-            int bspshift = 0;
-            int bspmagic = map.BSP.sbsp[0].magic;
-            int newmagicreflexive = bspmagic + loc2.startoffset;
-            bool found = false;
-            Meta tempbspmeta = new Meta(map);
             bool foundbsptoimport = false;
+            Meta bspToImport = null;
             for (int x = 0; x < metas.Count; x++)
             {
                 Meta m = (Meta)metas[x];
                 if (m.type == "sbsp")
                 {
                     foundbsptoimport = true;
-                    bsprawsize = 0;
-                    BinaryWriter BW = new BinaryWriter(m.MS);
-                    int[] tempoff = new int[m.raw.rawChunks.Count];
-
-                    for (int y = 0; y < m.raw.rawChunks.Count; y++)
-                    {
-                        found = false;
-                        RawDataChunk r = m.raw.rawChunks[y];
-                        for (int yy = 0; yy < y; yy++)
-                        {
-                            RawDataChunk rr = m.raw.rawChunks[yy];
-                            if (rr.offset == r.offset && rr.rawLocation == r.rawLocation)
-                            {
-                                tempoff[y] = tempoff[yy];
-
-                                // writes new pointer to loaded meta
-                                BW.BaseStream.Position = r.pointerMetaOffset;
-                                BW.Write(tempoff[y]);
-                                BW.Write(r.size);
-                                found = true;
-                                break;
-                            }
-                        }
-
-                        if (found)
-                        {
-                            continue;
-                        }
-
-                        tempoff[y] = loc.startoffset + (int)bsprawsize;
-
-                        // MessageBox.Show("Test");
-                        // writes new pointer to loaded meta
-                        BW.BaseStream.Position = r.pointerMetaOffset;
-                        BW.Write(tempoff[y]);
-                        BW.Write(r.size);
-
-                        // writes raw to map file
-                        map.BW.BaseStream.Position = loc.startoffset + bsprawsize;
-                        map.BW.BaseStream.Write(r.MS.ToArray(), 0, r.size);
-
-                        // write padding
-                        int tempinty = map.Functions.Padding(r.size, 512);
-                        byte[] tempbytes = new byte[tempinty];
-                        map.BW.Write(tempbytes);
-                        bsprawsize += (uint)(r.size + tempinty);
-                    }
-
-                    totalshift += (int)(bsprawsize - oldbspsize);
-                    bspshift += (int)(bsprawsize - oldbspsize);
-
-                    loc.size = (int)bsprawsize;
-                    loc.endoffset = (int)(loc.startoffset + bsprawsize);
-                    layout.chunks[tempint] = loc;
-                    loc2.MS = m.MS;
-                    loc2.size = m.size;
-                    loc2.endoffset = loc2.startoffset + m.size;
-                    layout.chunks[tempint2] = loc2;
-                    bspmagic = m.magic;
-                    newmagicreflexive = bspmagic + m.offset;
-                    tempbspmeta = m;
+                    bspToImport = m;
                     metas.RemoveAt(x);
                     break;
                 }
+            }
 
-                if (x == metas.Count - 1)
+            int bspshift = 0;
+            int newprimarymagicconstant = map.BSP.sbsp[0].magic + ((LayOutChunk)layout.chunks[layout.FindByType(RawDataContainerType.BSPMeta)]).startoffset;
+            int oldBSPRawStartOffset = ((LayOutChunk)layout.chunks[layout.FindByType(RawDataContainerType.BSP)]).startoffset;
+
+            if (foundbsptoimport)
+            {
+                tempint = layout.FindByType(RawDataContainerType.BSP);
+                loc = (LayOutChunk)layout.chunks[tempint];
+                loc.startoffset += totalshift;
+                int tempint2 = layout.FindByType(RawDataContainerType.BSPMeta);
+                loc2 = (LayOutChunk)layout.chunks[tempint2];
+                uint bsprawsize = (uint)loc.size;
+                uint oldbspsize = (uint)loc.size;
+                int bspmagic = map.BSP.sbsp[0].magic;
+                bool found = false;
+
+                bsprawsize = 0;
+                BinaryWriter BW = new BinaryWriter(bspToImport.MS);
+                int[] tempoff = new int[bspToImport.raw.rawChunks.Count];
+
+                for (int y = 0; y < bspToImport.raw.rawChunks.Count; y++)
                 {
+                    found = false;
+                    RawDataChunk r = (RawDataChunk)bspToImport.raw.rawChunks[y];
+                    for (int yy = 0; yy < y; yy++)
+                    {
+                        RawDataChunk rr = (RawDataChunk)bspToImport.raw.rawChunks[yy];
+                        if (rr.offset == r.offset && rr.rawLocation == r.rawLocation)
+                        {
+                            tempoff[y] = tempoff[yy];
+
+                            // writes new pointer to loaded meta
+                            BW.BaseStream.Position = r.pointerMetaOffset;
+                            BW.Write(tempoff[y]);
+                            BW.Write(r.size);
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (found == true) continue;
+
+                    tempoff[y] = loc.startoffset + (int)bsprawsize;
+
+                    // MessageBox.Show("Test");
+                    // writes new pointer to loaded meta
+                    BW.BaseStream.Position = r.pointerMetaOffset;
+                    BW.Write(tempoff[y]);
+                    BW.Write(r.size);
+
+                    // writes raw to map file
+                    map.BW.BaseStream.Position = loc.startoffset + bsprawsize;
+                    map.BW.BaseStream.Write(r.MS.ToArray(), 0, r.size);
+
+                    // write padding
+                    int tempinty = map.Functions.Padding(r.size, 512);
+                    byte[] tempbytes = new byte[tempinty];
+                    map.BW.Write(tempbytes);
+                    bsprawsize += (uint)(r.size + tempinty);
+                }
+
+                totalshift += (int)(bsprawsize - oldbspsize);
+                bspshift += (int)(bsprawsize - oldbspsize);
+
+                loc.size = (int)bsprawsize;
+                loc.endoffset = (int)(loc.startoffset + bsprawsize);
+                layout.chunks[tempint] = loc;
+                loc2.MS = bspToImport.MS;
+                loc2.size = bspToImport.size;
+                loc2.endoffset = loc2.startoffset + bspToImport.size;
+                layout.chunks[tempint2] = loc2;
+                bspmagic = bspToImport.magic;
+                newprimarymagicconstant = bspmagic + bspToImport.offset;
+            }
+            else
+            {
+                //Writes SBSP Raw Data
+                for (int sbspIndex = 0; sbspIndex < map.BSP.sbsp.Length; sbspIndex++)
+                {
+                    loc = (LayOutChunk)layout.chunks[layout.FindByType(RawDataContainerType.BSP, sbspIndex)];
+                    loc.startoffset += totalshift;
+
                     map.BW.BaseStream.Position = loc.startoffset;
                     map.BW.BaseStream.Write(loc.MS.ToArray(), 0, loc.size);
                     loc.endoffset = loc.startoffset + loc.size;
-                    layout.chunks[tempint] = loc;
                 }
             }
 
@@ -766,6 +781,77 @@ namespace entity.Tools
 
             #endregion
 
+            #region Coconut Model Raw Data
+            int coconutModelShift = 0;
+            tempint = layout.FindByType(RawDataContainerType.CoconutsModel);
+            if (tempint != -1)
+            {
+                loc = (LayOutChunk)layout.chunks[tempint];
+                loc.startoffset += totalshift;
+                map.BW.BaseStream.Position = loc.startoffset;
+                map.BW.BaseStream.Write(loc.MS.ToArray(), 0, loc.size);
+            }
+            else
+            {
+                loc = new LayOutChunk(0);
+                loc.rawType = RawDataContainerType.CoconutsModel;
+                int tx = layout.FindByType(RawDataContainerType.PRTM);
+                if (tx == -1)
+                {
+                    tx = layout.FindByType(RawDataContainerType.DECR);
+                    if (tx == -1)
+                    {
+                        tx = layout.FindByType(RawDataContainerType.Weather);
+                        if (tx == -1)
+                        {
+                            tx = layout.FindByType(RawDataContainerType.BSP);
+                        }
+                    }
+                }
+
+                loc.startoffset = ((LayOutChunk)layout.chunks[tx]).endoffset;
+                loc.size = 0;
+            }
+            //for (int x = 0; x < metas.Count; x++)
+            //{
+            //    Meta m = ((Meta)metas[x]);
+            //    if (m.rawType == RawDataContainerType.CoconutsModel)
+            //    {
+            //        BinaryWriter BW = new BinaryWriter(m.MS);
+            //        for (int y = 0; y < m.raw.rawChunks.Count; y++)
+            //        {
+            //            RawDataChunk r = (RawDataChunk)m.raw.rawChunks[y];
+            //            int tempintx = loc.startoffset + loc.size + coconutModelShift;
+            //            //writes new pointer to loaded meta
+            //            BW.BaseStream.Position = r.pointerMetaOffset - 4;
+            //            BW.Write(r.size);
+            //            BW.Write(tempintx);
+
+            //            //writes raw to map file
+            //            map.BW.BaseStream.Position = tempintx;
+            //            map.BW.BaseStream.Write(r.MS.ToArray(), 0, r.size);
+            //            //write padding
+            //            int tempinty = map.Functions.Padding(r.size, 512);
+            //            byte[] tempbytes = new byte[tempinty];
+            //            map.BW.Write(tempbytes);
+            //            coconutModelShift += r.size + tempinty;
+            //        }
+            //        metas[x] = m;
+            //    }
+            //}
+            //loc.size += coconutModelShift;
+            loc.endoffset = loc.startoffset + loc.size;
+            if (tempint == -1)
+            {
+                if (coconutModelShift > 0) { layout.chunks.Add(loc); };
+            }
+            else
+            {
+                layout.chunks[tempint] = loc;
+            }
+            totalshift += coconutModelShift;
+            #endregion
+
             #region jmad raw data
 
             int jmadshift = 0;
@@ -850,67 +936,66 @@ namespace entity.Tools
 
             #endregion
 
-            #region bsp meta data
-
-            uint bspmetasize = 0;
-            int bspmetashift = 0;
-            uint oldbspmetasize = (uint)map.BSP.sbsp[0].size;
-            tempint = layout.FindByType(RawDataContainerType.BSPMeta);
-            loc = (LayOutChunk)layout.chunks[tempint];
-            loc.startoffset += totalshift;
-            loc.endoffset += totalshift;
-            bspmetasize = (uint)loc.size;
-            int tempinteger = layout.FindByType(RawDataContainerType.MetaData);
-            loc2 = (LayOutChunk)layout.chunks[tempinteger];
-            int tempintxx = loc.startoffset;
-
-            if (foundbsptoimport == false)
+            #region bsp meta
+            int bspToImportOffset = 0;
+            for (int sbspIndex = 0; sbspIndex < map.BSP.sbsp.Length; sbspIndex++)
             {
-                int tempint3 = layout.FindByType(RawDataContainerType.BSP);
-                LayOutChunk loc3 = (LayOutChunk)layout.chunks[tempint3];
-                BinaryWriter BWZ = new BinaryWriter(loc.MS);
-                for (int w = 0; w < loc3.rawPieces.Count; w++)
+                int oldbspmetasize = map.BSP.sbsp[sbspIndex].size;
+
+                loc = (LayOutChunk)layout.chunks[layout.FindByType(RawDataContainerType.BSPMeta, sbspIndex)];
+                loc.startoffset += totalshift;
+                loc.endoffset += totalshift;
+
+                if (foundbsptoimport == false)
                 {
-                    RawInfoChunk r = (RawInfoChunk)loc3.rawPieces[w];
-                    BWZ.BaseStream.Position = r.offsetOfPointer - map.BSP.sbsp[0].offset;
-                    r.offset += (uint)(modeshift + sndshift);
-                    BWZ.Write(r.offset);
+                    LayOutChunk loc3 = (LayOutChunk)layout.chunks[layout.FindByType(RawDataContainerType.BSP, sbspIndex)];
+                    BinaryWriter BSPMetaBW = new BinaryWriter(loc.MS);
+
+                    //Writes SBSP Raw Pointers
+                    for (int w = 0; w < loc3.rawPieces.Count; w++)
+                    {
+                        RawInfoChunk r = (RawInfoChunk)loc3.rawPieces[w];
+                        r.offset += (uint)(modeshift + sndshift);
+
+                        BSPMetaBW.BaseStream.Position = r.offsetOfPointer - map.BSP.sbsp[sbspIndex].offset;
+                        BSPMetaBW.Write(r.offset);
+                    }
                 }
 
-                layout.chunks[tempint3] = loc3;
-            }
+                int bspoffset = loc.startoffset;
+                int bspmetasize = loc.size;
 
-            #endregion Should this be here or lower, didn't really look ????
+                loc2 = (LayOutChunk)layout.chunks[layout.FindByType(RawDataContainerType.MetaData)];
 
-            // writes new pointer and magic and size to scenario meta
-            BinaryWriter BWX = new BinaryWriter(loc2.MS);
-            int tempoffx = map.MetaInfo.Offset[3] - map.MapHeader.metaStart - map.MapHeader.indexOffset +
-                           map.BSP.sbsp[0].pointerOffset;
-            BWX.BaseStream.Position = tempoffx;
+                if (sbspIndex == 0) bspToImportOffset = bspoffset;
 
-            BWX.Write(tempintxx);
-            BWX.Write(loc.size);
-            BWX.Write(newmagicreflexive);
+                #region Update SBSP info in SCNR
+                //writes new pointer and magic and size to scenario meta
+                BinaryWriter BWX = new BinaryWriter(loc2.MS);
+                int scnrOffset = map.MetaInfo.Offset[3] - map.MapHeader.metaStart - map.MapHeader.indexOffset;
+                BWX.BaseStream.Position = scnrOffset + map.BSP.sbsp[sbspIndex].pointerOffset;
 
-            // writes raw to map file
-            int bspoffset = tempintxx;
-            map.BW.BaseStream.Position = tempintxx;
-            map.BW.BaseStream.Write(loc.MS.ToArray(), 0, loc.size);
+                BWX.Write(bspoffset);
+                BWX.Write(loc.size);
+                BWX.Write(newprimarymagicconstant);
 
-            // write padding
-            layout.chunks[tempint] = loc;
-            totalshift += (int)(bspmetasize - oldbspmetasize);
-            bspmetashift = (int)(bspmetasize - oldbspmetasize);
-            if (bspmetashift < 0)
-            {
-                bspmetashift = 0;
-            }
-            else
-            {
-                byte[] tempbytesxxxx = new byte[bspmetashift];
-                map.BW.Write(tempbytesxxxx);
+                //writes sbsp meta to map file
+                map.BW.BaseStream.Position = bspoffset;
+                map.BW.BaseStream.Write(loc.MS.ToArray(), 0, loc.size);
+
+                //write padding
+                int bspmetashift = bspmetasize - oldbspmetasize;
                 totalshift += bspmetashift;
+
+                if (bspmetashift < 0) bspmetashift = 0;
+                else
+                {
+                    map.BW.Write(new byte[bspmetashift]);
+                    totalshift += bspmetashift;
+                }
+                #endregion
             }
+            #endregion
 
             #region stringnames1
 
@@ -1204,6 +1289,8 @@ namespace entity.Tools
             map.BR.BaseStream.Position = map.IndexHeader.tagsOffset + totalshift + 8;
             map.SecondaryMagic = map.BR.ReadInt32() - (loc.startoffset + map.MapHeader.metaStart);
 
+            int newUghOffset = 0;
+
             int where = map.MetaInfo.Offset[map.IndexHeader.metaCount - 1] + totalshift;
 
             int howfar = 0;
@@ -1225,6 +1312,7 @@ namespace entity.Tools
 
                 if (x == metas.Count - 1)
                 {
+                    newUghOffset = offset;
                     int wherex = map.MetaInfo.Offset[0] + totalshift + 756;
                     map.BW.BaseStream.Position = wherex;
                     map.BW.Write(ident);
@@ -1234,7 +1322,7 @@ namespace entity.Tools
                 // very important for all HAVOK tags & data
                 #region alignment fix
 
-                if (m.type == "phmo" | m.type == "coll" | m.type == "spas")
+                if (m.type == "phmo" | m.type == "coll" | m.type == "spas" | m.type == "vehi")
                 {
                     int tempoffset = offset;
                     do
@@ -1346,11 +1434,13 @@ namespace entity.Tools
                         case Meta.ItemType.Reflexive:
                             Meta.Reflexive reflex = (Meta.Reflexive)i;
                             int newreflex = reflex.translation + offset + map.SecondaryMagic;
-                            // Handle referenced reflexives
+                            /*
+                            // Handle referenced reflexives                            
                             if (reflex.pointstoTagIndex != m.TagIndex)
                             {
                                 newreflex = totalshift + reflex.translation + map.MetaInfo.Offset[reflex.pointstoTagIndex] + map.SecondaryMagic;
                             }
+                            */
                             map.BW.BaseStream.Position = offset + reflex.offset;
                             map.BW.Write(reflex.chunkcount);
                             map.BW.Write(newreflex);
@@ -1419,16 +1509,14 @@ namespace entity.Tools
 
             map.BW.BaseStream.SetLength(tempfilesize);
 
-            if (bspmagic == map.BSP.sbsp[0].magic)
+            #region write new bsp meta
+            if (foundbsptoimport)
             {
-            }
-            else
-            {
-                int tempbspmagic = map.BSP.sbsp[0].magic + map.BSP.sbsp[0].offset - bspoffset;
+                int tempbspmagic = map.BSP.sbsp[0].magic + map.BSP.sbsp[0].offset - bspToImportOffset;
 
-                for (int xx = 0; xx < tempbspmeta.items.Count; xx++)
+                for (int xx = 0; xx < bspToImport.items.Count; xx++)
                 {
-                    Meta.Item i = tempbspmeta.items[xx];
+                    Meta.Item i = (Meta.Item)bspToImport.items[xx];
                     switch (i.type)
                     {
                         case Meta.ItemType.Ident:
@@ -1438,21 +1526,21 @@ namespace entity.Tools
                                 for (int e = 0; e < metas.Count; e++)
                                 {
                                     Meta tempm = (Meta)metas[e];
-                                    if (tempbspmeta.name == id.pointstotagname && tempbspmeta.type == id.pointstotagtype)
+                                    if (bspToImport.name == id.pointstotagname && bspToImport.type == id.pointstotagtype)
                                     {
                                         id.ident = map.BSP.sbsp[0].ident;
                                         break;
                                     }
                                     else if (tempm.name == id.pointstotagname && tempm.type == id.pointstotagtype)
                                     {
-                                        id.ident = map.MetaInfo.Ident[map.IndexHeader.metaCount - 1] + (e * 65537);
+                                        id.ident = map.MetaInfo.Ident[map.IndexHeader.metaCount - 1] + (e * 65537); ;
                                         break;
                                     }
-
                                     if (e == metas.Count - 1)
                                     {
                                         int sss = Array.IndexOf(map.MetaInfo.TagType, id.intagtype);
                                         id.ident = sss != -1 ? map.MetaInfo.Ident[sss] : -1;
+
                                     }
                                 }
                             }
@@ -1460,8 +1548,7 @@ namespace entity.Tools
                             {
                                 id.ident = map.MetaInfo.Ident[id.pointstoTagIndex];
                             }
-
-                            map.BW.BaseStream.Position = bspoffset + id.offset;
+                            map.BW.BaseStream.Position = bspToImportOffset + id.offset;
                             map.BW.Write(id.ident);
                             break;
                         case Meta.ItemType.String:
@@ -1476,17 +1563,17 @@ namespace entity.Tools
                                     stringlength = (byte)map.Strings.Length[e];
                                 }
                             }
-
                             for (int e = 0; e < strings.Count; e++)
                             {
                                 if (((string)strings[e]) == s.name)
                                 {
+
                                     stringnum = (short)(map.MapHeader.scriptReferenceCount + e);
                                     stringlength = (byte)s.name.Length;
                                 }
                             }
 
-                            map.BW.BaseStream.Position = bspoffset + s.offset;
+                            map.BW.BaseStream.Position = bspToImportOffset + s.offset;
                             map.BW.Write(stringnum);
                             map.BW.Write(new byte());
                             map.BW.Write(stringlength);
@@ -1494,14 +1581,40 @@ namespace entity.Tools
 
                         case Meta.ItemType.Reflexive:
                             Meta.Reflexive rr = (Meta.Reflexive)i;
-                            int newreflex = bspoffset + rr.translation + tempbspmagic;
-                            map.BW.BaseStream.Position = bspoffset + rr.offset + 4;
-
+                            int newreflex = bspToImportOffset + rr.translation + tempbspmagic;
+                            map.BW.BaseStream.Position = bspToImportOffset + rr.offset + 4;
                             // map.BW.Write(newreflex);
+
                             break;
+                    }
+
+                }
+
+
+            }
+            #endregion
+
+            #region Fix Raw Pointers
+
+            uint startOfModelTable = uint.MaxValue;
+            for (int x = 0; x < layout.chunks.Count; x++)
+            {
+                loc = (LayOutChunk)layout.chunks[x];
+                for (int xx = 0; xx < loc.rawPieces.Count; xx++)
+                {
+                    RawInfoChunk r = (RawInfoChunk)loc.rawPieces[xx];
+                    switch (r.rawType)
+                    {
+                        case RawDataType.mode1:
+                        case RawDataType.mode2:
+                            if (r.offset < startOfModelTable) startOfModelTable = r.offset; break;
                     }
                 }
             }
+
+            map.BR.BaseStream.Position = newUghOffset + 84;
+            int newUghRawInfoReflexiveStart = map.BR.ReadInt32() - map.SecondaryMagic;
+            int ughShift = newUghRawInfoReflexiveStart - oldUghRawInfoReflexiveStart - totalshift;//howfar - ((Meta)metas[metas.Count - 1]).size;
 
             for (int x = 0; x < layout.chunks.Count; x++)
             {
@@ -1513,20 +1626,6 @@ namespace entity.Tools
                     map.BW.BaseStream.Position = r.offsetOfPointer;
                     switch (r.rawType)
                     {
-                        case RawDataType.bitm:
-                            r.offset += (uint)(totalshift - bitmshift);
-                            map.BW.Write(r.offset);
-                            break;
-                        case RawDataType.DECR:
-                            r.offset += (uint)(sndshift + modeshift + bspshift + weathershift);
-                            map.BW.Write(r.offset);
-                            break;
-
-                            // case RawDataType.snd2:
-                        case RawDataType.jmad:
-                            r.offset += (uint)(sndshift + modeshift + bspshift + weathershift + decrshift + prtmshift);
-                            map.BW.Write(r.offset);
-                            break;
                         case RawDataType.mode1:
                             r.offset += (uint)sndshift;
                             map.BW.Write(r.offset);
@@ -1535,12 +1634,30 @@ namespace entity.Tools
                             r.offset += (uint)sndshift;
                             map.BW.Write(r.offset);
                             break;
+                        case RawDataType.weat:
+                            r.offset += (uint)(sndshift + modeshift + bspshift);
+                            map.BW.Write(r.offset);
+                            break;
+                        case RawDataType.DECR:
+                            r.offset += (uint)(sndshift + modeshift + bspshift + weathershift);
+                            map.BW.Write(r.offset);
+                            break;
                         case RawDataType.PRTM:
                             r.offset += (uint)(sndshift + modeshift + bspshift + weathershift + decrshift);
                             map.BW.Write(r.offset);
                             break;
-                        case RawDataType.weat:
-                            r.offset += (uint)(sndshift + modeshift + bspshift);
+                        case RawDataType.snd2:
+                            r.offsetOfPointer += ughShift;
+                            map.BW.BaseStream.Position = r.offsetOfPointer;
+                            if (r.offset >= startOfModelTable) r.offset += (uint)(sndshift + modeshift + bspshift + weathershift + decrshift + prtmshift);
+                            map.BW.Write(r.offset);
+                            break;
+                        case RawDataType.jmad:
+                            r.offset += (uint)(sndshift + modeshift + bspshift + weathershift + decrshift + prtmshift + coconutModelShift);
+                            map.BW.Write(r.offset);
+                            break;
+                        case RawDataType.bitm:
+                            r.offset += (uint)(totalshift - bitmshift);
                             map.BW.Write(r.offset);
                             break;
                     }
@@ -1584,10 +1701,13 @@ namespace entity.Tools
                                 r.offset |= 0X40000000;
                                 mapid.BW.Write(r.offset);
                                 break;
-                            case RawDataType.snd2:
+                            //case RawDataType.snd2:
+                            //    r.offset += (uint)(sndshift + modeshift + bspshift + weathershift + decrshift + prtmshift);
+                            //    r.offset |= 0X40000000;
+                            //    Maps.map[mapid].BW.Write(r.offset);
+                            //    break;
                             case RawDataType.jmad:
-                                r.offset +=
-                                    (uint)(sndshift + modeshift + bspshift + weathershift + decrshift + prtmshift);
+                                r.offset += (uint)(sndshift + modeshift + bspshift + weathershift + decrshift + prtmshift + coconutModelShift);
                                 r.offset |= 0X40000000;
                                 mapid.BW.Write(r.offset);
                                 break;
@@ -1615,11 +1735,12 @@ namespace entity.Tools
                     }
                 }
 
+            #endregion
                 mapid.CloseMap();
                 mapid.Sign();
             }
         }
 
-        #endregion
+            #endregion
     }
 }

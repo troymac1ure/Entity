@@ -30,7 +30,7 @@ namespace entity.HexEditor
         /// <summary>
         /// The map offset.
         /// </summary>
-        public int MapOffset;
+        public long MapOffset;
 
         /// <summary>
         /// The file path.
@@ -45,7 +45,7 @@ namespace entity.HexEditor
         /// <summary>
         /// The offset.
         /// </summary>
-        private int Offset;
+        private long Offset;
 
         /// <summary>
         /// The map.
@@ -60,12 +60,12 @@ namespace entity.HexEditor
         /// <summary>
         /// The selectionlength.
         /// </summary>
-        private int selectionlength;
+        private long selectionlength;
 
         /// <summary>
         /// The selectionoffset.
         /// </summary>
-        private int selectionoffset;
+        private long selectionoffset;
 
         /// <summary>
         /// The txt bitmask.
@@ -226,17 +226,17 @@ namespace entity.HexEditor
                     
                     if (meta.items[x] is Meta.Reflexive)
                     {
-                        this.hexBox1.Select((meta.items[x].offset - Offset), 8);
+                        this.hexBox1.Select((meta.items[x].offset), 8);
                         this.hexBox1.SelectionForeColor = Color.Red;
                     }
                     else if (meta.items[x] is Meta.String)
                     {
-                        this.hexBox1.Select((meta.items[x].offset - Offset), 4);
+                        this.hexBox1.Select((meta.items[x].offset), 4);
                         this.hexBox1.SelectionForeColor = Color.Blue;
                     }
                     else if (meta.items[x] is Meta.Ident)
                     {
-                        this.hexBox1.Select((meta.items[x].offset - Offset), 4);
+                        this.hexBox1.Select((meta.items[x].offset), 4);
                         this.hexBox1.SelectionForeColor = Color.YellowGreen;
                     }
                     
@@ -295,14 +295,24 @@ namespace entity.HexEditor
 
                         // ConvertBytesToUInt32(bytes).ToString();=
                         this.txtFloat = BitConverter.ToSingle(bytes, 0).ToString();
+
                         int temp = BitConverter.ToInt32(bytes, 0);
+
+                        #region check for reflexives
                         int tagIndex = map.Functions.ForMeta.FindMetaByID(temp);
                         if (tagIndex != -1)
                         {
                             this.txtIdentTagType = map.MetaInfo.TagType[tagIndex];
                             this.txtIdentName = map.FileNames.Name[tagIndex];
                         }
+                        else
+                        {
+                            this.txtIdentTagType = "null";
+                            this.txtIdentName = "null";
+                        }
+                        #endregion
 
+                        #region Check for StringID
                         int stringid = temp & 0xFFFF;
                         int stringcount = (temp >> 16) & 0xFFFF;
                         int middlebyte = stringcount & 0xFF;
@@ -313,21 +323,22 @@ namespace entity.HexEditor
                         {
                             this.txtSID = map.Strings.Name[stringid];
                         }
+                        #endregion
 
                         ConvertBytesToBoolArray(bytes);
                         goto case 2;
                     }
 
                 case 8:
-                    int temp1 = BitConverter.ToInt32(bytes, 0);
-                    int temp2 = BitConverter.ToInt32(bytes, 4);
-                    int rcount = temp1 & 0xFFFF;
-                    int rzero = (rcount >> 8) & 0xFF;
-                    rcount = rcount & 0xFF;
-                    int rtranslation = temp2 - meta.magic;
+                    int temp1 = BitConverter.ToInt32(bytes, 0); // Used to hold count on reflexives
+                    int temp2 = BitConverter.ToInt32(bytes, 4); // Used to hold reflexive offsets
+                    int rcount = temp1 & 0xFFFF;                // Make sure we have on 32 bits / 4 bytes
+                    //int rzero = (rcount >> 8) & 0xFF;           // What was going on here ???
+                    //rcount = rcount & 0xFF;                     // What was going on here ???
+                    int rtranslation = temp2 - meta.magic;      // Translate reflexive offset
                     int tagnumx = map.Functions.ForMeta.FindMetaByOffset(rtranslation);
 
-                    if (tagnumx != -1 && rzero == 0)
+                    if (tagnumx != -1) // && rzero == 0)   // Again, not sure what this was for, but would cause some reflexives to be lost
                     {
                         rtranslation -= map.MetaInfo.Offset[tagnumx];
                         this.txtReflexiveCount = rcount.ToString();
@@ -545,21 +556,29 @@ namespace entity.HexEditor
         /// <remarks></remarks>
         private void UpdateTxtbInfo()
         {
-            txtbInfo.Text = "Unsigned Byte      " + txtUByte + '\n' + "Signed Byte        " + txtByte + '\n' +
-                            "Unsigned Short     " + txtUShort + '\n' + "Signed Short       " + txtShort + '\n' +
-                            "Unsigned Long      " + txtULong + '\n' + "Signed Long        " + txtLong + '\n' +
-                            "Float              " + txtFloat + '\n' + "Bitmask            " + txtBitmask + '\n';
+            txtbInfo.Text = "Unsigned Byte       " + txtUByte + '\n' + "Signed Byte         " + txtByte + '\n' +
+                            "Unsigned Short      " + txtUShort + '\n' + "Signed Short        " + txtShort + '\n' +
+                            "Unsigned Long       " + txtULong + '\n' + "Signed Long         " + txtLong + '\n' +
+                            "Float               " + txtFloat + '\n' + "Bitmask             " + txtBitmask + '\n';
             int p1 = txtbInfo.Text.Length;
             txtbInfo.Text +=
-                            "Ident Tag Type     " + txtIdentTagType + '\n' + "Ident Name         " + txtIdentName + '\n';
+                            "Ident Tag Type      " + txtIdentTagType + '\n' + "Ident Name          " + txtIdentName + '\n';
             int p2 = txtbInfo.Text.Length;
             txtbInfo.Text +=
-                            "StringID           " + txtSID + '\n';
+                            "StringID            " + txtSID + '\n';
             int p3 = txtbInfo.Text.Length;
+            txtbInfo.Text += "Reflexive - Name  : ";
+            if (txtReflexiveCount != string.Empty)
+            {
+                int ItemIndex = meta.FindItemsByOffset((int)this.Offset);
+                if (ItemIndex != -1)
+                    txtbInfo.Text += meta.items[ItemIndex].description;
+            }
             txtbInfo.Text +=
-                            "Reflexive - Count  " + txtReflexiveCount + '\n' + 
-                            "Points To - Type   " + txtReflexiveTagType + '\n' + "Points To - Name   " +
-                            txtReflexiveTagName + '\n' + "Points To - Offset " + txtReflexiveTranslation;
+                            "\nReflexive - Count : " + txtReflexiveCount +
+                            "\nPoints To - Type  : " + txtReflexiveTagType + 
+                            "\nPoints To - Name  : " + txtReflexiveTagName + 
+                            "\nPoints To - Offset: " + txtReflexiveTranslation;
             txtbInfo.Select(0, p1 - 0);
             txtbInfo.SelectionColor = Color.Black;
             txtbInfo.Select(p1, p2 - p1);
@@ -676,13 +695,13 @@ namespace entity.HexEditor
 
         private void hexBox1_SelectionStartChanged(object sender, EventArgs e)
         {
-            long bytePos = (hexBox1.CurrentLine - 1) * hexBox1.BytesPerLine + hexBox1.CurrentPositionInLine - 1;
+            this.Offset = (hexBox1.CurrentLine - 1) * hexBox1.BytesPerLine + hexBox1.CurrentPositionInLine - 1;            
             lblPosition.Text = string.Format("{0} / {1}",
-                                    bytePos,
+                                    this.Offset,
                                     hexBox1.ByteProvider.Length - 1);
             lblLocation.Text = string.Format("Ln {0}    Col {1}",
                                     hexBox1.CurrentLine, hexBox1.CurrentPositionInLine);
-            if (hexBox1.SelectionLength == 0 && bytePos < hexBox1.ByteProvider.Length-1)
+            if (hexBox1.SelectionLength == 0 && this.Offset < hexBox1.ByteProvider.Length-1)
             {
                 // We need to have a selection length of 1 for CopyHex() to work
                 hexBox1.SelectionLength = 1;

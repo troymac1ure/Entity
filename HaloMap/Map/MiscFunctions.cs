@@ -126,22 +126,18 @@ namespace HaloMap.Map
                         // Get offset to BIPD listing
                         map.BR.BaseStream.Position = map.MetaInfo.Offset[tagIndex] + 16;
                         tagIndex = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                    }
 
-                    if (tagIndex == -1)
-                    {
-                        return -1;
+                        if (tagIndex == -1)
+                            return -1;
                     }
 
                     if (map.MetaInfo.TagType[tagIndex] == "vehc" | map.MetaInfo.TagType[tagIndex] == "itmc")
                     {
                         map.BR.BaseStream.Position = map.MetaInfo.Offset[tagIndex] + 20;
                         tagIndex = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                    }
-
-                    if (tagIndex == -1)
-                    {
-                        return -1;
+                     
+                        if (tagIndex == -1)
+                            return -1;
                     }
 
                     map.BR.BaseStream.Position = map.MetaInfo.Offset[tagIndex] + 56;

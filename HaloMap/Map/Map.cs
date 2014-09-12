@@ -547,12 +547,188 @@ namespace HaloMap.Map
                         MapHeader = new MapHeaderInfo(ref BR, HaloVersion);
                         IndexHeader = new IndexHeaderInfo(ref BR, this);
                         MetaInfo = new ObjectIndexInfo(ref BR, this);
+                        #region Added for loading of obfuscated maps
+                        
+                        System.Collections.Generic.List<int> offsets = new System.Collections.Generic.List<int>();
+                        System.Collections.Generic.List<int> indexes = new System.Collections.Generic.List<int>();
+
+                        // Obfuscated maps set filename offset to 0 and change all listings to spaces.
+                        // This point is back to the correct place for starters.
+                        if (MapHeader.offsetTofileNames == 0)
+                        {
+                            MapHeader.offsetTofileNames = MapHeader.offsetTofileIndex - MapHeader.fileNamesSize;
+                            MapHeader.offsetTofileNames = MapHeader.offsetTofileNames - (MapHeader.offsetTofileNames % 64);
+
+                            // All sizes get set to maximum length
+                            if (MetaInfo.Size[0] == Int32.MaxValue)
+                            {
+                                // Sort our meta by offset to start
+                                for (int x = 0; x < MapHeader.fileCount; x++)
+                                    if (x == 0 || MetaInfo.Offset[x] >= offsets[x - 1])
+                                    {
+                                        offsets.Add(MetaInfo.Offset[x]);
+                                        indexes.Add(x);
+                                    }
+                                    else
+                                    {
+                                        for (int y = 0; y < x; y++)
+                                            if (MetaInfo.Offset[x] < offsets[y])
+                                            {
+                                                offsets.Insert(y, MetaInfo.Offset[x]);
+                                                indexes.Insert(y, x);
+                                                break;
+                                            }
+                                    }
+                                for (int x = 0; x < MapHeader.fileCount; x++)
+                                {
+                                    if (offsets[x] < 0)
+                                        continue;
+                                    if (indexes[x] < MapHeader.fileCount - 1)
+                                        MetaInfo.Size[indexes[x]] = offsets[x + 1] - offsets[x];
+                                    else
+                                        MetaInfo.Size[indexes[x]] = this.MapHeader.fileSize - offsets[x];
+                                }
+                                
+                            }
+                        }
+                        #endregion
                         FileNames = new FileNamesInfo(ref BR, this);
                         Strings = new StringsInfo(ref BR, this);
                         CloseMap();
 
                         Unicode = new UnicodeTableReader(this.filePath, this.MetaInfo.Offset[0]);
+                    
+                        #region Attempt to detect and recover meta tag names from a known good base map
+                        
+                        // If the first two entries both start with our default # sign and offsets has a count, map is probably obfuscated
+                        if (FileNames.Name[0].StartsWith("#") && FileNames.Name[1].StartsWith("#") && offsets.Count > 0)
+                        {
+                            if (MessageBox.Show("This map may have been obfuscated. Would you like to try to recover names from a map(s)?", "Decode from map(s)?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            {
+                                OpenFileDialog ofd = new OpenFileDialog();
+                                ofd.Filter = "Map Files|*.map";
+                                ofd.Multiselect = true;                                
+                                ofd.Title = "Select the Clean Base Map for this Map (" + MapHeader.mapName.TrimEnd((char)0) + ")";
 
+                                do
+                                {
+                                    if (ofd.ShowDialog() == DialogResult.OK)
+                                    {
+                                        #region Information Form (f) Creation
+                                        Form f = new Form();
+                                        f.ControlBox = false;
+                                        f.MinimizeBox = false;
+                                        f.MaximizeBox = false;
+                                        f.FormBorderStyle = FormBorderStyle.FixedSingle;
+                                        f.Size = new System.Drawing.Size(700, 60);
+                                        f.StartPosition = FormStartPosition.CenterScreen;
+                                        Label lbl = new Label();
+                                        lbl.Dock = DockStyle.Fill;
+                                        lbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                                        #endregion
+                                        f.Show();
+                                        f.Controls.Add(lbl);
+
+                                        foreach (string filename in ofd.FileNames)
+                                        {
+                                            f.Text = filename;
+                                            lbl.Text = "Unknowns remaining: " + indexes.Count.ToString();
+                                            f.Focus();
+                                            f.Refresh();
+                                            
+                                            // Load clean base map
+                                            Map tempMap = Map.LoadFromFile(filename);
+                                            if (tempMap == null) 
+                                                continue;
+
+                                            /*
+                                            // Match all Idents and use original name
+                                            for (int z = 0; z < tempMap.MetaInfo.Ident.Length; z++)
+                                                for (int y = 0; y < indexes.Count; y++)
+                                                    if (tempMap.MetaInfo.Ident[z] == MetaInfo.Ident[indexes[y]])
+                                                    {
+                                                        FileNames.Name[indexes[y]] = tempMap.FileNames.Name[z];
+                                                        // No longer need these, so remove to speed up future searches.
+                                                        indexes.RemoveAt(y);
+                                                        offsets.RemoveAt(y);
+                                                        break;
+                                                    }
+                                             */
+
+                                            // Match all tags with same length, tag type & name lengths
+                                            for (int z = 0; z < tempMap.MetaInfo.Size.Length; z++)
+                                                for (int y = 0; y < indexes.Count; y++)
+                                                    if (tempMap.MetaInfo.Size[z] == MetaInfo.Size[indexes[y]]
+                                                        && tempMap.MetaInfo.TagType[z] == MetaInfo.TagType[indexes[y]]
+                                                        && tempMap.FileNames.Name[z].Length == FileNames.Name[indexes[y]].Length)
+                                                    {
+                                                        FileNames.Name[indexes[y]] = tempMap.FileNames.Name[z];
+                                                        // No longer need these, so remove to speed up future searches.
+                                                        indexes.RemoveAt(y);
+                                                        offsets.RemoveAt(y);
+                                                        break;
+                                                    }
+
+                                            tempMap.CloseMap();
+                                        }
+                                        f.Hide();
+                                        f.Dispose();
+                                    }                                    
+                                    if (indexes.Count > 0)
+                                        if (MessageBox.Show("There are still " + indexes.Count.ToString() + " unknowns.\n Would you like to try retrieving data from another map?", "Check another base map?", MessageBoxButtons.YesNo) == DialogResult.No)
+                                            break;
+                                } while (indexes.Count > 0);
+
+                                // For left-over tags, try something else
+                                for (int y = 0; y < indexes.Count; y++)
+                                {
+                                    // Models store the name inside the tag, so at least show that much
+                                    if (MetaInfo.TagType[indexes[y]] == "mode")
+                                    {
+                                        Meta m = Map.GetMetaFromTagIndex(indexes[y], this, false, false);
+                                        BinaryReader br = new BinaryReader(m.MS);
+                                        br.BaseStream.Position = 0;
+                                        int SID = br.ReadInt16();
+                                        br.BaseStream.Position += 1;
+                                        byte SIDLen = br.ReadByte();
+                                        if (this.Strings.Length[SID] == SIDLen)
+                                        {
+                                            string name = this.Strings.Name[SID] + "__";
+                                            FileNames.Name[indexes[y]] =
+                                                FileNames.Name[indexes[y]].Substring(0, 6)
+                                                + name
+                                                + FileNames.Name[indexes[y]].Remove(0, 6 + name.Length);
+                                        }
+                                        m.Dispose();
+                                        indexes.RemoveAt(y);
+                                        offsets.RemoveAt(y);
+                                    }
+                                }
+                                if (MessageBox.Show("Do you wish to save changes into map now?", "Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                {
+                                    this.OpenMap(MapTypes.Internal);
+                                    // Write the proper offset location to the header
+                                    this.BW.BaseStream.Position = 708;
+                                    BW.Write(this.MapHeader.offsetTofileNames);
+                                    // Write the meta tag sizes
+                                    for (int x = 0; x < this.IndexHeader.metaCount; x++)
+                                    {
+                                        BW.BaseStream.Position = this.IndexHeader.tagsOffset + x * 16 + 12;
+                                        BW.Write(this.MetaInfo.Size[x]);
+                                    }
+                                    // Write the names into the file
+                                    for (int x = 0; x < this.IndexHeader.metaCount; x++)
+                                    {
+                                        BW.BaseStream.Position = this.MapHeader.offsetTofileNames + this.FileNames.Offset[x];
+                                        BW.Write(this.FileNames.Name[x].PadRight(this.FileNames.Length[x],'\0').ToCharArray(), 0, this.FileNames.Length[x]);
+                                    }
+                                    this.CloseMap();
+
+                                }
+                            }
+
+                        }
+                        #endregion
                         break;
                     }
 

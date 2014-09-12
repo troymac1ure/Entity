@@ -85,6 +85,23 @@ namespace entity.Renderers
             }
 
         }
+
+        private Mesh loadSpawnZone(SpawnInfo.BaseSpawn spawn)
+        {
+            SpawnInfo.SpawnZone tempCylinder = spawn as SpawnInfo.SpawnZone;
+            // Used for fixing position of bounding boxes
+            tempCylinder.bbXDiff = 0;
+            tempCylinder.bbYDiff = 0;
+            tempCylinder.bbZDiff = tempCylinder.UpperHeight - (tempCylinder.UpperHeight - tempCylinder.LowerHeight) / 2;           
+            return (Mesh.Cylinder(
+                render.device, 
+                tempCylinder.InnerRadius, 
+                tempCylinder.OuterRadius, 
+                tempCylinder.UpperHeight - tempCylinder.LowerHeight, 
+                32, 
+                5
+                ));
+        }
     }
 }
 

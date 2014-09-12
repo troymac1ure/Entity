@@ -333,24 +333,9 @@ namespace HaloMap.Render
                     Meta m = new Meta(map);
                     m.ReadMetaFromMap(i, false);
 
-                    Weapon.ItmcTagNumber = i;
-
-                    // Base address of ITMC tag, offset of WEAP pointer (+20)
-                    map.BR.BaseStream.Position = map.MetaInfo.Offset[Weapon.ItmcTagNumber] + 20;
-                    Weapon.WeapTagNumber = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                    if (Weapon.WeapTagNumber == -1)
+                    Weapon.ModelTagNumber = map.Functions.FindModelByBaseClass(i);
+                    if (Weapon.ModelTagNumber != -1)
                     {
-                        continue;
-                    }
-
-                    // Base address of WEAP tag, offset of HLMT pointer (+56)
-                    map.BR.BaseStream.Position = map.MetaInfo.Offset[Weapon.WeapTagNumber] + 56;
-                    Weapon.HlmtTagNumber = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                    if (Weapon.HlmtTagNumber != -1)
-                    {
-                        // Base address of HLMT tag, offset of MODE pointer (+4)
-                        map.BR.BaseStream.Position = map.MetaInfo.Offset[Weapon.HlmtTagNumber] + 4;
-                        Weapon.ModelTagNumber = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
                         m.ReadMetaFromMap(Weapon.ModelTagNumber, false);
                         Weapon.Model = new ParsedModel(ref m);
                         ParsedModel.DisplayedInfo.LoadDirectXTexturesAndBuffers(ref device, ref Weapon.Model);

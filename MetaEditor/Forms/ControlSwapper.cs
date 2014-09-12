@@ -366,7 +366,7 @@ namespace MetaEditor.Forms
                         // Size * 8 bits
                         for (int x = 0; x < options.Length; x++)
                         {
-                            options[x] = new IFPIO.Option("Bit " + x, x.ToString(), parent.lineNum);
+                            options[x] = new IFPIO.Option("Bit " + x, "", x.ToString(), parent.lineNum);
                         }
 
                         if (parent.splitContainer1.Panel1.Controls[0] is Bitmask)
@@ -405,7 +405,7 @@ namespace MetaEditor.Forms
                         // Size * 8 bits
                         for (int x = 0; x < options.Length; x++)
                         {
-                            options[x] = new IFPIO.Option("Bit " + x, x.ToString(), parent.lineNum);
+                            options[x] = new IFPIO.Option("Bit " + x, "", x.ToString(), parent.lineNum);
                         }
 
                         if (parent.splitContainer1.Panel1.Controls[0] is Bitmask)

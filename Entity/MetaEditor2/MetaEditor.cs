@@ -86,7 +86,32 @@ namespace entity.MetaEditor2
             TabItem tp = tabs.CreateTab(typeAndTag);
             mecp.Parent = tp.AttachedControl;
             mecp.Dock = DockStyle.Fill;
+            #region tooltip Information
             tp.Tooltip = "[" + @meta.type.ToLower() + "] " + @meta.name;
+            try
+            {
+                string PluginSet = Globals.PluginSetSelector.getActivePlugin();
+                tp.Tooltip += "\nPlugin set: " + PluginSet;
+            } 
+            catch {}
+            string PluginInfo = string.Empty;
+            try
+            {
+                string PluginAuthor = ((HaloMap.Plugins.IFPIO)HaloMap.Plugins.IFPHashMap.H2IFPHash[meta.type]).author;
+                if (PluginAuthor != null)
+                    PluginInfo += "Author: " + PluginAuthor + "  ";
+            } 
+            catch { }
+            try
+            {
+                string PluginVersion = ((HaloMap.Plugins.IFPIO)HaloMap.Plugins.IFPHashMap.H2IFPHash[meta.type]).version;
+                if (PluginVersion != null)
+                    PluginInfo += "Version: " + PluginVersion + "  ";
+            }
+            catch { }
+            if (PluginInfo != string.Empty)
+                tp.Tooltip += "\nPlugin " + PluginInfo;
+            #endregion
 
             this.tabs.AllowDrop = true;
             //this.tabs.DragDrop += new DragEventHandler(tp_DragDrop);

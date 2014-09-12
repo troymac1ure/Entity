@@ -240,6 +240,7 @@ namespace entity.MapForms
             this.injectBitmapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.convertToBumpMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bitmapEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAnimatedBitmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.secondaryMagicBox = new System.Windows.Forms.RichTextBox();
             this.primaryMagicBox = new System.Windows.Forms.RichTextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -329,7 +330,7 @@ namespace entity.MapForms
             this.extractPRTMOBJToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBitmapDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.showAnimatedBitmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btn_EditHeader = new System.Windows.Forms.Button();
             this.treeviewcontext.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -865,7 +866,7 @@ namespace entity.MapForms
             this.bitmapEditorToolStripMenuItem,
             this.showAnimatedBitmapsToolStripMenuItem});
             this.BitmapContextStrip.Name = "contextMenuStrip1";
-            this.BitmapContextStrip.Size = new System.Drawing.Size(200, 136);
+            this.BitmapContextStrip.Size = new System.Drawing.Size(200, 114);
             // 
             // saveBitmapToolStripMenuItem
             // 
@@ -895,6 +896,16 @@ namespace entity.MapForms
             this.bitmapEditorToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.bitmapEditorToolStripMenuItem.Text = "Bitmap Editor";
             this.bitmapEditorToolStripMenuItem.Click += new System.EventHandler(this.bitmapEditorToolStripMenuItem_Click);
+            // 
+            // showAnimatedBitmapsToolStripMenuItem
+            // 
+            this.showAnimatedBitmapsToolStripMenuItem.Checked = true;
+            this.showAnimatedBitmapsToolStripMenuItem.CheckOnClick = true;
+            this.showAnimatedBitmapsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showAnimatedBitmapsToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.showAnimatedBitmapsToolStripMenuItem.Name = "showAnimatedBitmapsToolStripMenuItem";
+            this.showAnimatedBitmapsToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.showAnimatedBitmapsToolStripMenuItem.Text = "Show Animated Bitmaps";
             // 
             // secondaryMagicBox
             // 
@@ -1003,6 +1014,8 @@ namespace entity.MapForms
             // soundsCheckBox
             // 
             this.soundsCheckBox.BackColor = System.Drawing.Color.Transparent;
+            this.soundsCheckBox.Checked = true;
+            this.soundsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.soundsCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.soundsCheckBox.Location = new System.Drawing.Point(8, 204);
             this.soundsCheckBox.Name = "soundsCheckBox";
@@ -1014,6 +1027,8 @@ namespace entity.MapForms
             // recursiveCheckBox
             // 
             this.recursiveCheckBox.BackColor = System.Drawing.Color.Transparent;
+            this.recursiveCheckBox.Checked = true;
+            this.recursiveCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.recursiveCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.recursiveCheckBox.Location = new System.Drawing.Point(8, 156);
             this.recursiveCheckBox.Name = "recursiveCheckBox";
@@ -1237,9 +1252,9 @@ namespace entity.MapForms
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(76, 17);
+            this.button3.Location = new System.Drawing.Point(87, 17);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(67, 19);
+            this.button3.Size = new System.Drawing.Size(78, 19);
             this.button3.TabIndex = 42;
             this.button3.Text = "Edit";
             this.button3.UseVisualStyleBackColor = true;
@@ -1249,7 +1264,7 @@ namespace entity.MapForms
             // 
             this.button2.Location = new System.Drawing.Point(3, 17);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(73, 19);
+            this.button2.Size = new System.Drawing.Size(78, 19);
             this.button2.TabIndex = 41;
             this.button2.Text = "New";
             this.button2.UseVisualStyleBackColor = true;
@@ -1414,6 +1429,7 @@ namespace entity.MapForms
             this.LowerOptionsBar.BackColor = System.Drawing.Color.LightGray;
             this.LowerOptionsBar.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LowerOptionsBar.Controls.Add(this.groupBox1);
+            this.LowerOptionsBar.Controls.Add(this.btn_EditHeader);
             this.LowerOptionsBar.Controls.Add(this.renameMapButton);
             this.LowerOptionsBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LowerOptionsBar.Location = new System.Drawing.Point(0, 0);
@@ -1438,7 +1454,7 @@ namespace entity.MapForms
             // 
             this.renameMapButton.Location = new System.Drawing.Point(6, 8);
             this.renameMapButton.Name = "renameMapButton";
-            this.renameMapButton.Size = new System.Drawing.Size(100, 23);
+            this.renameMapButton.Size = new System.Drawing.Size(88, 23);
             this.renameMapButton.TabIndex = 39;
             this.renameMapButton.Text = "Rename Map";
             this.renameMapButton.UseVisualStyleBackColor = true;
@@ -1498,7 +1514,7 @@ namespace entity.MapForms
             this.hexView1.Enabled = false;
             this.hexView1.Location = new System.Drawing.Point(0, 0);
             this.hexView1.Name = "hexView1";
-            this.hexView1.Padding = new System.Windows.Forms.Padding(10);
+            this.hexView1.Padding = new System.Windows.Forms.Padding(4);
             this.hexView1.Size = new System.Drawing.Size(716, 669);
             this.hexView1.TabIndex = 0;
             this.hexView1.Visible = false;
@@ -1817,15 +1833,15 @@ namespace entity.MapForms
             this.timer1.Interval = 80;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // showAnimatedBitmapsToolStripMenuItem
+            // btn_EditHeader
             // 
-            this.showAnimatedBitmapsToolStripMenuItem.Checked = true;
-            this.showAnimatedBitmapsToolStripMenuItem.CheckOnClick = true;
-            this.showAnimatedBitmapsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showAnimatedBitmapsToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.showAnimatedBitmapsToolStripMenuItem.Name = "showAnimatedBitmapsToolStripMenuItem";
-            this.showAnimatedBitmapsToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
-            this.showAnimatedBitmapsToolStripMenuItem.Text = "Show Animated Bitmaps";
+            this.btn_EditHeader.Location = new System.Drawing.Point(100, 8);
+            this.btn_EditHeader.Name = "btn_EditHeader";
+            this.btn_EditHeader.Size = new System.Drawing.Size(78, 23);
+            this.btn_EditHeader.TabIndex = 39;
+            this.btn_EditHeader.Text = "Edit Header";
+            this.btn_EditHeader.UseVisualStyleBackColor = true;
+            this.btn_EditHeader.Click += new System.EventHandler(this.editHeaderButton_Click);
             // 
             // MapForm
             // 
@@ -1891,6 +1907,7 @@ namespace entity.MapForms
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem StringEditorToolStripMenuItem;
         private ToolStripMenuItem showAnimatedBitmapsToolStripMenuItem;
+        private Button btn_EditHeader;
     }
 }
 

@@ -161,7 +161,6 @@
     </Compile>
     <Compile Include="HexBox.cs">
       <SubType>Component</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="HexCasing.cs" />
     <Compile Include="ByteCharConverters.cs" />
@@ -184,7 +183,6 @@
     <EmbeddedResource Include="HexBox.resx">
       <DependentUpon>HexBox.cs</DependentUpon>
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

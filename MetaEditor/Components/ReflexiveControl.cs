@@ -1921,7 +1921,7 @@ namespace MetaEditor.Components
                     IFPIO.Option[] options = new IFPIO.Option[8];
                     for (int x = 0; x < 8; x++)
                     {
-                        options[x] = new IFPIO.Option("bit " + x, x.ToString(), lineNum);
+                        options[x] = new IFPIO.Option("bit " + x, "", x.ToString(), lineNum);
                     }
 
                     Bitmask bt = new Bitmask(name, map, chunkoffset, 8, options, lineNum);
@@ -1938,7 +1938,7 @@ namespace MetaEditor.Components
                     options = new IFPIO.Option[16];
                     for (int x = 0; x < 16; x++)
                     {
-                        options[x] = new IFPIO.Option("bit " + x, x.ToString(), lineNum);
+                        options[x] = new IFPIO.Option("bit " + x, "", x.ToString(), lineNum);
                     }
 
                     bt = new Bitmask(name, map, chunkoffset, 16, options, lineNum);
@@ -1955,7 +1955,7 @@ namespace MetaEditor.Components
                     options = new IFPIO.Option[32];
                     for (int x = 0; x < 32; x++)
                     {
-                        options[x] = new IFPIO.Option("bit " + x, x.ToString(), lineNum);
+                        options[x] = new IFPIO.Option("bit " + x, "", x.ToString(), lineNum);
                     }
 
                     bt = new Bitmask(name, map, chunkoffset, 32, options, lineNum);

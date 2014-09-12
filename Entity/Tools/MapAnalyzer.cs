@@ -360,28 +360,25 @@ namespace entity.Tools
                 if (m.rawType != RawDataContainerType.Empty)
                 {
                     m.raw = map.Functions.ForMeta.ReadRaw(x, true);
-                    LayOutChunk l = new LayOutChunk(map.MapHeader.fileSize);
+                    LayOutChunk l = null;
 
-                    int tempint = layout.FindByType(m.rawType);
-                    if (tempint == -1)
+                    int layoutChunkIndex = (m.rawType == RawDataContainerType.BSP) ? -1 : layout.FindByType(m.rawType);
+                    if (layoutChunkIndex == -1)
                     {
                         l = new LayOutChunk(map.MapHeader.fileSize);
                         l.rawType = m.rawType;
                         layout.chunks.Add(l);
-                        tempint = layout.FindByType(m.rawType);
+                        layoutChunkIndex = layout.FindByType(m.rawType);
                     }
                     else
                     {
-                        l = (LayOutChunk)layout.chunks[tempint];
+                        l = (LayOutChunk)layout.chunks[layoutChunkIndex];
                     }
 
                     for (int y = 0; y < m.raw.rawChunks.Count; y++)
                     {
                         RawDataChunk r = m.raw.rawChunks[y];
-                        if (r.offset == -1)
-                        {
-                            continue;
-                        }
+                        if (r.offset == -1) { continue; }
 
                         if (r.rawLocation == MapTypes.Internal)
                         {
@@ -408,7 +405,6 @@ namespace entity.Tools
                         {
                             l.startoffset = r.offset;
                             l.size = l.endoffset - l.startoffset;
-                            layout.chunks[tempint] = l;
                         }
 
                         if (r.offset + r.size > l.endoffset && r.rawLocation == MapTypes.Internal)
@@ -416,7 +412,6 @@ namespace entity.Tools
                             l.endoffset = r.offset + r.size;
                             l.endoffset += map.Functions.Padding(l.endoffset, 512);
                             l.size = l.endoffset - l.startoffset;
-                            layout.chunks[tempint] = l;
                         }
                     }
                 }
@@ -452,8 +447,8 @@ namespace entity.Tools
                 }
             }
 
-            layout.SortChunksByOffset();
-            layout.SortRawByOffset();
+            //layout.SortChunksByOffset();
+            //layout.SortRawByOffset();
 
             return layout;
         }
@@ -512,13 +507,13 @@ namespace entity.Tools
         /// <remarks></remarks>
         public int FindByType(RawDataContainerType type, int index)
         {
-            int tempc = 0;
+            int tempc = -1;
             for (int x = 0; x < chunks.Count; x++)
             {
                 LayOutChunk c = (LayOutChunk)chunks[x];
                 if (c.rawType == type)
                 {
-                    tempc += 1;
+                    tempc++;
                     if (tempc == index)
                     {
                         return x;
@@ -527,6 +522,18 @@ namespace entity.Tools
             }
 
             return -1;
+        }
+
+        public int FindLastByType(RawDataContainerType type)
+        {
+            int index = -1;
+            for (int x = 0; x < chunks.Count; x++)
+            {
+                LayOutChunk c = (LayOutChunk)chunks[x];
+                if (c.rawType == type)
+                    index = x;
+            }
+            return index;
         }
 
         /// <summary>

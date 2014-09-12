@@ -128,7 +128,29 @@ namespace HaloMap.Map
 
                     ///	Reads in string
                     BR.BaseStream.Position = map.MapHeader.offsetTofileNames + Offset[x];
-                    Name[x] = new string(BR.ReadChars(len - 1));
+                    try
+                    {
+                        Name[x] = new string(BR.ReadChars(len - 1));
+                    }
+                    catch
+                    {
+                        byte[] BRbs = BR.ReadBytes(len - 1);
+                        Name[x] = System.Text.Encoding.UTF8.GetString(BRbs);
+                    }
+
+                    // For obfuscated maps, generate random names instead of blanks
+                    if (Name[x].TrimEnd(' ', (char)0) == string.Empty)
+                    {
+                        Name[x] = "#" + x.ToString("0000") + "_";
+                        if (len < Name[x].Length)
+                        {
+                            while (Name[x].Length > len-1)
+                                Name[x] = Name[x].Remove(Name[x].Length - 1);
+                        }
+                        else
+                            for (int w = Name[x].Length; w < len-1; w++)
+                                Name[x] += (w % 10).ToString();
+                    }
 
                     // more for broken maps..
                     if (brokenMap)

@@ -14,6 +14,7 @@ namespace HaloMap.Render
 
     using HaloMap.H2MetaContainers;
     using HaloMap.Map;
+using System.IO;
 
     /// <summary>
     /// The spawn info.
@@ -32,6 +33,8 @@ namespace HaloMap.Render
         /// The hillshadertag.
         /// </summary>
         public int hillshadertag = -1;
+
+        public static string NullTags = "null";
 
         #endregion
 
@@ -85,95 +88,25 @@ namespace HaloMap.Render
         [FlagsAttribute]
         public enum SpawnType
         {
-            /// <summary>
-            /// The player.
-            /// </summary>
-            Player = 1, 
-
-            /// <summary>
-            /// The weapon.
-            /// </summary>
-            Weapon = 2, 
-
-            /// <summary>
-            /// The collection.
-            /// </summary>
-            Collection = 4, 
-
-            /// <summary>
-            /// The vehicle.
-            /// </summary>
-            Vehicle = 8, 
-
-            /// <summary>
-            /// The obstacle.
-            /// </summary>
-            Obstacle = 16, 
-
-            /// <summary>
-            /// The machine.
-            /// </summary>
-            Machine = 32, 
-
-            /// <summary>
-            /// The scenery.
-            /// </summary>
-            Scenery = 64, 
-
-            /// <summary>
-            /// The objective.
-            /// </summary>
-            Objective = 128, 
-
-            /// <summary>
-            /// The equipment.
-            /// </summary>
-            Equipment = 256, 
-
-            /// <summary>
-            /// The item collection.
-            /// </summary>
-            ItemCollection = 512, 
-
-            /// <summary>
-            /// The biped.
-            /// </summary>
-            Biped = 1024, 
-
-            /// <summary>
-            /// The control.
-            /// </summary>
-            Control = 2048, 
-
-            /// <summary>
-            /// The special.
-            /// </summary>
-            Special = 4096, 
-
-            /// <summary>
-            /// The death zone.
-            /// </summary>
-            DeathZone = 8192, 
-
-            /// <summary>
-            /// The camera.
-            /// </summary>
-            Camera = 16384, 
-
-            /// <summary>
-            /// The light.
-            /// </summary>
-            Light = 32768, 
-
-            /// <summary>
-            /// The sound.
-            /// </summary>
-            Sound = 65536, 
-
-            /// <summary>
-            /// The a i_ squads.
-            /// </summary>
-            AI_Squads = 131072, 
+            Player = 0x1, 
+            Weapon = 0x2, 
+            Collection = 0x4, 
+            Vehicle = 0x8, 
+            Obstacle = 0x10, 
+            Machine = 0x20, 
+            Scenery = 0x40, 
+            Objective = 0x80, 
+            Equipment = 0x100, 
+            ItemCollection = 0x200, 
+            Biped = 0x400, 
+            Control = 0x800, 
+            Special = 0x1000, 
+            DeathZone = 0x2000, 
+            Camera = 0x4000, 
+            Light = 0x8000, 
+            Sound = 0x10000, 
+            AI_Squads = 0x20000,
+            SpawnZone = 0x40000,
         }
 
         #endregion
@@ -198,14 +131,8 @@ namespace HaloMap.Render
             {
                 //map.OpenMap(MapTypes.Internal);
                 H1Collection vs = new H1Collection();
-                map.BR.BaseStream.Position = tempr + (144 * x) + 4;
-                vs.SpawnsInMode = (H1Collection.H1CollectionTypeEnum)map.BR.ReadInt32();
-                map.BR.BaseStream.Position = tempr + (144 * x) + 64;
-                vs.offset = tempr + (144 * x) + 64;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-                vs.RotationDirection = Renderer.DegreeToRadian(map.BR.ReadSingle());
+                map.BR.BaseStream.Position = tempr + (144 * x);
+                vs.Read(map);
 
                 map.BR.BaseStream.Position = tempr + (144 * x) + 92;
                 int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
@@ -250,30 +177,21 @@ namespace HaloMap.Render
             for (int x = 0; x < tempc; x++)
             {
                 map.BR.BaseStream.Position = tempr + (120 * x);
-                short tempshort = map.BR.ReadInt16();
+                VehicleSpawn vs = new VehicleSpawn();
+                vs.Read(map);
 
-                if (tempshort == -1)
+                if (vs.PaletteIndex == -1)
                 {
                     continue;
                 }
 
-                map.BR.BaseStream.Position = tempr + (120 * x) + 8;
-                VehicleSpawn vs = new VehicleSpawn();
-                vs.offset = tempr + (120 * x) + 8;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-
-                vs.Yaw = Renderer.DegreeToRadian(map.BR.ReadSingle());
-                vs.Pitch = Renderer.DegreeToRadian(map.BR.ReadSingle());
-                vs.Roll = Renderer.DegreeToRadian(map.BR.ReadSingle());
-                vs.ModelTagNumber = temppalette[tempshort];
+                vs.ModelTagNumber = temppalette[vs.PaletteIndex];
                 if (vs.ModelTagNumber == -1)
                 {
                     continue;
                 }
 
-                vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
+                vs.TagPath = map.FileNames.Name[temppalette2[vs.PaletteIndex]];
                 vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
                 Spawn.Add(vs);
             }
@@ -300,32 +218,24 @@ namespace HaloMap.Render
 
             for (int x = 0; x < tempc; x++)
             {
-                map.BR.BaseStream.Position = tempr + (72 * x);
-                short tempshort = map.BR.ReadInt16();
-
-                if (tempshort == -1)
-                {
-                    continue;
-                }
-
+                ScenerySpawn ss = new ScenerySpawn();
                 map.BR.BaseStream.Position = tempr + (72 * x) + 8;
-                ScenerySpawn vs = new ScenerySpawn();
-                vs.offset = tempr + (72 * x) + 8;
-                vs.X = map.BR.ReadSingle();
-                vs.Y = map.BR.ReadSingle();
-                vs.Z = map.BR.ReadSingle();
-                vs.Yaw = Renderer.DegreeToRadian(map.BR.ReadSingle());
-                vs.Pitch = Renderer.DegreeToRadian(map.BR.ReadSingle());
-                vs.Roll = Renderer.DegreeToRadian(map.BR.ReadSingle());
-                vs.ModelTagNumber = temppalette[tempshort];
-                if (vs.ModelTagNumber == -1)
+                ss.Read(map);
+
+                if (ss.PaletteIndex == -1)
                 {
                     continue;
                 }
 
-                vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                Spawn.Add(vs);
+                ss.ModelTagNumber = temppalette[ss.PaletteIndex];
+                if (ss.ModelTagNumber == -1)
+                {
+                    continue;
+                }
+
+                ss.TagPath = map.FileNames.Name[temppalette2[ss.PaletteIndex]];
+                ss.ModelName = map.FileNames.Name[ss.ModelTagNumber];
+                Spawn.Add(ss);
             }
         }
 
@@ -418,13 +328,9 @@ namespace HaloMap.Render
                 for (int x = 0; x < tempc; x++)
                 {
                     map.BR.BaseStream.Position = tempr + (52 * x);
+                    PlayerSpawn ps = new PlayerSpawn();                    
+                    ps.Read(map);
 
-                    PlayerSpawn ps = new PlayerSpawn();
-                    ps.offset = tempr + (52 * x);
-                    ps.X = map.BR.ReadSingle();
-                    ps.Y = map.BR.ReadSingle();
-                    ps.Z = map.BR.ReadSingle();
-                    ps.RotationDirection = map.BR.ReadSingle();
                     ps.ModelTagNumber = bipdmodeltag;
                     ps.ModelName = map.FileNames.Name[ps.ModelTagNumber];
 
@@ -438,7 +344,7 @@ namespace HaloMap.Render
 
             #endregion
 
-            #region //// death zones ////
+            #region //// trigger volumes / death zones ////
 
             try
             {
@@ -447,32 +353,11 @@ namespace HaloMap.Render
                 tempr = map.BR.ReadInt32() - map.SecondaryMagic;
                 for (int x = 0; x < tempc; x++)
                 {
-                    DeathZone ps = new DeathZone();
-
-                    // Load the deathzone name
+                    DeathZone tv = new DeathZone();
                     map.BR.BaseStream.Position = tempr + (68 * x);
-                    ps.Name = map.Strings.Name[map.BR.ReadInt16()];
-
-                    // We set the offset to 36 b/c we don't care about saving the name... right now anyways.
-                    ps.offset = tempr + (68 * x) + 36;
-
-                    // Load the deathzone coordinates
-                    map.BR.BaseStream.Position = tempr + (68 * x) + 36;
-                    ps.X = map.BR.ReadSingle();
-                    ps.Y = map.BR.ReadSingle();
-                    ps.Z = map.BR.ReadSingle();
-
-                    // Use ABS() to make sure our sizes are always positive
-                    ps.width = Math.Abs(map.BR.ReadSingle());
-                    ps.height = Math.Abs(map.BR.ReadSingle());
-                    ps.length = Math.Abs(map.BR.ReadSingle());
-
-                    // Deathzones are saved with a centre point and Width, Length, Height
-                    ps.X += ps.width / 2;
-                    ps.Y += ps.height / 2;
-                    ps.Z += ps.length / 2;
-
-                    Spawn.Add(ps);
+                    tv.Read(map);
+                    
+                    Spawn.Add(tv);
                 }
             }
             catch (Exception e)
@@ -508,31 +393,27 @@ namespace HaloMap.Render
                     map.BR.BaseStream.Position = tempr + (108 * x);
                     short tempshort = map.BR.ReadInt16();
 
-                    if (tempshort == -1)
+
+                    LightSpawn ls = new LightSpawn();
+                    map.BR.BaseStream.Position = tempr + (108 * x);
+                    ls.Read(map);
+
+                    if (ls.PaletteIndex == -1)
                     {
                         continue;
                     }
 
-                    map.BR.BaseStream.Position = tempr + (108 * x) + 8;
-                    LightSpawn vs = new LightSpawn();
-                    vs.offset = tempr + (108 * x) + 8;
-                    vs.X = map.BR.ReadSingle();
-                    vs.Y = map.BR.ReadSingle();
-                    vs.Z = map.BR.ReadSingle();
-                    vs.Roll = map.BR.ReadSingle();
-                    vs.Pitch = map.BR.ReadSingle();
-                    vs.Yaw = map.BR.ReadSingle();
-                    vs.Scale = map.BR.ReadSingle();
-
-                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                    vs.ModelTagNumber = temppalette[tempshort];
-                    if (vs.ModelTagNumber == -1)
+                    int nameIndex = temppalette2[tempshort];
+                    if (nameIndex >= 0)
+                        ls.TagPath = map.FileNames.Name[nameIndex];
+                    ls.ModelTagNumber = temppalette[tempshort];
+                    if (ls.ModelTagNumber == -1)
                     {
                         continue;
                     }
 
-                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                    Spawn.Add(vs);
+                    ls.ModelName = map.FileNames.Name[ls.ModelTagNumber];
+                    Spawn.Add(ls);
                 }
             }
             catch (Exception e)
@@ -566,56 +447,31 @@ namespace HaloMap.Render
                 tempr = map.BR.ReadInt32() - map.SecondaryMagic;
                 for (int x = 0; x < tempc; x++)
                 {
+                    SoundSpawn ss = new SoundSpawn();
                     map.BR.BaseStream.Position = tempr + (80 * x);
-                    short tempshort = map.BR.ReadInt16();
+                    ss.Read(map);
 
-                    if (tempshort == -1)
+                    if (ss.PaletteIndex == -1 || temppalette2[ss.PaletteIndex] == -1)
                     {
-                        continue;
-                    }
-
-                    SoundSpawn vs = new SoundSpawn();
-
-                    map.BR.BaseStream.Position = tempr + (80 * x) + 8;
-                    vs.offset = tempr + (80 * x) + 8;
-                    vs.X = map.BR.ReadSingle();
-                    vs.Y = map.BR.ReadSingle();
-                    vs.Z = map.BR.ReadSingle();
-                    vs.Roll = map.BR.ReadSingle();
-                    vs.Pitch = map.BR.ReadSingle();
-                    vs.Yaw = map.BR.ReadSingle();
-                    vs.Scale = map.BR.ReadSingle();
-
-                    map.BR.BaseStream.Position = tempr + (80 * x) + 54;
-                    vs.VolumeType = map.BR.ReadInt16();
-                    vs.Height = map.BR.ReadSingle();
-                    vs.DistanceBoundsLower = map.BR.ReadSingle();
-                    vs.DistanceBoundsUpper = map.BR.ReadSingle();
-                    vs.ConeAngleLower = map.BR.ReadSingle();
-                    vs.ConeAngleUpper = map.BR.ReadSingle();
-                    vs.OuterConeGain = map.BR.ReadSingle();
-
-                    if (temppalette2[tempshort] == -1)
-                    {
-                        vs.TagPath = "Nulled Out";
+                        ss.TagPath = NullTags;
                     }
                     else
                     {
-                        vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
+                        ss.TagPath = map.FileNames.Name[temppalette2[ss.PaletteIndex]];
                     }
 
-                    vs.ModelTagNumber = temppalette[tempshort];
-                    if (vs.ModelTagNumber == -1)
+                    ss.ModelTagNumber = temppalette[ss.PaletteIndex];
+                    if (ss.ModelTagNumber == -1)
                     {
                         // { continue; }
-                        vs.ModelName = null;
+                        ss.ModelName = null;
                     }
                     else
                     {
-                        vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                        ss.ModelName = map.FileNames.Name[ss.ModelTagNumber];
                     }
 
-                    Spawn.Add(vs);
+                    Spawn.Add(ss);
                 }
 
             }
@@ -635,43 +491,36 @@ namespace HaloMap.Render
                 tempr = map.BR.ReadInt32() - map.SecondaryMagic;
                 for (int x = 0; x < tempc; x++)
                 {
-                    ObjectiveSpawn ps = new ObjectiveSpawn();
-                    ps.offset = tempr + (32 * x);
+                    ObjectiveSpawn os = new ObjectiveSpawn();
                     map.BR.BaseStream.Position = tempr + (32 * x);
-                    ps.X = map.BR.ReadSingle();
-                    ps.Y = map.BR.ReadSingle();
-                    ps.Z = map.BR.ReadSingle();
-                    ps.RotationDirection = map.BR.ReadSingle();
-                    ps.ObjectiveType = (ObjectiveSpawn.ObjectiveTypeEnum)map.BR.ReadInt16();
-                    ps.Team = (ObjectiveSpawn.TeamType)map.BR.ReadInt16();
-                    ps.number = map.BR.ReadInt16();
+                    os.Read(map);
 
-                    if (ps.ObjectiveType == ObjectiveSpawn.ObjectiveTypeEnum.OddballSpawn && ballmodeltag != -1)
+                    if (os.ObjectiveType == ObjectiveSpawn.ObjectiveTypeEnum.OddballSpawn && ballmodeltag != -1)
                     {
-                        ps.ModelTagNumber = ballmodeltag;
+                        os.ModelTagNumber = ballmodeltag;
                     }
-                    else if (ps.ObjectiveType == ObjectiveSpawn.ObjectiveTypeEnum.CTFRespawn && ctfmodeltag != -1)
+                    else if (os.ObjectiveType == ObjectiveSpawn.ObjectiveTypeEnum.CTFRespawn && ctfmodeltag != -1)
                     {
-                        ps.ModelTagNumber = ctfmodeltag;
+                        os.ModelTagNumber = ctfmodeltag;
                     }
                     else if (
-                        ps.ObjectiveType.ToString().StartsWith(
+                        os.ObjectiveType.ToString().StartsWith(
                             ObjectiveSpawn.ObjectiveTypeEnum.KingOfTheHill_1.ToString().Substring(0, 13)) &&
                         ctfmodeltag != -1)
                     {
-                        ps.ModelTagNumber = ctfmodeltag;
+                        os.ModelTagNumber = ctfmodeltag;
                     }
-                    else if (ps.ObjectiveType == ObjectiveSpawn.ObjectiveTypeEnum.AssaultRespawn && assultmodeltag != -1)
+                    else if (os.ObjectiveType == ObjectiveSpawn.ObjectiveTypeEnum.AssaultRespawn && assultmodeltag != -1)
                     {
-                        ps.ModelTagNumber = assultmodeltag;
+                        os.ModelTagNumber = assultmodeltag;
                     }
                     else
                     {
-                        ps.ModelTagNumber = bipdmodeltag;
+                        os.ModelTagNumber = bipdmodeltag;
                     }
 
-                    ps.ModelName = map.FileNames.Name[ps.ModelTagNumber];
-                    Spawn.Add(ps);
+                    os.ModelName = map.FileNames.Name[os.ModelTagNumber];
+                    Spawn.Add(os);
                 }
             }
             catch (Exception e)
@@ -705,27 +554,17 @@ namespace HaloMap.Render
 
                 for (int x = 0; x < tempc; x++)
                 {
+                    VehicleSpawn vs = new VehicleSpawn();
                     map.BR.BaseStream.Position = tempr + (84 * x);
-                    short tempshort = map.BR.ReadInt16();
+                    vs.Read(map);
 
-                    if (tempshort == -1)
+                    if (vs.PaletteIndex == -1)
                     {
                         continue;
                     }
 
-                    map.BR.BaseStream.Position = tempr + (84 * x) + 8;
-                    VehicleSpawn vs = new VehicleSpawn();
-                    vs.offset = tempr + (84 * x) + 8;
-                    vs.X = map.BR.ReadSingle();
-                    vs.Y = map.BR.ReadSingle();
-                    vs.Z = map.BR.ReadSingle();
-                    vs.Roll = map.BR.ReadSingle();
-                    vs.Pitch = map.BR.ReadSingle();
-                    vs.Yaw = map.BR.ReadSingle();
-                    vs.Scale = map.BR.ReadSingle();
-
-                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                    vs.ModelTagNumber = temppalette[tempshort];
+                    vs.TagPath = map.FileNames.Name[temppalette2[vs.PaletteIndex]];
+                    vs.ModelTagNumber = temppalette[vs.PaletteIndex];
                     if (vs.ModelTagNumber == -1)
                     {
                         continue;
@@ -767,36 +606,24 @@ namespace HaloMap.Render
 
                 for (int x = 0; x < tempc; x++)
                 {
+                    EquipmentSpawn es = new EquipmentSpawn();
                     map.BR.BaseStream.Position = tempr + (56 * x);
-                    short tempshort = map.BR.ReadInt16();
+                    es.Read(map);
 
-                    if (tempshort == -1)
+                    if (es.PaletteIndex == -1)
                     {
                         continue;
                     }
 
-                    map.BR.BaseStream.Position = tempr + (56 * x) + 8;
-                    EquipmentSpawn vs = new EquipmentSpawn();
-                    vs.offset = tempr + (56 * x) + 8;
-                    vs.X = map.BR.ReadSingle();
-                    vs.Y = map.BR.ReadSingle();
-                    vs.Z = map.BR.ReadSingle();
-
-                    // vs.RotationDirection = map.BR.ReadSingle();
-                    vs.Roll = map.BR.ReadSingle();
-                    vs.Pitch = map.BR.ReadSingle();
-                    vs.Yaw = map.BR.ReadSingle();
-                    vs.Scale = map.BR.ReadSingle();
-
-                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                    vs.ModelTagNumber = temppalette[tempshort];
-                    if (vs.ModelTagNumber == -1)
+                    es.TagPath = map.FileNames.Name[temppalette2[es.PaletteIndex]];
+                    es.ModelTagNumber = temppalette[es.PaletteIndex];
+                    if (es.ModelTagNumber == -1)
                     {
                         continue;
                     }
 
-                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                    Spawn.Add(vs);
+                    es.ModelName = map.FileNames.Name[es.ModelTagNumber];
+                    Spawn.Add(es);
                 }
             }
             catch (Exception e)
@@ -831,34 +658,24 @@ namespace HaloMap.Render
 
                 for (int x = 0; x < tempc; x++)
                 {
+                    BipedSpawn bs = new BipedSpawn();
                     map.BR.BaseStream.Position = tempr + (84 * x);
-                    short tempshort = map.BR.ReadInt16();
-
-                    if (tempshort == -1)
+                    bs.Read(map);
+                    
+                    if (bs.PaletteIndex == -1)
                     {
                         continue;
                     }
 
-                    map.BR.BaseStream.Position = tempr + (84 * x) + 8;
-                    BipedSpawn vs = new BipedSpawn();
-                    vs.offset = tempr + (84 * x) + 8;
-                    vs.X = map.BR.ReadSingle();
-                    vs.Y = map.BR.ReadSingle();
-                    vs.Z = map.BR.ReadSingle();
-                    vs.Roll = map.BR.ReadSingle();
-                    vs.Pitch = map.BR.ReadSingle();
-                    vs.Yaw = map.BR.ReadSingle();
-                    vs.Scale = map.BR.ReadSingle();
-
-                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                    vs.ModelTagNumber = temppalette[tempshort];
-                    if (vs.ModelTagNumber == -1)
+                    bs.TagPath = map.FileNames.Name[temppalette2[bs.PaletteIndex]];
+                    bs.ModelTagNumber = temppalette[bs.PaletteIndex];
+                    if (bs.ModelTagNumber == -1)
                     {
                         continue;
                     }
 
-                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                    Spawn.Add(vs);
+                    bs.ModelName = map.FileNames.Name[bs.ModelTagNumber];
+                    Spawn.Add(bs);
                 }
             }
             catch (Exception e)
@@ -893,36 +710,24 @@ namespace HaloMap.Render
 
                 for (int x = 0; x < tempc; x++)
                 {
+                    ControlSpawn cs = new ControlSpawn();
                     map.BR.BaseStream.Position = tempr + (68 * x);
-                    short tempshort = map.BR.ReadInt16();
+                    cs.Read(map);
 
-                    if (tempshort == -1)
+                    if (cs.PaletteIndex == -1)
                     {
                         continue;
                     }
 
-                    map.BR.BaseStream.Position = tempr + (68 * x) + 8;
-                    ControlSpawn vs = new ControlSpawn();
-                    vs.offset = tempr + (68 * x) + 8;
-                    vs.X = map.BR.ReadSingle();
-                    vs.Y = map.BR.ReadSingle();
-                    vs.Z = map.BR.ReadSingle();
-
-                    // vs.RotationDirection = map.BR.ReadSingle();
-                    vs.Roll = map.BR.ReadSingle();
-                    vs.Pitch = map.BR.ReadSingle();
-                    vs.Yaw = map.BR.ReadSingle();
-                    vs.Scale = map.BR.ReadSingle();
-
-                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                    vs.ModelTagNumber = temppalette[tempshort];
-                    if (vs.ModelTagNumber == -1)
+                    cs.TagPath = map.FileNames.Name[temppalette2[cs.PaletteIndex]];
+                    cs.ModelTagNumber = temppalette[cs.PaletteIndex];
+                    if (cs.ModelTagNumber == -1)
                     {
                         continue;
                     }
 
-                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                    Spawn.Add(vs);
+                    cs.ModelName = map.FileNames.Name[cs.ModelTagNumber];
+                    Spawn.Add(cs);
                 }
             }
             catch (Exception e)
@@ -957,39 +762,29 @@ namespace HaloMap.Render
 
                 for (int x = 0; x < tempc; x++)
                 {
+                    MachineSpawn ms = new MachineSpawn();
                     map.BR.BaseStream.Position = tempr + (72 * x);
-                    short tempshort = map.BR.ReadInt16();
+                    ms.Read(map);
 
-                    if (tempshort == -1)
+                    if (ms.PaletteIndex == -1)
                     {
                         continue;
                     }
 
-                    map.BR.BaseStream.Position = tempr + (72 * x) + 8;
-                    MachineSpawn vs = new MachineSpawn();
-                    vs.offset = tempr + (72 * x) + 8;
-                    vs.X = map.BR.ReadSingle();
-                    vs.Y = map.BR.ReadSingle();
-                    vs.Z = map.BR.ReadSingle();
-                    vs.Roll = map.BR.ReadSingle();
-                    vs.Pitch = map.BR.ReadSingle();
-                    vs.Yaw = map.BR.ReadSingle();
-                    vs.Scale = map.BR.ReadSingle();
-
-                    if (temppalette2[tempshort] == -1 || temppalette[tempshort] == -1)
+                    if (temppalette2[ms.PaletteIndex] == -1 || temppalette[ms.PaletteIndex] == -1)
                     {
                         continue;
                     }
 
-                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                    vs.ModelTagNumber = temppalette[tempshort];
-                    if (vs.ModelTagNumber == -1)
+                    ms.TagPath = map.FileNames.Name[temppalette2[ms.PaletteIndex]];
+                    ms.ModelTagNumber = temppalette[ms.PaletteIndex];
+                    if (ms.ModelTagNumber == -1)
                     {
                         continue;
                     }
 
-                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                    Spawn.Add(vs);
+                    ms.ModelName = map.FileNames.Name[ms.ModelTagNumber];
+                    Spawn.Add(ms);
                 }
             }
             catch (Exception e)
@@ -1024,39 +819,29 @@ namespace HaloMap.Render
 
                 for (int x = 0; x < tempc; x++)
                 {
+                    ScenerySpawn ss = new ScenerySpawn();
                     map.BR.BaseStream.Position = tempr + (92 * x);
-                    short tempshort = map.BR.ReadInt16();
+                    ss.Read(map);
 
-                    if (tempshort == -1)
+                    if (ss.PaletteIndex == -1)
                     {
                         continue;
                     }
 
-                    map.BR.BaseStream.Position = tempr + (92 * x) + 8;
-                    ScenerySpawn vs = new ScenerySpawn();
-                    vs.offset = tempr + (92 * x) + 8;
-                    vs.X = map.BR.ReadSingle();
-                    vs.Y = map.BR.ReadSingle();
-                    vs.Z = map.BR.ReadSingle();
-                    vs.Roll = map.BR.ReadSingle();
-                    vs.Pitch = map.BR.ReadSingle();
-                    vs.Yaw = map.BR.ReadSingle();
-                    vs.Scale = map.BR.ReadSingle();
-
-                    if (temppalette2[tempshort] == -1 || temppalette[tempshort] == -1)
+                    if (temppalette2[ss.PaletteIndex] == -1 || temppalette[ss.PaletteIndex] == -1)
                     {
                         continue;
                     }
 
-                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                    vs.ModelTagNumber = temppalette[tempshort];
-                    if (vs.ModelTagNumber == -1)
+                    ss.TagPath = map.FileNames.Name[temppalette2[ss.PaletteIndex]];
+                    ss.ModelTagNumber = temppalette[ss.PaletteIndex];
+                    if (ss.ModelTagNumber == -1)
                     {
                         continue;
                     }
 
-                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                    Spawn.Add(vs);
+                    ss.ModelName = map.FileNames.Name[ss.ModelTagNumber];
+                    Spawn.Add(ss);
                 }
             }
             catch (Exception e)
@@ -1091,34 +876,24 @@ namespace HaloMap.Render
 
                 for (int x = 0; x < tempc; x++)
                 {
+                    WeaponSpawn ws = new WeaponSpawn();
                     map.BR.BaseStream.Position = tempr + (84 * x);
-                    short tempshort = map.BR.ReadInt16();
+                    ws.Read(map);
 
-                    if (tempshort == -1)
+                    if (ws.PaletteIndex == -1)
                     {
                         continue;
                     }
 
-                    map.BR.BaseStream.Position = tempr + (84 * x) + 8;
-                    WeaponSpawn vs = new WeaponSpawn();
-                    vs.offset = tempr + (84 * x) + 8;
-                    vs.X = map.BR.ReadSingle();
-                    vs.Y = map.BR.ReadSingle();
-                    vs.Z = map.BR.ReadSingle();
-                    vs.Roll = map.BR.ReadSingle();
-                    vs.Pitch = map.BR.ReadSingle();
-                    vs.Yaw = map.BR.ReadSingle();
-                    vs.Scale = map.BR.ReadSingle();
-
-                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                    vs.ModelTagNumber = temppalette[tempshort];
-                    if (vs.ModelTagNumber == -1)
+                    ws.TagPath = map.FileNames.Name[temppalette2[ws.PaletteIndex]];
+                    ws.ModelTagNumber = temppalette[ws.PaletteIndex];
+                    if (ws.ModelTagNumber == -1)
                     {
                         continue;
                     }
 
-                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                    Spawn.Add(vs);
+                    ws.ModelName = map.FileNames.Name[ws.ModelTagNumber];
+                    Spawn.Add(ws);
                 }
             }
             catch (Exception e)
@@ -1153,39 +928,29 @@ namespace HaloMap.Render
 
                 for (int x = 0; x < tempc; x++)
                 {
+                    ObstacleSpawn os = new ObstacleSpawn();
                     map.BR.BaseStream.Position = tempr + (76 * x);
-                    short tempshort = map.BR.ReadInt16();
+                    os.Read(map);
 
-                    if (tempshort == -1)
+                    if (os.PaletteIndex == -1)
                     {
                         continue;
                     }
 
-                    map.BR.BaseStream.Position = tempr + (76 * x) + 8;
-                    ObstacleSpawn vs = new ObstacleSpawn();
-                    vs.offset = tempr + (76 * x) + 8;
-                    vs.X = map.BR.ReadSingle();
-                    vs.Y = map.BR.ReadSingle();
-                    vs.Z = map.BR.ReadSingle();
-                    vs.Roll = map.BR.ReadSingle();
-                    vs.Pitch = map.BR.ReadSingle();
-                    vs.Yaw = map.BR.ReadSingle();
-                    vs.Scale = map.BR.ReadSingle();
-
-                    if (temppalette2[tempshort] == -1)
+                    if (temppalette2[os.PaletteIndex] == -1)
                     {
                         continue;
                     }
 
-                    vs.TagPath = map.FileNames.Name[temppalette2[tempshort]];
-                    vs.ModelTagNumber = temppalette[tempshort];
-                    if (vs.ModelTagNumber == -1)
+                    os.TagPath = map.FileNames.Name[temppalette2[os.PaletteIndex]];
+                    os.ModelTagNumber = temppalette[os.PaletteIndex];
+                    if (os.ModelTagNumber == -1)
                     {
                         continue;
                     }
 
-                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                    Spawn.Add(vs);
+                    os.ModelName = map.FileNames.Name[os.ModelTagNumber];
+                    Spawn.Add(os);
                 }
             }
             catch (Exception e)
@@ -1206,45 +971,23 @@ namespace HaloMap.Render
                 for (int x = 0; x < tempc; x++)
                 {
                     //map.OpenMap(MapTypes.Internal);
-                    Collection vs = new Collection();
-                    map.BR.BaseStream.Position = tempr + (144 * x) + 4;
-                    vs.SpawnsInMode = (Collection.SpawnsInEnum)map.BR.ReadInt32();
-
-                    // Why do they make the offset + 64? That just confuses stuff!!
-                    map.BR.BaseStream.Position = tempr + (144 * x) + 64;
-                    vs.offset = tempr + (144 * x) + 64;
-                    vs.X = map.BR.ReadSingle();
-                    vs.Y = map.BR.ReadSingle();
-                    vs.Z = map.BR.ReadSingle();
-                    vs.Roll = map.BR.ReadSingle();
-                    vs.Pitch = map.BR.ReadSingle();
-                    vs.Yaw = map.BR.ReadSingle();
-
-                    // test
-                    // if (vs.Pitch > 0) { vs.Pitch = -vs.Pitch; vs.isWeird = true; } else { vs.isWeird = false; }
-                    map.BR.BaseStream.Position = tempr + (144 * x) + 88;
+                    Collection collect = new Collection();
+                    map.BR.BaseStream.Position = tempr + (144 * x);
+                    collect.Read(map);
 
                     // ID Type
-                    char[] c = map.BR.ReadChars(4);
-                    vs.TagType = c[3].ToString() + c[2] + c[1] + c[0];
-
-                    // Tag Path ID
-                    int tempbase = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
-                    if (tempbase == -1)
+                    if (collect.TagPath == NullTags)
                     {
                         continue;
                     }
 
-                    //map.CloseMap();
-                    vs.TagPath = map.FileNames.Name[tempbase];
-                    vs.ModelTagNumber = map.Functions.FindModelByBaseClass(tempbase);
-                    if (vs.ModelTagNumber == -1)
+                    if (collect.ModelTagNumber == -1)
                     {
                         continue;
                     }
 
-                    vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                    Spawn.Add(vs);
+                    collect.ModelName = map.FileNames.Name[collect.ModelTagNumber];
+                    Spawn.Add(collect);
                 }
             }
             catch (Exception e)
@@ -1266,19 +1009,11 @@ namespace HaloMap.Render
                 for (int x = 0; x < tempc; x++)
                 {
                     //map.OpenMap(MapTypes.Internal);
-                    CameraSpawn vs = new CameraSpawn();
-                    map.BR.BaseStream.Position = tempr + (64 * x) + 36;
-                    vs.offset = tempr + (64 * x) + 36;
-                    vs.X = map.BR.ReadSingle();
-                    vs.Y = map.BR.ReadSingle();
-                    vs.Z = map.BR.ReadSingle();
-                    vs.Roll = map.BR.ReadSingle();
-                    vs.Pitch = map.BR.ReadSingle();
-                    vs.Yaw = map.BR.ReadSingle();
-                    vs.fov = map.BR.ReadSingle();
-                    vs.ModelTagNumber = -1;
+                    CameraSpawn cs = new CameraSpawn();
+                    map.BR.BaseStream.Position = tempr + (64 * x);
+                    cs.Read(map);
 
-                    Spawn.Add(vs);
+                    Spawn.Add(cs);
                 }
             }
             catch (Exception e)
@@ -1292,6 +1027,7 @@ namespace HaloMap.Render
 
             try
             {
+                // Reading Character Palette
                 map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 376;
                 int[] temppalette = new int[map.BR.ReadInt32()];
                 int[] temppalette2 = new int[temppalette.Length];
@@ -1311,40 +1047,35 @@ namespace HaloMap.Render
 
                 for (int x = 0; x < tempc; x++)
                 {
-                    // Reads AI Squad palette chunk
+                    // Reads AI Squad character index
                     map.BR.BaseStream.Position = tempr + (x * 116) + 54;
-                    short charNum = map.BR.ReadInt16();
+                    short charIndex = map.BR.ReadInt16();
 
                     // Reading locations sub reflexive
-                    map.BR.BaseStream.Position = tempr + 72;
+                    map.BR.BaseStream.Position = tempr + (x * 116) + 72;
                     int locc = map.BR.ReadInt32();
                     int locr = map.BR.ReadInt32() - map.SecondaryMagic;
 
-                    AI_Squads vs = new AI_Squads();
 
-                    // chunk size * x and starting position
-                    map.BR.BaseStream.Position = locr + (100 * x);
-                    vs.offset = tempr + (100 * x);
-                    vs.ModelName = map.Strings.Name[(Int16)map.BR.ReadInt32()];
-                    vs.X = map.BR.ReadSingle();
-                    vs.Y = map.BR.ReadSingle();
-                    vs.Z = map.BR.ReadSingle();
-
-                    // facing direction
-                    map.BR.BaseStream.Position = locr + (100 * x) + 20;
-                    vs.RotationDirection = map.BR.ReadSingle();
-
-                    if (charNum != -1)
+                    for (int y = 0; y < locc; y++)
                     {
-                        vs.TagPath = map.FileNames.Name[temppalette2[charNum]];
-                        vs.ModelTagNumber = temppalette[charNum];
-                        if (vs.ModelTagNumber == -1)
-                        {
-                            continue;
-                        }
+                        AI_Squads ai = new AI_Squads(x);
+                        map.BR.BaseStream.Position = locr + (100 * y);
+                        ai.Read(map);
 
-                        // vs.ModelName = map.FileNames.Name[vs.ModelTagNumber];
-                        Spawn.Add(vs);
+
+                        if (charIndex != -1)
+                        {
+                            ai.TagPath = map.FileNames.Name[temppalette2[charIndex]];
+                            ai.ModelTagNumber = temppalette[charIndex];
+                            if (ai.ModelTagNumber == -1)
+                            {
+                                continue;
+                            }
+
+                            // ai.ModelName = map.FileNames.Name[vs.ModelTagNumber];
+                            Spawn.Add(ai);
+                        }
                     }
                 }
             }
@@ -1355,37 +1086,145 @@ namespace HaloMap.Render
 
             #endregion
 
+            #region //// Spawn Zones //// 
+
+            try
+            {
+                // Reading Spawn Zone Section
+                // 792 = Spawn Data
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[3] + 792;
+                int SpawnDataCount = map.BR.ReadInt32();
+                tempr = map.BR.ReadInt32() - map.SecondaryMagic;
+
+                #region //// Inital Spawn Zones ////
+                // 88 = Static Initial Spawn Zones
+                map.BR.BaseStream.Position = tempr + 88;
+                int[] temppalette = new int[map.BR.ReadInt32()];
+                int initialR = map.BR.ReadInt32() - map.SecondaryMagic;
+
+                for (int x = 0; x < temppalette.Length; x++)
+                {
+                    // Each Initial Spawn Zone chunk = 48 bytes
+                    map.BR.BaseStream.Position = initialR + (x * 48);
+                    SpawnZone spawnZone = new SpawnZone(SpawnZoneType.Inital);
+                    spawnZone.Read(map);
+
+                    Spawn.Add(spawnZone);
+                }
+                #endregion
+
+                #region //// Respawn Zones ////
+                // 80 = Static Respawn Zones
+                map.BR.BaseStream.Position = tempr + 80;
+                temppalette = new int[map.BR.ReadInt32()];
+                int respawnR = map.BR.ReadInt32() - map.SecondaryMagic;
+
+                for (int x = 0; x < temppalette.Length; x++)
+                {
+                    // Each Respawn Zone chunk = 48 bytes
+                    map.BR.BaseStream.Position = respawnR + (x * 48);
+                    SpawnZone spawnZone = new SpawnZone(SpawnZoneType.Respawn);
+                    spawnZone.Read(map);
+
+                    Spawn.Add(spawnZone);
+                }
+                #endregion
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error loading Spawn Zones (Initial)", e);
+            }
+            #endregion
+
             map.CloseMap();
         }
 
         #endregion
 
         /// <summary>
-        /// The a i_ squads.
+        /// AI squads.
         /// </summary>
         /// <remarks></remarks>
         public class AI_Squads : RotateDirectionBaseSpawn
         {
+            #region Constants and Fields
+
+            /// <summary>
+            /// The squad number
+            /// </summary>
+            public int squadNumber;
+
+            #endregion
+
             #region Constructors and Destructors
 
             /// <summary>
             /// Initializes a new instance of the <see cref="AI_Squads"/> class.
             /// </summary>
             /// <remarks></remarks>
-            public AI_Squads()
+            public AI_Squads(int SquadNumber)
             {
                 this.Type = SpawnType.AI_Squads;
                 this.RotationType = SpawnRotationType.Direction;
+                this.squadNumber = SquadNumber;
             }
 
             #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the AI_Squads meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>AI_Squads scnr offset = 352 / 72</para>
+            /// <para>AI_Squads chunk size = 100</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+
+                /*
+                short SIDv = (Int16)map.BR.ReadInt16();
+                map.BR.BaseStream.Position++;
+                byte SIDl = map.BR.ReadByte();
+                if (SIDv >= 0 && SIDv < map.Strings.Length.Length && SIDl == map.Strings.Length[SIDv])
+                    this.ModelName = map.Strings.Name[SIDv];
+                else
+                    this.ModelName = "empty";
+                */
+                map.BR.BaseStream.Position = this.offset + 4;
+                this.X = map.BR.ReadSingle();
+                this.Y = map.BR.ReadSingle();
+                this.Z = map.BR.ReadSingle();
+
+                // facing direction
+                map.BR.BaseStream.Position = this.offset + 20;
+                this.RotationDirection = map.BR.ReadSingle();
+            }
+
+            /// <summary>
+            /// Writes the AI_Squads meta chunk info to the map MemoryStream.
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                map.BW.BaseStream.Position = this.offset + 4;
+                map.BW.Write(this.X);
+                map.BW.Write(this.Y);
+                map.BW.Write(this.Z);
+
+                map.BW.BaseStream.Position = this.offset + 20;
+                map.BW.Write(this.RotationDirection);
+            }
+            #endregion
+
         }
 
         /// <summary>
         /// The base spawn.
         /// </summary>
         /// <remarks></remarks>
-        public class BaseSpawn
+        public abstract class BaseSpawn
         {
             // Used for fixing bounding box positions
             #region Constants and Fields
@@ -1421,22 +1260,22 @@ namespace HaloMap.Render
             public float Z;
 
             /// <summary>
-            /// The bb x diff.
+            /// Bounding Box x difference
             /// </summary>
             public float bbXDiff;
 
             /// <summary>
-            /// The bb y diff.
+            /// Bounding Box y difference
             /// </summary>
             public float bbYDiff;
 
             /// <summary>
-            /// The bb z diff.
+            /// Bounding Box z difference
             /// </summary>
             public float bbZDiff;
 
             /// <summary>
-            /// The frozen.
+            /// Indicates if object is frozen.
             /// </summary>
             public bool frozen;
 
@@ -1446,6 +1285,19 @@ namespace HaloMap.Render
             public int offset;
 
             #endregion
+
+            /// <summary>
+            /// Spawns must declare a function for reading their data from the map.
+            /// It is expected that the given map.BR.BaseStream.Position is set already.
+            /// </summary>
+            /// <param name="map"></param>
+            public abstract void Read(Map map);
+
+            /// <summary>
+            /// Spawns must declare a function for writing their data to the map.
+            /// It is expected that this.offset has already been set.
+            /// </summary>
+            public abstract void Write(Map map);
         }
 
         /// <summary>
@@ -1465,6 +1317,32 @@ namespace HaloMap.Render
                 this.Type = SpawnType.Biped;
                 this.RotationType = SpawnRotationType.Direction;
             }
+            #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Biped Spawn meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>BipedSpawn scnr offst = 96</para>
+            /// <para>BipedSpawn chunk size = 84</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                base.Read(map);
+            }
+
+            /// <summary>
+            /// Writes the Biped Spawn meta chunk info to the map MemoryStream.
+            /// <para>BipedSpawn scnr offst = 96</para>
+            /// <para>BipedSpawn chunk size = 84</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                base.Write(map);
+            }
 
             #endregion
         }
@@ -1473,7 +1351,7 @@ namespace HaloMap.Render
         /// The bounding box spawn.
         /// </summary>
         /// <remarks></remarks>
-        public class BoundingBoxSpawn : BaseSpawn
+        public abstract class BoundingBoxSpawn : BaseSpawn
         {
             #region Constants and Fields
 
@@ -1523,10 +1401,52 @@ namespace HaloMap.Render
             }
 
             #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Camera Spawn meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>CameraSpawn scnr offst = 488</para>
+            /// <para>CameraSpawn chunk size = 64</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+
+                map.BR.BaseStream.Position = this.offset + 36;
+                this.X = map.BR.ReadSingle();
+                this.Y = map.BR.ReadSingle();
+                this.Z = map.BR.ReadSingle();
+                this.Roll = map.BR.ReadSingle();
+                this.Pitch = map.BR.ReadSingle();
+                this.Yaw = map.BR.ReadSingle();
+                this.fov = map.BR.ReadSingle();
+                this.ModelTagNumber = -1;
+            }
+
+            /// <summary>
+            /// Writes the Camera Spawn meta chunk info to the map MemoryStream.
+            /// <para>CameraSpawn scnr offst = 488</para>
+            /// <para>CameraSpawn chunk size = 64</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                map.BW.BaseStream.Position = this.offset + 36;
+                map.BW.Write(this.X);
+                map.BW.Write(this.Y);
+                map.BW.Write(this.Z);
+                map.BW.Write(this.Yaw);
+                map.BW.Write(this.Pitch);
+                map.BW.Write(this.Roll);
+                map.BW.Write(this.fov);
+            }
+            #endregion
         }
 
         /// <summary>
-        /// The collection.
+        /// The Collection Spawn / Netgame Equipment
         /// </summary>
         /// <remarks></remarks>
         public class Collection : RotateYawPitchRollBaseSpawn
@@ -1639,6 +1559,77 @@ namespace HaloMap.Render
             }
 
             #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Collection Spawn meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>Collection scnr offst = 288</para>
+            /// <para>Collection chunk size = 144</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+
+                map.BR.BaseStream.Position = this.offset + 4;
+                this.SpawnsInMode = (Collection.SpawnsInEnum)map.BR.ReadInt32();
+
+                map.BR.BaseStream.Position = this.offset + 64;
+                this.X = map.BR.ReadSingle();
+                this.Y = map.BR.ReadSingle();
+                this.Z = map.BR.ReadSingle();
+                this.Roll = map.BR.ReadSingle();
+                this.Pitch = map.BR.ReadSingle();
+                this.Yaw = map.BR.ReadSingle();
+
+                char[] c = map.BR.ReadChars(4);
+                Array.Reverse(c);
+                this.TagType = new string(c);
+
+                // Tag Path ID
+                int TagPathIndex = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+                if (TagPathIndex != -1)
+                    this.TagPath = map.FileNames.Name[TagPathIndex];
+                else
+                    this.TagPath = NullTags;
+                
+                this.ModelTagNumber = map.Functions.FindModelByBaseClass(TagPathIndex);
+
+            }
+
+            /// <summary>
+            /// Writes the Collection Spawn meta chunk info to the map MemoryStream.
+            /// <para>Collection scnr offst = 288</para>
+            /// <para>Collection chunk size = 144</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                map.BW.BaseStream.Position = this.offset + 4;
+                map.BW.Write((int)this.SpawnsInMode);
+
+                map.BW.BaseStream.Position = this.offset + 64;
+                map.BW.Write(this.X);
+                map.BW.Write(this.Y);
+                map.BW.Write(this.Z);
+                map.BW.Write(this.Roll);
+                map.BW.Write(this.Pitch);
+                map.BW.Write(this.Yaw);
+                
+                // reverse tag type (CMTI, IHEV, etc)
+                char[] c = this.TagType.ToCharArray();
+                Array.Reverse(c);
+                map.BW.Write(c);
+
+                int TagNum = map.Functions.ForMeta.FindByNameAndTagType(this.TagType, this.TagPath);
+                if (TagNum != -1)
+                    map.BW.Write(map.MetaInfo.Ident[TagNum]);
+                else
+                    map.BW.Write(TagNum);
+
+            }
+            #endregion
         }
 
         /// <summary>
@@ -1660,10 +1651,38 @@ namespace HaloMap.Render
             }
 
             #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Control Spawn meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>ControlSpawn scnr offst = 184</para>
+            /// <para>ControlSpawn chunk size = 68</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                base.Read(map);
+            }
+
+            /// <summary>
+            /// Writes the Control Spawn meta chunk info to the map MemoryStream.
+            /// <para>ControlSpawn scnr offst = 184</para>
+            /// <para>ControlSpawn chunk size = 68</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                base.Write(map);
+                //map.BW.BaseStream.Position = this.offset;
+            }
+
+            #endregion
         }
 
         /// <summary>
-        /// The death zone.
+        /// Trigger Volumes / Death Zones
         /// </summary>
         /// <remarks></remarks>
         public class DeathZone : BoundingBoxSpawn
@@ -1689,6 +1708,54 @@ namespace HaloMap.Render
             }
 
             #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Trigger Volume meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>Trigger Volume chunk size = 68</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+
+                // Load the deathzone name
+                this.Name = map.Strings.Name[map.BR.ReadInt16()];
+
+                map.BR.BaseStream.Position = this.offset + 36;
+                // Load the deathzone coordinates
+                this.X = map.BR.ReadSingle();
+                this.Y = map.BR.ReadSingle();
+                this.Z = map.BR.ReadSingle();
+
+                // Use ABS() to make sure our sizes are always positive
+                this.width = Math.Abs(map.BR.ReadSingle());
+                this.height = Math.Abs(map.BR.ReadSingle());
+                this.length = Math.Abs(map.BR.ReadSingle());
+
+                // Deathzones are saved with a centre point and Width, Length, Height
+                this.X += this.width / 2;
+                this.Y += this.height / 2;
+                this.Z += this.length / 2;
+            }
+
+            /// <summary>
+            /// Writes the Trigger Volume meta chunk info to the map MemoryStream.
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                map.BW.BaseStream.Position = this.offset + 36;
+                // Deathzones are saved as a midpoint and width, length & height, so save as midpoint
+                map.BW.Write(this.X - this.width / 2);
+                map.BW.Write(this.Y - this.height / 2);
+                map.BW.Write(this.Z - this.length / 2);
+                map.BW.Write(this.width);
+                map.BW.Write(this.height);
+                map.BW.Write(this.length);
+            }
+            #endregion
         }
 
         /// <summary>
@@ -1707,6 +1774,34 @@ namespace HaloMap.Render
             {
                 this.Type = SpawnType.Equipment;
                 this.RotationType = SpawnRotationType.Direction;
+            }
+
+            #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Equipment Spawn meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>EquipmentSpawn scnr offst = 128</para>
+            /// <para>EquipmentSpawn chunk size = 56</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                base.Read(map);
+            }
+
+            /// <summary>
+            /// Writes the Equipment Spawn meta chunk info to the map MemoryStream.
+            /// <para>EquipmentSpawn scnr offst = 128</para>
+            /// <para>EquipmentSpawn chunk size = 56</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                base.Write(map);
+                //map.BW.BaseStream.Position = this.offset;
             }
 
             #endregion
@@ -1826,6 +1921,47 @@ namespace HaloMap.Render
             }
 
             #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Light Spawn meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>LightSpawn scnr offst = 900</para>
+            /// <para>LightSpawn chunk size = 144</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                map.BR.BaseStream.Position = this.offset + 4;
+                this.SpawnsInMode = (H1Collection.H1CollectionTypeEnum)map.BR.ReadInt32();
+
+                map.BR.BaseStream.Position = this.offset + 64;
+                this.X = map.BR.ReadSingle();
+                this.Y = map.BR.ReadSingle();
+                this.Z = map.BR.ReadSingle();
+                this.RotationDirection = Renderer.DegreeToRadian(map.BR.ReadSingle());
+            }
+
+            /// <summary>
+            /// Writes the Light Spawn meta chunk info to the map MemoryStream.
+            /// <para>LightSpawn scnr offst = 900</para>
+            /// <para>LightSpawn chunk size = 144</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                map.BW.BaseStream.Position = this.offset + 4;
+                map.BW.Write((int)this.SpawnsInMode);
+
+                map.BR.BaseStream.Position = this.offset + 64;
+                map.BW.Write(this.X);
+                map.BW.Write(this.Y);
+                map.BW.Write(this.Z);
+                map.BW.Write(this.RotationDirection);
+            }
+
+            #endregion
         }
 
         /// <summary>
@@ -1856,6 +1992,34 @@ namespace HaloMap.Render
             }
 
             #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Light Spawn meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>LightSpawn scnr offst = 232</para>
+            /// <para>LightSpawn chunk size = 108</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                base.Read(map);
+            }
+
+            /// <summary>
+            /// Writes the Light Spawn meta chunk info to the map MemoryStream.
+            /// <para>LightSpawn scnr offst = 232</para>
+            /// <para>LightSpawn chunk size = 108</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                base.Write(map);
+                //map.BW.BaseStream.Position = this.offset;
+            }
+
+            #endregion
         }
 
         /// <summary>
@@ -1877,10 +2041,38 @@ namespace HaloMap.Render
             }
 
             #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Machines meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>Machines scnr offst = 168</para>
+            /// <para>Machines chunk size = 72</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                base.Read(map);
+            }
+
+            /// <summary>
+            /// Writes the Machines meta chunk info to the map MemoryStream.
+            /// <para>Machines scnr offst = 168</para>
+            /// <para>Machines chunk size = 72</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                base.Write(map);
+                //map.BW.BaseStream.Position = this.offset;
+            }
+
+            #endregion
         }
 
         /// <summary>
-        /// The objective spawn.
+        /// The Objective / Netgame Flags Spawn.
         /// </summary>
         /// <remarks></remarks>
         public class ObjectiveSpawn : RotateDirectionBaseSpawn
@@ -1924,7 +2116,7 @@ namespace HaloMap.Render
             /// The objective type enum.
             /// </summary>
             /// <remarks></remarks>
-            public enum ObjectiveTypeEnum
+            public enum ObjectiveTypeEnum : short
             {
                 /// <summary>
                 /// The ctf respawn.
@@ -1996,7 +2188,7 @@ namespace HaloMap.Render
             /// The team type.
             /// </summary>
             /// <remarks></remarks>
-            public enum TeamType
+            public enum TeamType : short
             {
                 /// <summary>
                 /// The red_ defense.
@@ -2045,10 +2237,50 @@ namespace HaloMap.Render
             }
 
             #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Objective meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>Objective scnr offst = 280</para>
+            /// <para>Objective chunk size = 32</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                this.X = map.BR.ReadSingle();
+                this.Y = map.BR.ReadSingle();
+                this.Z = map.BR.ReadSingle();
+                this.RotationDirection = map.BR.ReadSingle();
+                this.ObjectiveType = (ObjectiveSpawn.ObjectiveTypeEnum)map.BR.ReadInt16();
+                this.Team = (ObjectiveSpawn.TeamType)map.BR.ReadInt16();
+                this.number = map.BR.ReadInt16();
+            }
+
+            /// <summary>
+            /// Writes the Objective meta chunk info to the map MemoryStream.
+            /// <para>Objective scnr offst = 280</para>
+            /// <para>Objective chunk size = 32</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                map.BW.BaseStream.Position = this.offset;
+                map.BW.Write(this.X);
+                map.BW.Write(this.Y);
+                map.BW.Write(this.Z);
+                map.BW.Write(this.RotationDirection);
+                map.BW.Write((short)this.ObjectiveType);
+                map.BW.Write((short)this.Team);
+                map.BW.Write(this.number);
+            }
+
+            #endregion
         }
 
         /// <summary>
-        /// The obstacle spawn.
+        /// The Obstacle / Crates spawn.
         /// </summary>
         /// <remarks></remarks>
         public class ObstacleSpawn : ScaleRotateYawPitchRollSpawn
@@ -2075,6 +2307,34 @@ namespace HaloMap.Render
             }
 
             #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Obstacles meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>Obstacles scnr offst = 808</para>
+            /// <para>Obstacles chunk size = 76</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                base.Read(map);
+            }
+
+            /// <summary>
+            /// Writes the Obstacles meta chunk info to the map MemoryStream.
+            /// <para>Obstacles scnr offst = 808</para>
+            /// <para>Obstacles chunk size = 76</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                base.Write(map);
+                //map.BW.BaseStream.Position = this.offset;
+            }
+
+            #endregion
         }
 
         /// <summary>
@@ -2093,6 +2353,42 @@ namespace HaloMap.Render
             {
                 this.Type = SpawnType.Player;
                 this.RotationType = SpawnRotationType.Direction;
+                this.ModelTagNumber = -1;
+                this.ModelName = string.Empty;
+            }
+
+            #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Player Spawn meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>PlayerSpawn scnr offst = 256</para>
+            /// <para>PlayerSpawn chunk size = 52</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                this.X = map.BR.ReadSingle();
+                this.Y = map.BR.ReadSingle();
+                this.Z = map.BR.ReadSingle();
+                this.RotationDirection = map.BR.ReadSingle();
+            }
+
+            /// <summary>
+            /// Writes the Player Spawn meta chunk info to the map MemoryStream.
+            /// <para>PlayerSpawn scnr offst = 256</para>
+            /// <para>PlayerSpawn chunk size = 52</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                map.BW.BaseStream.Position = this.offset;
+                map.BW.Write(this.X);
+                map.BW.Write(this.Y);
+                map.BW.Write(this.Z);
+                map.BW.Write(this.RotationDirection);
             }
 
             #endregion
@@ -2102,7 +2398,7 @@ namespace HaloMap.Render
         /// The rotate direction base spawn.
         /// </summary>
         /// <remarks></remarks>
-        public class RotateDirectionBaseSpawn : RotationSpawn
+        public abstract class RotateDirectionBaseSpawn : RotationSpawn
         {
             #region Constants and Fields
 
@@ -2118,7 +2414,7 @@ namespace HaloMap.Render
         /// The rotate yaw pitch roll base spawn.
         /// </summary>
         /// <remarks></remarks>
-        public class RotateYawPitchRollBaseSpawn : RotationSpawn
+        public abstract class RotateYawPitchRollBaseSpawn : RotationSpawn
         {
             #region Constants and Fields
 
@@ -2149,7 +2445,7 @@ namespace HaloMap.Render
         /// The rotation spawn.
         /// </summary>
         /// <remarks></remarks>
-        public class RotationSpawn : BaseSpawn
+        public abstract class RotationSpawn : BaseSpawn
         {
             #region Constants and Fields
 
@@ -2175,16 +2471,184 @@ namespace HaloMap.Render
         /// The scale rotate yaw pitch roll spawn.
         /// </summary>
         /// <remarks></remarks>
-        public class ScaleRotateYawPitchRollSpawn : RotateYawPitchRollBaseSpawn
+        public abstract class ScaleRotateYawPitchRollSpawn : RotateYawPitchRollBaseSpawn
         {
             #region Constants and Fields
 
-            /// <summary>
-            /// The scale.
-            /// </summary>
+            public short PaletteIndex;
+            public short NameIndex;
+            public PlacementFlags Placements;
+            // public float X;
+            // public float Y;
+            // public float Z;
             public float Scale;
+            public TransformFlags Transforms;
+            public ManualBSPFlags ManualBSPs;
+            public uint UniqueID;
+            public Int16 OriginBSP;
+            public SpawnTypeEnum MetaSpawnType;
+            public SourceEnum Source;
+            public BSPPolicyEnum BSPPolicy;  
+            private byte Unused;
+            public short EditorFolder;
+
+            #region Bitmasks and Enums
+            [FlagsAttribute]
+            public enum PlacementFlags : int
+            {
+                NotAutomatically = 0x01,
+                NotOnEasy = 0x02,
+                NotOnNormal = 0x04,
+                NotOnHard = 0x08,
+                LockTypeToEnvObject = 0x10,
+                LockTransformToEnvObject = 0x20,
+                NeverPlaced = 0x40,
+                LockNameToEnvObject = 0x80,
+                CreateAtRest = 0x100
+            }
+            [FlagsAttribute]
+            public enum TransformFlags : ushort
+            {
+                Mirrored = 0x01
+            }            
+            [FlagsAttribute]
+            public enum ManualBSPFlags : ushort 
+            {
+                BSP00 = 0x0001,       BSP01 = 0x0002,
+                BSP02 = 0x0004,       BSP03 = 0x0008,
+                BSP04 = 0x0010,       BSP05 = 0x0020,
+                BSP06 = 0x0040,       BSP07 = 0x0080,
+                BSP08 = 0x0100,       BSP09 = 0x0200,
+                BSP10 = 0x0400,       BSP11 = 0x0800,
+                BSP12 = 0x1000,       BSP13 = 0x2000,
+                BSP14 = 0x4000,       BSP15 = 0x8000,
+            }
+            public enum SpawnTypeEnum : byte
+            {
+                Biped = 0,
+                Vehicle = 1,
+                Weapon = 2,
+                Equipment = 3,
+                Garbage = 4,
+                Projectile = 5,
+                Scenery = 6,
+                Machine = 7,
+                Control = 8,
+                LightFixture = 9,
+                SoundScenery = 10,
+                Crate = 11,
+                Creature = 12
+            }
+            public enum SourceEnum : byte
+            {
+                Structure = 0x00,
+                Editor = 0x01,
+                Dynamic = 0x02,
+                Legacy = 0x03
+            }
+            public enum BSPPolicyEnum : byte
+            {
+                Default = 0x00,
+                AlwaysPlaces = 0x01,
+                Manual = 0x02,
+            }
+            #endregion
 
             #endregion
+
+            /// <summary>
+            /// For ScaleRotateYawPitchRollSpawn objects, the first 52 bytes are all
+            /// generic for Halo 2.
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                map.BR.BaseStream.Position = this.offset;
+                this.PaletteIndex = map.BR.ReadInt16();
+                this.NameIndex = map.BR.ReadInt16();
+                this.Placements = (PlacementFlags)map.BR.ReadInt32();
+
+                this.X = map.BR.ReadSingle();
+                this.Y = map.BR.ReadSingle();
+                this.Z = map.BR.ReadSingle();
+                switch (map.HaloVersion)
+                {
+                    // Halo 1 Stores values in Degrees
+                    case HaloVersionEnum.Halo1:
+                        this.Yaw = Renderer.DegreeToRadian(map.BR.ReadSingle());
+                        this.Pitch = Renderer.DegreeToRadian(map.BR.ReadSingle());
+                        this.Roll = Renderer.DegreeToRadian(map.BR.ReadSingle());
+                        break;
+
+                    case HaloVersionEnum.Halo2:
+                    case HaloVersionEnum.Halo2Vista:
+                        // Is this correct? I think it should be Yaw, Pitch, Roll.
+                        // Before cleaing code into this shared read section some spawns
+                        // were Y,P,R and some were R,P,Y.
+                        this.Yaw = map.BR.ReadSingle();
+                        this.Pitch = map.BR.ReadSingle();
+                        this.Roll = map.BR.ReadSingle();
+                        this.Scale = map.BR.ReadSingle();
+
+                        // None of this is currently saved
+                        this.Transforms = (TransformFlags)map.BR.ReadInt16();
+                        this.ManualBSPs = (ManualBSPFlags)map.BR.ReadInt16();
+                        this.UniqueID = map.BR.ReadUInt32();
+                        this.OriginBSP = map.BR.ReadInt16();
+                        this.MetaSpawnType = (SpawnTypeEnum)map.BR.ReadByte();
+                        this.Source = (SourceEnum)map.BR.ReadByte();
+                        this.BSPPolicy = (BSPPolicyEnum)map.BR.ReadByte(); ;
+                        this.Unused = map.BR.ReadByte();
+                        this.EditorFolder = map.BR.ReadInt16();
+                        break;
+                }
+            }
+
+            /// <summary>
+            /// For ScaleRotateYawPitchRollSpawn objects, the first 52 bytes are all generic.
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                map.BW.BaseStream.Position = this.offset;
+                map.BW.Write(this.PaletteIndex);
+                map.BW.Write(this.NameIndex);
+                map.BW.Write((int)this.Placements);
+
+                map.BW.Write(this.X);
+                map.BW.Write(this.Y);
+                map.BW.Write(this.Z);
+                switch (map.HaloVersion)
+                {
+                    // Halo 1 Stores values in Degrees
+                    case HaloVersionEnum.Halo1:
+                        map.BW.Write(Renderer.RadianToDegree(this.Roll));
+                        map.BW.Write(Renderer.RadianToDegree(this.Pitch));
+                        map.BW.Write(Renderer.RadianToDegree(this.Yaw));
+                        break;
+
+                    case HaloVersionEnum.Halo2:
+                    case HaloVersionEnum.Halo2Vista:
+                        map.BW.Write(this.Yaw);
+                        map.BW.Write(this.Pitch);
+                        map.BW.Write(this.Roll);
+                        map.BW.Write(this.Scale);
+
+                        // None of this is currently saved
+                        /*
+                        this.Transforms = (TransformFlags)map.BR.ReadInt16();
+                        this.ManualBSPs = (ManualBSPFlags)map.BR.ReadInt16();
+                        this.UniqueID = map.BR.ReadUInt32();
+                        this.OriginBSP = map.BR.ReadInt16();
+                        this.SpawnType = (SpawnTypeEnum)map.BR.ReadByte();
+                        this.Source = (SourceEnum)map.BR.ReadByte();
+                        this.BSPPolicy = (BSPPolicyEnum)map.BR.ReadByte(); ;
+                        this.Unused = map.BR.ReadByte();
+                        this.EditorFolder = map.BR.ReadInt16();
+                        */
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -2212,6 +2676,33 @@ namespace HaloMap.Render
             {
                 this.Type = SpawnType.Scenery;
                 this.RotationType = SpawnRotationType.YawPitchRoll;
+            }
+
+            #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Scenery Spawn meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>ScenerySpawn scnr offst = 80</para>
+            /// <para>ScenerySpawn chunk size = 92</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                base.Read(map);
+            }
+
+            /// <summary>
+            /// Writes the Scenery Spawn meta chunk info to the map MemoryStream.
+            /// <para>ScenerySpawn scnr offst = 80</para>
+            /// <para>ScenerySpawn chunk size = 92</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                base.Write(map);
             }
 
             #endregion
@@ -2273,12 +2764,220 @@ namespace HaloMap.Render
                 this.Type = SpawnType.Sound;
                 this.RotationType = SpawnRotationType.YawPitchRoll;
             }
+            #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Sound Spawn meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>SoundSpawn scnr offst = 216</para>
+            /// <para>SoundSpawn chunk size = 80</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                base.Read(map);
+
+                map.BR.BaseStream.Position = this.offset + 54;
+                this.VolumeType = map.BR.ReadInt16();
+                this.Height = map.BR.ReadSingle();
+                this.DistanceBoundsLower = map.BR.ReadSingle();
+                this.DistanceBoundsUpper = map.BR.ReadSingle();
+                this.ConeAngleLower = map.BR.ReadSingle();
+                this.ConeAngleUpper = map.BR.ReadSingle();
+                this.OuterConeGain = map.BR.ReadSingle();
+            }
+
+            /// <summary>
+            /// Writes the Sound Spawn meta chunk info to the map MemoryStream.
+            /// <para>SoundSpawn scnr offst = 216</para>
+            /// <para>SoundSpawn chunk size = 80</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                base.Write(map);
+
+                map.BW.BaseStream.Position = this.offset + 54;
+                map.BW.Write((short)this.VolumeType);
+                map.BW.Write(this.Height);
+                map.BW.Write(this.DistanceBoundsLower);
+                map.BW.Write(this.DistanceBoundsUpper);
+                map.BW.Write(this.ConeAngleLower);
+                map.BW.Write(this.ConeAngleUpper);
+                map.BW.Write(this.OuterConeGain);
+            }
+            #endregion
+        }
+
+        /// <summary>
+        /// Spawning Zones
+        /// </summary>
+        /// <remarks></remarks>
+        public class SpawnZone : BaseSpawn
+        {
+            #region Constants and Fields
+
+            public SpawnZoneType ZoneType;
+            public string Name;
+            public int TeamColor;
+            public int ApplicableGames;
+            public int OptionModifiers;
+            public float LowerHeight;
+            public float UpperHeight;
+            public float InnerRadius;
+            public float OuterRadius;
+            public float Weight;
+            #endregion
+
+            #region Constructors and Destructors
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="SpawnZone"/> class.
+            /// </summary>
+            /// <remarks></remarks>
+            public SpawnZone(SpawnZoneType zoneType)
+            {
+                this.Type = SpawnType.SpawnZone;
+                this.ZoneType = zoneType;
+            }
+
+            /// <summary>
+            /// Reads the Spawn Zone data from the given map's current BaseStream position
+            /// </summary>
+            /// <param name="map"></param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                this.Name = string.Empty;
+                #region StringID Name
+                short SIDIndex = map.BR.ReadInt16();
+                // String IDs always have a null byte after the Index # before the length
+                if (map.BR.ReadByte() == 0)
+                {
+                    int SIDLength = map.BR.ReadByte();
+                    if (SIDLength == map.Strings.Length[SIDIndex])
+                        this.Name = map.Strings.Name[SIDIndex];
+                }
+                this.TeamColor = map.BR.ReadInt32();
+                this.ApplicableGames = map.BR.ReadInt32();
+                this.OptionModifiers = map.BR.ReadInt32();
+                this.X = map.BR.ReadSingle();
+                this.Y = map.BR.ReadSingle();
+                this.Z = map.BR.ReadSingle();
+                this.LowerHeight = map.BR.ReadSingle();
+                this.UpperHeight = map.BR.ReadSingle();
+                this.InnerRadius = map.BR.ReadSingle();
+                this.OuterRadius = map.BR.ReadSingle();
+                this.Weight = map.BR.ReadSingle();
+                #endregion
+
+            }
+
+            /// <summary>
+            /// Writes the Spawn Zone data to the given map's BaseStream
+            /// </summary>
+            /// <param name="map"></param>
+            public override void Write(Map map)
+            {
+                map.BW.BaseStream.Position = this.offset;
+
+                /*
+                this.Name = string.Empty;
+                #region StringID Name
+                short SIDIndex = map.BR.ReadInt16();
+                // String IDs always have a null byte after the Index # before the length
+                if (map.BR.ReadByte() == 0)
+                {
+                    int SIDLength = map.BR.ReadByte();
+                    if (SIDLength == map.Strings.Length[SIDIndex])
+                        this.Name = map.Strings.Name[SIDIndex];
+                }
+                */
+                map.BW.BaseStream.Position += 4;
+
+                map.BW.Write(this.TeamColor);
+                map.BW.Write(this.ApplicableGames);
+                map.BW.Write(this.OptionModifiers);
+                map.BW.Write(this.X);
+                map.BW.Write(this.Y);
+                map.BW.Write(this.Z);
+                map.BW.Write(this.LowerHeight);
+                map.BW.Write(this.UpperHeight);
+                map.BW.Write(this.InnerRadius);
+                map.BW.Write(this.OuterRadius);
+                map.BW.Write(this.Weight);
+
+            }
+
+            public class Options
+            {
+                public int Value;
+                public string Name;
+                public bool Checked;
+
+                public Options(int value, int bitValue, string name)
+                {
+                    this.Value = bitValue;
+                    this.Name = name;
+                    this.Checked = (value & (1 << bitValue)) != 0;
+                }
+            }
+
+            public Options[] GetTeamColorOptions()
+            {
+                Options[] options = new Options[9];
+                options[0] = new Options(this.TeamColor, 0, "Red");
+                options[1] = new Options(this.TeamColor, 1, "Blue");
+                options[2] = new Options(this.TeamColor, 2, "Yellow");
+                options[3] = new Options(this.TeamColor, 3, "Green");
+                options[4] = new Options(this.TeamColor, 4, "Purple");
+                options[5] = new Options(this.TeamColor, 5, "Orange");
+                options[6] = new Options(this.TeamColor, 6, "Brown");
+                options[7] = new Options(this.TeamColor, 7, "Pink");
+                options[8] = new Options(this.TeamColor, 8, "Neutral");
+                return options;
+            }
+
+            public Options[] GetGameTypeOptions()
+            {
+                Options[] options = new Options[9];
+                options[0] = new Options(this.ApplicableGames, 0, "Slayer");
+                options[1] = new Options(this.ApplicableGames, 1, "Oddball");
+                options[2] = new Options(this.ApplicableGames, 2, "KOTH");
+                options[3] = new Options(this.ApplicableGames, 3, "CTF");
+                options[4] = new Options(this.ApplicableGames, 4, "Race");
+                options[5] = new Options(this.ApplicableGames, 5, "Headhunter");
+                options[6] = new Options(this.ApplicableGames, 6, "Juggernaut");
+                options[7] = new Options(this.ApplicableGames, 7, "Territories");
+                return options;
+            }
+
+            public Options[] GetOptionModifiers()
+            {
+                Options[] options = new Options[9];
+                options[0] = new Options(this.OptionModifiers, 0, "Disabled If Flag Home");
+                options[1] = new Options(this.OptionModifiers, 1, "Disabled If Flag Away");
+                options[2] = new Options(this.OptionModifiers, 2, "Disabled If Bomb Home");
+                options[3] = new Options(this.OptionModifiers, 3, "Disabled If Bomb Away");
+                return options;
+            }
 
             #endregion
         }
 
         /// <summary>
-        /// The special spawn.
+        /// Spawn Zone Types
+        /// </summary>
+        public enum SpawnZoneType
+        {
+            Inital = 1,
+            Respawn = 2
+        }
+
+        /// <summary>
+        /// The special spawn (Unused?).
         /// </summary>
         /// <remarks></remarks>
         public class SpecialSpawn : BoundingBoxSpawn
@@ -2313,7 +3012,7 @@ namespace HaloMap.Render
             #region Enums
 
             /// <summary>
-            /// The special spawn type.
+            /// Special spawn types (CTF, Inital)
             /// </summary>
             /// <remarks></remarks>
             public enum SpecialSpawnType
@@ -2327,6 +3026,32 @@ namespace HaloMap.Render
                 /// The initital.
                 /// </summary>
                 Initital
+            }
+
+            #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Special Spawn meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>SpecialSpawn scnr offst = ?</para>
+            /// <para>SpecialSpawn chunk size = ?</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+            }
+
+            /// <summary>
+            /// Writes the Special Spawn meta chunk info to the map MemoryStream.
+            /// <para>SpecialSpawn scnr offst = ?</para>
+            /// <para>SpecialSpawn chunk size = ?</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                map.BW.BaseStream.Position = this.offset;
             }
 
             #endregion
@@ -2351,6 +3076,32 @@ namespace HaloMap.Render
             }
 
             #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Vehicle Spawn meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>VehicleSpawn scnr offst = Halo1: 576 Halo2: 112</para>
+            /// <para>VehicleSpawn chunk size = Halo1: 120 Halo2: 84</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                base.Read(map);
+            }
+
+            /// <summary>
+            /// Writes the Vehicle Spawn meta chunk info to the map MemoryStream.
+            /// <para>VehicleSpawn scnr offst = 112</para>
+            /// <para>VehicleSpawn chunk size = 84</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                base.Write(map);
+            }
+            #endregion
         }
 
         /// <summary>
@@ -2371,6 +3122,33 @@ namespace HaloMap.Render
                 this.RotationType = SpawnRotationType.YawPitchRoll;
             }
 
+            #endregion
+
+            #region Loading & Saving routines
+            /// <summary>
+            /// Reads the Weapon Spawn meta chunk info from the map MemoryStream.
+            /// <para>map.BR.BaseStream.Position must be set to start of chunk data.</para>
+            /// <para>WeaponSpawn scnr offst = 144</para>
+            /// <para>WeaponSpawn chunk size = 84</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Read(Map map)
+            {
+                this.offset = (int)map.BR.BaseStream.Position;
+                base.Read(map);
+
+            }
+
+            /// <summary>
+            /// Writes the Weapon Spawn meta chunk info to the map MemoryStream.
+            /// <para>WeaponSpawn scnr offst = 144</para>
+            /// <para>WeaponSpawn chunk size = 84</para>
+            /// </summary>
+            /// <param name="map">The HaloMap.Map.Map</param>
+            public override void Write(Map map)
+            {
+                base.Write(map);
+            }
             #endregion
         }
     }

@@ -29,7 +29,7 @@ namespace MetaEditor.Components
         /// <summary>
         /// The options.
         /// </summary>
-        public object[] Options;
+        public IFPIO.Option[] Options;
 
         /// <summary>
         /// The enum type.
@@ -77,7 +77,7 @@ namespace MetaEditor.Components
         /// <param name="iLineNumber">
         /// The i line number.
         /// </param>
-        public Enums(string iEntName, Map map, int iOffsetInChunk, int iType, object[] ioptions, int iLineNumber)
+        public Enums(string iEntName, Map map, int iOffsetInChunk, int iType, IFPIO.Option[] ioptions, int iLineNumber)
         {
             this.LineNumber = iLineNumber;
             this.Options = ioptions;
@@ -345,7 +345,7 @@ namespace MetaEditor.Components
             {
                 for (int counter = 0; counter < this.Options.Length; counter++)
                 {
-                    tempint.Add(((IFPIO.Option)this.Options[counter]).value);
+                    tempint.Add(this.Options[counter].value);
                 }
             }
 
@@ -370,12 +370,9 @@ namespace MetaEditor.Components
             {
                 for (int counter = 0; counter < this.Options.Length; counter++)
                 {
-                    if (tempint.IndexOf(((IFPIO.Option)this.Options[counter]).value) != -1)
+                    if (tempint.IndexOf(this.Options[counter].value) != -1)
                     {
-                        tempstring[tempint.IndexOf(((IFPIO.Option)this.Options[counter]).value)] += ": " +
-                                                                                                    ((IFPIO.Option)
-                                                                                                     this.Options[
-                                                                                                         counter]).name;
+                        tempstring[tempint.IndexOf(this.Options[counter].value)] += ": " + this.Options[counter].name;
                     }
                 }
             }

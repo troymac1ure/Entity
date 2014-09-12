@@ -525,6 +525,10 @@ namespace HaloMap.Meta
 
             // THIS = Currently Selected Tag
             // Find current Tag Meta and read into memory stream (MS)
+
+            // For figuring out Obfuscated maps (For UGH! tag):
+            // this.size = (int)(Map.BR.BaseStream.Length - this.offset);
+            // Map.MetaInfo.Size[tagIndex] = this.size;
             this.MS = new MemoryStream(this.size);
             Map.BR.BaseStream.Position = this.offset;
             this.MS.Write(Map.BR.ReadBytes(this.size), 0, this.size);
@@ -666,7 +670,7 @@ namespace HaloMap.Meta
             BW.Flush();
             BW.Close();
 
-            XmlTextWriter xtw = new XmlTextWriter(outputFileName + ".xml", Encoding.Default);
+            XmlTextWriter xtw = new XmlTextWriter(outputFileName + ".xml",  Encoding.Default);
             xtw.Formatting = Formatting.Indented;
             xtw.WriteStartElement("Meta");
             xtw.WriteAttributeString("TagType", this.type);

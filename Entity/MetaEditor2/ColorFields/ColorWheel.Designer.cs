@@ -7,10 +7,6 @@ namespace entity.MetaEditor2
 
     partial class ColorWheel
     {
-        /// <summary> 
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.Container components = null;
 
         private Bitmap renderBitmap = null;
         private Bitmap brightnessBitmap = null;
@@ -30,9 +26,11 @@ namespace entity.MetaEditor2
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.wheelPictureBox = new System.Windows.Forms.PictureBox();
             this.brightnessPictureBox = new System.Windows.Forms.PictureBox();
             this.colorBox = new System.Windows.Forms.PictureBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.wheelPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.brightnessPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.colorBox)).BeginInit();
@@ -42,7 +40,7 @@ namespace entity.MetaEditor2
             // 
             this.wheelPictureBox.Location = new System.Drawing.Point(3, 3);
             this.wheelPictureBox.Name = "wheelPictureBox";
-            this.wheelPictureBox.Padding = new Padding(4);
+            this.wheelPictureBox.Padding = new System.Windows.Forms.Padding(4);
             this.wheelPictureBox.Size = new System.Drawing.Size(160, 160);
             this.wheelPictureBox.TabIndex = 0;
             this.wheelPictureBox.TabStop = false;
@@ -74,6 +72,11 @@ namespace entity.MetaEditor2
             this.colorBox.TabIndex = 0;
             this.colorBox.TabStop = false;
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 800;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // ColorWheel
             // 
             this.Controls.Add(this.wheelPictureBox);
@@ -89,5 +92,8 @@ namespace entity.MetaEditor2
         }
 
         #endregion
+
+        private Timer timer1;
+        private System.ComponentModel.IContainer components;
     }
 }

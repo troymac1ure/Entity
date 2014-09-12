@@ -20,22 +20,22 @@ namespace HaloMap.H2MetaContainers
         #region Constants and Fields
 
         /// <summary>
-        /// The b.
+        /// The blue value
         /// </summary>
         public int b;
 
         /// <summary>
-        /// The g.
+        /// The green value
         /// </summary>
         public int g;
 
         /// <summary>
-        /// The r.
+        /// The red value
         /// </summary>
         public int r;
 
         /// <summary>
-        /// The range.
+        /// The light range.
         /// </summary>
         public int range;
 

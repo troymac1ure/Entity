@@ -203,6 +203,7 @@ namespace entity.Main
         {
             InitializeComponent();
 
+            this.TopMost = true;
             // Show selected plugin set
             lblPluginSet.Text = Globals.PluginSetSelector.getName(Globals.Prefs.pathPluginsFolder);
 
@@ -424,11 +425,12 @@ namespace entity.Main
                                     xnV = XList[0].Attributes.GetNamedItem("version");
                                     try
                                     {
+                                        XList = xd.GetElementsByTagName("plugin");
                                         tag = XList[0].Attributes.GetNamedItem("class").Value;
                                     }
                                     catch
                                     {
-                                        tag = fName[1].ToLower();
+                                        tag = fName[0].ToLower();
                                     }
                                 }
                                 catch
@@ -656,7 +658,7 @@ namespace entity.Main
             pForm.Show();
             dgvPluginData.Sort( dgvPluginData.Columns[0], ListSortDirection.Descending);
             int i = -1; int count = 0;
-            while ((bool)dgvPluginData[0, ++i].Value == true)
+            while (++i < dgvPluginData.RowCount && (bool)dgvPluginData[0, i].Value == true)
             {
                 PluginData pd = (PluginData)dgvPluginData.Rows[i].Tag;
                 string localName = pd.tagType + ".ent";

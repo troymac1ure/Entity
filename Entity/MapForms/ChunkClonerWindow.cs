@@ -602,29 +602,29 @@ namespace entity.MapForms
             {
                 string tempchunk = reflex.description;
 
-                /**** This uses the labels in the .ENT plugins
+                /**** This uses the labels in the .ENT plugins ***/
                 foreach (Meta.Item mi in reflex.Chunks[x].ChunkResources)
                 {
                     if (mi.description == reflex.label)
                     {
-                        tempchunk = ((Meta.String)mi).name;
-                        break;
-                    }
-                    if (mi.type == Meta.ItemType.String)
-                    {
+                        if (mi.type == Meta.ItemType.String)
+                        {
+                            tempchunk = ((Meta.String)mi).name;
+                            break;
+                        }
 
-                        tempchunk = ((Meta.String)mi).name;
-                    }
-                    if (mi.type == Meta.ItemType.Ident)
-                    {
-                        tempchunk = ((Meta.Ident)mi).pointstotagname;
-                        string[] splits = tempchunk.Split('\\');
-                        tempchunk = splits[splits.Length - 1] + "." + ((Meta.Ident)mi).pointstotagtype;
-                        break;
+                        if (mi.type == Meta.ItemType.Ident)
+                        {
+                            tempchunk = ((Meta.Ident)mi).pointstotagname;
+                            string[] splits = tempchunk.Split('\\');
+                            tempchunk = splits[splits.Length - 1] + "." + ((Meta.Ident)mi).pointstotagtype;
+                            break;
+                        }
                     }
                 }
-                */
-                string tempchunkname = "Chunk - Number: " + x + " - Name: " + tempchunk + " - Size: " +
+                /**/
+
+                string tempchunkname = "Chunk - #" + x + " - Name: " + tempchunk + " - Size: " +
                                        reflex.Chunks[x].chunksize;
 
                 TreeNode ChunkNumberNode = new TreeNode(tempchunkname);
@@ -667,6 +667,7 @@ namespace entity.MapForms
                 m.scanner.ScanWithIFP(ref ifpx);
                 metasplit = new MetaSplitter();
                 metasplit.SplitWithIFP(ref ifpx, ref m, map);
+
             }
             catch (Exception ex)
             {

@@ -481,7 +481,7 @@ namespace entity.MetaEditor2
             if (tn.Nodes.Count > 0 || tn.ForeColor == System.Drawing.Color.LightGray)
                 return;
 
-            TagTreeView.reflexiveData rd = (TagTreeView.reflexiveData)tn.Tag;
+            reflexiveData rd = (reflexiveData)tn.Tag;
             BinaryReader br = new BinaryReader(fStream);
             for (int i = 0; i < rd.chunkCount; i++)
             {
@@ -534,7 +534,7 @@ namespace entity.MetaEditor2
 
             if (lastNode != 0)
             {
-                entity.MetaEditor2.TagTreeView.reflexiveData rd = ((entity.MetaEditor2.TagTreeView.reflexiveData)tn[lastNode - 1].Tag);
+                reflexiveData rd = ((reflexiveData)tn[lastNode - 1].Tag);
                 baseOffsetS = rd.baseOffset;
                 // Don't show all for refelxives as we can't do full reflexives anyways
                 if (tn[lastNode].Nodes.Count == 0)
@@ -546,7 +546,7 @@ namespace entity.MetaEditor2
                         panel1.Controls.RemoveAt(panel1.Controls.Count - 1);
                     for (int x = 0; x <= lastNode - 2; x++)
                     {
-                        rd = (entity.MetaEditor2.TagTreeView.reflexiveData)tn[x + 1].Tag;
+                        rd = (reflexiveData)tn[x + 1].Tag;
 
                         ComboBox cb;
                         if (panel1.Controls.Count <= x)
@@ -809,7 +809,7 @@ namespace entity.MetaEditor2
             TreeNode tn = tvSourceTags.SelectedNode;
             while ((tn.Level - 1) > level)
                 tn = tn.Parent;
-            ((TagTreeView.reflexiveData)tn.Tag).chunkSelected = cb.SelectedIndex;
+            ((reflexiveData)tn.Tag).chunkSelected = cb.SelectedIndex;
 
             tvSourceTags.refreshTreeListing(tn);
             /*

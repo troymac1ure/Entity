@@ -66,7 +66,7 @@ namespace HaloMap.Plugins
                     }
                     catch (Exception e)
                     {
-                        throw new Exception("Error Reading Ifp: " + TagType, e);
+                        throw new Exception("Error Reading Ent: " + TagType, e);
                     }
 
                     // IFPHashMap.H2IFPHash.Remove(TagType);
@@ -91,7 +91,7 @@ namespace HaloMap.Plugins
                     }
                     catch (Exception ex)
                     {
-                        Global.ShowErrorMsg("Error Reading Ifp: " + TagType, ex);
+                        Global.ShowErrorMsg("Error Reading Ent: " + TagType, ex);
                     }
 
                     H1IFPHash.Add(TagType, tempifp);

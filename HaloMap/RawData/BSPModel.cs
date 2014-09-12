@@ -196,6 +196,7 @@ namespace HaloMap.RawData
                     LoadModelStructure(ref meta);
                     // 5x 0.0000010
                     LoadPermutations(ref meta);
+                    // Load Decorators
                     LoadUnknowns(ref meta);
                     // 5x 0.0000010
                     Shaders = new BSPShaderContainer(this, ref meta);

@@ -238,6 +238,13 @@
     <Compile Include="MetaEditor2\ColorFields\rgb_color.Designer.cs">
       <DependentUpon>rgb_color.cs</DependentUpon>
     </Compile>
+    <Compile Include="MetaEditor2\global.cs" />
+    <Compile Include="MetaEditor2\MassFieldChanger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MetaEditor2\MassFieldChanger.Designer.cs">
+      <DependentUpon>MassFieldChanger.cs</DependentUpon>
+    </Compile>
     <Compile Include="MetaEditor2\MetaEditorControlPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -444,6 +451,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MetaEditor2\ColorFields\rgb_color.resx">
       <DependentUpon>rgb_color.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetaEditor2\MassFieldChanger.resx">
+      <DependentUpon>MassFieldChanger.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MetaEditor2\MetaEditorControlPage.resx">
       <DependentUpon>MetaEditorControlPage.cs</DependentUpon>

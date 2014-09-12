@@ -13,6 +13,9 @@ using HaloMap.RealTimeHalo;
 
 namespace entity.MetaEditor2
 {
+    /// <summary>
+    /// Tag Types / Idents are pointers to other meta within the map
+    /// </summary>
     public partial class Ident : BaseField
     {
         #region Fields
@@ -26,13 +29,23 @@ namespace entity.MetaEditor2
         public string tagType;
         public int tagIndex;
         public string tagName;
+        public bool HasTagType { get { return doesHaveTagType; } }
         private bool doesHaveTagType;
         private bool AddEvents = true;
         private int tagComboBoxIndexer = 0;
         private bool isNulledOutReflexive = true;
         private int longestName = -1;
         #endregion
-        public Ident(Meta meta, string iEntName, Map map, int iOffsetInChunk,bool idoesHaveTagType,int iLineNumber)
+        /// <summary>
+        /// The (Tag Type &) Ident Class
+        /// </summary>
+        /// <param name="meta">The controls meta data</param>
+        /// <param name="iEntName">The identifying name of the meta string</param>
+        /// <param name="map">The metas map file</param>
+        /// <param name="iOffsetInChunk">The offset to the string in the memory stream</param>
+        /// <param name="idoesHaveTagType">States whether there is a preceding Tag Type or just an Ident</param>
+        /// <param name="iLineNumber">The associated line number</param>
+        public Ident(Meta meta, string iEntName, Map map, int iOffsetInChunk, bool idoesHaveTagType, int iLineNumber)
         {
             InitializeComponent();
             this.meta = meta;

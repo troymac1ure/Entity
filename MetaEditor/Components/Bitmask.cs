@@ -29,7 +29,7 @@ namespace MetaEditor.Components
         /// <summary>
         /// The options.
         /// </summary>
-        public object[] Options;
+        public IFPIO.Option[] Options;
 
         /// <summary>
         /// The bit count.
@@ -71,27 +71,15 @@ namespace MetaEditor.Components
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Bitmask"/> class.
+        /// 
         /// </summary>
-        /// <param name="iEntName">
-        /// The i ent name.
-        /// </param>
-        /// <param name="map">
-        /// The map.
-        /// </param>
-        /// <param name="iOffsetInChunk">
-        /// The i offset in chunk.
-        /// </param>
-        /// <param name="iBitCount">
-        /// The i bit count.
-        /// </param>
-        /// <param name="ioptions">
-        /// The ioptions.
-        /// </param>
-        /// <param name="iLineNumber">
-        /// The i line number.
-        /// </param>
-        public Bitmask(string iEntName, Map map, int iOffsetInChunk, int iBitCount, object[] ioptions, int iLineNumber)
+        /// <param name="iEntName"></param>
+        /// <param name="map"></param>
+        /// <param name="iOffsetInChunk"></param>
+        /// <param name="iBitCount"></param>
+        /// <param name="ioptions"></param>
+        /// <param name="iLineNumber"></param>
+        public Bitmask(string iEntName, Map map, int iOffsetInChunk, int iBitCount, IFPIO.Option[] ioptions, int iLineNumber)
         {
             this.LineNumber = iLineNumber;
             this.Options = ioptions;
@@ -406,10 +394,10 @@ namespace MetaEditor.Components
                 {
                     for (int counter2 = 0; counter2 < this.Options.Length; counter2++)
                     {
-                        if (((IFPIO.Option)this.Options[counter2]).value == counter)
+                        if (this.Options[counter2].value == counter)
                         {
                             this.visibleBits[counter] = true;
-                            tempcheckBox1.Text = ((IFPIO.Option)this.Options[counter2]).name;
+                            tempcheckBox1.Text = this.Options[counter2].name;
 
                             break;
                         }
@@ -475,7 +463,7 @@ namespace MetaEditor.Components
 
             for (int counter = 0; counter < this.Options.Length; counter++)
             {
-                this.checkBox1.Text = ((IFPIO.Option)this.Options[counter]).name;
+                this.checkBox1.Text = this.Options[counter].name;
                 if (this.checkBox1.PreferredSize.Width > this.optionNamePadding)
                 {
                     this.optionNamePadding = this.checkBox1.PreferredSize.Width + 5;

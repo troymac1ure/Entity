@@ -33,7 +33,7 @@ namespace entity.MapForms
             loadDDSInfo(filename, this.bitm);
 
             // Get the filename variable from the path / filename combo
-            filename = filename.Substring(filename.LastIndexOf('\\') + 1);
+            string fname = filename.Substring(filename.LastIndexOf('\\') + 1);
                        
             // Populate Bitmap Injection box with number of bitmaps in current selection
             for (int i = 0; i < NumDDS; i++)
@@ -42,7 +42,7 @@ namespace entity.MapForms
             }
 
             #region inject_Form
-            this.Text = "Inject " + filename + " to...";
+            this.Text = "Inject " + fname + " to...";
             if (lbInjectionBitmap.Items.Count > 0)
             {
                 lbInjectionBitmap.SelectedIndex = 0;

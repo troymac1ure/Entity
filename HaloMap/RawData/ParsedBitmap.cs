@@ -846,6 +846,9 @@ namespace HaloMap.RawData
                             }
                         }
 
+                        // XZodia hack to fix issue in 03b_newmombosa, 2nd BSP, G8B8 bitmap issue
+                        if (offset > tempb.size) 
+                            offset = tempb.size;
                         int tempsize = tempb.size - offset;
                         guh = new byte[tempsize];
                         Array.Copy(tempb.MS.ToArray(), offset, guh, 0, tempsize);

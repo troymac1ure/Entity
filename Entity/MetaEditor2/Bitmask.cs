@@ -12,6 +12,14 @@ using HaloMap.RealTimeHalo;
 
 namespace entity.MetaEditor2
 {
+    /// <summary>
+    /// Bitmasks are a list of options, accessed through a bit value.
+    /// <para>Example:</para>
+    /// <para>  bit 0 (1): Visible           bit 4  (16): Deaf</para>
+    /// <para>  bit 1 (2): Can Fly         bit 5  (32): Mute</para>
+    /// <para>  bit 2 (4): Can't Move   bit 6  (64): Team Killer</para>
+    /// <para>  bit 3 (8): Blind              bit 7 (128): No Ragdoll</para>
+    /// </summary>
     public partial class Bitmask : BaseField
     {
         #region fields
@@ -26,11 +34,21 @@ namespace entity.MetaEditor2
         private bool isNulledOutReflexive = true;
         private bool[] Bits;
         public int bitCount;
-        public object[] Options;
+        public IFPIO.Option[] Options;
         private bool[] visibleBits;
         #endregion
         #region Constructor
-        public Bitmask(Meta meta, string iEntName, Map map, int iOffsetInChunk, int iBitCount, object[] ioptions, int iLineNumber)
+        /// <summary>
+        /// The Bitmask class
+        /// </summary>
+        /// <param name="meta">The controls meta data</param>
+        /// <param name="iEntName">The identifying name of the meta string</param>
+        /// <param name="map">The metas map file</param>
+        /// <param name="iOffsetInChunk">The offset to the string in the memory stream</param>
+        /// <param name="iBitCount">8 for Bitmask8, 16 for Bitmask16, 32 for Bitmask32 types</param>
+        /// <param name="ioptions">The array of options available</param>
+        /// <param name="iLineNumber"></param>
+        public Bitmask(Meta meta, string iEntName, Map map, int iOffsetInChunk, int iBitCount, IFPIO.Option[] ioptions, int iLineNumber)
         {
             this.meta = meta;
             this.LineNumber = iLineNumber;
@@ -113,7 +131,7 @@ namespace entity.MetaEditor2
                 return;
             for (int counter = 0; counter < this.Options.Length; counter++)
             {
-                this.checkBox1.Text = ((IFPIO.Option)this.Options[counter]).name;
+                this.checkBox1.Text = this.Options[counter].name;
                 if (this.checkBox1.PreferredSize.Width>this.optionNamePadding)
                     this.optionNamePadding = this.checkBox1.PreferredSize.Width+5;
             }
@@ -152,10 +170,10 @@ namespace entity.MetaEditor2
                 {
                     for (int counter2 = 0; counter2 < this.Options.Length; counter2++)
                     {
-                        if (((IFPIO.Option)this.Options[counter2]).value == counter)
+                        if (this.Options[counter2].value == counter)
                         {
                             this.visibleBits[counter] = true;
-                            tempcheckBox1.Text = ((IFPIO.Option)this.Options[counter2]).name;
+                            tempcheckBox1.Text = this.Options[counter2].name;
                                
                             break;
                         }

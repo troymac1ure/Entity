@@ -89,7 +89,7 @@ namespace MetaEditor.Forms
                 case "Reflexive":
                     {
                         this.Ent.ENTElements.Add(
-                            new IFPIO.Reflexive(-1, -1, false, "unnamed", string.Empty, null, -1, true, -1, -1));
+                            new IFPIO.Reflexive(-1, -1, false, "unnamed", "", string.Empty, null, -1, 0, true, -1, -1));
                         break;
                     }
 
@@ -97,25 +97,25 @@ namespace MetaEditor.Forms
 
                 case "String32":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.IFPString("unnamed", false, -1, 32, false, -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.IFPString("unnamed", "", false, -1, 32, false, -1, -1, -1));
                         break;
                     }
 
                 case "UnicodeString256":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.IFPString("unnamed", false, -1, 256, true, -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.IFPString("unnamed", "", false, -1, 256, true, -1, -1, -1));
                         break;
                     }
 
                 case "UnicodeString64":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.IFPString("unnamed", false, -1, 64, true, -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.IFPString("unnamed", "", false, -1, 64, true, -1, -1, -1));
                         break;
                     }
 
                 case "String256":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.IFPString("unnamed", false, -1, 256, false, -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.IFPString("unnamed", "", false, -1, 256, false, -1, -1, -1));
                         break;
                     }
 
@@ -131,6 +131,7 @@ namespace MetaEditor.Forms
                                 (IFPIO.ObjectEnum)Enum.Parse(typeof(IFPIO.ObjectEnum), TheEnum),
                                 false,
                                 "unnamed",
+                                "",
                                 new IFPIO.Index(
                                     string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, -1),
                                 -1,
@@ -161,6 +162,7 @@ namespace MetaEditor.Forms
                                 -1,
                                 false,
                                 "unnamed",
+                                "",
                                 new IFPIO.Index(
                                     string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, -1),
                                 -1,
@@ -175,19 +177,19 @@ namespace MetaEditor.Forms
 
                 case "Bitmask32":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.Bitmask(-1, false, "unnamed", null, 32, -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.Bitmask(-1, false, "unnamed", "", null, 32, -1, -1, -1));
                         break;
                     }
 
                 case "Bitmask16":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.Bitmask(-1, false, "unnamed", null, 16, -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.Bitmask(-1, false, "unnamed", "", null, 16, -1, -1, -1));
                         break;
                     }
 
                 case "Bitmask8":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.Bitmask(-1, false, "unnamed", null, 8, -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.Bitmask(-1, false, "unnamed", "", null, 8, -1, -1, -1));
                         break;
                     }
 
@@ -197,19 +199,19 @@ namespace MetaEditor.Forms
 
                 case "Enum32":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.IFPEnum(-1, false, "unnamed", null, 32, -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.IFPEnum(-1, false, "unnamed", "", null, 32, -1, -1, -1));
                         break;
                     }
 
                 case "Enum16":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.IFPEnum(-1, false, "unnamed", null, 16, -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.IFPEnum(-1, false, "unnamed", "", null, 16, -1, -1, -1));
                         break;
                     }
 
                 case "Enum8":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.IFPEnum(-1, false, "unnamed", null, 8, -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.IFPEnum(-1, false, "unnamed", "", null, 8, -1, -1, -1));
                         break;
                     }
 
@@ -219,20 +221,20 @@ namespace MetaEditor.Forms
 
                 case "TagBlock":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.TagBlock("unnamed", false, -1, -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.TagBlock("unnamed", "", false, -1, -1, -1, -1));
                         break;
                     }
 
                 // To be outdated
                 case "TagType":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.TagType(-1, false, "unnamed", -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.TagType(-1, false, "unnamed", "", -1, -1, -1));
                         break;
                     }
 
                 case "Ident":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.Ident("unnamed", false, -1, false, -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.Ident("unnamed", "", false, -1, false, -1, -1, -1));
                         break;
                     }
 
@@ -252,13 +254,13 @@ namespace MetaEditor.Forms
 
                 case "Unknown":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.Unknown(-1, false, "unnamed", -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.Unknown(-1, false, "unnamed", "", -1, -1, -1));
                         break;
                     }
 
                 case "Float":
                     {
-                        this.Ent.ENTElements.Add(new IFPIO.IFPFloat(-1, false, "unnamed", -1, -1, -1));
+                        this.Ent.ENTElements.Add(new IFPIO.IFPFloat(-1, false, "unnamed", "", -1, -1, -1));
                         break;
                     }
 
@@ -286,8 +288,8 @@ namespace MetaEditor.Forms
             for (int counter = 0; counter < ((IFPIO.Bitmask)this.buttGoTo.Tag).options.Length; counter++)
             {
                 this.combBitmaskBits.Items.Add(
-                    ((IFPIO.Option)((IFPIO.Bitmask)this.buttGoTo.Tag).options[counter]).name + " : Bit " +
-                    ((IFPIO.Option)((IFPIO.Bitmask)this.buttGoTo.Tag).options[counter]).value);
+                    ((IFPIO.Bitmask)this.buttGoTo.Tag).options[counter].name + " : Bit " +
+                    ((IFPIO.Bitmask)this.buttGoTo.Tag).options[counter].value);
                 optionIndexers.Add(counter);
             }
 
@@ -482,8 +484,8 @@ namespace MetaEditor.Forms
             for (int counter = 0; counter < ((IFPIO.IFPEnum)this.buttGoTo.Tag).options.Length; counter++)
             {
                 this.combEnumsItems.Items.Add(
-                    ((IFPIO.Option)((IFPIO.IFPEnum)this.buttGoTo.Tag).options[counter]).name + " : Value " +
-                    ((IFPIO.Option)((IFPIO.IFPEnum)this.buttGoTo.Tag).options[counter]).value);
+                    ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[counter].name + " : Value " +
+                    ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[counter].value);
                 optionIndexers.Add(counter);
             }
 
@@ -835,8 +837,8 @@ namespace MetaEditor.Forms
                 temparray.AddRange(((IFPIO.Bitmask)this.buttGoTo.Tag).options);
             }
 
-            temparray.Add(new IFPIO.Option(this.txtbBitmaskName.Text, this.txtbBitmaskBitNumber.Text, -1));
-            ((IFPIO.Bitmask)this.buttGoTo.Tag).options = temparray.ToArray();
+            temparray.Add(new IFPIO.Option(this.txtbBitmaskName.Text, "", this.txtbBitmaskBitNumber.Text, -1));
+            ((IFPIO.Bitmask)this.buttGoTo.Tag).options = (IFPIO.Option[])temparray.ToArray();
             this.BitmaskLoadBitNames();
         }
 
@@ -856,7 +858,7 @@ namespace MetaEditor.Forms
             List<object> temparray = new List<object>(0);
             temparray.AddRange(((IFPIO.Bitmask)this.buttGoTo.Tag).options);
             temparray.RemoveAt(((int[])this.combBitmaskBits.Tag)[this.combBitmaskBits.SelectedIndex]);
-            ((IFPIO.Bitmask)this.buttGoTo.Tag).options = temparray.Count > 0 ? temparray.ToArray() : null;
+            ((IFPIO.Bitmask)this.buttGoTo.Tag).options = temparray.Count > 0 ? (IFPIO.Option[])temparray.ToArray() : null;
             this.BitmaskLoadBitNames();
         }
 
@@ -874,10 +876,10 @@ namespace MetaEditor.Forms
                 return;
             }
 
-            object tempItem1 =
+            IFPIO.Option tempItem1 =
                 ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
                     ((int[])this.combBitmaskBits.Tag)[this.combBitmaskBits.SelectedIndex]];
-            object tempItem2 =
+            IFPIO.Option tempItem2 =
                 ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
                     ((int[])this.combBitmaskBits.Tag)[this.combBitmaskBits.SelectedIndex + 1]];
             ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
@@ -900,10 +902,10 @@ namespace MetaEditor.Forms
                 return;
             }
 
-            object tempItem1 =
+            IFPIO.Option tempItem1 =
                 ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
                     ((int[])this.combBitmaskBits.Tag)[this.combBitmaskBits.SelectedIndex]];
-            object tempItem2 =
+            IFPIO.Option tempItem2 =
                 ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
                     ((int[])this.combBitmaskBits.Tag)[this.combBitmaskBits.SelectedIndex - 1]];
             ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
@@ -926,13 +928,11 @@ namespace MetaEditor.Forms
                 return;
             }
 
-            ((IFPIO.Option)
-             ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
-                 ((int[])this.combBitmaskBits.Tag)[this.combBitmaskBits.SelectedIndex]]).value =
+            ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
+                 ((int[])this.combBitmaskBits.Tag)[this.combBitmaskBits.SelectedIndex]].value =
                 Convert.ToInt32(this.txtbBitmaskBitNumber.Text);
-            ((IFPIO.Option)
-             ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
-                 ((int[])this.combBitmaskBits.Tag)[this.combBitmaskBits.SelectedIndex]]).name =
+            ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
+                 ((int[])this.combBitmaskBits.Tag)[this.combBitmaskBits.SelectedIndex]].name =
                 this.txtbBitmaskName.Text;
             this.BitmaskLoadBitNames();
         }
@@ -951,8 +951,8 @@ namespace MetaEditor.Forms
                 temparray.AddRange(((IFPIO.IFPEnum)this.buttGoTo.Tag).options);
             }
 
-            temparray.Add(new IFPIO.Option(this.txtbEnumsName.Text, this.txtbEnumsValue.Text, -1));
-            ((IFPIO.IFPEnum)this.buttGoTo.Tag).options = temparray.ToArray();
+            temparray.Add(new IFPIO.Option(this.txtbEnumsName.Text, "", this.txtbEnumsValue.Text, -1));
+            ((IFPIO.IFPEnum)this.buttGoTo.Tag).options = (IFPIO.Option[])temparray.ToArray();
             this.EnumLoadItemNames();
         }
 
@@ -972,7 +972,7 @@ namespace MetaEditor.Forms
             List<object> temparray = new List<object>(0);
             temparray.AddRange(((IFPIO.IFPEnum)this.buttGoTo.Tag).options);
             temparray.RemoveAt(((int[])this.combEnumsItems.Tag)[this.combEnumsItems.SelectedIndex]);
-            ((IFPIO.IFPEnum)this.buttGoTo.Tag).options = temparray.Count > 0 ? temparray.ToArray() : null;
+            ((IFPIO.IFPEnum)this.buttGoTo.Tag).options = temparray.Count > 0 ? (IFPIO.Option[])temparray.ToArray() : null;
             this.EnumLoadItemNames();
         }
 
@@ -990,10 +990,10 @@ namespace MetaEditor.Forms
                 return;
             }
 
-            object tempItem1 =
+            IFPIO.Option tempItem1 =
                 ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
                     ((int[])this.combEnumsItems.Tag)[this.combEnumsItems.SelectedIndex]];
-            object tempItem2 =
+            IFPIO.Option tempItem2 =
                 ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
                     ((int[])this.combEnumsItems.Tag)[this.combEnumsItems.SelectedIndex + 1]];
             ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
@@ -1016,10 +1016,10 @@ namespace MetaEditor.Forms
                 return;
             }
 
-            object tempItem1 =
+            IFPIO.Option tempItem1 =
                 ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
                     ((int[])this.combEnumsItems.Tag)[this.combEnumsItems.SelectedIndex]];
-            object tempItem2 =
+            IFPIO.Option tempItem2 =
                 ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
                     ((int[])this.combEnumsItems.Tag)[this.combEnumsItems.SelectedIndex - 1]];
             ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
@@ -1042,13 +1042,12 @@ namespace MetaEditor.Forms
                 return;
             }
 
-            ((IFPIO.Option)
-             ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
-                 ((int[])this.combEnumsItems.Tag)[this.combEnumsItems.SelectedIndex]]).value =
+            ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
+                ((int[])this.combEnumsItems.Tag)[this.combEnumsItems.SelectedIndex]].value =
                 Convert.ToInt32(this.txtbEnumsValue.Text);
-            ((IFPIO.Option)
-             ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
-                 ((int[])this.combEnumsItems.Tag)[this.combEnumsItems.SelectedIndex]]).name = this.txtbEnumsName.Text;
+            ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
+                ((int[])this.combEnumsItems.Tag)[this.combEnumsItems.SelectedIndex]].name = 
+                this.txtbEnumsName.Text;
             this.EnumLoadItemNames();
         }
 
@@ -1309,13 +1308,11 @@ namespace MetaEditor.Forms
             if (this.combBitmaskBits.SelectedIndex > 0)
             {
                 this.txtbBitmaskName.Text =
-                    ((IFPIO.Option)
-                     ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
-                         ((int[])this.combBitmaskBits.Tag)[this.combBitmaskBits.SelectedIndex]]).name;
+                    ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
+                        ((int[])this.combBitmaskBits.Tag)[this.combBitmaskBits.SelectedIndex]].name;
                 this.txtbBitmaskBitNumber.Text =
-                    ((IFPIO.Option)
-                     ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
-                         ((int[])this.combBitmaskBits.Tag)[this.combBitmaskBits.SelectedIndex]]).value.ToString();
+                    ((IFPIO.Bitmask)this.buttGoTo.Tag).options[
+                        ((int[])this.combBitmaskBits.Tag)[this.combBitmaskBits.SelectedIndex]].value.ToString();
             }
             else if (this.combBitmaskBits.SelectedIndex == 0)
             {
@@ -1335,13 +1332,11 @@ namespace MetaEditor.Forms
             if (this.combEnumsItems.SelectedIndex > 0)
             {
                 this.txtbEnumsName.Text =
-                    ((IFPIO.Option)
-                     ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
-                         ((int[])this.combEnumsItems.Tag)[this.combEnumsItems.SelectedIndex]]).name;
+                    ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
+                        ((int[])this.combEnumsItems.Tag)[this.combEnumsItems.SelectedIndex]].name;
                 this.txtbEnumsValue.Text =
-                    ((IFPIO.Option)
-                     ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
-                         ((int[])this.combEnumsItems.Tag)[this.combEnumsItems.SelectedIndex]]).value.ToString();
+                    ((IFPIO.IFPEnum)this.buttGoTo.Tag).options[
+                        ((int[])this.combEnumsItems.Tag)[this.combEnumsItems.SelectedIndex]].value.ToString();
             }
             else if (this.combEnumsItems.SelectedIndex == 0)
             {
@@ -1454,7 +1449,7 @@ namespace MetaEditor.Forms
                 case IFPIO.ObjectEnum.Struct:
                     {
                         this.buttGoTo.Tag = new IFPIO.Reflexive(
-                            lineNumber, offset, visible, name, string.Empty, null, 0, false, parent, prevSibling);
+                            lineNumber, offset, visible, name, string.Empty, string.Empty, null, 0, 0, false, parent, prevSibling);
                         this.radbReflexiveHCTrue.Checked = ((IFPIO.Reflexive)this.buttGoTo.Tag).HasCount;
                         this.radbReflexiveHCFalse.Checked = !((IFPIO.Reflexive)this.buttGoTo.Tag).HasCount;
                         this.txtbReflexiveChunkSize.Text = ((IFPIO.Reflexive)this.buttGoTo.Tag).chunkSize.ToString();
@@ -1505,7 +1500,7 @@ namespace MetaEditor.Forms
                         }
 
                         this.buttGoTo.Tag = new IFPIO.IFPString(
-                            name, visible, offset, ifpSize, unicode, lineNumber, parent, prevSibling);
+                            name, string.Empty, visible, offset, ifpSize, unicode, lineNumber, parent, prevSibling);
                         this.radbStringString.Checked = !((IFPIO.IFPString)this.buttGoTo.Tag).type;
                         this.radbStringUnicode.Checked = ((IFPIO.IFPString)this.buttGoTo.Tag).type;
                         this.combStringSize.Text = ((IFPIO.IFPString)this.buttGoTo.Tag).size.ToString();
@@ -1519,7 +1514,7 @@ namespace MetaEditor.Forms
 
                 case IFPIO.ObjectEnum.Float:
                     {
-                        this.buttGoTo.Tag = new IFPIO.IFPFloat(offset, visible, name, lineNumber, parent, prevSibling);
+                        this.buttGoTo.Tag = new IFPIO.IFPFloat(offset, visible, name, "", lineNumber, parent, prevSibling);
                         break;
                     }
 
@@ -1536,6 +1531,7 @@ namespace MetaEditor.Forms
                             (IFPIO.ObjectEnum)tempIndexer,
                             visible,
                             name,
+                            string.Empty,
                             Index,
                             lineNumber,
                             parent,
@@ -1563,7 +1559,7 @@ namespace MetaEditor.Forms
                 case IFPIO.ObjectEnum.Long_Flags:
                     {
                         this.buttGoTo.Tag = new IFPIO.Bitmask(
-                            offset, visible, name, null, 0, lineNumber, parent, prevSibling);
+                            offset, visible, name, "", null, 0, lineNumber, parent, prevSibling);
                         this.panBitmask.Show();
                         this.BitmaskLoadBitNames();
                         break;
@@ -1578,7 +1574,7 @@ namespace MetaEditor.Forms
                 case IFPIO.ObjectEnum.Long_Enum:
                     {
                         this.buttGoTo.Tag = new IFPIO.IFPEnum(
-                            offset, visible, name, null, 0, lineNumber, parent, prevSibling);
+                            offset, visible, name, "", null, 0, lineNumber, parent, prevSibling);
                         this.panEnums.Show();
 
                         // this.EnumLoadItemNames();

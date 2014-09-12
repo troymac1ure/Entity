@@ -20,7 +20,7 @@ namespace entity.MetaEditor2
     /// <summary>
     /// The color wheel.
     /// </summary>
-    public partial class ColorWheel : UserControl
+    public partial class ColorWheel : BaseField
     {
         #region Constants and Fields
 
@@ -100,7 +100,8 @@ namespace entity.MetaEditor2
         private Map mapindex;
 
         /// <summary>
-        /// The updating colors.
+        /// Set to true when the color wheel is updating the text boxes so that the text boxes
+        /// do not try to update the color wheel
         /// </summary>
         private bool updatingColors;
 
@@ -390,55 +391,35 @@ namespace entity.MetaEditor2
         /// </param>
         private void Control_LostFocus(object sender, EventArgs e)
         {
+            // In case they leave the text box before the timer has expired, call the
+            // timer1_tick to update the color wheel with the new data.
+            if (timer1.Enabled) 
+                timer1_Tick(sender, e);
             hsvColor = ColorHandler.RGBtoHSV(this.color);
             updateBar();
             this.Refresh();
         }
 
         /// <summary>
-        /// The control_ text changed.
+        /// Called when a (ARGB) textbox is changed. Starts a timer, then updates the
+        /// colorwheel after the timer expires (allowing for typing)
         /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="e">
-        /// The e.
-        /// </param>
+        /// <param name="sender">The (ARGB) textbox that sent the request</param>
+        /// <param name="e"></param>
         private void Control_TextChanged(object sender, EventArgs e)
         {
             if (updatingColors)
             {
                 return;
             }
-
-            Control c = (Control)sender;
-            try
+            timer1.Tag = sender;
+            if (((Control)sender).Focused)
             {
-                if ((Color)c.Tag == Color.White)
-                {
-                    this.color.Alpha = Math.Max(0, Math.Min(255, (int)(float.Parse(c.Text) * 255)));
-                }
-
-                if ((Color)c.Tag == Color.Red)
-                {
-                    this.color.Red = Math.Max(0, Math.Min(255, (int)(float.Parse(c.Text) * 255)));
-                }
-
-                if ((Color)c.Tag == Color.Green)
-                {
-                    this.color.Green = Math.Max(0, Math.Min(255, (int)(float.Parse(c.Text) * 255)));
-                }
-
-                if ((Color)c.Tag == Color.Blue)
-                {
-                    this.color.Blue = Math.Max(0, Math.Min(255, (int)(float.Parse(c.Text) * 255)));
-                }
-
-                this.hsvColor = ColorHandler.RGBtoHSV(this.color);
-                updateBar();
+                timer1.Start();
             }
-            catch
+            else
             {
+                timer1_Tick(null, null);
             }
         }
 
@@ -758,6 +739,48 @@ namespace entity.MetaEditor2
                 //GrabColor(sender, new Point(e.X, e.Y));
             }
         }
+
+        /// <summary>
+        /// The timer is used to control the color wheel update from the text boxes.
+        /// If we update instantly, we are unable to type, therefore allow a delay for typing
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            // The tag contains the control that started the timer
+            Control c = (Control)timer1.Tag;
+            try
+            {
+                if ((Color)c.Tag == Color.White)
+                {
+                    this.color.Alpha = Math.Max(0, Math.Min(255, (int)(float.Parse(c.Text) * 255)));
+                }
+
+                if ((Color)c.Tag == Color.Red)
+                {
+                    this.color.Red = Math.Max(0, Math.Min(255, (int)(float.Parse(c.Text) * 255)));
+                }
+
+                if ((Color)c.Tag == Color.Green)
+                {
+                    this.color.Green = Math.Max(0, Math.Min(255, (int)(float.Parse(c.Text) * 255)));
+                }
+
+                if ((Color)c.Tag == Color.Blue)
+                {
+                    this.color.Blue = Math.Max(0, Math.Min(255, (int)(float.Parse(c.Text) * 255)));
+                }
+
+                this.hsvColor = ColorHandler.RGBtoHSV(this.color);
+                updateBar();
+            }
+            catch
+            {
+            }
+            timer1.Stop();
+        }
         #endregion
+
     }
 }

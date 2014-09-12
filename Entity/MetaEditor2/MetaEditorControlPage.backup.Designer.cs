@@ -43,9 +43,6 @@
             this.tmr_MEControlPage = new System.Windows.Forms.Timer(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeViewTagReflexives = new System.Windows.Forms.TreeView();
-            this.cmTreeReflexives = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsExternalReferenceAdd = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsExternalReferencePoint = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panelMetaEditor = new System.Windows.Forms.Panel();
             this.panelInfoPane = new System.Windows.Forms.TextBox();
@@ -53,7 +50,7 @@
             this.tsNavigation = new System.Windows.Forms.ToolStrip();
             this.tsMetaMassEdit = new System.Windows.Forms.ToolStrip();
             this.tsBtnResetValue = new System.Windows.Forms.ToolStripButton();
-            this.tsBtnResetReflexiveChunk = new System.Windows.Forms.ToolStripButton();
+            this.tsBtnResetReflexive = new System.Windows.Forms.ToolStripButton();
             this.tsBtnResetReflexiveAll = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsBtnCopyToAll = new System.Windows.Forms.ToolStripButton();
@@ -63,20 +60,19 @@
             this.tscbApplyTo = new System.Windows.Forms.ToolStripComboBox();
             this.btnTreeViewOpen = new System.Windows.Forms.RadioButton();
             this.cmIdent = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cmMassField = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsMassFieldOpenMassFieldEdit = new System.Windows.Forms.ToolStripMenuItem();
             this.jumpToTagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsIdentOpenMassFieldEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmTreeReflexives = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.tsExternalReferenceAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsExternalReferencePoint = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.cmTreeReflexives.SuspendLayout();
             this.panel1.SuspendLayout();
             this.toolStripPanel1.SuspendLayout();
             this.tsMetaMassEdit.SuspendLayout();
             this.tsDebugCommands.SuspendLayout();
             this.cmIdent.SuspendLayout();
-            this.cmMassField.SuspendLayout();
+            this.cmTreeReflexives.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnReset
@@ -106,7 +102,7 @@
             this.cbHideUnused.AutoSize = true;
             this.cbHideUnused.Checked = true;
             this.cbHideUnused.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbHideUnused.Location = new System.Drawing.Point(17, 65);
+            this.cbHideUnused.Location = new System.Drawing.Point(9, 35);
             this.cbHideUnused.Name = "cbHideUnused";
             this.cbHideUnused.Size = new System.Drawing.Size(140, 17);
             this.cbHideUnused.TabIndex = 0;
@@ -117,7 +113,7 @@
             // 
             // btnSaveValues
             // 
-            this.btnSaveValues.Location = new System.Drawing.Point(3, 35);
+            this.btnSaveValues.Location = new System.Drawing.Point(3, 74);
             this.btnSaveValues.Name = "btnSaveValues";
             this.btnSaveValues.Size = new System.Drawing.Size(80, 23);
             this.btnSaveValues.TabIndex = 3;
@@ -129,7 +125,7 @@
             // btnRestoreValues
             // 
             this.btnRestoreValues.Enabled = false;
-            this.btnRestoreValues.Location = new System.Drawing.Point(89, 35);
+            this.btnRestoreValues.Location = new System.Drawing.Point(89, 74);
             this.btnRestoreValues.Name = "btnRestoreValues";
             this.btnRestoreValues.Size = new System.Drawing.Size(80, 23);
             this.btnRestoreValues.TabIndex = 4;
@@ -143,7 +139,7 @@
             this.cbSortByName.AutoSize = true;
             this.cbSortByName.Checked = true;
             this.cbSortByName.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbSortByName.Location = new System.Drawing.Point(17, 81);
+            this.cbSortByName.Location = new System.Drawing.Point(9, 51);
             this.cbSortByName.Name = "cbSortByName";
             this.cbSortByName.Size = new System.Drawing.Size(91, 17);
             this.cbSortByName.TabIndex = 5;
@@ -186,7 +182,7 @@
             this.treeViewTagReflexives.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeViewTagReflexives.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
             this.treeViewTagReflexives.HideSelection = false;
-            this.treeViewTagReflexives.Location = new System.Drawing.Point(0, 104);
+            this.treeViewTagReflexives.Location = new System.Drawing.Point(0, 0);
             this.treeViewTagReflexives.Name = "treeViewTagReflexives";
             this.treeViewTagReflexives.ShowNodeToolTips = true;
             this.treeViewTagReflexives.Size = new System.Drawing.Size(193, 268);
@@ -198,28 +194,6 @@
             this.treeViewTagReflexives.MouseLeave += new System.EventHandler(this.treeViewTagReflexives_MouseLeave);
             this.treeViewTagReflexives.Click += new System.EventHandler(this.treeViewTagReflexives_Click);
             // 
-            // cmTreeReflexives
-            // 
-            this.cmTreeReflexives.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsExternalReferenceAdd,
-            this.tsExternalReferencePoint});
-            this.cmTreeReflexives.Name = "cmTreeReflexives";
-            this.cmTreeReflexives.Size = new System.Drawing.Size(265, 48);
-            // 
-            // tsExternalReferenceAdd
-            // 
-            this.tsExternalReferenceAdd.Name = "tsExternalReferenceAdd";
-            this.tsExternalReferenceAdd.Size = new System.Drawing.Size(264, 22);
-            this.tsExternalReferenceAdd.Text = "Add to external references list";
-            this.tsExternalReferenceAdd.Click += new System.EventHandler(this.tsExternalReferenceAdd_Click);
-            // 
-            // tsExternalReferencePoint
-            // 
-            this.tsExternalReferencePoint.Name = "tsExternalReferencePoint";
-            this.tsExternalReferencePoint.Size = new System.Drawing.Size(264, 22);
-            this.tsExternalReferencePoint.Text = "Reference external reflexive from list";
-            this.tsExternalReferencePoint.Click += new System.EventHandler(this.tsExternalReferencePoint_Click);
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.cbSortByName);
@@ -228,8 +202,8 @@
             this.panel1.Controls.Add(this.btnReset);
             this.panel1.Controls.Add(this.btnSave);
             this.panel1.Controls.Add(this.cbHideUnused);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 268);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(193, 104);
             this.panel1.TabIndex = 1;
@@ -285,13 +259,13 @@
             this.tsMetaMassEdit.Dock = System.Windows.Forms.DockStyle.None;
             this.tsMetaMassEdit.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsBtnResetValue,
-            this.tsBtnResetReflexiveChunk,
+            this.tsBtnResetReflexive,
             this.tsBtnResetReflexiveAll,
             this.toolStripSeparator1,
             this.tsBtnCopyToAll});
             this.tsMetaMassEdit.Location = new System.Drawing.Point(3, 25);
             this.tsMetaMassEdit.Name = "tsMetaMassEdit";
-            this.tsMetaMassEdit.Size = new System.Drawing.Size(355, 25);
+            this.tsMetaMassEdit.Size = new System.Drawing.Size(399, 25);
             this.tsMetaMassEdit.TabIndex = 0;
             this.tsMetaMassEdit.Text = "toolStrip1";
             // 
@@ -305,15 +279,15 @@
             this.tsBtnResetValue.Text = "Reset Value";
             this.tsBtnResetValue.Click += new System.EventHandler(this.tsBtnResetValue_Click);
             // 
-            // tsBtnResetReflexiveChunk
+            // tsBtnResetReflexive
             // 
-            this.tsBtnResetReflexiveChunk.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tsBtnResetReflexiveChunk.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnResetReflexiveChunk.Image")));
-            this.tsBtnResetReflexiveChunk.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsBtnResetReflexiveChunk.Name = "tsBtnResetReflexiveChunk";
-            this.tsBtnResetReflexiveChunk.Size = new System.Drawing.Size(72, 22);
-            this.tsBtnResetReflexiveChunk.Text = "Reset Chunk";
-            this.tsBtnResetReflexiveChunk.Click += new System.EventHandler(this.tsBtnResetReflexive_Click);
+            this.tsBtnResetReflexive.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsBtnResetReflexive.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnResetReflexive.Image")));
+            this.tsBtnResetReflexive.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsBtnResetReflexive.Name = "tsBtnResetReflexive";
+            this.tsBtnResetReflexive.Size = new System.Drawing.Size(87, 22);
+            this.tsBtnResetReflexive.Text = "Reset Reflexive";
+            this.tsBtnResetReflexive.Click += new System.EventHandler(this.tsBtnResetReflexive_Click);
             // 
             // tsBtnResetReflexiveAll
             // 
@@ -321,8 +295,8 @@
             this.tsBtnResetReflexiveAll.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnResetReflexiveAll.Image")));
             this.tsBtnResetReflexiveAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnResetReflexiveAll.Name = "tsBtnResetReflexiveAll";
-            this.tsBtnResetReflexiveAll.Size = new System.Drawing.Size(99, 22);
-            this.tsBtnResetReflexiveAll.Text = "Reset Chunks (All)";
+            this.tsBtnResetReflexiveAll.Size = new System.Drawing.Size(114, 22);
+            this.tsBtnResetReflexiveAll.Text = "Reset Reflevixes (All)";
             this.tsBtnResetReflexiveAll.Click += new System.EventHandler(this.tsBtnResetReflexiveAll_Click);
             // 
             // toolStripSeparator1
@@ -336,9 +310,9 @@
             this.tsBtnCopyToAll.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnCopyToAll.Image")));
             this.tsBtnCopyToAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnCopyToAll.Name = "tsBtnCopyToAll";
-            this.tsBtnCopyToAll.Size = new System.Drawing.Size(98, 22);
-            this.tsBtnCopyToAll.Text = "Copy to all chunks";
-            this.tsBtnCopyToAll.ToolTipText = "Copies the current selected value to all reflexive chunks";
+            this.tsBtnCopyToAll.Size = new System.Drawing.Size(112, 22);
+            this.tsBtnCopyToAll.Text = "Copy to all reflexives";
+            this.tsBtnCopyToAll.ToolTipText = "Copies the current selected value to all reflexives";
             this.tsBtnCopyToAll.Click += new System.EventHandler(this.tsBtnCopyToAll_Click);
             // 
             // tsDebugCommands
@@ -412,38 +386,38 @@
             // cmIdent
             // 
             this.cmIdent.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.jumpToTagToolStripMenuItem,
-            this.tsIdentOpenMassFieldEdit});
+            this.jumpToTagToolStripMenuItem});
             this.cmIdent.Name = "cmIdent";
-            this.cmIdent.Size = new System.Drawing.Size(195, 70);
-            // 
-            // cmMassField
-            // 
-            this.cmMassField.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsMassFieldOpenMassFieldEdit});
-            this.cmMassField.Name = "cmMassField";
-            this.cmMassField.Size = new System.Drawing.Size(195, 26);
-            // 
-            // tsOpenMassFieldEdit
-            // 
-            this.tsMassFieldOpenMassFieldEdit.Name = "tsMassFieldOpenMassFieldEdit";
-            this.tsMassFieldOpenMassFieldEdit.Size = new System.Drawing.Size(194, 22);
-            this.tsMassFieldOpenMassFieldEdit.Text = "Open Mass Field Editor";
-            this.tsMassFieldOpenMassFieldEdit.Click += new System.EventHandler(this.tsOpenMassFieldEdit_Click);
+            this.cmIdent.Size = new System.Drawing.Size(147, 26);
             // 
             // jumpToTagToolStripMenuItem
             // 
             this.jumpToTagToolStripMenuItem.Name = "jumpToTagToolStripMenuItem";
-            this.jumpToTagToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.jumpToTagToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.jumpToTagToolStripMenuItem.Text = "Jump To Tag";
-            this.jumpToTagToolStripMenuItem.Click += new System.EventHandler(jumpToTagToolStripMenuItem_Click);
+            this.jumpToTagToolStripMenuItem.Click += new System.EventHandler(this.jumpToTagToolStripMenuItem_Click);
             // 
-            // toolStripMenuItem1
+            // cmTreeReflexives
             // 
-            this.tsIdentOpenMassFieldEdit.Name = "tsIdentOpenMassFieldEdit";
-            this.tsIdentOpenMassFieldEdit.Size = new System.Drawing.Size(194, 22);
-            this.tsIdentOpenMassFieldEdit.Text = "Open Mass Field Editor";
-            this.tsIdentOpenMassFieldEdit.Click += new System.EventHandler(this.tsOpenMassFieldEdit_Click);
+            this.cmTreeReflexives.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsExternalReferenceAdd,
+            this.tsExternalReferencePoint});
+            this.cmTreeReflexives.Name = "cmTreeReflexives";
+            this.cmTreeReflexives.Size = new System.Drawing.Size(224, 48);
+            // 
+            // tsExternalReferenceAdd
+            // 
+            this.tsExternalReferenceAdd.Name = "tsExternalReferenceAdd";
+            this.tsExternalReferenceAdd.Size = new System.Drawing.Size(223, 22);
+            this.tsExternalReferenceAdd.Text = "Add to external references list";
+            this.tsExternalReferenceAdd.Click += new System.EventHandler(this.tsExternalReferenceAdd_Click);
+            // 
+            // tsExternalReferencePoint
+            // 
+            this.tsExternalReferencePoint.Name = "tsExternalReferencePoint";
+            this.tsExternalReferencePoint.Size = new System.Drawing.Size(223, 22);
+            this.tsExternalReferencePoint.Text = "Reference external reflexive from list";
+            this.tsExternalReferencePoint.Click += new System.EventHandler(this.tsExternalReferencePoint_Click);
             // 
             // MetaEditorControlPage
             // 
@@ -459,7 +433,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             this.splitContainer1.ResumeLayout(false);
-            this.cmTreeReflexives.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.toolStripPanel1.ResumeLayout(false);
@@ -469,7 +442,7 @@
             this.tsDebugCommands.ResumeLayout(false);
             this.tsDebugCommands.PerformLayout();
             this.cmIdent.ResumeLayout(false);
-            this.cmMassField.ResumeLayout(false);
+            this.cmTreeReflexives.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -489,11 +462,12 @@
         #endregion
         private System.Windows.Forms.ToolStrip tsMetaMassEdit;
         private System.Windows.Forms.ToolStripButton tsBtnResetValue;
-        private System.Windows.Forms.ToolStripButton tsBtnResetReflexiveChunk;
+        private System.Windows.Forms.ToolStripButton tsBtnResetReflexive;
         private System.Windows.Forms.ToolStripButton tsBtnResetReflexiveAll;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton tsBtnCopyToAll;
         private System.Windows.Forms.ContextMenuStrip cmIdent;
+        private System.Windows.Forms.ToolStripMenuItem jumpToTagToolStripMenuItem;
         private System.Windows.Forms.ToolStripPanel toolStripPanel1;
         private System.Windows.Forms.ToolStrip tsDebugCommands;
         private System.Windows.Forms.ToolStripButton tsbtnPeek;
@@ -505,10 +479,6 @@
         private System.Windows.Forms.ContextMenuStrip cmTreeReflexives;
         private System.Windows.Forms.ToolStripMenuItem tsExternalReferenceAdd;
         private System.Windows.Forms.ToolStripMenuItem tsExternalReferencePoint;
-        private System.Windows.Forms.ContextMenuStrip cmMassField;
-        private System.Windows.Forms.ToolStripMenuItem tsMassFieldOpenMassFieldEdit;
-        private System.Windows.Forms.ToolStripMenuItem jumpToTagToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tsIdentOpenMassFieldEdit;
 
     }
 }
