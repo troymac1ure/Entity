@@ -42,10 +42,10 @@ local.properties
 *.sln.docstates
 
 # Build results
-[Bb]in/
-[Oo]bj/
-[Dd]ebug/
-[Rr]elease/
+**/[Bb]in/
+**/[Oo]bj/
+**/[Dd]ebug/
+**/[Rr]elease/
 *_i.c
 *_p.c
 *.ilk
@@ -99,8 +99,8 @@ DocProject/Help/html
 publish
 
 # Others
-[Bb]in
-[Oo]bj
+**/[Bb]in
+**/[Oo]bj
 sql
 TestResults
 *.Cache
@@ -113,7 +113,7 @@ Generated_Code #added for RIA/Silverlight projects
 # Backup & report files from converting an old project file to a newer
 # Visual Studio version. Backup files are not needed, because we have git ;-)
 _UpgradeReport_Files/
-Backup*/
+**/Backup*/
 UpgradeLog*.XML
 
 
@@ -177,16 +177,16 @@ pip-log.txt
 *.userprefs
 
 # Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-build/
-bld/
-[Bb]in/
-[Oo]bj/
+**/[Dd]ebug/
+**/[Dd]ebugPublic/
+**/[Rr]elease/
+**/[Rr]eleases/
+**/x64/
+**/x86/
+**/build/
+**/bld/
+**/[Bb]in/
+**/[Oo]bj/
 
 # Visual Studo 2015 cache/options directory
 .vs/
