@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaEditor", "MetaEditor\MetaEditor.csproj", "{6423865E-C775-4F86-AC8D-5BE425761567}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HaloMap", "HaloMap\HaloMap.csproj", "{32FC9CF1-7BD8-4541-81A3-4C6B9B94AFF4}"
