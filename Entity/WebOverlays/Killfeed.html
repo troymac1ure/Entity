@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="websocket_client.js"></script>
+        <script src="config.js"></script>
+        <script src="app-kill-feed.js"></script>
+        <style>
+            @font-face {
+                font-family: 'HighwayGothic';
+                src: url('HighwayGothic.ttf') format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            body {
+                font-family: 'HighwayGothic', 'Arial Narrow', Arial, sans-serif;
+                font-size: 18px;
+                margin: 0;
+                padding: 10px;
+                background-color: transparent;
+                color: white;
+            }
+
+            /* Green chromakey mode - add ?chromakey to URL */
+            body.chromakey {
+                background-color: #00FF00;
+            }
+
+            #kill-feed-container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 4px;
+                position: fixed;
+                top: 10px;
+                right: 10px;
+            }
+
+            .feed-entry {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 4px 8px;
+                animation: slideIn 0.3s ease-out;
+                white-space: nowrap;
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            .player-name {
+                font-weight: bold;
+                text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;
+            }
+
+            .weapon-icon {
+                height: 20px;
+                filter: drop-shadow(1px 1px 1px black);
+            }
+
+            .action-text {
+                color: #CCCCCC;
+                text-shadow: 1px 1px 0 black;
+            }
+
+            .team-name {
+                font-weight: bold;
+                text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;
+            }
+
+            /* Game selector styles */
+            #game-selector {
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                background: rgba(0, 0, 0, 0.8);
+                padding: 8px 12px;
+                border-radius: 4px;
+                z-index: 1000;
+            }
+
+            #game-selector label {
+                margin-right: 8px;
+                font-size: 14px;
+            }
+
+            #game-selector select {
+                background: #333;
+                color: white;
+                border: 1px solid #555;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 14px;
+            }
+
+            /* Hide selector in chromakey mode */
+            body.chromakey #game-selector {
+                display: none;
+            }
+
+            /* Instructions panel (hidden in chromakey mode) */
+            #instructions {
+                position: fixed;
+                bottom: 10px;
+                left: 10px;
+                background: rgba(0, 0, 0, 0.85);
+                padding: 12px 16px;
+                border-radius: 6px;
+                font-size: 12px;
+                max-width: 320px;
+                line-height: 1.5;
+            }
+
+            #instructions h3 {
+                margin: 0 0 8px 0;
+                font-size: 14px;
+                color: #FF4444;
+            }
+
+            #instructions code {
+                background: #333;
+                padding: 2px 6px;
+                border-radius: 3px;
+                font-family: monospace;
+            }
+
+            #instructions ul {
+                margin: 8px 0;
+                padding-left: 18px;
+            }
+
+            #instructions li {
+                margin: 4px 0;
+            }
+
+            body.chromakey #instructions {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Game Selector (hidden in chromakey mode) -->
+        <div id="game-selector">
+            <label>Game:</label>
+            <select id="game-select">
+                <option value="">Loading...</option>
+            </select>
+        </div>
+
+        <!-- Instructions (hidden in chromakey mode) -->
+        <div id="instructions">
+            <h3>OBS Kill Feed Setup</h3>
+            <p>Use the dropdown to find your game by player names.</p>
+            <p><b>For OBS Browser Source:</b></p>
+            <ul>
+                <li>Single game: <code>?chromakey</code></li>
+                <li>Specific slot: <code>?game=2&chromakey</code></li>
+            </ul>
+            <p><b>Examples:</b></p>
+            <ul>
+                <li><code>Killfeed.html?chromakey</code></li>
+                <li><code>Killfeed.html?game=2&chromakey</code></li>
+            </ul>
+        </div>
+
+        <div id="kill-feed-container"></div>
+        <script>
+            // Check for chromakey mode via URL parameter
+            if (new URLSearchParams(window.location.search).has('chromakey')) {
+                document.body.classList.add('chromakey');
+            }
+        </script>
+    </body>
+</html>

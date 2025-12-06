@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="websocket_client.js"></script>
+        <script src="config.js"></script>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700&display=swap');
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Overpass', 'Highway Gothic', 'Arial', sans-serif;
+                background-color: transparent;
+                color: white;
+            }
+
+            /* Green chromakey mode - add ?chromakey to URL */
+            body.chromakey {
+                background-color: #00FF00;
+            }
+
+            #scoreboard-container {
+                width: 340px;
+            }
+
+            .team-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 4px 10px;
+                font-size: 18px;
+                font-weight: 600;
+                text-shadow: 1px 1px 0px black, -1px -1px 0px black, 1px -1px 0px black, -1px 1px 0px black;
+            }
+
+            .team-header.red {
+                background-color: #C54245;
+            }
+
+            .team-header.blue {
+                background-color: #4169A8;
+            }
+
+            .team-name {
+                /* No text-transform - use proper case */
+            }
+
+            .team-score {
+                font-weight: bold;
+            }
+
+            .team-gap {
+                height: 6px;
+            }
+
+            .players-section {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .player-row {
+                display: flex;
+                align-items: center;
+                padding: 2px 6px;
+                font-size: 14px;
+                text-shadow: 1px 1px 0px black, -1px -1px 0px black, 1px -1px 0px black, -1px 1px 0px black;
+            }
+
+            .player-row.red {
+                background-color: #C54245;
+            }
+
+            .player-row.blue {
+                background-color: #4169A8;
+            }
+
+            .player-emblem {
+                width: 22px;
+                height: 22px;
+                margin-right: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .player-emblem img {
+                max-width: 22px;
+                max-height: 22px;
+            }
+
+            .player-emblem canvas {
+                width: 22px;
+                height: 22px;
+            }
+
+            .dead-x {
+                color: #FF0000;
+                font-size: 18px;
+                font-weight: bold;
+                line-height: 1;
+                width: 22px;
+                height: 22px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .player-name {
+                flex: 1;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .player-weapon {
+                width: 22px;
+                height: 16px;
+                margin-left: 4px;
+                margin-right: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .player-weapon img {
+                max-width: 22px;
+                max-height: 16px;
+                filter: brightness(0) invert(1);
+            }
+
+            .player-stats {
+                display: flex;
+                gap: 2px;
+                font-size: 13px;
+            }
+
+            .stat-label {
+                opacity: 0.7;
+            }
+
+            .stat-value {
+                min-width: 12px;
+                text-align: right;
+            }
+
+            .objective-icon {
+                width: 16px;
+                height: 16px;
+                margin-right: 2px;
+                filter: brightness(0) invert(1);
+                vertical-align: middle;
+            }
+
+            .objective-stat {
+                display: flex;
+                align-items: center;
+                margin-right: 4px;
+            }
+
+            #connection-status {
+                display: none;
+            }
+
+            /* Game selector styles */
+            #game-selector {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: rgba(0, 0, 0, 0.8);
+                padding: 8px 12px;
+                border-radius: 4px;
+                z-index: 1000;
+            }
+
+            #game-selector label {
+                margin-right: 8px;
+                font-size: 14px;
+            }
+
+            #game-selector select {
+                background: #333;
+                color: white;
+                border: 1px solid #555;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 14px;
+            }
+
+            /* Hide selector in chromakey mode */
+            body.chromakey #game-selector {
+                display: none;
+            }
+
+            /* Instructions panel (hidden in chromakey mode) */
+            #instructions {
+                position: fixed;
+                bottom: 10px;
+                left: 10px;
+                background: rgba(0, 0, 0, 0.85);
+                padding: 12px 16px;
+                border-radius: 6px;
+                font-size: 12px;
+                max-width: 320px;
+                line-height: 1.5;
+            }
+
+            #instructions h3 {
+                margin: 0 0 8px 0;
+                font-size: 14px;
+                color: #4488FF;
+            }
+
+            #instructions code {
+                background: #333;
+                padding: 2px 6px;
+                border-radius: 3px;
+                font-family: monospace;
+            }
+
+            #instructions ul {
+                margin: 8px 0;
+                padding-left: 18px;
+            }
+
+            #instructions li {
+                margin: 4px 0;
+            }
+
+            body.chromakey #instructions {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Game Selector (hidden in chromakey mode) -->
+        <div id="game-selector">
+            <label>Game:</label>
+            <select id="game-select">
+                <option value="">Loading...</option>
+            </select>
+        </div>
+
+        <!-- Instructions (hidden in chromakey mode) -->
+        <div id="instructions">
+            <h3>OBS Overlay Setup</h3>
+            <p>Use the dropdown above to find your game by player names.</p>
+            <p><b>For OBS Browser Source:</b></p>
+            <ul>
+                <li>Single game: <code>?chromakey</code></li>
+                <li>Specific slot: <code>?game=2&chromakey</code></li>
+            </ul>
+            <p><b>Examples:</b></p>
+            <ul>
+                <li><code>Scoreboard.html?chromakey</code></li>
+                <li><code>Scoreboard.html?game=2&chromakey</code></li>
+                <li><code>Killfeed.html?chromakey</code></li>
+            </ul>
+        </div>
+
+        <div id="scoreboard-container">
+            <!-- Red Team Header (hidden until data exists) -->
+            <div class="team-header red" id="red-team-header" style="display:none;">
+                <span class="team-name" id="red-team-name">Red Team</span>
+                <span class="team-score" id="red-team-score">0</span>
+            </div>
+            <!-- Blue Team Header (hidden until data exists) -->
+            <div class="team-header blue" id="blue-team-header" style="display:none;">
+                <span class="team-name" id="blue-team-name">Blue Team</span>
+                <span class="team-score" id="blue-team-score">0</span>
+            </div>
+            <!-- Gap between headers and players (hidden until data exists) -->
+            <div class="team-gap" id="team-gap" style="display:none;"></div>
+            <!-- Players Section -->
+            <div id="players-section" class="players-section">
+                <!-- Dynamic player rows -->
+            </div>
+        </div>
+        <div id="connection-status">Connecting...</div>
+
+        <script>
+            // Check for chromakey mode via URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('chromakey')) {
+                document.body.classList.add('chromakey');
+            }
+
+            let client = new websocket_client();
+            let updateInterval;
+            let redTeamData = null;
+            let blueTeamData = null;
+            let currentGame = urlParams.get('game') || '1';
+            // Track player states to avoid unnecessary DOM updates
+            let playerRowCache = new Map();
+
+            // Detect if running as local file (file:// protocol)
+            const isLocalFile = window.location.protocol === 'file:';
+
+            // Populate game selector from VPS API
+            let gameSelectorInitialized = false;
+            async function populateGameSelector() {
+                const gameSelect = document.getElementById('game-select');
+                const previousValue = gameSelect.value;
+
+                // Skip API calls when running as local file
+                if (isLocalFile) {
+                    if (!gameSelectorInitialized) {
+                        gameSelect.innerHTML = '<option value="1">Local Mode</option>';
+                        gameSelectorInitialized = true;
+                        gameSelect.addEventListener('change', (e) => {
+                            currentGame = e.target.value;
+                            switchGame();
+                        });
+                    }
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/halocaster');
+                    if (response.ok) {
+                        const games = await response.json();
+                        gameSelect.innerHTML = '';
+
+                        const slots = Object.keys(games).sort();
+                        if (slots.length === 0) {
+                            gameSelect.innerHTML = '<option value="">No games available</option>';
+                            return;
+                        }
+
+                        slots.forEach(slot => {
+                            const game = games[slot];
+                            const option = document.createElement('option');
+                            option.value = slot;
+                            // Show game info: map, players, or just host
+                            const label = game.label || game.map || `${game.host}`;
+                            option.textContent = label;
+                            gameSelect.appendChild(option);
+                        });
+
+                        // Keep current selection or pick first
+                        if (games[previousValue]) {
+                            gameSelect.value = previousValue;
+                        } else if (games[currentGame]) {
+                            gameSelect.value = currentGame;
+                        } else if (slots.length > 0) {
+                            currentGame = slots[0];
+                            gameSelect.value = currentGame;
+                        }
+                    }
+                } catch (e) {
+                    console.log('Could not fetch games list');
+                    if (!gameSelectorInitialized) {
+                        gameSelect.innerHTML = '<option value="1">Default</option>';
+                    }
+                }
+
+                // Only add listener once
+                if (!gameSelectorInitialized) {
+                    gameSelectorInitialized = true;
+                    gameSelect.addEventListener('change', (e) => {
+                        currentGame = e.target.value;
+                        switchGame();
+                    });
+                }
+            }
+
+            // Set initial game selector value
+            document.addEventListener('DOMContentLoaded', () => {
+                populateGameSelector();
+                // Refresh game list every 30 seconds
+                setInterval(populateGameSelector, 30000);
+            });
+
+            // Fetch HaloCaster connection info from VPS API for specific game
+            async function getHaloCasterHost(gameSlot) {
+                // Allow URL param override for local testing
+                const urlHost = urlParams.get('host');
+                const urlPort = urlParams.get('port');
+                if (urlHost) {
+                    return { host: urlHost, port: urlPort || '3333' };
+                }
+
+                // Skip API calls when running as local file - use config.js directly
+                if (isLocalFile) {
+                    return { host: window.config.host, port: window.config.port };
+                }
+
+                try {
+                    const response = await fetch(`/api/halocaster/${gameSlot}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.host) {
+                            return { host: data.host, port: data.port || '3333' };
+                        }
+                    }
+                } catch (e) {
+                    console.log('Could not fetch from VPS API, falling back to config.js');
+                }
+
+                // Fall back to config.js for local use
+                return { host: window.config.host, port: window.config.port };
+            }
+
+            // Switch to a different game
+            async function switchGame() {
+                // Disconnect current
+                if (updateInterval) clearInterval(updateInterval);
+                client.disconnect();
+
+                // Don't clear scoreboard - keep previous game data until new game populates
+                // Just reset the data references so new data will come in
+                redTeamData = null;
+                blueTeamData = null;
+
+                // Create new client and reconnect
+                client = new websocket_client();
+                await init();
+            }
+
+            async function init() {
+                const { host: wsHost, port: wsPort } = await getHaloCasterHost(currentGame);
+                const wsUrl = `ws://${wsHost}:${wsPort}`;
+
+                try {
+                    await client.connect(wsUrl);
+                    document.getElementById('connection-status').textContent = 'Connected';
+
+                    client.add_message_recieved_callback('get_team_scoreboard', handleTeamScoreboard);
+                    client.add_message_recieved_callback('close', handleDisconnect);
+
+                    // Request both teams
+                    requestBothTeams();
+
+                    // Poll every 500ms for responsive time-based scores
+                    updateInterval = setInterval(() => {
+                        requestBothTeams();
+                    }, 500);
+
+                } catch (error) {
+                    document.getElementById('connection-status').textContent = 'Connection failed';
+                    console.error('Failed to connect:', error);
+                    setTimeout(init, 3000);
+                }
+            }
+
+            function requestBothTeams() {
+                client.request_team_scoreboard(0); // Red
+                client.request_team_scoreboard(1); // Blue
+            }
+
+            function handleDisconnect() {
+                document.getElementById('connection-status').textContent = 'Disconnected - Reconnecting...';
+                if (updateInterval) clearInterval(updateInterval);
+                setTimeout(init, 3000);
+            }
+
+            function handleTeamScoreboard(response) {
+                console.log('Received team scoreboard:', response);
+                const teamIndex = parseInt(response.team_index);
+
+                if (teamIndex === 0) {
+                    redTeamData = response;
+                } else if (teamIndex === 1) {
+                    blueTeamData = response;
+                }
+
+                renderScoreboard();
+            }
+
+            // Check if game type uses time-based scoring
+            function isTimeBasedGameType(gameType) {
+                if (!gameType) return false;
+                const gt = gameType.toLowerCase();
+                return gt.includes('oddball') || gt.includes('ball') ||
+                       gt.includes('king') || gt.includes('koth') ||
+                       gt.includes('juggernaut');
+            }
+
+            function renderScoreboard() {
+                // Determine if scores should be displayed as time
+                const gameType = redTeamData?.game_type || blueTeamData?.game_type;
+                const useTimeFormat = isTimeBasedGameType(gameType);
+
+                // Filter out Unknown/empty players
+                const validRedPlayers = redTeamData?.players?.filter(p =>
+                    p.name && p.name !== 'Unknown' && p.name.trim() !== ''
+                ) || [];
+                const validBluePlayers = blueTeamData?.players?.filter(p =>
+                    p.name && p.name !== 'Unknown' && p.name.trim() !== ''
+                ) || [];
+
+                console.log('Red players (raw):', redTeamData?.players);
+                console.log('Blue players (raw):', blueTeamData?.players);
+                console.log('Valid red:', validRedPlayers.length, 'Valid blue:', validBluePlayers.length);
+
+                // Check if teams have valid players
+                const hasRedPlayers = validRedPlayers.length > 0;
+                const hasBluePlayers = validBluePlayers.length > 0;
+
+                // Get elements
+                const redHeader = document.getElementById('red-team-header');
+                const blueHeader = document.getElementById('blue-team-header');
+                const teamGap = document.getElementById('team-gap');
+                const playersSection = document.getElementById('players-section');
+
+                // If no valid players at all, hide everything
+                if (!hasRedPlayers && !hasBluePlayers) {
+                    redHeader.style.display = 'none';
+                    blueHeader.style.display = 'none';
+                    teamGap.style.display = 'none';
+                    playersSection.innerHTML = '';
+                    playerRowCache.clear();
+                    return;
+                }
+
+                // Show/hide team headers based on whether they have players
+                redHeader.style.display = hasRedPlayers ? 'flex' : 'none';
+                blueHeader.style.display = hasBluePlayers ? 'flex' : 'none';
+                teamGap.style.display = (hasRedPlayers || hasBluePlayers) ? 'block' : 'none';
+
+                // Update team headers
+                if (hasRedPlayers) {
+                    document.getElementById('red-team-name').textContent = redTeamData.team_name || 'Red Team';
+                    const redScore = redTeamData.team_score || 0;
+                    document.getElementById('red-team-score').textContent = useTimeFormat ? formatTime(redScore) : redScore;
+                }
+                if (hasBluePlayers) {
+                    document.getElementById('blue-team-name').textContent = blueTeamData.team_name || 'Blue Team';
+                    const blueScore = blueTeamData.team_score || 0;
+                    document.getElementById('blue-team-score').textContent = useTimeFormat ? formatTime(blueScore) : blueScore;
+                }
+
+                // Collect all current valid players
+                const allPlayers = [];
+                validRedPlayers.forEach((player, idx) => {
+                    allPlayers.push({ player, teamColor: 'red', gameType: redTeamData.game_type, id: `red-${idx}` });
+                });
+                validBluePlayers.forEach((player, idx) => {
+                    allPlayers.push({ player, teamColor: 'blue', gameType: blueTeamData.game_type, id: `blue-${idx}` });
+                });
+
+                // Track which rows we've seen this update
+                const seenIds = new Set();
+
+                allPlayers.forEach(({ player, teamColor, gameType, id }) => {
+                    seenIds.add(id);
+
+                    let rowEl = document.getElementById(`player-row-${id}`);
+                    const cached = playerRowCache.get(id);
+
+                    // Check if we need to rebuild the row (player changed, dead status changed, or emblem changed)
+                    const currentEmblemUrl = getEmblemUrl(player);
+                    const needsRebuild = !rowEl ||
+                        !cached ||
+                        cached.isDead !== player.is_dead ||
+                        cached.emblemUrl !== currentEmblemUrl ||
+                        cached.name !== player.name;
+
+                    if (needsRebuild) {
+                        // Create or replace the row
+                        const newRow = createPlayerRowElement(player, teamColor, gameType, id);
+                        if (rowEl) {
+                            rowEl.replaceWith(newRow);
+                        } else {
+                            playersSection.appendChild(newRow);
+                        }
+                        rowEl = newRow;
+
+                        // Update cache
+                        playerRowCache.set(id, {
+                            isDead: player.is_dead,
+                            emblemUrl: currentEmblemUrl,
+                            name: player.name
+                        });
+                    } else {
+                        // Just update dynamic content (stats, weapon) without touching iframe
+                        updatePlayerRowStats(rowEl, player, gameType);
+                    }
+                });
+
+                // Remove rows for players no longer present
+                const existingRows = playersSection.querySelectorAll('.player-row');
+                existingRows.forEach(row => {
+                    const rowId = row.id.replace('player-row-', '');
+                    if (!seenIds.has(rowId)) {
+                        row.remove();
+                        playerRowCache.delete(rowId);
+                    }
+                });
+            }
+
+            // Map weapon names to icon filenames
+            function getWeaponIconPath(weaponName) {
+                if (!weaponName || weaponName === 'None') return 'Weapons/None.png';
+                const cleanName = weaponName.replace(/\s+/g, '');
+                return `Weapons/${cleanName}.png`;
+            }
+
+            // Format seconds to M:SS
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            // Get objective score based on game type
+            function getObjectiveScore(player, gameType) {
+                if (!gameType) return null;
+                const gt = gameType.toLowerCase();
+
+                if (gt.includes('ctf') || gt.includes('capture')) {
+                    return { value: player.ctf_scores || 0, isTime: false };
+                } else if (gt.includes('assault') || gt.includes('bomb')) {
+                    return { value: player.assault_score || 0, isTime: false };
+                } else if (gt.includes('oddball') || gt.includes('ball')) {
+                    return { value: player.oddball_score || 0, isTime: true };
+                } else if (gt.includes('king') || gt.includes('koth')) {
+                    return { value: player.koth_time || 0, isTime: true };
+                } else if (gt.includes('territories') || gt.includes('territory')) {
+                    return { value: player.territories_taken || 0, isTime: false };
+                } else if (gt.includes('juggernaut')) {
+                    return { value: player.juggernaut_time || 0, isTime: true };
+                }
+                return null;
+            }
+
+            // Construct emblem URL from player data
+            function getEmblemUrl(player) {
+                // If full URL provided, use it
+                if (player.emblem_url) return player.emblem_url;
+
+                // Construct from raw emblem data (check multiple field name formats)
+                // P=primary, S=secondary, EP=emblem primary (tertiary), ES=emblem secondary (quaternary), EF=foreground, EB=background
+                const p = player.PrimaryColor ?? player.primary_color ?? player.color_primary ?? 0;
+                const s = player.SecondaryColor ?? player.secondary_color ?? player.color_secondary ?? 0;
+                const ep = player.TertiaryColor ?? player.tertiary_color ?? player.color_tertiary ?? 0;
+                const es = player.QuaternaryColor ?? player.quaternary_color ?? player.color_quaternary ?? 0;
+                const ef = player.EmblemForeground ?? player.emblem_foreground ?? player.emblem_fg ?? 0;
+                const eb = player.EmblemBackground ?? player.emblem_background ?? player.emblem_bg ?? 0;
+
+                return `${window.config.emblemServiceUrl}/P${p}-S${s}-EP${ep}-ES${es}-EF${ef}-EB${eb}-ET0.png`;
+            }
+
+            function createPlayerRowElement(player, teamColor, gameType, id) {
+                const row = document.createElement('div');
+                row.className = `player-row ${teamColor}`;
+                row.id = `player-row-${id}`;
+
+                // Emblem container
+                const emblemDiv = document.createElement('div');
+                emblemDiv.className = 'player-emblem';
+
+                // Get emblem URL (constructed or provided)
+                const emblemUrl = getEmblemUrl(player);
+                console.log(`Emblem URL for ${player.name}: ${emblemUrl}`);
+
+                if (player.is_dead) {
+                    emblemDiv.innerHTML = '<span class="dead-x">X</span>';
+                } else if (emblemUrl) {
+                    // Use img tag directly for PNG emblems
+                    const img = document.createElement('img');
+                    img.crossOrigin = 'anonymous';
+                    img.style.width = '22px';
+                    img.style.height = '22px';
+                    img.onerror = function() {
+                        console.error(`Failed to load emblem: ${emblemUrl}`);
+                        this.style.display = 'none';
+                        emblemDiv.innerHTML = '<span style="width:22px;height:22px;background:#444;border-radius:2px;display:inline-block;"></span>';
+                    };
+                    img.src = emblemUrl;
+                    emblemDiv.appendChild(img);
+                } else {
+                    emblemDiv.innerHTML = '<span style="width:22px;height:22px;background:#444;border-radius:2px;display:inline-block;"></span>';
+                }
+                row.appendChild(emblemDiv);
+
+                // Weapon
+                const weaponDiv = document.createElement('div');
+                weaponDiv.className = 'player-weapon';
+                const weaponPath = getWeaponIconPath(player.current_weapon);
+                weaponDiv.innerHTML = `<img src="${weaponPath}" alt="${player.current_weapon || 'None'}">`;
+                row.appendChild(weaponDiv);
+
+                // Name
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'player-name';
+                nameSpan.textContent = player.name || 'Unknown';
+                row.appendChild(nameSpan);
+
+                // Stats
+                const statsDiv = document.createElement('div');
+                statsDiv.className = 'player-stats';
+                updateStatsDiv(statsDiv, player, gameType);
+                row.appendChild(statsDiv);
+
+                return row;
+            }
+
+            function updatePlayerRowStats(rowEl, player, gameType) {
+                // Update weapon
+                const weaponDiv = rowEl.querySelector('.player-weapon img');
+                if (weaponDiv) {
+                    const newPath = getWeaponIconPath(player.current_weapon);
+                    if (weaponDiv.src !== newPath) {
+                        weaponDiv.src = newPath;
+                        weaponDiv.alt = player.current_weapon || 'None';
+                    }
+                }
+
+                // Update stats
+                const statsDiv = rowEl.querySelector('.player-stats');
+                if (statsDiv) {
+                    updateStatsDiv(statsDiv, player, gameType);
+                }
+            }
+
+            function updateStatsDiv(statsDiv, player, gameType) {
+                const isSlayer = !gameType || gameType.toLowerCase().includes('slayer');
+                const objective = getObjectiveScore(player, gameType);
+
+                let html = '';
+                if (!isSlayer && objective) {
+                    const displayValue = objective.isTime ? formatTime(objective.value) : objective.value;
+                    html += `<span class="stat-label">Score:</span><span class="stat-value">${displayValue}</span>`;
+                }
+                html += `
+                    <span class="stat-label">K</span>
+                    <span class="stat-value">${player.kills || 0}</span>
+                    <span class="stat-label">D</span>
+                    <span class="stat-value">${player.deaths || 0}</span>
+                    <span class="stat-label">A</span>
+                    <span class="stat-value">${player.assists || 0}</span>
+                `;
+                statsDiv.innerHTML = html;
+            }
+
+            // Start
+            init();
+        </script>
+    </body>
+</html>

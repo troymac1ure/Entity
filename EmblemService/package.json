@@ -1,0 +1,12 @@
+{
+  "name": "h2emblem-service",
+  "version": "1.0.0",
+  "description": "Halo 2 Emblem Generation Service",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "author": "",
+  "license": "MIT"
+}

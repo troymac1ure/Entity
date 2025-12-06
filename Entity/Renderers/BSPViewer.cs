@@ -368,7 +368,7 @@ namespace entity.Renderers
         /// <summary>
         /// Playback speed multiplier.
         /// </summary>
-        private float pathPlaybackSpeed = 0.25f;
+        private float pathPlaybackSpeed = 1.0f;
 
         /// <summary>
         /// Time accumulator for animation.
@@ -383,7 +383,7 @@ namespace entity.Renderers
         /// <summary>
         /// Bookmark timestamp for loop playback.
         /// </summary>
-        private float bookmarkTimestamp = -1;
+        // Replaced by bookmarkStartTimestamp and bookmarkEndTimestamp for A-B loop
 
         /// <summary>
         /// Whether bookmark loop mode is enabled.
@@ -426,7 +426,32 @@ namespace entity.Renderers
         /// <summary>
         /// Whether to show the path trail.
         /// </summary>
-        private bool showPathTrail = true;
+        private bool showPathTrail = false;
+
+        /// <summary>
+        /// Field of view in degrees for theater mode camera.
+        /// </summary>
+        private float theaterFOV = 78f;
+
+        /// <summary>
+        /// Bookmark start timestamp for loop playback (A-B loop start).
+        /// </summary>
+        private float bookmarkStartTimestamp = -1;
+
+        /// <summary>
+        /// Bookmark end timestamp for loop playback (A-B loop end).
+        /// </summary>
+        private float bookmarkEndTimestamp = -1;
+
+        /// <summary>
+        /// Timeline zoom level (1.0 = full timeline visible).
+        /// </summary>
+        private float timelineZoom = 1.0f;
+
+        /// <summary>
+        /// Timeline view offset for panning when zoomed.
+        /// </summary>
+        private float timelineOffset = 0f;
 
         /// <summary>
         /// Parsed biped model for rendering player on path.
@@ -608,6 +633,26 @@ namespace entity.Renderers
         private bool showLiveTelemetry = false;
 
         /// <summary>
+        /// Whether to show the scoreboard overlay.
+        /// </summary>
+        private bool showScoreboard = false;
+
+        /// <summary>
+        /// Whether to show the killfeed overlay.
+        /// </summary>
+        private bool showKillfeed = false;
+
+        /// <summary>
+        /// Font for scoreboard text.
+        /// </summary>
+        private Microsoft.DirectX.Direct3D.Font scoreboardFont;
+
+        /// <summary>
+        /// Font for scoreboard header.
+        /// </summary>
+        private Microsoft.DirectX.Direct3D.Font scoreboardHeaderFont;
+
+        /// <summary>
         /// List of live player names for dropdown population.
         /// </summary>
         private List<string> livePlayerNames = new List<string>();
@@ -658,6 +703,60 @@ namespace entity.Renderers
         /// Set of weapon names currently being loaded.
         /// </summary>
         private HashSet<string> weaponLoadingSet = new HashSet<string>();
+
+        #endregion
+
+        #region Player Selection Wheel Fields
+
+        /// <summary>
+        /// Panel for player selection wheel (Price is Right style spinner).
+        /// </summary>
+        private Panel playerWheelPanel;
+
+        /// <summary>
+        /// Current spin offset for wheel animation (0-1 range per player slot).
+        /// </summary>
+        private float wheelSpinOffset = 0f;
+
+        /// <summary>
+        /// Target offset for spin animation.
+        /// </summary>
+        private float wheelTargetOffset = 0f;
+
+        /// <summary>
+        /// Whether wheel is currently spinning.
+        /// </summary>
+        private bool wheelIsSpinning = false;
+
+        /// <summary>
+        /// Spin velocity for deceleration animation.
+        /// </summary>
+        private float wheelSpinVelocity = 0f;
+
+        /// <summary>
+        /// Timer for wheel spin animation.
+        /// </summary>
+        private System.Windows.Forms.Timer wheelSpinTimer;
+
+        /// <summary>
+        /// Current selected index in player wheel.
+        /// </summary>
+        private int wheelSelectedIndex = 0;
+
+        /// <summary>
+        /// Cache of loaded emblem images for wheel display (GDI+ Bitmap).
+        /// </summary>
+        private Dictionary<string, System.Drawing.Image> wheelEmblemCache = new Dictionary<string, System.Drawing.Image>();
+
+        /// <summary>
+        /// Set of emblem keys currently being loaded for wheel.
+        /// </summary>
+        private HashSet<string> wheelEmblemLoadingSet = new HashSet<string>();
+
+        /// <summary>
+        /// Whether the game is a team game (affects background colors).
+        /// </summary>
+        private bool isTeamGame = true;
 
         #endregion
 
@@ -1007,61 +1106,7 @@ namespace entity.Renderers
             pathPlayerDropdown.DisplayStyle = ToolStripItemDisplayStyle.Text;
             toolStrip.Items.Add(pathPlayerDropdown);
 
-            // Play/Pause button
-            pathPlayPauseButton = new ToolStripButton();
-            pathPlayPauseButton.Text = "▶ Play";
-            pathPlayPauseButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            pathPlayPauseButton.Click += (s, e) => {
-                TogglePathPlayback();
-                pathPlayPauseButton.Text = pathIsPlaying ? "⏸ Pause" : "▶ Play";
-            };
-            toolStrip.Items.Add(pathPlayPauseButton);
-
-            // Reset button
-            ToolStripButton btnReset = new ToolStripButton();
-            btnReset.Text = "⏹ Reset";
-            btnReset.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            btnReset.Click += (s, e) => {
-                ResetPathAnimation();
-                pathPlayPauseButton.Text = "▶ Play";
-            };
-            toolStrip.Items.Add(btnReset);
-
-            // Speed label
-            ToolStripLabel lblSpeed = new ToolStripLabel();
-            lblSpeed.Text = "Speed:";
-            toolStrip.Items.Add(lblSpeed);
-
-            // Speed dropdown
-            ToolStripComboBox cboSpeed = new ToolStripComboBox();
-            cboSpeed.Items.AddRange(new object[] { "0.25x", "0.5x", "1x", "2x", "4x", "10x" });
-            cboSpeed.SelectedIndex = 0; // Default 0.25x
-            cboSpeed.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboSpeed.Width = 60;
-            cboSpeed.SelectedIndexChanged += (s, e) => {
-                switch (cboSpeed.SelectedIndex)
-                {
-                    case 0: pathPlaybackSpeed = 0.25f; break;
-                    case 1: pathPlaybackSpeed = 0.5f; break;
-                    case 2: pathPlaybackSpeed = 1.0f; break;
-                    case 3: pathPlaybackSpeed = 2.0f; break;
-                    case 4: pathPlaybackSpeed = 4.0f; break;
-                    case 5: pathPlaybackSpeed = 10.0f; break;
-                }
-            };
-            toolStrip.Items.Add(cboSpeed);
-
-            // Show Trail checkbox
-            ToolStripButton btnTrail = new ToolStripButton();
-            btnTrail.Text = "Trail: ON";
-            btnTrail.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            btnTrail.Click += (s, e) => {
-                showPathTrail = !showPathTrail;
-                btnTrail.Text = showPathTrail ? "Trail: ON" : "Trail: OFF";
-            };
-            toolStrip.Items.Add(btnTrail);
-
-            // POV mode dropdown
+            // POV mode dropdown - placed right next to Players
             ToolStripLabel lblPOV = new ToolStripLabel();
             lblPOV.Text = "POV:";
             toolStrip.Items.Add(lblPOV);
@@ -1085,6 +1130,104 @@ namespace entity.Renderers
                 }
             };
             toolStrip.Items.Add(povPlayerDropdown);
+
+            toolStrip.Items.Add(new ToolStripSeparator());
+
+            // Play/Pause button
+            pathPlayPauseButton = new ToolStripButton();
+            pathPlayPauseButton.Text = "> Play";
+            pathPlayPauseButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            pathPlayPauseButton.Click += (s, e) => {
+                TogglePathPlayback();
+                pathPlayPauseButton.Text = pathIsPlaying ? "|| Pause" : "> Play";
+            };
+            toolStrip.Items.Add(pathPlayPauseButton);
+
+            // Reset button
+            ToolStripButton btnReset = new ToolStripButton();
+            btnReset.Text = "[] Reset";
+            btnReset.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnReset.Click += (s, e) => {
+                ResetPathAnimation();
+                pathPlayPauseButton.Text = "> Play";
+            };
+            toolStrip.Items.Add(btnReset);
+
+            // Playback Speed label and dropdown
+            ToolStripLabel lblPlaySpeed = new ToolStripLabel();
+            lblPlaySpeed.Text = "Play:";
+            toolStrip.Items.Add(lblPlaySpeed);
+
+            ToolStripComboBox cboPlaySpeed = new ToolStripComboBox();
+            cboPlaySpeed.Items.AddRange(new object[] { "0.25x", "0.5x", "1x", "2x", "4x", "10x" });
+            cboPlaySpeed.SelectedIndex = 2; // Default 1x
+            cboPlaySpeed.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboPlaySpeed.Width = 55;
+            cboPlaySpeed.SelectedIndexChanged += (s, e) => {
+                switch (cboPlaySpeed.SelectedIndex)
+                {
+                    case 0: pathPlaybackSpeed = 0.25f; break;
+                    case 1: pathPlaybackSpeed = 0.5f; break;
+                    case 2: pathPlaybackSpeed = 1.0f; break;
+                    case 3: pathPlaybackSpeed = 2.0f; break;
+                    case 4: pathPlaybackSpeed = 4.0f; break;
+                    case 5: pathPlaybackSpeed = 10.0f; break;
+                }
+            };
+            pathPlaybackSpeed = 1.0f; // Default 1x playback
+            toolStrip.Items.Add(cboPlaySpeed);
+
+            // Camera Speed label and dropdown
+            ToolStripLabel lblCamSpeed = new ToolStripLabel();
+            lblCamSpeed.Text = "Cam:";
+            toolStrip.Items.Add(lblCamSpeed);
+
+            ToolStripComboBox cboCamSpeed = new ToolStripComboBox();
+            cboCamSpeed.Items.AddRange(new object[] { "0.1", "0.25", "0.5", "1.0", "2.0", "5.0" });
+            cboCamSpeed.SelectedIndex = 1; // Default 0.25
+            cboCamSpeed.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboCamSpeed.Width = 50;
+            cboCamSpeed.SelectedIndexChanged += (s, e) => {
+                switch (cboCamSpeed.SelectedIndex)
+                {
+                    case 0: cam.speed = 0.1f; break;
+                    case 1: cam.speed = 0.25f; break;
+                    case 2: cam.speed = 0.5f; break;
+                    case 3: cam.speed = 1.0f; break;
+                    case 4: cam.speed = 2.0f; break;
+                    case 5: cam.speed = 5.0f; break;
+                }
+            };
+            if (cam != null) cam.speed = 0.25f; // Default 0.25 camera speed
+            toolStrip.Items.Add(cboCamSpeed);
+
+            toolStrip.Items.Add(new ToolStripSeparator());
+
+            // Show Trail checkbox
+            ToolStripButton btnTrail = new ToolStripButton();
+            btnTrail.Text = "Trail: OFF";
+            btnTrail.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnTrail.Click += (s, e) => {
+                showPathTrail = !showPathTrail;
+                btnTrail.Text = showPathTrail ? "Trail: ON" : "Trail: OFF";
+            };
+            toolStrip.Items.Add(btnTrail);
+
+            // FOV control
+            ToolStripLabel lblFOV = new ToolStripLabel();
+            lblFOV.Text = "FOV:";
+            toolStrip.Items.Add(lblFOV);
+
+            ToolStripTextBox txtFOV = new ToolStripTextBox();
+            txtFOV.Text = "78";
+            txtFOV.Width = 40;
+            txtFOV.TextChanged += (s, e) => {
+                if (float.TryParse(txtFOV.Text, out float fov))
+                {
+                    theaterFOV = Math.Max(30, Math.Min(120, fov));
+                }
+            };
+            toolStrip.Items.Add(txtFOV);
 
             // Create timeline panel at bottom of form - Halo theater style
             Panel timelinePanel = new Panel();
@@ -1123,22 +1266,59 @@ namespace entity.Renderers
                     pathPlayPauseButton.Text = "▶ Play";
                 }
             };
-            // Right-click to set bookmark at clicked position
+            // Right-click to set bookmark marker at clicked position
             pathTimelineTrackBar.MouseUp += (s, e) => {
                 if (e.Button == MouseButtons.Right && pathMaxTimestamp > pathMinTimestamp)
                 {
                     float clickRatio = (float)e.X / pathTimelineTrackBar.Width;
                     clickRatio = Math.Max(0, Math.Min(1, clickRatio));
-                    bookmarkTimestamp = pathMinTimestamp + clickRatio * (pathMaxTimestamp - pathMinTimestamp);
+                    float clickedTimestamp = pathMinTimestamp + clickRatio * (pathMaxTimestamp - pathMinTimestamp);
+                    // Set the appropriate marker
+                    if (bookmarkStartTimestamp < 0)
+                        bookmarkStartTimestamp = clickedTimestamp;
+                    else if (bookmarkEndTimestamp < 0)
+                    {
+                        bookmarkEndTimestamp = clickedTimestamp;
+                        if (bookmarkEndTimestamp < bookmarkStartTimestamp)
+                        {
+                            float temp = bookmarkStartTimestamp;
+                            bookmarkStartTimestamp = bookmarkEndTimestamp;
+                            bookmarkEndTimestamp = temp;
+                        }
+                    }
+                    else
+                    {
+                        // Reset and set new start
+                        bookmarkStartTimestamp = clickedTimestamp;
+                        bookmarkEndTimestamp = -1;
+                        bookmarkLoopEnabled = false;
+                    }
                     UpdateBookmarkButton();
+                    UpdateLoopButton();
                     timelinePanelRef?.Invalidate();
                 }
             };
+
+            // Mouse wheel zoom on timeline
+            pathTimelineTrackBar.MouseWheel += (s, e) => {
+                if (pathMaxTimestamp > pathMinTimestamp)
+                {
+                    float zoomFactor = e.Delta > 0 ? 0.9f : 1.1f;
+                    timelineZoom = Math.Max(0.1f, Math.Min(1.0f, timelineZoom * zoomFactor));
+                    // Calculate offset to zoom at mouse position
+                    float mouseRatio = (float)e.X / pathTimelineTrackBar.Width;
+                    float centerTime = pathMinTimestamp + (pathMaxTimestamp - pathMinTimestamp) * mouseRatio;
+                    timelineOffset = centerTime - (pathMaxTimestamp - pathMinTimestamp) * timelineZoom * 0.5f;
+                    timelineOffset = Math.Max(pathMinTimestamp, Math.Min(pathMaxTimestamp - (pathMaxTimestamp - pathMinTimestamp) * timelineZoom, timelineOffset));
+                    timelinePanelRef?.Invalidate();
+                }
+            };
+
             timelinePanel.Controls.Add(pathTimelineTrackBar);
 
-            // Bookmark button - sets bookmark at current position
+            // Bookmark button - sets A-B markers at current position
             bookmarkButton = new System.Windows.Forms.Button();
-            bookmarkButton.Text = "🔖 Set";
+            bookmarkButton.Text = "[A] Set";
             bookmarkButton.FlatStyle = FlatStyle.Flat;
             bookmarkButton.FlatAppearance.BorderColor = Color.FromArgb(0, 120, 180);
             bookmarkButton.BackColor = Color.FromArgb(30, 45, 60);
@@ -1147,24 +1327,13 @@ namespace entity.Renderers
             bookmarkButton.Size = new Size(55, 25);
             bookmarkButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             bookmarkButton.Click += (s, e) => {
-                if (bookmarkTimestamp < 0)
-                {
-                    bookmarkTimestamp = pathCurrentTimestamp;
-                }
-                else
-                {
-                    bookmarkTimestamp = -1;
-                    bookmarkLoopEnabled = false;
-                    UpdateLoopButton();
-                }
-                UpdateBookmarkButton();
-                timelinePanelRef?.Invalidate();
+                SetBookmarkMarker();
             };
             timelinePanel.Controls.Add(bookmarkButton);
 
-            // Loop button - toggles loop mode
+            // Loop button - toggles loop mode between A-B markers
             loopButton = new System.Windows.Forms.Button();
-            loopButton.Text = "🔁 Loop";
+            loopButton.Text = "Loop";
             loopButton.FlatStyle = FlatStyle.Flat;
             loopButton.FlatAppearance.BorderColor = Color.FromArgb(0, 120, 180);
             loopButton.BackColor = Color.FromArgb(30, 45, 60);
@@ -1173,7 +1342,7 @@ namespace entity.Renderers
             loopButton.Size = new Size(60, 25);
             loopButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             loopButton.Click += (s, e) => {
-                if (bookmarkTimestamp >= 0)
+                if (bookmarkStartTimestamp >= 0 && bookmarkEndTimestamp >= 0)
                 {
                     bookmarkLoopEnabled = !bookmarkLoopEnabled;
                     UpdateLoopButton();
@@ -1207,6 +1376,9 @@ namespace entity.Renderers
             pathTimelineTrackBar.Width = this.ClientSize.Width - 110 - initialButtonAreaWidth;
             bookmarkButton.Location = new Point(this.ClientSize.Width - initialButtonAreaWidth + 5, 10);
             loopButton.Location = new Point(this.ClientSize.Width - initialButtonAreaWidth + 65, 10);
+
+            // Initialize player selection wheel (Price is Right style spinner)
+            InitializePlayerWheel();
 
             // Separator before live telemetry
             ToolStripSeparator separator2 = new ToolStripSeparator();
@@ -1244,6 +1416,485 @@ namespace entity.Renderers
 
             // Make toolbar visible so path controls are accessible
             toolStrip.Visible = true;
+        }
+
+        /// <summary>
+        /// Initializes the player selection wheel UI (Price is Right style spinner).
+        /// </summary>
+        private void InitializePlayerWheel()
+        {
+            // Create the wheel panel - positioned on the right side of the form
+            playerWheelPanel = new Panel();
+            playerWheelPanel.Width = 140;
+            playerWheelPanel.Height = 280;
+            playerWheelPanel.BackColor = Color.FromArgb(15, 25, 35); // Dark blue-black matching timeline
+            playerWheelPanel.Anchor = AnchorStyles.Right | AnchorStyles.Bottom;
+
+            // Enable double buffering for smooth animation
+            typeof(Panel).InvokeMember("DoubleBuffered",
+                System.Reflection.BindingFlags.SetProperty | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic,
+                null, playerWheelPanel, new object[] { true });
+
+            // Add subtle border and title
+            playerWheelPanel.Paint += (s, e) => {
+                // Draw Halo blue border
+                using (Pen borderPen = new Pen(Color.FromArgb(0, 120, 180), 2))
+                {
+                    e.Graphics.DrawRectangle(borderPen, 1, 1, playerWheelPanel.Width - 3, playerWheelPanel.Height - 3);
+                }
+
+                // Draw title at top
+                using (System.Drawing.Font titleFont = new System.Drawing.Font("Segoe UI", 9, FontStyle.Bold))
+                using (SolidBrush titleBrush = new SolidBrush(Color.FromArgb(0, 200, 255)))
+                {
+                    string title = "POV SELECT";
+                    SizeF titleSize = e.Graphics.MeasureString(title, titleFont);
+                    e.Graphics.DrawString(title, titleFont, titleBrush,
+                        (playerWheelPanel.Width - titleSize.Width) / 2, 5);
+                }
+            };
+
+            // Custom paint for the wheel
+            playerWheelPanel.Paint += PlayerWheelPanel_Paint;
+
+            // Click to spin
+            playerWheelPanel.MouseClick += PlayerWheelPanel_MouseClick;
+
+            // Mouse wheel to scroll through players
+            playerWheelPanel.MouseWheel += (s, e) => {
+                if (!wheelIsSpinning)
+                {
+                    List<string> playerNames = showLiveTelemetry ? livePlayerNames : pathPlayerNames;
+                    if (playerNames.Count > 0)
+                    {
+                        int delta = e.Delta > 0 ? -1 : 1;
+                        wheelSelectedIndex = (wheelSelectedIndex + delta + playerNames.Count + 1) % (playerNames.Count + 1);
+                        UpdatePOVFromWheel();
+                        playerWheelPanel.Invalidate();
+                    }
+                }
+            };
+
+            // Spin animation timer
+            wheelSpinTimer = new System.Windows.Forms.Timer();
+            wheelSpinTimer.Interval = 16; // ~60 FPS
+            wheelSpinTimer.Tick += WheelSpinTimer_Tick;
+
+            // Position the panel - right side, above timeline
+            this.Controls.Add(playerWheelPanel);
+            playerWheelPanel.BringToFront();
+            UpdatePlayerWheelPosition();
+
+            // Update position when form resizes
+            this.Resize += (s, e) => UpdatePlayerWheelPosition();
+        }
+
+        /// <summary>
+        /// Updates player wheel position based on form size.
+        /// </summary>
+        private void UpdatePlayerWheelPosition()
+        {
+            if (playerWheelPanel != null)
+            {
+                // Position on right side, above the timeline (timeline is 45px)
+                playerWheelPanel.Location = new Point(
+                    this.ClientSize.Width - playerWheelPanel.Width - 10,
+                    this.ClientSize.Height - playerWheelPanel.Height - 55
+                );
+            }
+        }
+
+        /// <summary>
+        /// Paints the player selection wheel with emblems and team colors.
+        /// </summary>
+        private void PlayerWheelPanel_Paint(object sender, PaintEventArgs e)
+        {
+            List<string> playerNames = showLiveTelemetry ? livePlayerNames : pathPlayerNames;
+            if (playerNames.Count == 0)
+            {
+                // Draw "No Players" message
+                using (System.Drawing.Font font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold))
+                using (SolidBrush brush = new SolidBrush(Color.FromArgb(0, 200, 255)))
+                {
+                    string msg = "No Players";
+                    SizeF sz = e.Graphics.MeasureString(msg, font);
+                    e.Graphics.DrawString(msg, font, brush,
+                        (playerWheelPanel.Width - sz.Width) / 2,
+                        (playerWheelPanel.Height - sz.Height) / 2);
+                }
+                return;
+            }
+
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+
+            int slotHeight = 50; // Height of each player slot
+            int emblemSize = 36;
+            int titleHeight = 25; // Space for title at top
+            int hintHeight = 20; // Space for hint at bottom
+            int centerY = titleHeight + (playerWheelPanel.Height - titleHeight - hintHeight) / 2;
+            int totalSlots = playerNames.Count + 1; // +1 for "Free Camera"
+
+            // Calculate visible slot range
+            float currentOffset = wheelSpinOffset + wheelSelectedIndex;
+            int visibleSlots = 5; // Show 5 slots
+
+            // Draw selection highlight in center
+            using (SolidBrush highlightBrush = new SolidBrush(Color.FromArgb(40, 0, 200, 255)))
+            {
+                e.Graphics.FillRectangle(highlightBrush,
+                    5, centerY - slotHeight / 2 - 2,
+                    playerWheelPanel.Width - 10, slotHeight + 4);
+            }
+            using (Pen highlightPen = new Pen(Color.FromArgb(0, 200, 255), 2))
+            {
+                e.Graphics.DrawRectangle(highlightPen,
+                    5, centerY - slotHeight / 2 - 2,
+                    playerWheelPanel.Width - 10, slotHeight + 4);
+            }
+
+            // Draw player slots with perspective effect
+            for (int visOffset = -visibleSlots / 2; visOffset <= visibleSlots / 2; visOffset++)
+            {
+                float slotIndex = currentOffset + visOffset - wheelSpinOffset;
+                int actualIndex = ((int)Math.Round(slotIndex) % totalSlots + totalSlots) % totalSlots;
+
+                // Calculate Y position with wheel curve effect
+                float offsetFromCenter = visOffset + (wheelSpinOffset % 1.0f);
+                float yPos = centerY + offsetFromCenter * slotHeight;
+
+                // Scale based on distance from center (perspective)
+                float distFromCenter = Math.Abs(offsetFromCenter);
+                float scale = 1.0f - (distFromCenter * 0.15f);
+                float alpha = 1.0f - (distFromCenter * 0.3f);
+
+                if (scale <= 0.3f || alpha <= 0.1f) continue;
+
+                // Get player info
+                string playerName;
+                Color bgColor;
+                PlayerTelemetry playerData = null;
+
+                if (actualIndex == 0)
+                {
+                    playerName = "Free Camera";
+                    bgColor = Color.FromArgb((int)(alpha * 255), 50, 60, 70);
+                }
+                else
+                {
+                    playerName = playerNames[actualIndex - 1];
+                    int team = GetPlayerTeam(playerName);
+
+                    // Get team background color (white for non-team games)
+                    if (!isTeamGame)
+                    {
+                        bgColor = Color.FromArgb((int)(alpha * 200), 240, 240, 240);
+                    }
+                    else
+                    {
+                        Color teamColor = GetTeamColor(team);
+                        bgColor = Color.FromArgb((int)(alpha * 200), teamColor.R, teamColor.G, teamColor.B);
+                    }
+
+                    // Get player telemetry data for emblem
+                    if (showLiveTelemetry)
+                    {
+                        lock (livePlayersLock)
+                        {
+                            if (livePlayers.ContainsKey(playerName))
+                                playerData = livePlayers[playerName];
+                        }
+                    }
+                    else
+                    {
+                        // Get emblem data from path player (replay mode)
+                        playerData = GetPathPlayerData(playerName);
+                    }
+                }
+
+                // Calculate scaled dimensions
+                int scaledHeight = (int)(slotHeight * scale);
+                int scaledEmblemSize = (int)(emblemSize * scale);
+                int slotY = (int)(yPos - scaledHeight / 2);
+                int slotX = 10;
+                int slotWidth = playerWheelPanel.Width - 20;
+
+                // Draw slot background with team color
+                using (SolidBrush bgBrush = new SolidBrush(bgColor))
+                {
+                    e.Graphics.FillRoundedRectangle(bgBrush, slotX, slotY, slotWidth, scaledHeight, 6);
+                }
+
+                // Draw emblem if player data available
+                int emblemX = slotX + 5;
+                int emblemY = slotY + (scaledHeight - scaledEmblemSize) / 2;
+
+                if (playerData != null && actualIndex > 0)
+                {
+                    string emblemKey = GetEmblemKeyForWheel(playerData);
+                    System.Drawing.Image emblemImg = GetOrLoadWheelEmblem(playerData, emblemKey);
+
+                    if (emblemImg != null)
+                    {
+                        e.Graphics.DrawImage(emblemImg, emblemX, emblemY, scaledEmblemSize, scaledEmblemSize);
+                    }
+                    else
+                    {
+                        // Draw placeholder circle
+                        using (SolidBrush placeholderBrush = new SolidBrush(Color.FromArgb((int)(alpha * 150), 100, 100, 100)))
+                        {
+                            e.Graphics.FillEllipse(placeholderBrush, emblemX, emblemY, scaledEmblemSize, scaledEmblemSize);
+                        }
+                    }
+                }
+                else if (actualIndex == 0)
+                {
+                    // Draw camera icon for Free Camera
+                    using (System.Drawing.Font iconFont = new System.Drawing.Font("Segoe UI Symbol", 16 * scale, FontStyle.Regular))
+                    using (SolidBrush iconBrush = new SolidBrush(Color.FromArgb((int)(alpha * 255), 0, 200, 255)))
+                    {
+                        e.Graphics.DrawString("📷", iconFont, iconBrush, emblemX, emblemY);
+                    }
+                }
+
+                // Draw player name
+                int textX = emblemX + scaledEmblemSize + 8;
+                int textY = slotY + (scaledHeight - (int)(14 * scale)) / 2;
+                Color textColor = actualIndex == 0 ?
+                    Color.FromArgb((int)(alpha * 255), 0, 200, 255) :
+                    Color.FromArgb((int)(alpha * 255), 255, 255, 255);
+
+                using (System.Drawing.Font nameFont = new System.Drawing.Font("Segoe UI", 9 * scale, FontStyle.Bold))
+                using (SolidBrush textBrush = new SolidBrush(textColor))
+                {
+                    // Truncate name if too long
+                    string displayName = playerName;
+                    SizeF textSize = e.Graphics.MeasureString(displayName, nameFont);
+                    int maxWidth = slotWidth - scaledEmblemSize - 20;
+                    while (textSize.Width > maxWidth && displayName.Length > 3)
+                    {
+                        displayName = displayName.Substring(0, displayName.Length - 1);
+                        textSize = e.Graphics.MeasureString(displayName + "...", nameFont);
+                    }
+                    if (displayName != playerName) displayName += "...";
+
+                    e.Graphics.DrawString(displayName, nameFont, textBrush, textX, textY);
+                }
+            }
+
+            // Draw spin instruction at bottom
+            using (System.Drawing.Font hintFont = new System.Drawing.Font("Segoe UI", 8, FontStyle.Regular))
+            using (SolidBrush hintBrush = new SolidBrush(Color.FromArgb(150, 0, 200, 255)))
+            {
+                string hint = "Click to spin";
+                SizeF hintSize = e.Graphics.MeasureString(hint, hintFont);
+                e.Graphics.DrawString(hint, hintFont, hintBrush,
+                    (playerWheelPanel.Width - hintSize.Width) / 2,
+                    playerWheelPanel.Height - hintSize.Height - 5);
+            }
+        }
+
+        /// <summary>
+        /// Handles click on player wheel to start spinning.
+        /// </summary>
+        private void PlayerWheelPanel_MouseClick(object sender, MouseEventArgs e)
+        {
+            List<string> playerNames = showLiveTelemetry ? livePlayerNames : pathPlayerNames;
+            if (playerNames.Count == 0) return;
+
+            if (e.Button == MouseButtons.Left)
+            {
+                if (!wheelIsSpinning)
+                {
+                    // Start spin animation with random velocity
+                    Random rnd = new Random();
+                    wheelSpinVelocity = 15f + (float)(rnd.NextDouble() * 10);
+                    wheelIsSpinning = true;
+                    wheelSpinTimer.Start();
+                }
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                // Right click selects immediately without spin
+                int slotHeight = 50;
+                int titleHeight = 25;
+                int hintHeight = 20;
+                int centerY = titleHeight + (playerWheelPanel.Height - titleHeight - hintHeight) / 2;
+                int clickedSlot = (int)Math.Round((e.Y - centerY) / (float)slotHeight);
+                int totalSlots = playerNames.Count + 1;
+                int newIndex = (wheelSelectedIndex + clickedSlot + totalSlots) % totalSlots;
+                wheelSelectedIndex = newIndex;
+                UpdatePOVFromWheel();
+                playerWheelPanel.Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Timer tick for wheel spin animation.
+        /// </summary>
+        private void WheelSpinTimer_Tick(object sender, EventArgs e)
+        {
+            List<string> playerNames = showLiveTelemetry ? livePlayerNames : pathPlayerNames;
+            int totalSlots = playerNames.Count + 1;
+
+            // Apply deceleration
+            wheelSpinVelocity *= 0.97f;
+            wheelSpinOffset += wheelSpinVelocity * 0.016f; // 16ms per tick
+
+            // Wrap offset
+            while (wheelSpinOffset >= totalSlots) wheelSpinOffset -= totalSlots;
+            while (wheelSpinOffset < 0) wheelSpinOffset += totalSlots;
+
+            // Stop when velocity is low enough
+            if (wheelSpinVelocity < 0.5f)
+            {
+                wheelSpinTimer.Stop();
+                wheelIsSpinning = false;
+
+                // Snap to nearest slot
+                wheelSelectedIndex = (int)Math.Round(wheelSpinOffset) % totalSlots;
+                wheelSpinOffset = 0;
+
+                UpdatePOVFromWheel();
+            }
+
+            playerWheelPanel.Invalidate();
+        }
+
+        /// <summary>
+        /// Updates POV mode based on wheel selection.
+        /// </summary>
+        private void UpdatePOVFromWheel()
+        {
+            List<string> playerNames = showLiveTelemetry ? livePlayerNames : pathPlayerNames;
+
+            if (wheelSelectedIndex == 0)
+            {
+                // Free Camera
+                povModeEnabled = false;
+                povFollowPlayer = null;
+            }
+            else if (wheelSelectedIndex <= playerNames.Count)
+            {
+                // Follow selected player
+                povModeEnabled = true;
+                povFollowPlayer = playerNames[wheelSelectedIndex - 1];
+            }
+
+            // Sync with POV dropdown
+            if (povPlayerDropdown != null && povPlayerDropdown.Items.Count > wheelSelectedIndex)
+            {
+                povPlayerDropdown.SelectedIndex = wheelSelectedIndex;
+            }
+        }
+
+        /// <summary>
+        /// Gets emblem key for wheel display.
+        /// </summary>
+        private string GetEmblemKeyForWheel(PlayerTelemetry player)
+        {
+            return $"{player.EmblemFg}_{player.EmblemBg}_{player.ColorPrimary}_{player.ColorSecondary}";
+        }
+
+        /// <summary>
+        /// Gets or loads an emblem image for wheel display.
+        /// </summary>
+        private System.Drawing.Image GetOrLoadWheelEmblem(PlayerTelemetry player, string emblemKey)
+        {
+            // Return cached image if available
+            if (wheelEmblemCache.ContainsKey(emblemKey))
+            {
+                return wheelEmblemCache[emblemKey];
+            }
+
+            // Start async load if not already loading
+            if (!wheelEmblemLoadingSet.Contains(emblemKey))
+            {
+                wheelEmblemLoadingSet.Add(emblemKey);
+                string url = GetEmblemUrl(player);
+
+                System.Threading.ThreadPool.QueueUserWorkItem(_ =>
+                {
+                    try
+                    {
+                        using (var webClient = new System.Net.WebClient())
+                        {
+                            webClient.Headers.Add("User-Agent", "Entity-BSPViewer/1.0");
+                            byte[] imageData = webClient.DownloadData(url);
+
+                            this.BeginInvoke(new System.Action(() =>
+                            {
+                                try
+                                {
+                                    using (var ms = new System.IO.MemoryStream(imageData))
+                                    {
+                                        System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
+                                        wheelEmblemCache[emblemKey] = img;
+                                        playerWheelPanel?.Invalidate();
+                                    }
+                                }
+                                catch { }
+                                finally
+                                {
+                                    wheelEmblemLoadingSet.Remove(emblemKey);
+                                }
+                            }));
+                        }
+                    }
+                    catch
+                    {
+                        wheelEmblemLoadingSet.Remove(emblemKey);
+                    }
+                });
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Refreshes the player wheel when player list changes.
+        /// </summary>
+        private void RefreshPlayerWheel()
+        {
+            // Ensure selected index is valid
+            List<string> playerNames = showLiveTelemetry ? livePlayerNames : pathPlayerNames;
+            int totalSlots = playerNames.Count + 1;
+            wheelSelectedIndex = Math.Min(wheelSelectedIndex, totalSlots - 1);
+            playerWheelPanel?.Invalidate();
+        }
+
+        /// <summary>
+        /// Gets player telemetry data from path data for emblem display in replay mode.
+        /// </summary>
+        private PlayerTelemetry GetPathPlayerData(string playerName)
+        {
+            if (!multiPlayerPaths.ContainsKey(playerName))
+                return null;
+
+            var segments = multiPlayerPaths[playerName];
+            if (segments.Count == 0)
+                return null;
+
+            // Find a point with emblem data (any point since emblem data doesn't change)
+            foreach (var segment in segments)
+            {
+                if (segment.Count > 0)
+                {
+                    var pt = segment[0];
+                    PlayerTelemetry data = new PlayerTelemetry();
+                    data.PlayerName = pt.PlayerName;
+                    data.Team = pt.Team;
+                    data.EmblemFg = pt.EmblemFg;
+                    data.EmblemBg = pt.EmblemBg;
+                    data.ColorPrimary = pt.ColorPrimary;
+                    data.ColorSecondary = pt.ColorSecondary;
+                    data.ColorTertiary = pt.ColorTertiary;
+                    data.ColorQuaternary = pt.ColorQuaternary;
+                    return data;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -1450,6 +2101,9 @@ namespace entity.Renderers
                 int povIdx = prevPovPlayer != null ? playerNames.IndexOf(prevPovPlayer) + 1 : 0;
                 povPlayerDropdown.SelectedIndex = Math.Max(0, Math.Min(povIdx, povPlayerDropdown.Items.Count - 1));
             }
+
+            // Refresh player wheel
+            RefreshPlayerWheel();
         }
 
         /// <summary>
@@ -2757,30 +3411,26 @@ namespace entity.Renderers
                     break;
             }
 
-            // Theater mode bookmark shortcuts
+            // Theater mode shortcuts
             if (theaterMode)
             {
                 char key = char.ToLower(e.KeyChar);
                 switch (key)
                 {
-                    case 'b':
-                        if (bookmarkTimestamp < 0)
-                        {
-                            bookmarkTimestamp = pathCurrentTimestamp;
-                        }
-                        else
-                        {
-                            bookmarkTimestamp = -1;
-                            bookmarkLoopEnabled = false;
-                            UpdateLoopButton();
-                        }
-                        UpdateBookmarkButton();
-                        timelinePanelRef?.Invalidate();
+                    case ' ': // Spacebar - play/pause
+                        TogglePathPlayback();
+                        if (pathPlayPauseButton != null)
+                            pathPlayPauseButton.Text = pathIsPlaying ? "|| Pause" : "> Play";
                         e.Handled = true;
                         break;
 
-                    case 'l':
-                        if (bookmarkTimestamp >= 0)
+                    case 'b': // Set bookmark
+                        SetBookmarkMarker();
+                        e.Handled = true;
+                        break;
+
+                    case 'l': // Toggle loop
+                        if (bookmarkStartTimestamp >= 0 && bookmarkEndTimestamp >= 0)
                         {
                             bookmarkLoopEnabled = !bookmarkLoopEnabled;
                             UpdateLoopButton();
@@ -2789,15 +3439,172 @@ namespace entity.Renderers
                         e.Handled = true;
                         break;
 
-                    case 'g':
-                        if (bookmarkTimestamp >= 0)
+                    case 'g': // Go to bookmark start
+                        if (bookmarkStartTimestamp >= 0)
                         {
                             JumpToBookmark();
                             timelinePanelRef?.Invalidate();
                         }
                         e.Handled = true;
                         break;
+
+                    case ',': // < key - previous tick
+                    case '<':
+                        SkipTicks(-1);
+                        e.Handled = true;
+                        break;
+
+                    case '.': // > key - next tick
+                    case '>':
+                        SkipTicks(1);
+                        e.Handled = true;
+                        break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Process command keys for arrow key handling in theater mode.
+        /// </summary>
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (theaterMode)
+            {
+                switch (keyData)
+                {
+                    case Keys.Space:
+                        TogglePathPlayback();
+                        if (pathPlayPauseButton != null)
+                            pathPlayPauseButton.Text = pathIsPlaying ? "|| Pause" : "> Play";
+                        return true;
+
+                    case Keys.Left:
+                        SkipSeconds(-5);
+                        return true;
+
+                    case Keys.Right:
+                        SkipSeconds(5);
+                        return true;
+
+                    case Keys.Oemcomma: // < key
+                        SkipTicks(-1);
+                        return true;
+
+                    case Keys.OemPeriod: // > key
+                        SkipTicks(1);
+                        return true;
+
+                    case Keys.Tab: // Toggle scoreboard
+                        showScoreboard = !showScoreboard;
+                        return true;
+
+                    case Keys.K: // Toggle killfeed
+                        showKillfeed = !showKillfeed;
+                        return true;
+                }
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        /// <summary>
+        /// Skips playback by specified number of seconds.
+        /// </summary>
+        private void SkipSeconds(float seconds)
+        {
+            if (playerPath.Count == 0) return;
+
+            pathCurrentTimestamp = Math.Max(pathMinTimestamp,
+                Math.Min(pathMaxTimestamp, pathCurrentTimestamp + seconds));
+            pathTimeAccumulator = pathCurrentTimestamp;
+
+            // Find the index for the new timestamp
+            for (int i = 0; i < playerPath.Count - 1; i++)
+            {
+                if (playerPath[i].Timestamp <= pathCurrentTimestamp &&
+                    playerPath[i + 1].Timestamp > pathCurrentTimestamp)
+                {
+                    pathCurrentIndex = i;
+                    break;
+                }
+            }
+
+            UpdateTimelineLabel();
+            UpdateTrackBarFromTimestamp();
+            timelinePanelRef?.Invalidate();
+        }
+
+        /// <summary>
+        /// Skips playback by specified number of data ticks.
+        /// </summary>
+        private void SkipTicks(int ticks)
+        {
+            if (playerPath.Count == 0) return;
+
+            // Find current index based on timestamp
+            int currentIdx = 0;
+            for (int i = 0; i < playerPath.Count - 1; i++)
+            {
+                if (playerPath[i].Timestamp <= pathCurrentTimestamp)
+                    currentIdx = i;
+                else
+                    break;
+            }
+
+            currentIdx = Math.Max(0, Math.Min(playerPath.Count - 1, currentIdx + ticks));
+            pathCurrentIndex = currentIdx;
+            pathCurrentTimestamp = playerPath[currentIdx].Timestamp;
+            pathTimeAccumulator = pathCurrentTimestamp;
+
+            UpdateTimelineLabel();
+            UpdateTrackBarFromTimestamp();
+            timelinePanelRef?.Invalidate();
+        }
+
+        /// <summary>
+        /// Sets bookmark markers (A-B loop). First press sets start, second sets end.
+        /// </summary>
+        private void SetBookmarkMarker()
+        {
+            if (bookmarkStartTimestamp < 0)
+            {
+                // Set start marker
+                bookmarkStartTimestamp = pathCurrentTimestamp;
+                bookmarkEndTimestamp = -1;
+                bookmarkLoopEnabled = false;
+            }
+            else if (bookmarkEndTimestamp < 0)
+            {
+                // Set end marker
+                bookmarkEndTimestamp = pathCurrentTimestamp;
+                // Ensure start < end
+                if (bookmarkEndTimestamp < bookmarkStartTimestamp)
+                {
+                    float temp = bookmarkStartTimestamp;
+                    bookmarkStartTimestamp = bookmarkEndTimestamp;
+                    bookmarkEndTimestamp = temp;
+                }
+            }
+            else
+            {
+                // Clear both markers
+                bookmarkStartTimestamp = -1;
+                bookmarkEndTimestamp = -1;
+                bookmarkLoopEnabled = false;
+            }
+            UpdateBookmarkButton();
+            UpdateLoopButton();
+            timelinePanelRef?.Invalidate();
+        }
+
+        /// <summary>
+        /// Updates trackbar position from current timestamp.
+        /// </summary>
+        private void UpdateTrackBarFromTimestamp()
+        {
+            if (pathTimelineTrackBar != null && pathMaxTimestamp > pathMinTimestamp)
+            {
+                float ratio = (pathCurrentTimestamp - pathMinTimestamp) / (pathMaxTimestamp - pathMinTimestamp);
+                pathTimelineTrackBar.Value = (int)(ratio * pathTimelineTrackBar.Maximum);
             }
         }
 
@@ -3292,7 +4099,7 @@ namespace entity.Renderers
                         render.device.TextureState[1].TextureCoordinateIndex = 2;
                     }
                     */
-                    render.device.RenderState.FillMode = FillMode.WireFrame;
+                    render.device.RenderState.FillMode = FillMode.Solid;
 
                     // render.device.SetTexture(0, meshtextures[i]);
                     pm.Display.meshes[x].DrawSubset(xx);
@@ -4387,6 +5194,18 @@ namespace entity.Renderers
             if (theaterMode)
             {
                 DrawHUD();
+
+                // Draw scoreboard overlay (Tab to toggle)
+                if (showScoreboard)
+                {
+                    DrawScoreboard();
+                }
+
+                // Draw killfeed overlay (K to toggle)
+                if (showKillfeed)
+                {
+                    DrawKillfeed();
+                }
             }
 
             #endregion
@@ -4556,7 +5375,9 @@ namespace entity.Renderers
 
             // Matrix.RotationAxis(new Vector3((float)Math.Cos(Environment.TickCount / 250.0f), 1, (float)Math.Sin(Environment.TickCount / 250.0f)), Environment.TickCount / 1000.0f);
             render.device.Transform.View = Matrix.LookAtRH(cam.Position, cam.LookAt, cam.UpVector);
-            render.device.Transform.Projection = Matrix.PerspectiveFovRH(0.785f, aspect, 0.2f, 1000.0f);
+            // Use theater FOV if in theater mode, otherwise default 45 degrees (0.785 radians)
+            float fovRadians = theaterMode ? (theaterFOV * (float)Math.PI / 180f) : 0.785f;
+            render.device.Transform.Projection = Matrix.PerspectiveFovRH(fovRadians, aspect, 0.2f, 1000.0f);
 
             // cam.BuildViewFrustum(ref render.device);
         }
@@ -7903,25 +8724,20 @@ namespace entity.Renderers
                 pathCurrentTimestamp = pathMinTimestamp;
                 UpdateTimelineLabel();
 
+                // Silent load - no prompts
                 if (playerPath.Count > 0)
                 {
-                    string msg = $"Loaded {playerPath.Count} path points for {pathPlayerNames.Count} player(s).";
+                    // Log to debug instead of showing dialog
+                    AddDebugLog($"Loaded {playerPath.Count} path points for {pathPlayerNames.Count} player(s).");
                     int totalSegments = 0;
                     foreach (var kvp in multiPlayerPaths) totalSegments += kvp.Value.Count;
-                    msg += $"\n{totalSegments} path segments (respawns detected).";
-                    if (skippedLines > 0)
-                        msg += $"\n({skippedLines} lines skipped due to invalid format)";
-                    MessageBox.Show(msg, "Path Loaded", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    MessageBox.Show("No valid path points found in file.\nExpected format: CSV with X,Y,Z columns or x,y,z[,timestamp]",
-                        "No Data", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    AddDebugLog($"{totalSegments} path segments (respawns detected).");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading path file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Log error silently
+                AddDebugLog($"[ERROR] Loading path file: {ex.Message}");
             }
         }
 
@@ -7951,7 +8767,7 @@ namespace entity.Renderers
         {
             if (playerPath.Count == 0)
             {
-                MessageBox.Show("No path data loaded. Please load a path file first.", "No Path Data", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // No path data - silent return
                 return;
             }
 
@@ -8006,19 +8822,20 @@ namespace entity.Renderers
             // Update camera for POV mode
             UpdatePOVCamera();
 
-            // Handle end of playback
-            if (pathCurrentTimestamp >= pathMaxTimestamp || pathCurrentIndex >= playerPath.Count - 1)
+            // Handle A-B loop - loop back to A when reaching B
+            if (bookmarkLoopEnabled && bookmarkStartTimestamp >= 0 && bookmarkEndTimestamp >= 0)
             {
-                if (bookmarkLoopEnabled && bookmarkTimestamp >= 0)
+                if (pathCurrentTimestamp >= bookmarkEndTimestamp)
                 {
-                    JumpToBookmark();
+                    JumpToBookmark(); // Jump back to A
                 }
-                else
-                {
-                    pathIsPlaying = false;
-                    if (pathPlayPauseButton != null)
-                        pathPlayPauseButton.Text = "▶ Play";
-                }
+            }
+            // Handle end of playback (when not looping)
+            else if (pathCurrentTimestamp >= pathMaxTimestamp || pathCurrentIndex >= playerPath.Count - 1)
+            {
+                pathIsPlaying = false;
+                if (pathPlayPauseButton != null)
+                    pathPlayPauseButton.Text = "> Play";
             }
         }
 
@@ -8878,7 +9695,7 @@ namespace entity.Renderers
             // Create or reuse circle mesh - flat disc on XY plane
             if (teamCircleMesh == null || teamCircleMesh.Disposed)
             {
-                // Create a flat cylinder (disc) - height is along Z axis by default
+                // Create a flat cylinder (disc) - Mesh.Cylinder creates height along Y axis
                 // Radius 0.125 (4x smaller than original 0.5)
                 teamCircleMesh = Mesh.Cylinder(render.device, 0.125f, 0.125f, 0.02f, 24, 1);
             }
@@ -8888,9 +9705,11 @@ namespace entity.Renderers
             circleMat.Ambient = teamColor;
             circleMat.Emissive = Color.FromArgb(teamColor.R / 2, teamColor.G / 2, teamColor.B / 2);
 
-            // Position circle flat at player's feet (no rotation needed - cylinder Z is up)
-            // Lower it so the disc sits at ground level
-            render.device.Transform.World = Matrix.Translation(x, y, z - 0.15f);
+            // Rotate 90 degrees around X axis to lay flat on XY plane (disc faces up in Z)
+            // Then translate to player position
+            Matrix rotation = Matrix.RotationX((float)(Math.PI / 2.0));
+            Matrix translation = Matrix.Translation(x, y, z - 0.15f);
+            render.device.Transform.World = Matrix.Multiply(rotation, translation);
             render.device.Material = circleMat;
             render.device.SetTexture(0, null);
             render.device.RenderState.Lighting = true;
@@ -8941,7 +9760,7 @@ namespace entity.Renderers
                 }
 
                 // Project 3D position to screen coordinates
-                Vector3 worldPos = new Vector3(player.PosX, player.PosY, player.PosZ + 0.6f); // Above head
+                Vector3 worldPos = new Vector3(player.PosX, player.PosY, player.PosZ + 1.5f); // Above head
                 Vector3 screenPos = Vector3.Project(worldPos,
                     render.device.Viewport,
                     render.device.Transform.Projection,
@@ -9069,10 +9888,10 @@ namespace entity.Renderers
                 fpsLastUpdate = DateTime.Now;
             }
 
-            // Create font if needed
+            // Create font if needed - use smaller size for better fit
             if (fpsFont == null || fpsFont.Disposed)
             {
-                fpsFont = new Microsoft.DirectX.Direct3D.Font(render.device, new System.Drawing.Font("Segoe UI", 14, FontStyle.Bold));
+                fpsFont = new Microsoft.DirectX.Direct3D.Font(render.device, new System.Drawing.Font("Segoe UI", 11, FontStyle.Bold));
             }
 
             // Halo blue color scheme
@@ -9082,38 +9901,294 @@ namespace entity.Renderers
             int screenWidth = render.device.Viewport.Width;
             int screenHeight = render.device.Viewport.Height;
 
-            // Draw FPS in top right
+            // Ensure FPS stays within bounds with padding
+            int padding = 10;
+            int fpsWidth = 80;
+
+            // Draw FPS in top right - clamp to visible area
             string fpsText = $"{currentFps:F0} FPS";
-            Rectangle fpsRect = new Rectangle(screenWidth - 120, 10, 110, 30);
+            int fpsX = Math.Max(padding, screenWidth - fpsWidth - padding);
+            Rectangle fpsRect = new Rectangle(fpsX, padding, fpsWidth, 24);
             fpsFont.DrawText(null, fpsText, fpsRect, DrawTextFormat.Right | DrawTextFormat.Top, haloBlue);
 
             // Draw mode indicator in top left
-            string modeText = showLiveTelemetry ? "● LIVE" : (playerPath.Count > 0 ? "▶ REPLAY" : "");
+            string modeText = showLiveTelemetry ? "* LIVE" : (playerPath.Count > 0 ? "> REPLAY" : "");
             if (!string.IsNullOrEmpty(modeText))
             {
-                Rectangle modeRect = new Rectangle(10, 10, 150, 30);
+                Rectangle modeRect = new Rectangle(padding, padding, 100, 24);
                 Color modeColor = showLiveTelemetry ? Color.FromArgb(255, 80, 80) : haloCyan;
                 fpsFont.DrawText(null, modeText, modeRect, DrawTextFormat.Left | DrawTextFormat.Top, modeColor);
             }
 
-            // Draw playback info when in replay mode
+            // Draw playback info when in replay mode - position above timeline
             if (!showLiveTelemetry && playerPath.Count > 0)
             {
                 string timeText = FormatTime(pathCurrentTimestamp - pathMinTimestamp) + " / " + FormatTime(pathMaxTimestamp - pathMinTimestamp);
                 string speedText = $"{pathPlaybackSpeed:F2}x";
-                Rectangle timeRect = new Rectangle(10, screenHeight - 60, 200, 25);
-                Rectangle speedRect = new Rectangle(screenWidth - 80, screenHeight - 60, 70, 25);
+                int bottomY = Math.Max(60, screenHeight - 70);
+                Rectangle timeRect = new Rectangle(padding, bottomY, 150, 20);
+                Rectangle speedRect = new Rectangle(Math.Max(padding, screenWidth - 60 - padding), bottomY, 60, 20);
                 fpsFont.DrawText(null, timeText, timeRect, DrawTextFormat.Left, haloCyan);
                 fpsFont.DrawText(null, speedText, speedRect, DrawTextFormat.Right, haloBlue);
             }
 
-            // Draw player count
+            // Draw player count below FPS
             int playerCount = showLiveTelemetry ? livePlayerNames.Count : pathPlayerNames.Count;
             if (playerCount > 0)
             {
-                string playerText = $"👥 {playerCount}";
-                Rectangle playerRect = new Rectangle(screenWidth - 80, 40, 70, 25);
+                string playerText = $"[{playerCount}]";
+                int playerX = Math.Max(padding, screenWidth - 50 - padding);
+                Rectangle playerRect = new Rectangle(playerX, padding + 24, 50, 20);
                 fpsFont.DrawText(null, playerText, playerRect, DrawTextFormat.Right, haloCyan);
+            }
+        }
+
+        /// <summary>
+        /// Draws the scoreboard overlay matching HTML style.
+        /// </summary>
+        private void DrawScoreboard()
+        {
+            try
+            {
+                // Create fonts if needed
+                if (scoreboardFont == null || scoreboardFont.Disposed)
+                {
+                    scoreboardFont = new Microsoft.DirectX.Direct3D.Font(render.device,
+                        new System.Drawing.Font("Overpass", 12, FontStyle.Regular));
+                }
+                if (scoreboardHeaderFont == null || scoreboardHeaderFont.Disposed)
+                {
+                    scoreboardHeaderFont = new Microsoft.DirectX.Direct3D.Font(render.device,
+                        new System.Drawing.Font("Overpass", 14, FontStyle.Bold));
+                }
+
+                int screenWidth = render.device.Viewport.Width;
+                int screenHeight = render.device.Viewport.Height;
+
+                // Scoreboard position (top-left with padding)
+                int sbX = 20;
+                int sbY = 60;
+                int sbWidth = 340;
+                int rowHeight = 24;
+                int headerHeight = 28;
+
+                // Team colors matching HTML
+                Color redTeamBg = Color.FromArgb(200, 197, 66, 69);    // #C54245 with alpha
+                Color blueTeamBg = Color.FromArgb(200, 65, 105, 168);  // #4169A8 with alpha
+                Color textColor = Color.White;
+
+                // Get player data
+                Dictionary<string, PlayerTelemetry> players = new Dictionary<string, PlayerTelemetry>();
+                lock (livePlayersLock)
+                {
+                    if (showLiveTelemetry)
+                    {
+                        players = new Dictionary<string, PlayerTelemetry>(livePlayers);
+                    }
+                    else
+                    {
+                        // Build from path data - get latest point for each player
+                        foreach (var kvp in multiPlayerPaths)
+                        {
+                            var allPoints = kvp.Value.SelectMany(seg => seg).ToList();
+                            var latest = allPoints.LastOrDefault(p => p.Timestamp <= pathCurrentTimestamp);
+                            if (!string.IsNullOrEmpty(latest.PlayerName))
+                            {
+                                players[kvp.Key] = new PlayerTelemetry
+                                {
+                                    PlayerName = latest.PlayerName,
+                                    Team = latest.Team,
+                                    IsDead = latest.IsDead,
+                                    CurrentWeapon = latest.CurrentWeapon,
+                                    EmblemFg = latest.EmblemFg,
+                                    EmblemBg = latest.EmblemBg,
+                                    ColorPrimary = latest.ColorPrimary,
+                                    ColorSecondary = latest.ColorSecondary,
+                                    ColorTertiary = latest.ColorTertiary,
+                                    ColorQuaternary = latest.ColorQuaternary
+                                };
+                            }
+                        }
+                    }
+                }
+
+                // Separate by team
+                var redPlayers = players.Values.Where(p => p.Team == 0).OrderByDescending(p => p.Kills).ToList();
+                var bluePlayers = players.Values.Where(p => p.Team == 1).OrderByDescending(p => p.Kills).ToList();
+
+                int currentY = sbY;
+
+                // Calculate team scores (sum of kills for slayer)
+                int redScore = redPlayers.Sum(p => p.Kills);
+                int blueScore = bluePlayers.Sum(p => p.Kills);
+
+                // Draw Red Team Header
+                if (redPlayers.Count > 0)
+                {
+                    DrawFilledRect(sbX, currentY, sbWidth, headerHeight, redTeamBg);
+                    scoreboardHeaderFont.DrawText(null, "Red Team",
+                        new Rectangle(sbX + 10, currentY + 4, sbWidth - 60, headerHeight),
+                        DrawTextFormat.Left | DrawTextFormat.VerticalCenter, textColor);
+                    scoreboardHeaderFont.DrawText(null, redScore.ToString(),
+                        new Rectangle(sbX, currentY + 4, sbWidth - 10, headerHeight),
+                        DrawTextFormat.Right | DrawTextFormat.VerticalCenter, textColor);
+                    currentY += headerHeight;
+                }
+
+                // Draw Blue Team Header
+                if (bluePlayers.Count > 0)
+                {
+                    DrawFilledRect(sbX, currentY, sbWidth, headerHeight, blueTeamBg);
+                    scoreboardHeaderFont.DrawText(null, "Blue Team",
+                        new Rectangle(sbX + 10, currentY + 4, sbWidth - 60, headerHeight),
+                        DrawTextFormat.Left | DrawTextFormat.VerticalCenter, textColor);
+                    scoreboardHeaderFont.DrawText(null, blueScore.ToString(),
+                        new Rectangle(sbX, currentY + 4, sbWidth - 10, headerHeight),
+                        DrawTextFormat.Right | DrawTextFormat.VerticalCenter, textColor);
+                    currentY += headerHeight;
+                }
+
+                // Gap between headers and players
+                currentY += 6;
+
+                // Draw Red Team Players
+                foreach (var player in redPlayers)
+                {
+                    DrawPlayerRow(sbX, currentY, sbWidth, rowHeight, player, redTeamBg);
+                    currentY += rowHeight + 2;
+                }
+
+                // Draw Blue Team Players
+                foreach (var player in bluePlayers)
+                {
+                    DrawPlayerRow(sbX, currentY, sbWidth, rowHeight, player, blueTeamBg);
+                    currentY += rowHeight + 2;
+                }
+            }
+            catch (Exception ex)
+            {
+                AddDebugLog($"[SCOREBOARD] Error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Draws a single player row in the scoreboard.
+        /// </summary>
+        private void DrawPlayerRow(int x, int y, int width, int height, PlayerTelemetry player, Color bgColor)
+        {
+            // Draw background
+            DrawFilledRect(x, y, width, height, bgColor);
+
+            int currentX = x + 4;
+
+            // Draw emblem or dead X (22x22)
+            int emblemSize = 22;
+            if (player.IsDead)
+            {
+                scoreboardFont.DrawText(null, "X",
+                    new Rectangle(currentX, y, emblemSize, height),
+                    DrawTextFormat.Center | DrawTextFormat.VerticalCenter, Color.Red);
+            }
+            else
+            {
+                // Draw emblem texture if available
+                string emblemKey = $"{player.EmblemFg}_{player.EmblemBg}_{player.ColorPrimary}_{player.ColorSecondary}_{player.ColorTertiary}_{player.ColorQuaternary}";
+                if (emblemTextureCache.TryGetValue(emblemKey, out Texture emblemTex) && emblemTex != null && !emblemTex.Disposed)
+                {
+                    if (emblemSprite == null || emblemSprite.Disposed)
+                    {
+                        emblemSprite = new Sprite(render.device);
+                    }
+                    float scale = emblemSize / 256.0f;
+                    emblemSprite.Begin(SpriteFlags.AlphaBlend);
+                    emblemSprite.Transform = Matrix.Scaling(scale, scale, 1f) * Matrix.Translation(currentX, y + 1, 0);
+                    emblemSprite.Draw(emblemTex, Vector3.Empty, Vector3.Empty, Color.White.ToArgb());
+                    emblemSprite.Transform = Matrix.Identity;
+                    emblemSprite.End();
+                }
+            }
+            currentX += emblemSize + 4;
+
+            // Draw player name
+            int nameWidth = 180;
+            scoreboardFont.DrawText(null, player.PlayerName ?? "Unknown",
+                new Rectangle(currentX, y, nameWidth, height),
+                DrawTextFormat.Left | DrawTextFormat.VerticalCenter | DrawTextFormat.NoClip, Color.White);
+            currentX += nameWidth;
+
+            // Draw K/D/A stats
+            string stats = $"K {player.Kills}  D {player.Deaths}";
+            scoreboardFont.DrawText(null, stats,
+                new Rectangle(currentX, y, width - currentX - 4, height),
+                DrawTextFormat.Right | DrawTextFormat.VerticalCenter, Color.White);
+        }
+
+        /// <summary>
+        /// Draws a filled rectangle for UI backgrounds.
+        /// </summary>
+        private void DrawFilledRect(int x, int y, int width, int height, Color color)
+        {
+            // Use a simple line-based approach since we don't have a rectangle mesh
+            // This is less efficient but works without additional setup
+            CustomVertex.TransformedColored[] verts = new CustomVertex.TransformedColored[4];
+            verts[0] = new CustomVertex.TransformedColored(x, y, 0, 1, color.ToArgb());
+            verts[1] = new CustomVertex.TransformedColored(x + width, y, 0, 1, color.ToArgb());
+            verts[2] = new CustomVertex.TransformedColored(x, y + height, 0, 1, color.ToArgb());
+            verts[3] = new CustomVertex.TransformedColored(x + width, y + height, 0, 1, color.ToArgb());
+
+            render.device.VertexFormat = CustomVertex.TransformedColored.Format;
+            render.device.SetTexture(0, null);
+            render.device.RenderState.AlphaBlendEnable = true;
+            render.device.RenderState.SourceBlend = Blend.SourceAlpha;
+            render.device.RenderState.DestinationBlend = Blend.InvSourceAlpha;
+            render.device.DrawUserPrimitives(PrimitiveType.TriangleStrip, 2, verts);
+        }
+
+        /// <summary>
+        /// Draws the killfeed overlay.
+        /// </summary>
+        private void DrawKillfeed()
+        {
+            try
+            {
+                if (scoreboardFont == null || scoreboardFont.Disposed)
+                {
+                    scoreboardFont = new Microsoft.DirectX.Direct3D.Font(render.device,
+                        new System.Drawing.Font("Overpass", 12, FontStyle.Regular));
+                }
+
+                int screenWidth = render.device.Viewport.Width;
+                int kfX = screenWidth - 320;
+                int kfY = 60;
+                int rowHeight = 22;
+
+                // Get recent kills from killEvents
+                var recentKills = killEvents
+                    .Where(k => showLiveTelemetry || k.Timestamp <= pathCurrentTimestamp)
+                    .OrderByDescending(k => k.Timestamp)
+                    .Take(8)
+                    .Reverse()
+                    .ToList();
+
+                int currentY = kfY;
+                foreach (var kill in recentKills)
+                {
+                    // Draw killfeed entry: "Player got a kill with Weapon"
+                    Color teamColor = kill.Team == 0 ? Color.FromArgb(197, 66, 69) :
+                                     kill.Team == 1 ? Color.FromArgb(65, 105, 168) : Color.White;
+
+                    string entry = $"{kill.PlayerName} [{kill.Weapon}]";
+                    DrawFilledRect(kfX, currentY, 300, rowHeight, Color.FromArgb(150, 0, 0, 0));
+                    scoreboardFont.DrawText(null, entry,
+                        new Rectangle(kfX + 8, currentY, 290, rowHeight),
+                        DrawTextFormat.Left | DrawTextFormat.VerticalCenter, teamColor);
+
+                    currentY += rowHeight + 2;
+                }
+            }
+            catch (Exception ex)
+            {
+                AddDebugLog($"[KILLFEED] Error: {ex.Message}");
             }
         }
 
@@ -9136,13 +10211,18 @@ namespace entity.Renderers
         }
 
         /// <summary>
-        /// Gets the Carnage Report emblem URL for a player.
+        /// Gets the emblem URL for a player.
         /// </summary>
         private string GetEmblemUrl(PlayerTelemetry player)
         {
-            // P=primary armor, S=secondary armor, EP=emblem primary (tertiary), ES=emblem secondary (quaternary)
-            return $"https://h2emblem.carnagereport.workers.dev/P{player.ColorPrimary}-S{player.ColorSecondary}-EP{player.ColorTertiary}-ES{player.ColorQuaternary}-EF{player.EmblemFg}-EB{player.EmblemBg}-ET0.png";
+            // P=primary, S=secondary, EP=emblem primary, ES=emblem secondary, EF=foreground, EB=background, ET=toggle
+            return $"http://104.207.143.249:3001/P{player.ColorPrimary}-S{player.ColorSecondary}-EP{player.ColorTertiary}-ES{player.ColorQuaternary}-EF{player.EmblemFg}-EB{player.EmblemBg}-ET0.png";
         }
+
+        /// <summary>
+        /// Tracks failed emblem loads to avoid retrying too quickly.
+        /// </summary>
+        private Dictionary<string, DateTime> emblemFailedCache = new Dictionary<string, DateTime>();
 
         /// <summary>
         /// Gets or loads an emblem texture, caching it for reuse.
@@ -9155,6 +10235,14 @@ namespace entity.Renderers
                 return emblemTextureCache[emblemKey];
             }
 
+            // Check if this emblem recently failed - wait 60 seconds before retry
+            if (emblemFailedCache.ContainsKey(emblemKey))
+            {
+                if ((DateTime.Now - emblemFailedCache[emblemKey]).TotalSeconds < 60)
+                    return null;
+                emblemFailedCache.Remove(emblemKey);
+            }
+
             // Start async load if not already loading
             if (!emblemLoadingSet.Contains(emblemKey))
             {
@@ -9162,43 +10250,84 @@ namespace entity.Renderers
                 string url = GetEmblemUrl(player);
                 AddDebugLog($"[EMBLEM] Loading: {url}");
 
-                // Load emblem in background thread
+                // Load emblem in background thread with retry
                 System.Threading.ThreadPool.QueueUserWorkItem(_ =>
                 {
-                    try
+                    int maxRetries = 2;
+                    int retryDelay = 1000;
+
+                    for (int attempt = 0; attempt <= maxRetries; attempt++)
                     {
-                        using (var webClient = new System.Net.WebClient())
+                        try
                         {
-                            byte[] imageData = webClient.DownloadData(url);
-                            AddDebugLog($"[EMBLEM] Downloaded {imageData.Length} bytes for {player.PlayerName}");
-                            // Must create texture on main thread
-                            this.BeginInvoke(new System.Action(() =>
+                            using (var webClient = new System.Net.WebClient())
                             {
-                                try
+                                // Add headers to help with Cloudflare
+                                webClient.Headers.Add("User-Agent", "Entity-BSPViewer/1.0");
+                                webClient.Headers.Add("Accept", "image/png,image/*");
+
+                                byte[] imageData = webClient.DownloadData(url);
+                                AddDebugLog($"[EMBLEM] Downloaded {imageData.Length} bytes for {player.PlayerName}");
+
+                                // Must create texture on main thread
+                                this.BeginInvoke(new System.Action(() =>
                                 {
-                                    using (var ms = new System.IO.MemoryStream(imageData))
+                                    try
                                     {
-                                        Texture tex = TextureLoader.FromStream(render.device, ms);
-                                        emblemTextureCache[emblemKey] = tex;
-                                        AddDebugLog($"[EMBLEM] Texture created for {player.PlayerName}");
+                                        using (var ms = new System.IO.MemoryStream(imageData))
+                                        {
+                                            Texture tex = TextureLoader.FromStream(render.device, ms);
+                                            emblemTextureCache[emblemKey] = tex;
+                                            AddDebugLog($"[EMBLEM] Texture created for {player.PlayerName}");
+                                        }
                                     }
-                                }
-                                catch (Exception ex)
-                                {
-                                    AddDebugLog($"[EMBLEM] Texture error: {ex.Message}");
-                                }
-                                finally
-                                {
-                                    emblemLoadingSet.Remove(emblemKey);
-                                }
-                            }));
+                                    catch (Exception ex)
+                                    {
+                                        AddDebugLog($"[EMBLEM] Texture error: {ex.Message}");
+                                        emblemFailedCache[emblemKey] = DateTime.Now;
+                                    }
+                                    finally
+                                    {
+                                        emblemLoadingSet.Remove(emblemKey);
+                                    }
+                                }));
+                                return; // Success, exit retry loop
+                            }
+                        }
+                        catch (System.Net.WebException wex)
+                        {
+                            var response = wex.Response as System.Net.HttpWebResponse;
+                            int statusCode = response != null ? (int)response.StatusCode : 0;
+                            AddDebugLog($"[EMBLEM] Download error (attempt {attempt + 1}): HTTP {statusCode} - {wex.Message}");
+
+                            // Don't retry on 4xx errors (client errors)
+                            if (statusCode >= 400 && statusCode < 500)
+                            {
+                                emblemFailedCache[emblemKey] = DateTime.Now;
+                                emblemLoadingSet.Remove(emblemKey);
+                                return;
+                            }
+
+                            if (attempt < maxRetries)
+                            {
+                                System.Threading.Thread.Sleep(retryDelay);
+                                retryDelay *= 2; // Exponential backoff
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            AddDebugLog($"[EMBLEM] Download error (attempt {attempt + 1}): {ex.Message}");
+                            if (attempt < maxRetries)
+                            {
+                                System.Threading.Thread.Sleep(retryDelay);
+                                retryDelay *= 2;
+                            }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        AddDebugLog($"[EMBLEM] Download error: {ex.Message}");
-                        emblemLoadingSet.Remove(emblemKey);
-                    }
+
+                    // All retries failed
+                    emblemFailedCache[emblemKey] = DateTime.Now;
+                    emblemLoadingSet.Remove(emblemKey);
                 });
             }
 
@@ -9565,67 +10694,93 @@ namespace entity.Renderers
                 }
             }
 
-            // Draw bookmark marker if set
-            if (bookmarkTimestamp >= 0 && pathMaxTimestamp > pathMinTimestamp)
+            // Draw A-B bookmark markers if set
+            if (pathMaxTimestamp > pathMinTimestamp)
             {
-                float t = (bookmarkTimestamp - pathMinTimestamp) / timeRange;
-                int bx = trackLeft + (int)(t * trackWidth);
+                Color markerAColor = Color.FromArgb(0, 200, 255);
+                Color markerBColor = Color.FromArgb(255, 180, 0);
+                Color loopColor = Color.FromArgb(255, 215, 0);
 
-                Color bookmarkColor = bookmarkLoopEnabled
-                    ? Color.FromArgb(255, 215, 0)
-                    : Color.FromArgb(255, 255, 100);
+                // Draw shaded region between A and B if both set
+                if (bookmarkStartTimestamp >= 0 && bookmarkEndTimestamp >= 0)
+                {
+                    float tA = (bookmarkStartTimestamp - pathMinTimestamp) / timeRange;
+                    float tB = (bookmarkEndTimestamp - pathMinTimestamp) / timeRange;
+                    int xA = trackLeft + (int)(tA * trackWidth);
+                    int xB = trackLeft + (int)(tB * trackWidth);
 
-                using (Pen glowPen = new Pen(Color.FromArgb(100, bookmarkColor), 6))
-                {
-                    e.Graphics.DrawLine(glowPen, bx, 2, bx, 40);
-                }
-                using (Pen pen = new Pen(bookmarkColor, 2))
-                {
-                    e.Graphics.DrawLine(pen, bx, 2, bx, 40);
-                }
-
-                Point[] flag = {
-                    new Point(bx, 2),
-                    new Point(bx + 10, 7),
-                    new Point(bx, 12),
-                    new Point(bx, 2)
-                };
-                using (SolidBrush brush = new SolidBrush(bookmarkColor))
-                {
-                    e.Graphics.FillPolygon(brush, flag);
-                }
-                using (Pen outlinePen = new Pen(Color.FromArgb(200, 0, 0, 0), 1))
-                {
-                    e.Graphics.DrawPolygon(outlinePen, flag);
-                }
-
-                if (bookmarkLoopEnabled)
-                {
-                    using (System.Drawing.Font font = new System.Drawing.Font("Segoe UI", 7, FontStyle.Bold))
-                    using (SolidBrush textBrush = new SolidBrush(Color.Black))
+                    Color fillColor = bookmarkLoopEnabled
+                        ? Color.FromArgb(60, 255, 215, 0)
+                        : Color.FromArgb(40, 0, 200, 255);
+                    using (SolidBrush brush = new SolidBrush(fillColor))
                     {
-                        e.Graphics.DrawString("↺", font, textBrush, bx - 4, 24);
+                        e.Graphics.FillRectangle(brush, xA, 5, xB - xA, 35);
+                    }
+                }
+
+                // Draw marker A (start)
+                if (bookmarkStartTimestamp >= 0)
+                {
+                    float t = (bookmarkStartTimestamp - pathMinTimestamp) / timeRange;
+                    int bx = trackLeft + (int)(t * trackWidth);
+                    Color color = bookmarkLoopEnabled ? loopColor : markerAColor;
+
+                    using (Pen pen = new Pen(color, 2))
+                    {
+                        e.Graphics.DrawLine(pen, bx, 2, bx, 40);
+                    }
+                    using (System.Drawing.Font font = new System.Drawing.Font("Segoe UI", 7, FontStyle.Bold))
+                    using (SolidBrush textBrush = new SolidBrush(color))
+                    {
+                        e.Graphics.DrawString("A", font, textBrush, bx - 4, 2);
+                    }
+                }
+
+                // Draw marker B (end)
+                if (bookmarkEndTimestamp >= 0)
+                {
+                    float t = (bookmarkEndTimestamp - pathMinTimestamp) / timeRange;
+                    int bx = trackLeft + (int)(t * trackWidth);
+                    Color color = bookmarkLoopEnabled ? loopColor : markerBColor;
+
+                    using (Pen pen = new Pen(color, 2))
+                    {
+                        e.Graphics.DrawLine(pen, bx, 2, bx, 40);
+                    }
+                    using (System.Drawing.Font font = new System.Drawing.Font("Segoe UI", 7, FontStyle.Bold))
+                    using (SolidBrush textBrush = new SolidBrush(color))
+                    {
+                        e.Graphics.DrawString("B", font, textBrush, bx - 4, 2);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Updates the bookmark button appearance.
+        /// Updates the bookmark button appearance based on A-B marker state.
         /// </summary>
         private void UpdateBookmarkButton()
         {
             if (bookmarkButton == null) return;
 
-            if (bookmarkTimestamp >= 0)
+            if (bookmarkStartTimestamp >= 0 && bookmarkEndTimestamp >= 0)
             {
-                bookmarkButton.Text = "🔖 Clear";
+                // Both markers set - click will clear
+                bookmarkButton.Text = "[Clear]";
                 bookmarkButton.BackColor = Color.FromArgb(60, 80, 40);
                 bookmarkButton.ForeColor = Color.FromArgb(255, 215, 0);
             }
+            else if (bookmarkStartTimestamp >= 0)
+            {
+                // Only A set - waiting for B
+                bookmarkButton.Text = "[B] Set";
+                bookmarkButton.BackColor = Color.FromArgb(50, 70, 90);
+                bookmarkButton.ForeColor = Color.FromArgb(255, 180, 0);
+            }
             else
             {
-                bookmarkButton.Text = "🔖 Set";
+                // Neither set - waiting for A
+                bookmarkButton.Text = "[A] Set";
                 bookmarkButton.BackColor = Color.FromArgb(30, 45, 60);
                 bookmarkButton.ForeColor = Color.FromArgb(0, 200, 255);
             }
@@ -9638,7 +10793,9 @@ namespace entity.Renderers
         {
             if (loopButton == null) return;
 
-            if (bookmarkLoopEnabled && bookmarkTimestamp >= 0)
+            bool hasValidLoop = bookmarkStartTimestamp >= 0 && bookmarkEndTimestamp >= 0;
+
+            if (bookmarkLoopEnabled && hasValidLoop)
             {
                 loopButton.BackColor = Color.FromArgb(60, 80, 40);
                 loopButton.ForeColor = Color.FromArgb(255, 215, 0);
@@ -9646,19 +10803,19 @@ namespace entity.Renderers
             else
             {
                 loopButton.BackColor = Color.FromArgb(30, 45, 60);
-                loopButton.ForeColor = bookmarkTimestamp >= 0 ? Color.FromArgb(0, 200, 255) : Color.Gray;
+                loopButton.ForeColor = hasValidLoop ? Color.FromArgb(0, 200, 255) : Color.Gray;
             }
         }
 
         /// <summary>
-        /// Jumps playback to the bookmark position.
+        /// Jumps playback to the bookmark start position.
         /// </summary>
         private void JumpToBookmark()
         {
-            if (bookmarkTimestamp < 0 || pathMaxTimestamp <= pathMinTimestamp) return;
+            if (bookmarkStartTimestamp < 0 || pathMaxTimestamp <= pathMinTimestamp) return;
 
-            pathCurrentTimestamp = bookmarkTimestamp;
-            pathTimeAccumulator = bookmarkTimestamp;
+            pathCurrentTimestamp = bookmarkStartTimestamp;
+            pathTimeAccumulator = bookmarkStartTimestamp;
 
             for (int i = 0; i < playerPath.Count - 1; i++)
             {
@@ -9670,6 +10827,7 @@ namespace entity.Renderers
             }
 
             UpdateTimelineLabel();
+            UpdateTrackBarFromTimestamp();
         }
 
         /// <summary>
@@ -9757,6 +10915,60 @@ namespace entity.Renderers
             }
 
             #endregion
+        }
+    }
+
+    /// <summary>
+    /// Extension methods for Graphics class.
+    /// </summary>
+    public static class GraphicsExtensions
+    {
+        /// <summary>
+        /// Fills a rounded rectangle.
+        /// </summary>
+        public static void FillRoundedRectangle(this Graphics g, Brush brush, int x, int y, int width, int height, int radius)
+        {
+            if (radius <= 0)
+            {
+                g.FillRectangle(brush, x, y, width, height);
+                return;
+            }
+
+            radius = Math.Min(radius, Math.Min(width, height) / 2);
+
+            using (System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath())
+            {
+                path.AddArc(x, y, radius * 2, radius * 2, 180, 90);
+                path.AddArc(x + width - radius * 2, y, radius * 2, radius * 2, 270, 90);
+                path.AddArc(x + width - radius * 2, y + height - radius * 2, radius * 2, radius * 2, 0, 90);
+                path.AddArc(x, y + height - radius * 2, radius * 2, radius * 2, 90, 90);
+                path.CloseFigure();
+                g.FillPath(brush, path);
+            }
+        }
+
+        /// <summary>
+        /// Draws a rounded rectangle outline.
+        /// </summary>
+        public static void DrawRoundedRectangle(this Graphics g, Pen pen, int x, int y, int width, int height, int radius)
+        {
+            if (radius <= 0)
+            {
+                g.DrawRectangle(pen, x, y, width, height);
+                return;
+            }
+
+            radius = Math.Min(radius, Math.Min(width, height) / 2);
+
+            using (System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath())
+            {
+                path.AddArc(x, y, radius * 2, radius * 2, 180, 90);
+                path.AddArc(x + width - radius * 2, y, radius * 2, radius * 2, 270, 90);
+                path.AddArc(x + width - radius * 2, y + height - radius * 2, radius * 2, radius * 2, 0, 90);
+                path.AddArc(x, y + height - radius * 2, radius * 2, radius * 2, 90, 90);
+                path.CloseFigure();
+                g.DrawPath(pen, path);
+            }
         }
     }
 }
