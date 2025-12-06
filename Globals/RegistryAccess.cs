@@ -132,7 +132,7 @@ namespace Globals
                 the_Reg.DeleteValue(valueName);
                 the_Reg.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -203,7 +203,7 @@ namespace Globals
             {
                 mainKey.DeleteSubKeyTree(subKey);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

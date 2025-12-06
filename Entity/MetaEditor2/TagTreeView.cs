@@ -118,7 +118,7 @@ namespace entity.MetaEditor2
 
         public void loadMeta(Meta meta, HaloVersionEnum HaloVersion, string FileName)
         {
-            this.fileName = fileName;
+            this.fileName = FileName;
             this.HaloVersion = HaloVersion;
             this.meta = meta;
 

@@ -333,7 +333,7 @@ namespace entity.Main
                     }
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
                 #endregion
@@ -546,10 +546,6 @@ namespace entity.Main
                             fd.name = fileName;
                         }
 
-                        if (pd.version == "0.0")
-                        {
-                            int a = 0;
-                        }
                         this.Add(fName[0], pd);
                     }
 

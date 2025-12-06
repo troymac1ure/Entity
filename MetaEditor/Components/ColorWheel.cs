@@ -94,12 +94,16 @@ namespace MetaEditor.Components
         /// <summary>
         /// The is nulled out reflexive.
         /// </summary>
+        #pragma warning disable 0414  // Field assigned but never used
         private bool isNulledOutReflexive = true;
+        #pragma warning restore 0414
 
         /// <summary>
         /// The mapindex.
         /// </summary>
+        #pragma warning disable 0169  // Field never used
         private Map mapindex;
+        #pragma warning restore 0169
 
         /// <summary>
         /// The updating colors.

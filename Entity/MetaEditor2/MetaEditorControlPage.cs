@@ -19,7 +19,9 @@ namespace entity.MetaEditor2
         /// Our Binary Stream Reader & Writer variables, used for all populating & changing
         /// </summary>
         BinaryReader BR;
+#pragma warning disable CS0169 // Field is never used
         BinaryWriter BW;
+#pragma warning restore CS0169
         /// <summary>
         /// Keeps a pointer to our currently selected control for when we hit "Restore Value" because the focus gets
         /// transferred to the button. This way we know what control we were on.
@@ -280,7 +282,6 @@ namespace entity.MetaEditor2
             else
                 o = rd.reflexive.items;
 
-            bool labelFound = false;
             int tabIndex = 0;
             // These are used to detect color fields and replace with a ColorWheel control
             // Stores the control for an Alpha Color value
@@ -1551,8 +1552,10 @@ namespace entity.MetaEditor2
 
                 try
                 {
+#pragma warning disable CS1690 // Accessing marshal-by-reference field
                     string tip =
                             "offset in reflexive: " + (((BaseField)this.panelMetaEditor.Controls[counter]).chunkOffset).ToString() + " (" + toHex(((BaseField)this.panelMetaEditor.Controls[counter]).chunkOffset) + ")" +
+#pragma warning restore CS1690
                             "\noffset in tag: " + (temp - map.MetaInfo.Offset[tagnum]).ToString() + " (" + toHex(temp - map.MetaInfo.Offset[tagnum]) + ")" +
                             "\noffset in map: " + (temp).ToString() + " (" + toHex(temp) + ")";
                     if (tagnum == meta.TagIndex)

@@ -1,11 +1,13 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ControlSwapper.cs" company="">
-//   
+//
 // </copyright>
 // <summary>
 //   The control swapper.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
+
+#pragma warning disable 1690  // Accessing a member on a marshal-by-reference class field
 
 namespace MetaEditor.Forms
 {

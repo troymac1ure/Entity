@@ -99,7 +99,9 @@ namespace entity.MetaEditor2
 
         #endregion
 
+#pragma warning disable CS0169 // Field is never used
         private System.Windows.Forms.ComboBox TagType;
+#pragma warning restore CS0169
         private System.Windows.Forms.ComboBox cbTagIdent;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cbTagType;

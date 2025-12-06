@@ -60,12 +60,14 @@ namespace entity.HexEditor
         /// <summary>
         /// The selectionlength.
         /// </summary>
+#pragma warning disable CS0169 // Field is never used
         private long selectionlength;
 
         /// <summary>
         /// The selectionoffset.
         /// </summary>
         private long selectionoffset;
+#pragma warning restore CS0169
 
         /// <summary>
         /// The txt bitmask.

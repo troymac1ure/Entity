@@ -9,10 +9,12 @@ namespace MetaEditor.Components
 
     partial class ColorWheel
     {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
+        #pragma warning disable 0414  // Field assigned but never used
         private System.ComponentModel.Container components = null;
+        #pragma warning restore 0414
 
         private Bitmap renderBitmap = null;
         private Bitmap brightnessBitmap = null;

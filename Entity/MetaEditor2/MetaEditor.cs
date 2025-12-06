@@ -18,7 +18,9 @@ namespace entity.MetaEditor2
         //Meta oldMeta = null;
         HaloMap.Map.Map map = null;
         MapForm mapForm;
+#pragma warning disable CS0414 // Field is assigned but never used
         bool isDragging = false;
+#pragma warning restore CS0414
 
         private Color bgColor;
         private Color fgColor;

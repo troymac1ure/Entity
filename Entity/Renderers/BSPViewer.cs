@@ -14,6 +14,11 @@ namespace entity.Renderers
     using System.ComponentModel;
     using System.Drawing;
     using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Threading;
     using System.Windows.Forms;
 
     using entity;
@@ -39,6 +44,12 @@ namespace entity.Renderers
     public partial class BSPViewer : Form
     {
         #region Constants and Fields
+
+        /// <summary>
+        /// Whether theater mode is enabled (shows timeline, HUD, telemetry features).
+        /// When false, opens as basic Visual Editor.
+        /// </summary>
+        private readonly bool theaterMode = false;
 
         /// <summary>
         /// The cam.
@@ -173,7 +184,9 @@ namespace entity.Renderers
         /// <summary>
         /// The gizmo.
         /// </summary>
+#pragma warning disable CS0649 // Field is never assigned
         private Gizmo gizmo;
+#pragma warning restore CS0649
 
         /// <summary>
         /// The in sizing.
@@ -243,7 +256,9 @@ namespace entity.Renderers
         /// <summary>
         /// The shaderx.
         /// </summary>
+#pragma warning disable CS0649 // Field is never assigned
         private DXShader shaderx;
+#pragma warning restore CS0649
 
         /// <summary>
         /// The spawnmodelindex.
@@ -275,6 +290,377 @@ namespace entity.Renderers
         /// </summary>
         private bool updateXYZYPR = true;
 
+        #region Player Path Animation Fields
+
+        /// <summary>
+        /// List of player path coordinates with timestamps (legacy single-player).
+        /// </summary>
+        private List<PlayerPathPoint> playerPath = new List<PlayerPathPoint>();
+
+        /// <summary>
+        /// Multi-player paths: Dictionary of player name -> list of path segments.
+        /// Each segment is a list of points (segments break on respawn).
+        /// </summary>
+        private Dictionary<string, List<List<PlayerPathPoint>>> multiPlayerPaths = new Dictionary<string, List<List<PlayerPathPoint>>>();
+
+        /// <summary>
+        /// List of all unique player names in the loaded path data.
+        /// </summary>
+        private List<string> pathPlayerNames = new List<string>();
+
+        /// <summary>
+        /// Set of players to hide during playback/live view.
+        /// </summary>
+        private HashSet<string> hiddenPlayers = new HashSet<string>();
+
+        /// <summary>
+        /// Whether POV mode is enabled (camera follows selected player).
+        /// </summary>
+        private bool povModeEnabled = false;
+
+        /// <summary>
+        /// Player being followed in POV mode.
+        /// </summary>
+        private string povFollowPlayer = null;
+
+        /// <summary>
+        /// Minimum timestamp in path data (for timeline).
+        /// </summary>
+        private float pathMinTimestamp = 0;
+
+        /// <summary>
+        /// Maximum timestamp in path data (for timeline).
+        /// </summary>
+        private float pathMaxTimestamp = 0;
+
+        /// <summary>
+        /// Tracks kill events for timeline display.
+        /// </summary>
+        private struct KillEvent
+        {
+            public float Timestamp;
+            public string PlayerName;
+            public int Team;
+            public string Weapon;
+        }
+        private List<KillEvent> killEvents = new List<KillEvent>();
+
+        /// <summary>
+        /// Tracks previous kill count per player to detect new kills.
+        /// </summary>
+        private Dictionary<string, int> playerPrevKills = new Dictionary<string, int>();
+
+        /// <summary>
+        /// Current playback timestamp.
+        /// </summary>
+        private float pathCurrentTimestamp = 0;
+
+        /// <summary>
+        /// Current index in the player path animation.
+        /// </summary>
+        private int pathCurrentIndex = 0;
+
+        /// <summary>
+        /// Whether path animation is playing.
+        /// </summary>
+        private bool pathIsPlaying = false;
+
+        /// <summary>
+        /// Playback speed multiplier.
+        /// </summary>
+        private float pathPlaybackSpeed = 0.25f;
+
+        /// <summary>
+        /// Time accumulator for animation.
+        /// </summary>
+        private float pathTimeAccumulator = 0;
+
+        /// <summary>
+        /// Last frame time for delta calculation.
+        /// </summary>
+        private DateTime pathLastFrameTime = DateTime.Now;
+
+        /// <summary>
+        /// Bookmark timestamp for loop playback.
+        /// </summary>
+        private float bookmarkTimestamp = -1;
+
+        /// <summary>
+        /// Whether bookmark loop mode is enabled.
+        /// </summary>
+        private bool bookmarkLoopEnabled = false;
+
+        /// <summary>
+        /// Reference to the timeline panel for invalidation.
+        /// </summary>
+        private Panel timelinePanelRef = null;
+
+        /// <summary>
+        /// Bookmark button reference.
+        /// </summary>
+        private System.Windows.Forms.Button bookmarkButton = null;
+
+        /// <summary>
+        /// Loop toggle button reference.
+        /// </summary>
+        private System.Windows.Forms.Button loopButton = null;
+
+        /// <summary>
+        /// FPS counter fields.
+        /// </summary>
+        private int fpsFrameCount = 0;
+        private DateTime fpsLastUpdate = DateTime.Now;
+        private float currentFps = 0;
+        private Microsoft.DirectX.Direct3D.Font fpsFont = null;
+
+        /// <summary>
+        /// Mesh for rendering the player marker.
+        /// </summary>
+        private Mesh playerMarkerMesh;
+
+        /// <summary>
+        /// Material for the player marker.
+        /// </summary>
+        private Material PlayerMarkerMaterial;
+
+        /// <summary>
+        /// Whether to show the path trail.
+        /// </summary>
+        private bool showPathTrail = true;
+
+        /// <summary>
+        /// Parsed biped model for rendering player on path.
+        /// </summary>
+        private ParsedModel playerBipedModel;
+
+        /// <summary>
+        /// Whether biped model loading has been attempted.
+        /// </summary>
+        private bool playerBipedModelLoaded = false;
+
+        /// <summary>
+        /// Player telemetry data structure with all fields.
+        /// </summary>
+        public class PlayerTelemetry
+        {
+            // Identity
+            public string PlayerName;
+            public string XboxId;
+            public string MachineId;
+            public int Team; // 0 = red, 1 = blue, 2 = green, 3 = orange, -1 = unknown
+
+            // Emblem & Colors
+            public int EmblemFg;
+            public int EmblemBg;
+            public int ColorPrimary;
+            public int ColorSecondary;
+            public int ColorTertiary;
+            public int ColorQuaternary;
+
+            // Timing
+            public DateTime Timestamp;
+
+            // Position & Velocity
+            public float PosX;
+            public float PosY;
+            public float PosZ;
+            public float VelX;
+            public float VelY;
+            public float VelZ;
+            public float Speed;
+
+            // Orientation (radians and degrees)
+            public float Yaw;
+            public float Pitch;
+            public float YawDeg;
+            public float PitchDeg;
+
+            // Movement State
+            public bool IsCrouching;
+            public float CrouchBlend;
+            public bool IsAirborne;
+            public int AirborneTicks;
+
+            // Weapons
+            public int WeaponSlot;
+            public string CurrentWeapon;
+            public int FragGrenades;
+            public int PlasmaGrenades;
+
+            // K/D Stats
+            public int Kills;
+            public int Deaths;
+            public int RespawnTimer;
+            public bool IsDead;
+
+            // Events
+            public string Event;
+        }
+
+        /// <summary>
+        /// Player path point structure.
+        /// </summary>
+        public struct PlayerPathPoint
+        {
+            public float X;
+            public float Y;
+            public float Z;
+            public float Timestamp; // In seconds from start
+            public int Team; // 0 = red, 1 = blue, 2 = green, 3 = orange, -1 = unknown
+            public float FacingYaw;
+            public string PlayerName;
+            public string CurrentWeapon;
+            public bool IsCrouching;
+            public bool IsAirborne;
+            public bool IsDead;
+
+            // Emblem & Colors (same as PlayerTelemetry)
+            public int EmblemFg;
+            public int EmblemBg;
+            public int ColorPrimary;
+            public int ColorSecondary;
+            public int ColorTertiary;
+            public int ColorQuaternary;
+
+            public PlayerPathPoint(float x, float y, float z, float timestamp, int team = -1,
+                float facingYaw = 0, string playerName = "", string weapon = "",
+                bool crouching = false, bool airborne = false, bool isDead = false,
+                int emblemFg = 0, int emblemBg = 0, int colorPrimary = 0, int colorSecondary = 0,
+                int colorTertiary = 0, int colorQuaternary = 0)
+            {
+                X = x;
+                Y = y;
+                Z = z;
+                Timestamp = timestamp;
+                Team = team;
+                FacingYaw = facingYaw;
+                PlayerName = playerName;
+                CurrentWeapon = weapon;
+                IsCrouching = crouching;
+                IsAirborne = airborne;
+                IsDead = isDead;
+                EmblemFg = emblemFg;
+                EmblemBg = emblemBg;
+                ColorPrimary = colorPrimary;
+                ColorSecondary = colorSecondary;
+                ColorTertiary = colorTertiary;
+                ColorQuaternary = colorQuaternary;
+            }
+        }
+
+        #endregion
+
+        #region Live Telemetry Network Fields
+
+        /// <summary>
+        /// UDP client for receiving live player telemetry.
+        /// </summary>
+        private UdpClient telemetryUdpClient;
+
+        /// <summary>
+        /// TCP listener for receiving live player telemetry.
+        /// </summary>
+        private TcpListener telemetryTcpListener;
+
+        /// <summary>
+        /// Thread for handling incoming UDP telemetry data.
+        /// </summary>
+        private Thread telemetryListenerThread;
+
+        /// <summary>
+        /// Thread for handling incoming TCP telemetry data.
+        /// </summary>
+        private Thread telemetryTcpListenerThread;
+
+        /// <summary>
+        /// Whether the telemetry listener is running.
+        /// </summary>
+        private volatile bool telemetryListenerRunning = false;
+
+        /// <summary>
+        /// Dictionary of live player data by player name.
+        /// </summary>
+        private Dictionary<string, PlayerTelemetry> livePlayers = new Dictionary<string, PlayerTelemetry>();
+
+        /// <summary>
+        /// Tracks death state per player (true = currently dead, waiting for respawn).
+        /// </summary>
+        private Dictionary<string, bool> playerDeadState = new Dictionary<string, bool>();
+
+        /// <summary>
+        /// Tracks previous death count per player to detect new deaths.
+        /// </summary>
+        private Dictionary<string, int> playerPrevDeaths = new Dictionary<string, int>();
+
+        /// <summary>
+        /// Tracks previous position per player to detect respawn.
+        /// </summary>
+        private Dictionary<string, Vector3> playerPrevPosition = new Dictionary<string, Vector3>();
+
+        /// <summary>
+        /// Lock object for thread-safe access to live player data.
+        /// </summary>
+        private object livePlayersLock = new object();
+
+        /// <summary>
+        /// Whether to show live telemetry instead of recorded path.
+        /// </summary>
+        private bool showLiveTelemetry = false;
+
+        /// <summary>
+        /// List of live player names for dropdown population.
+        /// </summary>
+        private List<string> livePlayerNames = new List<string>();
+
+        /// <summary>
+        /// Font for drawing player names.
+        /// </summary>
+        private Microsoft.DirectX.Direct3D.Font playerNameFont;
+
+        /// <summary>
+        /// Mesh for team indicator circle.
+        /// </summary>
+        private Mesh teamCircleMesh;
+
+        /// <summary>
+        /// Column indices for CSV parsing (detected from header).
+        /// </summary>
+        private Dictionary<string, int> csvColumnIndices = new Dictionary<string, int>();
+
+        /// <summary>
+        /// Debug log of recent telemetry messages.
+        /// </summary>
+        private List<string> telemetryDebugLog = new List<string>();
+        private object telemetryDebugLogLock = new object();
+        private const int MaxDebugLogEntries = 50;
+
+        /// <summary>
+        /// Cached emblem textures by emblem key (EF_EB_P_S format).
+        /// </summary>
+        private Dictionary<string, Texture> emblemTextureCache = new Dictionary<string, Texture>();
+
+        /// <summary>
+        /// Sprite for drawing 2D textures.
+        /// </summary>
+        private Sprite emblemSprite;
+
+        /// <summary>
+        /// Set of emblem keys currently being loaded.
+        /// </summary>
+        private HashSet<string> emblemLoadingSet = new HashSet<string>();
+
+        /// <summary>
+        /// Cached weapon textures by weapon name.
+        /// </summary>
+        private Dictionary<string, Texture> weaponTextureCache = new Dictionary<string, Texture>();
+
+        /// <summary>
+        /// Set of weapon names currently being loaded.
+        /// </summary>
+        private HashSet<string> weaponLoadingSet = new HashSet<string>();
+
+        #endregion
+
         #endregion
 
         #region Constructors and Destructors
@@ -284,9 +670,12 @@ namespace entity.Renderers
         /// </summary>
         /// <param name="tempbsp">The tempbsp.</param>
         /// <param name="map">The map.</param>
+        /// <param name="theaterMode">If true, opens in Theater Mode with full playback features.</param>
         /// <remarks></remarks>
-        public BSPViewer(BSPModel tempbsp, Map map)
+        public BSPViewer(BSPModel tempbsp, Map map, bool theaterMode = false)
         {
+            this.theaterMode = theaterMode;
+
             // InitializeComponent
             InitializeComponent();
 
@@ -313,16 +702,16 @@ namespace entity.Renderers
             this.BackColor = Color.Blue;
 
             #region Clear the labels
-            toolStripLabel2.Text = "Camera Position: X: 0 • Y: 0 • Z: 0";
+            toolStripLabel2.Text = "Camera Position: X: 0 ï¿½ Y: 0 ï¿½ Z: 0";
             tsLabel1.Text = "Type: <";
             tsButtonType.Text = string.Empty;
             tsLabel2.Text = "> (";
             tsLabelCount.Text = string.Empty;
-            tsLabelX.Text = ") • X: ";
+            tsLabelX.Text = ") ï¿½ X: ";
             tsTextBoxX.Text = string.Empty;
-            tsLabelY.Text = " • Y: ";
+            tsLabelY.Text = " ï¿½ Y: ";
             tsTextBoxY.Text = string.Empty;
-            tsLabelZ.Text = " • Z: ";
+            tsLabelZ.Text = " ï¿½ Z: ";
             tsTextBoxZ.Text = string.Empty;
 
             tsLabelYaw.Text = string.Empty;
@@ -563,7 +952,682 @@ namespace entity.Renderers
                 this.NoCulling.Checked = true;
             }
 
+            // Initialize path playback controls (Theater Mode only)
+            if (theaterMode)
+            {
+                InitializePathControls();
+                this.Text = "Theater Mode - " + map.filePath;
+            }
+
+            // Clean up telemetry listener on close
+            this.FormClosing += BSPViewer_FormClosing;
+
             Main();
+        }
+
+        private void BSPViewer_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Stop telemetry listener if running
+            if (telemetryListenerRunning)
+            {
+                StopTelemetryListener();
+            }
+        }
+
+        // UI controls that need to be updated when path is loaded
+        private ToolStripDropDownButton pathPlayerDropdown;
+        private ToolStripComboBox povPlayerDropdown;
+        private TrackBar pathTimelineTrackBar;
+        private Label pathTimeLabel;
+        private ToolStripButton pathPlayPauseButton;
+
+        /// <summary>
+        /// Initializes the player path playback UI controls.
+        /// </summary>
+        private void InitializePathControls()
+        {
+            // Add separator
+            ToolStripSeparator separator = new ToolStripSeparator();
+            toolStrip.Items.Add(separator);
+
+            // Load Path button
+            ToolStripButton btnLoadPath = new ToolStripButton();
+            btnLoadPath.Text = "Load Path";
+            btnLoadPath.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnLoadPath.Click += btnLoadPath_Click;
+            toolStrip.Items.Add(btnLoadPath);
+
+            // Player dropdown with checkmarks for visibility
+            ToolStripLabel lblPlayer = new ToolStripLabel();
+            lblPlayer.Text = "Players:";
+            toolStrip.Items.Add(lblPlayer);
+
+            pathPlayerDropdown = new ToolStripDropDownButton();
+            pathPlayerDropdown.Text = "All Visible";
+            pathPlayerDropdown.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            toolStrip.Items.Add(pathPlayerDropdown);
+
+            // Play/Pause button
+            pathPlayPauseButton = new ToolStripButton();
+            pathPlayPauseButton.Text = "â–¶ Play";
+            pathPlayPauseButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            pathPlayPauseButton.Click += (s, e) => {
+                TogglePathPlayback();
+                pathPlayPauseButton.Text = pathIsPlaying ? "â¸ Pause" : "â–¶ Play";
+            };
+            toolStrip.Items.Add(pathPlayPauseButton);
+
+            // Reset button
+            ToolStripButton btnReset = new ToolStripButton();
+            btnReset.Text = "â¹ Reset";
+            btnReset.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnReset.Click += (s, e) => {
+                ResetPathAnimation();
+                pathPlayPauseButton.Text = "â–¶ Play";
+            };
+            toolStrip.Items.Add(btnReset);
+
+            // Speed label
+            ToolStripLabel lblSpeed = new ToolStripLabel();
+            lblSpeed.Text = "Speed:";
+            toolStrip.Items.Add(lblSpeed);
+
+            // Speed dropdown
+            ToolStripComboBox cboSpeed = new ToolStripComboBox();
+            cboSpeed.Items.AddRange(new object[] { "0.25x", "0.5x", "1x", "2x", "4x", "10x" });
+            cboSpeed.SelectedIndex = 0; // Default 0.25x
+            cboSpeed.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboSpeed.Width = 60;
+            cboSpeed.SelectedIndexChanged += (s, e) => {
+                switch (cboSpeed.SelectedIndex)
+                {
+                    case 0: pathPlaybackSpeed = 0.25f; break;
+                    case 1: pathPlaybackSpeed = 0.5f; break;
+                    case 2: pathPlaybackSpeed = 1.0f; break;
+                    case 3: pathPlaybackSpeed = 2.0f; break;
+                    case 4: pathPlaybackSpeed = 4.0f; break;
+                    case 5: pathPlaybackSpeed = 10.0f; break;
+                }
+            };
+            toolStrip.Items.Add(cboSpeed);
+
+            // Show Trail checkbox
+            ToolStripButton btnTrail = new ToolStripButton();
+            btnTrail.Text = "Trail: ON";
+            btnTrail.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnTrail.Click += (s, e) => {
+                showPathTrail = !showPathTrail;
+                btnTrail.Text = showPathTrail ? "Trail: ON" : "Trail: OFF";
+            };
+            toolStrip.Items.Add(btnTrail);
+
+            // POV mode dropdown
+            ToolStripLabel lblPOV = new ToolStripLabel();
+            lblPOV.Text = "POV:";
+            toolStrip.Items.Add(lblPOV);
+
+            povPlayerDropdown = new ToolStripComboBox();
+            povPlayerDropdown.Items.Add("Free Camera");
+            povPlayerDropdown.SelectedIndex = 0;
+            povPlayerDropdown.DropDownStyle = ComboBoxStyle.DropDownList;
+            povPlayerDropdown.Width = 100;
+            povPlayerDropdown.SelectedIndexChanged += (s, e) => {
+                List<string> playerNames = showLiveTelemetry ? livePlayerNames : pathPlayerNames;
+                if (povPlayerDropdown.SelectedIndex == 0)
+                {
+                    povModeEnabled = false;
+                    povFollowPlayer = null;
+                }
+                else if (povPlayerDropdown.SelectedIndex <= playerNames.Count)
+                {
+                    povModeEnabled = true;
+                    povFollowPlayer = playerNames[povPlayerDropdown.SelectedIndex - 1];
+                }
+            };
+            toolStrip.Items.Add(povPlayerDropdown);
+
+            // Create timeline panel at bottom of form - Halo theater style
+            Panel timelinePanel = new Panel();
+            timelinePanel.Dock = DockStyle.Bottom;
+            timelinePanel.Height = 45;
+            timelinePanel.BackColor = Color.FromArgb(15, 25, 35); // Dark blue-black
+
+            // Add subtle top border
+            Panel borderPanel = new Panel();
+            borderPanel.Dock = DockStyle.Top;
+            borderPanel.Height = 2;
+            borderPanel.BackColor = Color.FromArgb(0, 120, 180); // Halo blue accent
+            timelinePanel.Controls.Add(borderPanel);
+
+            pathTimeLabel = new Label();
+            pathTimeLabel.Text = "0:00 / 0:00";
+            pathTimeLabel.ForeColor = Color.FromArgb(0, 200, 255); // Cyan
+            pathTimeLabel.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
+            pathTimeLabel.AutoSize = true;
+            pathTimeLabel.Location = new Point(10, 14);
+            pathTimeLabel.BackColor = Color.Transparent;
+            timelinePanel.Controls.Add(pathTimeLabel);
+
+            pathTimelineTrackBar = new TrackBar();
+            pathTimelineTrackBar.Minimum = 0;
+            pathTimelineTrackBar.Maximum = 1000;
+            pathTimelineTrackBar.Value = 0;
+            pathTimelineTrackBar.TickStyle = TickStyle.None;
+            pathTimelineTrackBar.Location = new Point(100, 5);
+            pathTimelineTrackBar.Height = 30;
+            pathTimelineTrackBar.Scroll += PathTimelineTrackBar_Scroll;
+            pathTimelineTrackBar.MouseDown += (s, e) => {
+                if (e.Button == MouseButtons.Left)
+                {
+                    pathIsPlaying = false;
+                    pathPlayPauseButton.Text = "â–¶ Play";
+                }
+            };
+            // Right-click to set bookmark at clicked position
+            pathTimelineTrackBar.MouseUp += (s, e) => {
+                if (e.Button == MouseButtons.Right && pathMaxTimestamp > pathMinTimestamp)
+                {
+                    float clickRatio = (float)e.X / pathTimelineTrackBar.Width;
+                    clickRatio = Math.Max(0, Math.Min(1, clickRatio));
+                    bookmarkTimestamp = pathMinTimestamp + clickRatio * (pathMaxTimestamp - pathMinTimestamp);
+                    UpdateBookmarkButton();
+                    timelinePanelRef?.Invalidate();
+                }
+            };
+            timelinePanel.Controls.Add(pathTimelineTrackBar);
+
+            // Bookmark button - sets bookmark at current position
+            bookmarkButton = new System.Windows.Forms.Button();
+            bookmarkButton.Text = "ðŸ”– Set";
+            bookmarkButton.FlatStyle = FlatStyle.Flat;
+            bookmarkButton.FlatAppearance.BorderColor = Color.FromArgb(0, 120, 180);
+            bookmarkButton.BackColor = Color.FromArgb(30, 45, 60);
+            bookmarkButton.ForeColor = Color.FromArgb(0, 200, 255);
+            bookmarkButton.Font = new System.Drawing.Font("Segoe UI", 8, FontStyle.Bold);
+            bookmarkButton.Size = new Size(55, 25);
+            bookmarkButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            bookmarkButton.Click += (s, e) => {
+                if (bookmarkTimestamp < 0)
+                {
+                    bookmarkTimestamp = pathCurrentTimestamp;
+                }
+                else
+                {
+                    bookmarkTimestamp = -1;
+                    bookmarkLoopEnabled = false;
+                    UpdateLoopButton();
+                }
+                UpdateBookmarkButton();
+                timelinePanelRef?.Invalidate();
+            };
+            timelinePanel.Controls.Add(bookmarkButton);
+
+            // Loop button - toggles loop mode
+            loopButton = new System.Windows.Forms.Button();
+            loopButton.Text = "ðŸ” Loop";
+            loopButton.FlatStyle = FlatStyle.Flat;
+            loopButton.FlatAppearance.BorderColor = Color.FromArgb(0, 120, 180);
+            loopButton.BackColor = Color.FromArgb(30, 45, 60);
+            loopButton.ForeColor = Color.Gray;
+            loopButton.Font = new System.Drawing.Font("Segoe UI", 8, FontStyle.Bold);
+            loopButton.Size = new Size(60, 25);
+            loopButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            loopButton.Click += (s, e) => {
+                if (bookmarkTimestamp >= 0)
+                {
+                    bookmarkLoopEnabled = !bookmarkLoopEnabled;
+                    UpdateLoopButton();
+                }
+            };
+            timelinePanel.Controls.Add(loopButton);
+
+            // Store reference for invalidation
+            timelinePanelRef = timelinePanel;
+
+            // Add paint handler to draw kill markers and bookmark on timeline
+            timelinePanel.Paint += TimelinePanel_Paint;
+
+            // Handle resize to keep trackbar full width and position buttons
+            timelinePanel.Resize += (s, e) => {
+                int buttonAreaWidth = 130;
+                if (pathTimelineTrackBar != null)
+                    pathTimelineTrackBar.Width = timelinePanel.Width - 110 - buttonAreaWidth;
+                if (bookmarkButton != null)
+                    bookmarkButton.Location = new Point(timelinePanel.Width - buttonAreaWidth + 5, 10);
+                if (loopButton != null)
+                    loopButton.Location = new Point(timelinePanel.Width - buttonAreaWidth + 65, 10);
+                timelinePanel.Invalidate();
+            };
+
+            this.Controls.Add(timelinePanel);
+            timelinePanel.BringToFront();
+
+            // Initial sizing after panel is added
+            int initialButtonAreaWidth = 130;
+            pathTimelineTrackBar.Width = this.ClientSize.Width - 110 - initialButtonAreaWidth;
+            bookmarkButton.Location = new Point(this.ClientSize.Width - initialButtonAreaWidth + 5, 10);
+            loopButton.Location = new Point(this.ClientSize.Width - initialButtonAreaWidth + 65, 10);
+
+            // Separator before live telemetry
+            ToolStripSeparator separator2 = new ToolStripSeparator();
+            toolStrip.Items.Add(separator2);
+
+            // Live telemetry listener button
+            ToolStripButton btnListen = new ToolStripButton();
+            btnListen.Text = "ðŸ“¡ Listen";
+            btnListen.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnListen.Click += (s, e) => {
+                if (telemetryListenerRunning)
+                {
+                    StopTelemetryListener();
+                    btnListen.Text = "ðŸ“¡ Listen";
+                    showLiveTelemetry = false;
+                }
+                else
+                {
+                    StartTelemetryListener();
+                    btnListen.Text = "ðŸ”´ Stop";
+                    showLiveTelemetry = true;
+                    EnableTelemetryViewOptions();
+                }
+            };
+            toolStrip.Items.Add(btnListen);
+
+            // Debug button to show incoming telemetry data
+            ToolStripButton btnDebug = new ToolStripButton();
+            btnDebug.Text = "ðŸ” Debug";
+            btnDebug.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnDebug.Click += (s, e) => {
+                ShowTelemetryDebug();
+            };
+            toolStrip.Items.Add(btnDebug);
+
+            // Make toolbar visible so path controls are accessible
+            toolStrip.Visible = true;
+        }
+
+        /// <summary>
+        /// Enables recommended view options for replay/live telemetry mode.
+        /// </summary>
+        private void EnableTelemetryViewOptions()
+        {
+            // Enable RenderSky
+            if (RenderSky != null)
+                RenderSky.Checked = true;
+
+            // Enable spawn types that are useful for viewing: Scenery, Collection, Obstacle
+            string[] spawnTypesToEnable = { "Scenery", "Collection", "Obstacle", "Vehicle", "Weapon" };
+
+            if (checkedListBox1 != null)
+            {
+                for (int i = 0; i < checkedListBox1.Items.Count; i++)
+                {
+                    string itemName = checkedListBox1.Items[i].ToString();
+                    foreach (string spawnType in spawnTypesToEnable)
+                    {
+                        if (itemName == spawnType)
+                        {
+                            checkedListBox1.SetItemChecked(i, true);
+                            setSpawnBox(itemName, CheckState.Checked);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Enable BSP textures if available
+            if (cbBSPTextures != null)
+                cbBSPTextures.Checked = true;
+
+            // Enable BSP lighting if available
+            if (BSPLighting != null)
+                BSPLighting.Checked = true;
+        }
+
+        /// <summary>
+        /// Updates player dropdowns with live player names when in live telemetry mode.
+        /// </summary>
+        private void UpdateLivePlayerDropdowns()
+        {
+            if (!showLiveTelemetry)
+                return;
+
+            List<string> currentPlayers;
+            lock (livePlayersLock)
+            {
+                currentPlayers = new List<string>(livePlayers.Keys);
+            }
+
+            // Check if player list changed
+            bool changed = currentPlayers.Count != livePlayerNames.Count;
+            if (!changed)
+            {
+                foreach (string name in currentPlayers)
+                {
+                    if (!livePlayerNames.Contains(name))
+                    {
+                        changed = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!changed)
+                return;
+
+            livePlayerNames = currentPlayers;
+
+            // Update dropdowns on UI thread
+            if (pathPlayerDropdown != null && pathPlayerDropdown.GetCurrentParent() != null)
+            {
+                try
+                {
+                    if (pathPlayerDropdown.GetCurrentParent().InvokeRequired)
+                    {
+                        pathPlayerDropdown.GetCurrentParent().BeginInvoke(new System.Action(() => RefreshPlayerDropdowns()));
+                    }
+                    else
+                    {
+                        RefreshPlayerDropdowns();
+                    }
+                }
+                catch { }
+            }
+        }
+
+        /// <summary>
+        /// Gets a team color indicator prefix for display in dropdowns.
+        /// </summary>
+        private string GetTeamColorPrefix(int team)
+        {
+            switch (team)
+            {
+                case 0: return "ðŸ”´ "; // Red
+                case 1: return "ðŸ”µ "; // Blue
+                case 2: return "ðŸŸ¢ "; // Green
+                case 3: return "ðŸŸ  "; // Orange
+                default: return "âšª "; // Unknown/FFA (white)
+            }
+        }
+
+        /// <summary>
+        /// Gets the team for a player name.
+        /// </summary>
+        private int GetPlayerTeam(string playerName)
+        {
+            if (showLiveTelemetry)
+            {
+                lock (livePlayersLock)
+                {
+                    if (livePlayers.ContainsKey(playerName))
+                        return livePlayers[playerName].Team;
+                }
+            }
+            else
+            {
+                // Check playback path data
+                if (multiPlayerPaths.ContainsKey(playerName) && multiPlayerPaths[playerName].Count > 0)
+                {
+                    var firstSegment = multiPlayerPaths[playerName][0];
+                    if (firstSegment.Count > 0)
+                        return firstSegment[0].Team;
+                }
+            }
+            return -1; // Unknown
+        }
+
+        /// <summary>
+        /// Refreshes the player and POV dropdowns with current player names.
+        /// </summary>
+        private void RefreshPlayerDropdowns()
+        {
+            List<string> playerNames = showLiveTelemetry ? livePlayerNames : pathPlayerNames;
+            string prevPovPlayer = povFollowPlayer;
+
+            // Update player visibility dropdown (checkable menu)
+            if (pathPlayerDropdown != null)
+            {
+                pathPlayerDropdown.DropDownItems.Clear();
+
+                // Show All option
+                ToolStripMenuItem showAllItem = new ToolStripMenuItem("âœ“ Show All");
+                showAllItem.Click += (s, e) => {
+                    hiddenPlayers.Clear();
+                    UpdatePlayerDropdownChecks();
+                };
+                pathPlayerDropdown.DropDownItems.Add(showAllItem);
+
+                // Hide All option
+                ToolStripMenuItem hideAllItem = new ToolStripMenuItem("âœ— Hide All");
+                hideAllItem.Click += (s, e) => {
+                    List<string> names = showLiveTelemetry ? livePlayerNames : pathPlayerNames;
+                    foreach (string name in names)
+                        hiddenPlayers.Add(name);
+                    UpdatePlayerDropdownChecks();
+                };
+                pathPlayerDropdown.DropDownItems.Add(hideAllItem);
+
+                pathPlayerDropdown.DropDownItems.Add(new ToolStripSeparator());
+
+                // Add checkable item for each player
+                foreach (string name in playerNames)
+                {
+                    int team = GetPlayerTeam(name);
+                    string prefix = GetTeamColorPrefix(team);
+                    bool isVisible = !hiddenPlayers.Contains(name);
+
+                    ToolStripMenuItem playerItem = new ToolStripMenuItem(prefix + name);
+                    playerItem.Checked = isVisible;
+                    playerItem.CheckOnClick = true;
+                    playerItem.Tag = name; // Store actual name without prefix
+                    playerItem.CheckedChanged += (s, e) => {
+                        ToolStripMenuItem item = (ToolStripMenuItem)s;
+                        string playerName = (string)item.Tag;
+                        if (item.Checked)
+                            hiddenPlayers.Remove(playerName);
+                        else
+                            hiddenPlayers.Add(playerName);
+                        UpdatePlayerDropdownText();
+                    };
+                    pathPlayerDropdown.DropDownItems.Add(playerItem);
+                }
+
+                UpdatePlayerDropdownText();
+            }
+
+            // Update POV dropdown
+            if (povPlayerDropdown != null)
+            {
+                povPlayerDropdown.Items.Clear();
+                povPlayerDropdown.Items.Add("Free Camera");
+                foreach (string name in playerNames)
+                {
+                    int team = GetPlayerTeam(name);
+                    string prefix = GetTeamColorPrefix(team);
+                    povPlayerDropdown.Items.Add(prefix + name);
+                }
+                // Try to restore selection
+                int povIdx = prevPovPlayer != null ? playerNames.IndexOf(prevPovPlayer) + 1 : 0;
+                povPlayerDropdown.SelectedIndex = Math.Max(0, Math.Min(povIdx, povPlayerDropdown.Items.Count - 1));
+            }
+        }
+
+        /// <summary>
+        /// Updates the player dropdown button text based on visibility state.
+        /// </summary>
+        private void UpdatePlayerDropdownText()
+        {
+            if (pathPlayerDropdown == null) return;
+            List<string> playerNames = showLiveTelemetry ? livePlayerNames : pathPlayerNames;
+            int visibleCount = playerNames.Count - hiddenPlayers.Count(n => playerNames.Contains(n));
+            if (visibleCount == playerNames.Count)
+                pathPlayerDropdown.Text = "All Visible";
+            else if (visibleCount == 0)
+                pathPlayerDropdown.Text = "None Visible";
+            else
+                pathPlayerDropdown.Text = $"{visibleCount}/{playerNames.Count} Visible";
+        }
+
+        /// <summary>
+        /// Updates the checked state of player dropdown items.
+        /// </summary>
+        private void UpdatePlayerDropdownChecks()
+        {
+            if (pathPlayerDropdown == null) return;
+            foreach (ToolStripItem item in pathPlayerDropdown.DropDownItems)
+            {
+                if (item is ToolStripMenuItem menuItem && menuItem.Tag is string playerName)
+                {
+                    menuItem.Checked = !hiddenPlayers.Contains(playerName);
+                }
+            }
+            UpdatePlayerDropdownText();
+        }
+
+        private Form debugForm = null;
+        private TextBox debugTextBox = null;
+        private System.Windows.Forms.Timer debugTimer = null;
+
+        private void ShowTelemetryDebug()
+        {
+            // If already open, just bring to front
+            if (debugForm != null && !debugForm.IsDisposed)
+            {
+                debugForm.BringToFront();
+                return;
+            }
+
+            // Create debug window
+            debugForm = new Form();
+            debugForm.Text = showLiveTelemetry ? "Live Telemetry Debug" : "Replay Data Debug";
+            debugForm.Size = new System.Drawing.Size(600, 500);
+            debugForm.StartPosition = FormStartPosition.CenterParent;
+
+            debugTextBox = new TextBox();
+            debugTextBox.Multiline = true;
+            debugTextBox.ReadOnly = true;
+            debugTextBox.ScrollBars = ScrollBars.Both;
+            debugTextBox.Dock = DockStyle.Fill;
+            debugTextBox.Font = new System.Drawing.Font("Consolas", 9);
+            debugForm.Controls.Add(debugTextBox);
+
+            // Timer to update every 100ms
+            debugTimer = new System.Windows.Forms.Timer();
+            debugTimer.Interval = 100;
+            debugTimer.Tick += (s, e) => UpdateDebugText();
+            debugTimer.Start();
+
+            debugForm.FormClosed += (s, e) => {
+                debugTimer.Stop();
+                debugTimer.Dispose();
+                debugTimer = null;
+            };
+
+            UpdateDebugText();
+            debugForm.Show();
+        }
+
+        private void UpdateDebugText()
+        {
+            if (debugTextBox == null || debugTextBox.IsDisposed) return;
+
+            StringBuilder sb = new StringBuilder();
+
+            if (showLiveTelemetry)
+            {
+                // Live telemetry mode
+                sb.AppendLine("=== LIVE TELEMETRY DEBUG (updates every 100ms) ===\n");
+
+                sb.AppendLine($"Listener Running: {telemetryListenerRunning}");
+                sb.AppendLine($"Show Live Telemetry: {showLiveTelemetry}");
+                sb.AppendLine($"CSV Columns Parsed: {csvColumnIndices.Count}");
+
+                // Show parsed column names
+                sb.AppendLine("Columns: " + string.Join(", ", csvColumnIndices.Keys));
+
+                lock (livePlayersLock)
+                {
+                    sb.AppendLine($"Live Players: {livePlayers.Count}");
+                    foreach (var kvp in livePlayers)
+                    {
+                        var p = kvp.Value;
+                        sb.AppendLine($"  - {p.PlayerName}: Pos=({p.PosX:F1}, {p.PosY:F1}, {p.PosZ:F1})");
+                        sb.AppendLine($"    Team={p.Team} Spd={p.Speed:F1} Yaw={p.Yaw:F2} YawDeg={p.YawDeg:F0}Â°");
+                        sb.AppendLine($"    Crouch={p.IsCrouching} Air={p.IsAirborne}");
+                        sb.AppendLine($"    Weapon={p.CurrentWeapon} Frags={p.FragGrenades} Plasma={p.PlasmaGrenades}");
+                        sb.AppendLine($"    K/D: {p.Kills}/{p.Deaths} RespawnTimer={p.RespawnTimer} IsDead={p.IsDead}");
+                        sb.AppendLine($"    Emblem: FG={p.EmblemFg} BG={p.EmblemBg} Colors={p.ColorPrimary},{p.ColorSecondary},{p.ColorTertiary},{p.ColorQuaternary}");
+                    }
+                }
+
+                sb.AppendLine("\n=== RECENT LOG ===\n");
+                lock (telemetryDebugLogLock)
+                {
+                    foreach (var entry in telemetryDebugLog)
+                    {
+                        sb.AppendLine(entry);
+                    }
+                    if (telemetryDebugLog.Count == 0)
+                    {
+                        sb.AppendLine("(no data received yet)");
+                    }
+                }
+            }
+            else
+            {
+                // Replay mode - show path data
+                sb.AppendLine("=== REPLAY DATA DEBUG ===\n");
+
+                sb.AppendLine($"Path Points: {playerPath.Count}");
+                sb.AppendLine($"Players: {pathPlayerNames.Count} - {string.Join(", ", pathPlayerNames)}");
+                sb.AppendLine($"Kill Events: {killEvents.Count}");
+                sb.AppendLine($"Timeline: {pathMinTimestamp:F1} to {pathMaxTimestamp:F1} (current: {pathCurrentTimestamp:F1})");
+                sb.AppendLine($"Playing: {pathIsPlaying} Speed: {pathPlaybackSpeed}x");
+                sb.AppendLine($"Hidden: {string.Join(", ", hiddenPlayers)}");
+
+                // Show current player data at current timestamp
+                sb.AppendLine("\n=== PLAYERS AT CURRENT TIME ===\n");
+
+                foreach (var kvp in multiPlayerPaths)
+                {
+                    string playerName = kvp.Key;
+                    PlayerPathPoint? currentPt = null;
+
+                    foreach (var segment in kvp.Value)
+                    {
+                        foreach (var pt in segment)
+                        {
+                            if (pt.Timestamp <= pathCurrentTimestamp)
+                                currentPt = pt;
+                            else
+                                break;
+                        }
+                    }
+
+                    if (currentPt.HasValue)
+                    {
+                        var p = currentPt.Value;
+                        sb.AppendLine($"  - {p.PlayerName}: Pos=({p.X:F1}, {p.Y:F1}, {p.Z:F1}) T={p.Timestamp:F1}");
+                        sb.AppendLine($"    Team={p.Team} Yaw={p.FacingYaw:F1}Â° Dead={p.IsDead}");
+                        sb.AppendLine($"    Weapon={p.CurrentWeapon} Crouch={p.IsCrouching} Air={p.IsAirborne}");
+                        sb.AppendLine($"    Emblem: FG={p.EmblemFg} BG={p.EmblemBg} Colors={p.ColorPrimary},{p.ColorSecondary},{p.ColorTertiary},{p.ColorQuaternary}");
+                    }
+                }
+
+                // Show recent kills
+                sb.AppendLine("\n=== KILL EVENTS ===\n");
+                var filteredKills = killEvents.Where(k => k.Timestamp <= pathCurrentTimestamp).ToList();
+                var recentKills = filteredKills.Skip(Math.Max(0, filteredKills.Count - 10)).ToList();
+                foreach (var kill in recentKills)
+                {
+                    string teamName = kill.Team == 0 ? "Red" : kill.Team == 1 ? "Blue" : kill.Team == 2 ? "Green" : kill.Team == 3 ? "Orange" : "FFA";
+                    sb.AppendLine($"  T={kill.Timestamp:F1}: {kill.PlayerName} ({teamName}) - {kill.Weapon}");
+                }
+                if (!recentKills.Any())
+                    sb.AppendLine("  (no kills yet)");
+            }
+
+            debugTextBox.Text = sb.ToString();
         }
 
         #endregion
@@ -1692,6 +2756,49 @@ namespace entity.Renderers
                     this.Dispose();
                     break;
             }
+
+            // Theater mode bookmark shortcuts
+            if (theaterMode)
+            {
+                char key = char.ToLower(e.KeyChar);
+                switch (key)
+                {
+                    case 'b':
+                        if (bookmarkTimestamp < 0)
+                        {
+                            bookmarkTimestamp = pathCurrentTimestamp;
+                        }
+                        else
+                        {
+                            bookmarkTimestamp = -1;
+                            bookmarkLoopEnabled = false;
+                            UpdateLoopButton();
+                        }
+                        UpdateBookmarkButton();
+                        timelinePanelRef?.Invalidate();
+                        e.Handled = true;
+                        break;
+
+                    case 'l':
+                        if (bookmarkTimestamp >= 0)
+                        {
+                            bookmarkLoopEnabled = !bookmarkLoopEnabled;
+                            UpdateLoopButton();
+                            timelinePanelRef?.Invalidate();
+                        }
+                        e.Handled = true;
+                        break;
+
+                    case 'g':
+                        if (bookmarkTimestamp >= 0)
+                        {
+                            JumpToBookmark();
+                            timelinePanelRef?.Invalidate();
+                        }
+                        e.Handled = true;
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -2142,7 +3249,6 @@ namespace entity.Renderers
 
             for (int x = 0; x < pm.Display.Chunk.Count; x++)
             {
-                if (x != 0 && x != 0) continue;
                 int rawindex = pm.Display.Chunk[x];
                 for (int xx = 0; xx < pm.RawDataMetaChunks[rawindex].SubMeshInfo.Length; xx++)
                 {
@@ -2524,10 +3630,10 @@ namespace entity.Renderers
                 }
 
                 /************/
-                tsLabel1.Text = selectionStart.X.ToString().PadRight(10) + " • " +
+                tsLabel1.Text = selectionStart.X.ToString().PadRight(10) + " ï¿½ " +
                                 selectionStart.Y.ToString().PadRight(10) + selectionStart.Z.ToString().PadRight(10) +
-                                " • " + selectionWidth.ToString().PadRight(10) + " • " +
-                                selectionHeight.ToString().PadRight(10) + " • " + selectionDepth.ToString().PadRight(10);
+                                " ï¿½ " + selectionWidth.ToString().PadRight(10) + " ï¿½ " +
+                                selectionHeight.ToString().PadRight(10) + " ï¿½ " + selectionDepth.ToString().PadRight(10);
                 selectionMesh = Mesh.Box(render.device, tempselectionWidth, tempselectionHeight, tempselectionDepth);
             }
                 
@@ -2789,6 +3895,11 @@ namespace entity.Renderers
                 return;
             }
 
+            if (cam == null)
+            {
+                return;
+            }
+
             if (RenderSky.Checked)
             {
                 render.BeginScene(Color.Black);
@@ -2844,8 +3955,8 @@ namespace entity.Renderers
             render.device.RenderState.Ambient = Color.White;
             // Set camera postion
             string tempstring = toolStripLabel2.Text;
-            string tempstring2 = "Camera Position: X: " + cam.x.ToString().PadRight(10) + " • Y: " +
-                                 cam.y.ToString().PadRight(10) + " • Z: " + cam.z.ToString().PadRight(10);
+            string tempstring2 = "Camera Position: X: " + cam.x.ToString().PadRight(10) + " ï¿½ Y: " +
+                                 cam.y.ToString().PadRight(10) + " ï¿½ Z: " + cam.z.ToString().PadRight(10);
             if (tempstring != tempstring2)
             {
                 if (statusStrip.Items.IndexOf(toolStripLabel2) == -1)
@@ -3085,6 +4196,13 @@ namespace entity.Renderers
                 {
                     if (SelectedSpawn[i] == x)
                     {
+                        // Skip wireframe boxes for obstacles and scenery - just show solid models
+                        if (bsp.Spawns.Spawn[x] is SpawnInfo.ObstacleSpawn ||
+                            bsp.Spawns.Spawn[x] is SpawnInfo.ScenerySpawn)
+                        {
+                            break;
+                        }
+
                         render.device.SetTexture(0, null);
                         render.device.RenderState.AlphaBlendEnable = false;
                         render.device.RenderState.AlphaTestEnable = false;
@@ -3093,10 +4211,10 @@ namespace entity.Renderers
                         // Adjust center position of Bounding Boxes to proper offset
                         Matrix mat = Matrix.Identity;
                         mat = Matrix.Add(
-                            mat, 
+                            mat,
                             Matrix.Translation(
-                                bsp.Spawns.Spawn[SelectedSpawn[i]].bbXDiff, 
-                                bsp.Spawns.Spawn[SelectedSpawn[i]].bbYDiff, 
+                                bsp.Spawns.Spawn[SelectedSpawn[i]].bbXDiff,
+                                bsp.Spawns.Spawn[SelectedSpawn[i]].bbYDiff,
                                 bsp.Spawns.Spawn[SelectedSpawn[i]].bbZDiff));
                         render.device.Transform.World = mat * TranslationMatrix[x];
                         BoundingBoxModel[x].DrawSubset(0);
@@ -3251,6 +4369,27 @@ namespace entity.Renderers
             {
                 this.BackColor = Color.FromArgb(235, 233, 237);
             }
+
+            #region RenderPlayerPath
+
+            // Update and render player path animation
+            UpdatePathAnimation();
+            RenderPlayerPath();
+
+            // Update camera for POV mode (live telemetry)
+            if (showLiveTelemetry)
+                UpdatePOVCamera();
+
+            // Render live telemetry players
+            RenderLivePlayers();
+
+            // Draw HUD overlay (FPS, etc.) - Theater Mode only
+            if (theaterMode)
+            {
+                DrawHUD();
+            }
+
+            #endregion
 
             render.EndScene();
         }
@@ -5507,8 +6646,8 @@ namespace entity.Renderers
 
                     // Set camera postion
                     string tempstring = toolStripLabel2.Text;
-                    string tempstring2 = "Camera Position: X: " + cam.x.ToString().PadRight(10) + " • Y: " +
-                                         cam.y.ToString().PadRight(10) + " • Z: " + cam.z.ToString().PadRight(10);
+                    string tempstring2 = "Camera Position: X: " + cam.x.ToString().PadRight(10) + " ï¿½ Y: " +
+                                         cam.y.ToString().PadRight(10) + " ï¿½ Z: " + cam.z.ToString().PadRight(10);
                     if (tempstring != tempstring2)
                     {
                         toolStripLabel2.Text = tempstring2;
@@ -5898,11 +7037,11 @@ namespace entity.Renderers
                 // Stop it from overwriting text in boxes when user is trying to change it!
                 if (updateXYZYPR)
                 {
-                    tsLabelX.Text = ") • X: ";
+                    tsLabelX.Text = ") ï¿½ X: ";
                     tsTextBoxX.Text = bsp.Spawns.Spawn[lastSelectedSpawn].X.ToString("#0.0000####");
-                    tsLabelY.Text = " • Y: ";
+                    tsLabelY.Text = " ï¿½ Y: ";
                     tsTextBoxY.Text = bsp.Spawns.Spawn[lastSelectedSpawn].Y.ToString("#0.0000####");
-                    tsLabelZ.Text = " • Z: ";
+                    tsLabelZ.Text = " ï¿½ Z: ";
                     tsTextBoxZ.Text = bsp.Spawns.Spawn[lastSelectedSpawn].Z.ToString("#0.0000####");
                 }
 
@@ -5919,11 +7058,11 @@ namespace entity.Renderers
                     {
                         SpawnInfo.RotateYawPitchRollBaseSpawn temprot;
                         temprot = bsp.Spawns.Spawn[lastSelectedSpawn] as SpawnInfo.RotateYawPitchRollBaseSpawn;
-                        tsLabelYaw.Text = " • Yaw:";
+                        tsLabelYaw.Text = " ï¿½ Yaw:";
                         tsTextBoxYaw.Text = temprot.Yaw.ToString("#0.0000####");
-                        tsLabelPitch.Text = " • Pitch:";
+                        tsLabelPitch.Text = " ï¿½ Pitch:";
                         tsTextBoxPitch.Text = temprot.Pitch.ToString("#0.0000####");
-                        tsLabelRoll.Text = " • Roll:";
+                        tsLabelRoll.Text = " ï¿½ Roll:";
                         tsTextBoxRoll.Text = temprot.Roll.ToString("#0.0000####");
                     }
                 }
@@ -5942,11 +7081,11 @@ namespace entity.Renderers
                             {
                                 rot = 2;
                                 temprot2 = bsp.Spawns.Spawn[SelectedSpawn[x]] as SpawnInfo.RotateYawPitchRollBaseSpawn;
-                                tsLabelYaw.Text = " • Yaw:";
+                                tsLabelYaw.Text = " ï¿½ Yaw:";
                                 tsTextBoxYaw.Text = temprot.RotationDirection.ToString("#0.0000####");
-                                tsLabelPitch.Text = " • Pitch:";
+                                tsLabelPitch.Text = " ï¿½ Pitch:";
                                 tsTextBoxPitch.Text = temprot2.Pitch.ToString("#0.0000####");
-                                tsLabelRoll.Text = " • Roll:";
+                                tsLabelRoll.Text = " ï¿½ Roll:";
                                 tsTextBoxRoll.Text = temprot2.Roll.ToString("#0.0000####");
                                 break;
                             }
@@ -5954,7 +7093,7 @@ namespace entity.Renderers
 
                         // ...otherwise just show rotation
                         rot = 1;
-                        tsLabelYaw.Text = " • Yaw:";
+                        tsLabelYaw.Text = " ï¿½ Yaw:";
                         tsTextBoxYaw.Text = temprot.RotationDirection.ToString("#0.0000####");
                         tsLabelPitch.Text = string.Empty;
                         tsLabelRoll.Text = string.Empty;
@@ -6511,12 +7650,12 @@ namespace entity.Renderers
             else
             {
                 statusStrip.Items.Clear();
-                toolStrip.Visible = false;
+                // Always keep toolbar visible for path/telemetry controls
             }
 
             // Add the camera position
-            toolStripLabel2.Text = "Camera Position: X: " + cam.x.ToString().PadRight(10) + " • Y: " +
-                                   cam.y.ToString().PadRight(10) + " • Z: " + cam.z.ToString().PadRight(10);
+            toolStripLabel2.Text = "Camera Position: X: " + cam.x.ToString().PadRight(10) + " ï¿½ Y: " +
+                                   cam.y.ToString().PadRight(10) + " ï¿½ Z: " + cam.z.ToString().PadRight(10);
             statusStrip.Items.Add(toolStripLabel2);
             statusStrip.ResumeLayout();
 
@@ -6525,6 +7664,2038 @@ namespace entity.Renderers
         }
 
         #endregion
+
+        #region Player Path Animation Methods
+
+        /// <summary>
+        /// Loads player path data from a CSV file.
+        /// Format: x,y,z[,timestamp] - one point per line.
+        /// If timestamp is omitted, points are evenly spaced at 0.1 second intervals.
+        /// </summary>
+        /// <param name="filePath">Path to the CSV file.</param>
+        public void LoadPlayerPath(string filePath)
+        {
+            playerPath.Clear();
+            multiPlayerPaths.Clear();
+            pathPlayerNames.Clear();
+            killEvents.Clear();
+            playerPrevKills.Clear();
+            pathCurrentIndex = 0;
+            pathTimeAccumulator = 0;
+            pathMinTimestamp = float.MaxValue;
+            pathMaxTimestamp = float.MinValue;
+
+            try
+            {
+                string[] lines = File.ReadAllLines(filePath);
+                float autoTimestamp = 0;
+                int skippedLines = 0;
+
+                // Column indices - support full 36-column format
+                Dictionary<string, int> cols = new Dictionary<string, int>();
+                bool hasHeader = false;
+                float timestampDivisor = 1.0f;
+
+                // Check for header row and detect column layout
+                if (lines.Length > 0)
+                {
+                    string[] headerParts = lines[0].Split(',');
+                    string firstCol = headerParts[0].Trim().ToLowerInvariant();
+                    hasHeader = firstCol == "timestamp" || firstCol == "playername" ||
+                                firstCol == "x" || firstCol == "posx" || !firstCol.Contains("-");
+
+                    if (hasHeader)
+                    {
+                        for (int i = 0; i < headerParts.Length; i++)
+                        {
+                            cols[headerParts[i].Trim().ToLowerInvariant()] = i;
+                        }
+                        if (cols.ContainsKey("gametimems"))
+                            timestampDivisor = 1000.0f;
+                    }
+                    else
+                    {
+                        // Default simple format: x,y,z[,timestamp]
+                        cols["x"] = 0; cols["y"] = 1; cols["z"] = 2; cols["timestamp"] = 3;
+                    }
+                }
+
+                // Helper to get column value
+                Func<string[], string, string> getStr = (parts, col) => {
+                    if (cols.ContainsKey(col) && parts.Length > cols[col])
+                        return parts[cols[col]].Trim();
+                    return null;
+                };
+                Func<string[], string, float> getFloat = (parts, col) => {
+                    float val = 0;
+                    if (cols.ContainsKey(col) && parts.Length > cols[col])
+                        float.TryParse(parts[cols[col]].Trim(), System.Globalization.NumberStyles.Float,
+                            System.Globalization.CultureInfo.InvariantCulture, out val);
+                    return val;
+                };
+                Func<string[], string, int> getInt = (parts, col) => {
+                    int val = 0;
+                    if (cols.ContainsKey(col) && parts.Length > cols[col])
+                        int.TryParse(parts[cols[col]].Trim(), out val);
+                    return val;
+                };
+                Func<string[], string, bool> getBool = (parts, col) => {
+                    if (cols.ContainsKey(col) && parts.Length > cols[col])
+                    {
+                        string val = parts[cols[col]].Trim().ToLowerInvariant();
+                        return val == "true" || val == "1" || val == "yes";
+                    }
+                    return false;
+                };
+
+                int startLine = hasHeader ? 1 : 0;
+                Dictionary<string, PlayerPathPoint> lastPoints = new Dictionary<string, PlayerPathPoint>();
+
+                for (int lineIdx = startLine; lineIdx < lines.Length; lineIdx++)
+                {
+                    string line = lines[lineIdx];
+                    if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#") || line.StartsWith("//"))
+                        continue;
+
+                    string[] parts = line.Split(',');
+                    if (parts.Length < 3)
+                    {
+                        skippedLines++;
+                        continue;
+                    }
+
+                    // Parse position (try both x/y/z and posx/posy/posz)
+                    float x = getFloat(parts, "posx");
+                    float y = getFloat(parts, "posy");
+                    float z = getFloat(parts, "posz");
+                    if (x == 0 && y == 0 && z == 0)
+                    {
+                        x = getFloat(parts, "x");
+                        y = getFloat(parts, "y");
+                        z = getFloat(parts, "z");
+                    }
+                    if (x == 0 && y == 0 && z == 0 && parts.Length >= 3)
+                    {
+                        // Fall back to first 3 columns as x,y,z
+                        float.TryParse(parts[0].Trim(), System.Globalization.NumberStyles.Float,
+                            System.Globalization.CultureInfo.InvariantCulture, out x);
+                        float.TryParse(parts[1].Trim(), System.Globalization.NumberStyles.Float,
+                            System.Globalization.CultureInfo.InvariantCulture, out y);
+                        float.TryParse(parts[2].Trim(), System.Globalization.NumberStyles.Float,
+                            System.Globalization.CultureInfo.InvariantCulture, out z);
+                    }
+
+                    if (x == 0 && y == 0 && z == 0)
+                    {
+                        skippedLines++;
+                        continue;
+                    }
+
+                    // Parse timestamp
+                    float timestamp = getFloat(parts, "timestamp");
+                    if (timestamp == 0) timestamp = getFloat(parts, "gametimems") / timestampDivisor;
+                    if (timestamp == 0) timestamp = autoTimestamp;
+                    autoTimestamp += 0.1f;
+
+                    // Track min/max timestamps
+                    if (timestamp < pathMinTimestamp) pathMinTimestamp = timestamp;
+                    if (timestamp > pathMaxTimestamp) pathMaxTimestamp = timestamp;
+
+                    // Parse player name
+                    string playerName = getStr(parts, "playername") ?? "Player";
+
+                    // Parse team
+                    int team = -1;
+                    string teamStr = getStr(parts, "team");
+                    if (!string.IsNullOrEmpty(teamStr))
+                    {
+                        teamStr = teamStr.ToLowerInvariant();
+                        if (teamStr.Contains("red") || teamStr == "0") team = 0;
+                        else if (teamStr.Contains("blue") || teamStr == "1") team = 1;
+                        else if (teamStr.Contains("green") || teamStr == "2") team = 2;
+                        else if (teamStr.Contains("orange") || teamStr == "3") team = 3;
+                        else int.TryParse(teamStr, out team);
+                    }
+
+                    // Parse all other fields
+                    float yaw = getFloat(parts, "yawdeg");
+                    if (yaw == 0) yaw = getFloat(parts, "yaw") * (180f / (float)Math.PI);
+                    string weapon = getStr(parts, "currentweapon");
+                    bool crouching = getBool(parts, "iscrouching");
+                    bool airborne = getBool(parts, "isairborne");
+                    bool isDead = getBool(parts, "isdead") || getInt(parts, "respawntimer") > 0;
+                    int emblemFg = getInt(parts, "emblemfg");
+                    int emblemBg = getInt(parts, "emblembg");
+                    int colorPrimary = getInt(parts, "colorprimary");
+                    int colorSecondary = getInt(parts, "colorsecondary");
+                    int colorTertiary = getInt(parts, "colortertiary");
+                    int colorQuaternary = getInt(parts, "colorquaternary");
+                    int kills = getInt(parts, "kills");
+
+                    // Track kill events
+                    if (!playerPrevKills.ContainsKey(playerName))
+                        playerPrevKills[playerName] = 0;
+                    if (kills > playerPrevKills[playerName])
+                    {
+                        // New kill(s) detected
+                        for (int k = 0; k < kills - playerPrevKills[playerName]; k++)
+                        {
+                            killEvents.Add(new KillEvent
+                            {
+                                Timestamp = timestamp,
+                                PlayerName = playerName,
+                                Team = team,
+                                Weapon = weapon
+                            });
+                        }
+                        playerPrevKills[playerName] = kills;
+                    }
+
+                    PlayerPathPoint point = new PlayerPathPoint(x, y, z, timestamp, team, yaw, playerName, weapon,
+                        crouching, airborne, isDead, emblemFg, emblemBg, colorPrimary, colorSecondary, colorTertiary, colorQuaternary);
+
+                    // Add to legacy single list
+                    playerPath.Add(point);
+
+                    // Add to multi-player structure with respawn detection
+                    if (!multiPlayerPaths.ContainsKey(playerName))
+                    {
+                        multiPlayerPaths[playerName] = new List<List<PlayerPathPoint>>();
+                        multiPlayerPaths[playerName].Add(new List<PlayerPathPoint>());
+                        pathPlayerNames.Add(playerName);
+                    }
+
+                    // Detect respawn: position jump > 10 units or was dead and now alive
+                    bool isRespawn = false;
+                    if (lastPoints.ContainsKey(playerName))
+                    {
+                        var last = lastPoints[playerName];
+                        float dist = (float)Math.Sqrt((x - last.X) * (x - last.X) + (y - last.Y) * (y - last.Y) + (z - last.Z) * (z - last.Z));
+                        if (dist > 10.0f || (last.IsDead && !isDead))
+                        {
+                            isRespawn = true;
+                        }
+                    }
+
+                    if (isRespawn)
+                    {
+                        // Start new segment
+                        multiPlayerPaths[playerName].Add(new List<PlayerPathPoint>());
+                    }
+
+                    // Add point to current segment
+                    var currentSegment = multiPlayerPaths[playerName][multiPlayerPaths[playerName].Count - 1];
+                    currentSegment.Add(point);
+                    lastPoints[playerName] = point;
+                }
+
+                // Clear hidden players when loading new path
+                hiddenPlayers.Clear();
+                povModeEnabled = false;
+                povFollowPlayer = null;
+
+                // Update player and POV dropdowns with team colors
+                RefreshPlayerDropdowns();
+
+                // Initialize timeline
+                if (pathMinTimestamp == float.MaxValue) pathMinTimestamp = 0;
+                if (pathMaxTimestamp == float.MinValue) pathMaxTimestamp = 0;
+                pathCurrentTimestamp = pathMinTimestamp;
+                UpdateTimelineLabel();
+
+                if (playerPath.Count > 0)
+                {
+                    string msg = $"Loaded {playerPath.Count} path points for {pathPlayerNames.Count} player(s).";
+                    int totalSegments = 0;
+                    foreach (var kvp in multiPlayerPaths) totalSegments += kvp.Value.Count;
+                    msg += $"\n{totalSegments} path segments (respawns detected).";
+                    if (skippedLines > 0)
+                        msg += $"\n({skippedLines} lines skipped due to invalid format)";
+                    MessageBox.Show(msg, "Path Loaded", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("No valid path points found in file.\nExpected format: CSV with X,Y,Z columns or x,y,z[,timestamp]",
+                        "No Data", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading path file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Opens a file dialog to load player path data.
+        /// </summary>
+        private void LoadPlayerPathDialog()
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Load Player Path Data";
+                ofd.Filter = "CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+                ofd.FilterIndex = 1;
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    LoadPlayerPath(ofd.FileName);
+                    EnableTelemetryViewOptions();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Toggles path animation playback.
+        /// </summary>
+        private void TogglePathPlayback()
+        {
+            if (playerPath.Count == 0)
+            {
+                MessageBox.Show("No path data loaded. Please load a path file first.", "No Path Data", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            pathIsPlaying = !pathIsPlaying;
+            pathLastFrameTime = DateTime.Now;
+
+            if (pathIsPlaying && pathCurrentIndex >= playerPath.Count - 1)
+            {
+                // Restart from beginning if at end
+                pathCurrentIndex = 0;
+                pathTimeAccumulator = 0;
+            }
+        }
+
+        /// <summary>
+        /// Resets path animation to beginning.
+        /// </summary>
+        private void ResetPathAnimation()
+        {
+            pathCurrentIndex = 0;
+            pathTimeAccumulator = 0;
+            pathCurrentTimestamp = pathMinTimestamp;
+            pathIsPlaying = false;
+            UpdateTimelineLabel();
+        }
+
+        /// <summary>
+        /// Updates path animation state.
+        /// </summary>
+        private void UpdatePathAnimation()
+        {
+            if (!pathIsPlaying || playerPath.Count < 2)
+                return;
+
+            DateTime now = DateTime.Now;
+            float deltaTime = (float)(now - pathLastFrameTime).TotalSeconds;
+            pathLastFrameTime = now;
+
+            pathTimeAccumulator += deltaTime * pathPlaybackSpeed;
+            pathCurrentTimestamp = pathTimeAccumulator;
+
+            // Find current position based on time
+            while (pathCurrentIndex < playerPath.Count - 1 &&
+                   pathTimeAccumulator >= playerPath[pathCurrentIndex + 1].Timestamp)
+            {
+                pathCurrentIndex++;
+            }
+
+            // Update timeline
+            UpdateTimelineLabel();
+
+            // Update camera for POV mode
+            UpdatePOVCamera();
+
+            // Handle end of playback
+            if (pathCurrentTimestamp >= pathMaxTimestamp || pathCurrentIndex >= playerPath.Count - 1)
+            {
+                if (bookmarkLoopEnabled && bookmarkTimestamp >= 0)
+                {
+                    JumpToBookmark();
+                }
+                else
+                {
+                    pathIsPlaying = false;
+                    if (pathPlayPauseButton != null)
+                        pathPlayPauseButton.Text = "â–¶ Play";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the camera to follow the selected player in POV mode.
+        /// Works for both playback and live telemetry.
+        /// </summary>
+        private void UpdatePOVCamera()
+        {
+            if (!povModeEnabled || string.IsNullOrEmpty(povFollowPlayer))
+                return;
+
+            // Try live telemetry first
+            if (showLiveTelemetry)
+            {
+                PlayerTelemetry livePlayer = null;
+                lock (livePlayersLock)
+                {
+                    if (livePlayers.ContainsKey(povFollowPlayer))
+                        livePlayer = livePlayers[povFollowPlayer];
+                }
+
+                if (livePlayer != null && !livePlayer.IsDead)
+                {
+                    cam.x = livePlayer.PosX;
+                    cam.y = livePlayer.PosY;
+                    cam.z = livePlayer.PosZ + 0.6f; // Eye height offset
+                    cam.Position.X = cam.x;
+                    cam.Position.Y = cam.y;
+                    cam.Position.Z = cam.z;
+                    // Use Yaw (radians) directly if available, otherwise convert YawDeg
+                    cam.radianh = livePlayer.Yaw != 0 ? livePlayer.Yaw : livePlayer.YawDeg * (float)(Math.PI / 180.0);
+                    cam.ComputePosition();
+                    return;
+                }
+            }
+
+            // Fall back to playback path data
+            if (!multiPlayerPaths.ContainsKey(povFollowPlayer))
+                return;
+
+            // Find the point for the followed player at current timestamp
+            // Skip dead points to find the most recent alive position
+            PlayerPathPoint? currentPoint = null;
+            PlayerPathPoint? lastAlivePoint = null;
+            foreach (var segment in multiPlayerPaths[povFollowPlayer])
+            {
+                foreach (var pt in segment)
+                {
+                    if (pt.Timestamp <= pathCurrentTimestamp)
+                    {
+                        currentPoint = pt;
+                        if (!pt.IsDead)
+                            lastAlivePoint = pt;
+                    }
+                    else
+                        break;
+                }
+            }
+
+            // Prefer alive point, fallback to any point
+            if (!lastAlivePoint.HasValue && !currentPoint.HasValue)
+                return;
+
+            var point = lastAlivePoint.HasValue ? lastAlivePoint.Value : currentPoint.Value;
+
+            // Skip if player is dead at current timestamp
+            if (point.IsDead)
+                return;
+
+            // Set camera position at player's eye level
+            cam.x = point.X;
+            cam.y = point.Y;
+            cam.z = point.Z + 0.6f; // Eye height offset
+            cam.Position.X = cam.x;
+            cam.Position.Y = cam.y;
+            cam.Position.Z = cam.z;
+
+            // Set camera yaw to player's facing direction
+            cam.radianh = point.FacingYaw * (float)(Math.PI / 180.0);
+            cam.ComputePosition();
+        }
+
+        /// <summary>
+        /// Gets the interpolated current position along the path.
+        /// </summary>
+        private Vector3 GetCurrentPathPosition()
+        {
+            if (playerPath.Count == 0)
+                return new Vector3(0, 0, 0);
+
+            if (pathCurrentIndex >= playerPath.Count - 1)
+            {
+                var last = playerPath[playerPath.Count - 1];
+                return new Vector3(last.X, last.Y, last.Z);
+            }
+
+            var p1 = playerPath[pathCurrentIndex];
+            var p2 = playerPath[pathCurrentIndex + 1];
+
+            // Interpolate between current and next point
+            float t = 0;
+            float duration = p2.Timestamp - p1.Timestamp;
+            if (duration > 0)
+            {
+                t = (pathTimeAccumulator - p1.Timestamp) / duration;
+                t = Math.Max(0, Math.Min(1, t));
+            }
+
+            return new Vector3(
+                p1.X + (p2.X - p1.X) * t,
+                p1.Y + (p2.Y - p1.Y) * t,
+                p1.Z + (p2.Z - p1.Z) * t
+            );
+        }
+
+        /// <summary>
+        /// Renders the player path and current position marker.
+        /// </summary>
+        private void RenderPlayerPath()
+        {
+            if (multiPlayerPaths.Count == 0 && playerPath.Count == 0)
+                return;
+
+            // Try to load biped model if not already attempted
+            if (!playerBipedModelLoaded)
+            {
+                LoadPlayerBipedModel();
+            }
+
+            // Draw path trails as separate segments (not connected across respawns)
+            if (showPathTrail)
+            {
+                render.device.SetTexture(0, null);
+                render.device.RenderState.Lighting = false;
+                render.device.VertexFormat = CustomVertex.PositionColored.Format;
+                render.device.Transform.World = Matrix.Identity;
+
+                foreach (var kvp in multiPlayerPaths)
+                {
+                    string playerName = kvp.Key;
+                    if (hiddenPlayers.Contains(playerName))
+                        continue;
+
+                    foreach (var segment in kvp.Value)
+                    {
+                        if (segment.Count < 2) continue;
+
+                        // Only draw points up to current timestamp
+                        List<CustomVertex.PositionColored> verts = new List<CustomVertex.PositionColored>();
+                        foreach (var pt in segment)
+                        {
+                            if (pt.Timestamp > pathCurrentTimestamp) break;
+                            Color ptColor = pt.Team >= 0 ? GetTeamColor(pt.Team) : Color.White;
+                            verts.Add(new CustomVertex.PositionColored(pt.X, pt.Y, pt.Z, ptColor.ToArgb()));
+                        }
+
+                        if (verts.Count >= 2)
+                        {
+                            render.device.DrawUserPrimitives(PrimitiveType.LineStrip, verts.Count - 1, verts.ToArray());
+                        }
+                    }
+                }
+                render.device.RenderState.Lighting = true;
+            }
+
+            // Find and render each player at their current position
+            foreach (var kvp in multiPlayerPaths)
+            {
+                string playerName = kvp.Key;
+                if (hiddenPlayers.Contains(playerName))
+                    continue;
+
+                // Find the point for this player at current timestamp
+                PlayerPathPoint? currentPoint = null;
+                PlayerPathPoint? prevPoint = null;
+
+                foreach (var segment in kvp.Value)
+                {
+                    for (int i = 0; i < segment.Count; i++)
+                    {
+                        if (segment[i].Timestamp <= pathCurrentTimestamp)
+                        {
+                            prevPoint = currentPoint;
+                            currentPoint = segment[i];
+                        }
+                        else break;
+                    }
+                }
+
+                if (!currentPoint.HasValue) continue;
+                var pt = currentPoint.Value;
+
+                // Skip if dead
+                if (pt.IsDead) continue;
+
+                Color teamColor = pt.Team >= 0 ? GetTeamColor(pt.Team) : Color.White;
+                float groundOffset = -0.2f;
+
+                // Draw team color circle at ground level
+                DrawTeamCircle(pt.X, pt.Y, pt.Z + groundOffset, teamColor);
+
+                // Use biped model if available, otherwise fall back to cylinder
+                if (playerBipedModel != null)
+                {
+                    float yawRadians = pt.FacingYaw * (float)(Math.PI / 180.0);
+                    Matrix rotation = Matrix.RotationZ(yawRadians);
+                    Matrix translation = Matrix.Translation(pt.X, pt.Y, pt.Z + groundOffset);
+                    render.device.Transform.World = Matrix.Multiply(rotation, translation);
+
+                    Material teamMaterial = new Material();
+                    teamMaterial.Diffuse = teamColor;
+                    teamMaterial.Ambient = teamColor;
+                    teamMaterial.Emissive = Color.FromArgb(teamColor.R / 3, teamColor.G / 3, teamColor.B / 3);
+
+                    render.device.RenderState.Lighting = true;
+                    render.device.Material = teamMaterial;
+                    ParsedModel.DisplayedInfo.Draw(ref render.device, playerBipedModel);
+                }
+                else
+                {
+                    if (playerMarkerMesh == null || playerMarkerMesh.Disposed)
+                    {
+                        playerMarkerMesh = Mesh.Cylinder(render.device, 0.2f, 0.1f, 0.7f, 8, 1);
+                    }
+
+                    PlayerMarkerMaterial = new Material();
+                    PlayerMarkerMaterial.Diffuse = teamColor;
+                    PlayerMarkerMaterial.Ambient = teamColor;
+                    PlayerMarkerMaterial.Emissive = Color.FromArgb(teamColor.R / 2, teamColor.G / 2, teamColor.B / 2);
+
+                    float yawRadians = pt.FacingYaw * (float)(Math.PI / 180.0);
+                    Matrix yawRotation = Matrix.RotationZ(yawRadians);
+                    Matrix tiltRotation = Matrix.RotationX((float)(Math.PI / 2));
+                    Matrix translation = Matrix.Translation(pt.X, pt.Y, pt.Z + 0.35f + groundOffset);
+                    render.device.Transform.World = Matrix.Multiply(Matrix.Multiply(tiltRotation, yawRotation), translation);
+                    render.device.Material = PlayerMarkerMaterial;
+                    render.device.SetTexture(0, null);
+                    render.device.RenderState.FillMode = FillMode.Solid;
+                    playerMarkerMesh.DrawSubset(0);
+                }
+
+                // Draw player name above head (create temporary telemetry object for DrawPlayerName)
+                PlayerTelemetry tempTelemetry = new PlayerTelemetry();
+                tempTelemetry.PlayerName = pt.PlayerName;
+                tempTelemetry.Team = pt.Team;
+                tempTelemetry.PosX = pt.X;
+                tempTelemetry.PosY = pt.Y;
+                tempTelemetry.PosZ = pt.Z;
+                tempTelemetry.CurrentWeapon = pt.CurrentWeapon;
+                tempTelemetry.EmblemFg = pt.EmblemFg;
+                tempTelemetry.EmblemBg = pt.EmblemBg;
+                tempTelemetry.ColorPrimary = pt.ColorPrimary;
+                tempTelemetry.ColorSecondary = pt.ColorSecondary;
+                tempTelemetry.ColorTertiary = pt.ColorTertiary;
+                tempTelemetry.ColorQuaternary = pt.ColorQuaternary;
+                tempTelemetry.IsDead = pt.IsDead;
+                DrawPlayerName(tempTelemetry, pt.IsDead);
+            }
+        }
+
+        /// <summary>
+        /// Loads the player biped model from the map (Spartan/Master Chief).
+        /// </summary>
+        private void LoadPlayerBipedModel()
+        {
+            playerBipedModelLoaded = true;
+
+            try
+            {
+                // Track map state to restore it properly
+                int alreadyOpen = map.isOpen ? (int)map.openMapType : -1;
+                if (alreadyOpen != (int)MapTypes.Internal)
+                {
+                    map.OpenMap(MapTypes.Internal);
+                }
+
+                // Find the default biped model (Master Chief/Spartan) from the scenario
+                // This is stored at offset 308 in the scenario tag (meta 0)
+                map.BR.BaseStream.Position = map.MetaInfo.Offset[0] + 308;
+                int tempr = map.BR.ReadInt32();
+                if (tempr == 0)
+                {
+                    RestoreMapState(alreadyOpen);
+                    return;
+                }
+
+                tempr -= map.SecondaryMagic;
+                map.BR.BaseStream.Position = tempr + 4;
+                int bipdTagIndex = map.Functions.ForMeta.FindMetaByID(map.BR.ReadInt32());
+
+                if (bipdTagIndex == -1)
+                {
+                    RestoreMapState(alreadyOpen);
+                    return;
+                }
+
+                // Get the model tag number from the biped
+                int modelTagNumber = map.Functions.FindModelByBaseClass(bipdTagIndex);
+
+                if (modelTagNumber == -1)
+                {
+                    RestoreMapState(alreadyOpen);
+                    return;
+                }
+
+                // Load the model
+                Meta m = new Meta(map);
+                m.ReadMetaFromMap(modelTagNumber, false);
+
+                playerBipedModel = new ParsedModel(ref m);
+                ParsedModel.DisplayedInfo.LoadDirectXTexturesAndBuffers(ref render.device, ref playerBipedModel);
+
+                m.Dispose();
+                RestoreMapState(alreadyOpen);
+            }
+            catch (Exception)
+            {
+                // If loading fails, we'll just use the cylinder fallback
+                playerBipedModel = null;
+            }
+        }
+
+        /// <summary>
+        /// Restores the map to its previous open state.
+        /// </summary>
+        private void RestoreMapState(int previousState)
+        {
+            if (previousState == -1)
+            {
+                map.CloseMap();
+            }
+            else
+            {
+                map.OpenMap((MapTypes)previousState);
+            }
+        }
+
+        /// <summary>
+        /// Gets the color for a team.
+        /// </summary>
+        private Color GetTeamColor(int team)
+        {
+            switch (team)
+            {
+                case 0: return Color.Red;
+                case 1: return Color.Blue;
+                case 2: return Color.Green;
+                case 3: return Color.Orange;
+                default: return Color.Yellow;
+            }
+        }
+
+        #endregion
+
+        #region Live Telemetry Network Methods
+
+        /// <summary>
+        /// Starts the UDP telemetry listener on port 2222.
+        /// </summary>
+        public void StartTelemetryListener()
+        {
+            if (telemetryListenerRunning)
+                return;
+
+            try
+            {
+                telemetryListenerRunning = true;
+                showLiveTelemetry = true;
+
+                // Reset header parsing state
+                csvColumnIndices.Clear();
+
+                // Clear live player data for fresh start
+                lock (livePlayersLock)
+                {
+                    livePlayers.Clear();
+                }
+                livePlayerNames.Clear();
+                RefreshPlayerDropdowns();
+
+                // Start UDP listener
+                telemetryUdpClient = new UdpClient();
+                telemetryUdpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                telemetryUdpClient.Client.Bind(new IPEndPoint(IPAddress.Any, 2222));
+
+                telemetryListenerThread = new Thread(TelemetryListenerLoop);
+                telemetryListenerThread.IsBackground = true;
+                telemetryListenerThread.Start();
+
+                // Start TCP listener
+                telemetryTcpListener = new TcpListener(IPAddress.Any, 2222);
+                telemetryTcpListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                telemetryTcpListener.Start();
+
+                telemetryTcpListenerThread = new Thread(TelemetryTcpListenerLoop);
+                telemetryTcpListenerThread.IsBackground = true;
+                telemetryTcpListenerThread.Start();
+
+                AddDebugLog("Telemetry listeners started on port 2222 (UDP + TCP)");
+            }
+            catch (Exception ex)
+            {
+                AddDebugLog($"Failed to start telemetry listener: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Stops the telemetry listener.
+        /// </summary>
+        public void StopTelemetryListener()
+        {
+            telemetryListenerRunning = false;
+            showLiveTelemetry = false;
+
+            try
+            {
+                telemetryUdpClient?.Close();
+                telemetryTcpListener?.Stop();
+                telemetryListenerThread?.Join(1000);
+                telemetryTcpListenerThread?.Join(1000);
+            }
+            catch { }
+
+            lock (livePlayersLock)
+            {
+                livePlayers.Clear();
+            }
+            livePlayerNames.Clear();
+
+            // Restore playback player dropdowns
+            RefreshPlayerDropdowns();
+        }
+
+        /// <summary>
+        /// Main loop for receiving UDP telemetry data.
+        /// </summary>
+        private void TelemetryListenerLoop()
+        {
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
+
+            AddDebugLog("UDP listener started, waiting for data on port 2222...");
+
+            while (telemetryListenerRunning)
+            {
+                try
+                {
+                    byte[] data = telemetryUdpClient.Receive(ref remoteEP);
+                    string packet = Encoding.UTF8.GetString(data).Trim();
+
+                    // Split packet into multiple lines (one per player)
+                    string[] lines = packet.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (string line in lines)
+                    {
+                        if (string.IsNullOrWhiteSpace(line)) continue;
+                        ProcessTelemetryLine(line);
+                    }
+                }
+                catch (SocketException)
+                {
+                    // Socket closed, exit loop
+                    if (!telemetryListenerRunning) break;
+                }
+                catch (Exception ex)
+                {
+                    AddDebugLog($"[UDP ERROR] {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Main loop for receiving TCP telemetry data.
+        /// </summary>
+        private void TelemetryTcpListenerLoop()
+        {
+            AddDebugLog("TCP listener started, waiting for connections on port 2222...");
+
+            while (telemetryListenerRunning)
+            {
+                try
+                {
+                    // Accept a TCP client
+                    if (!telemetryTcpListener.Pending())
+                    {
+                        Thread.Sleep(100);
+                        continue;
+                    }
+
+                    using (TcpClient client = telemetryTcpListener.AcceptTcpClient())
+                    using (NetworkStream stream = client.GetStream())
+                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                    {
+                        AddDebugLog($"[TCP] Client connected from {client.Client.RemoteEndPoint}");
+
+                        while (telemetryListenerRunning && client.Connected)
+                        {
+                            string line = reader.ReadLine();
+                            if (line == null) break;
+                            if (string.IsNullOrWhiteSpace(line)) continue;
+
+                            ProcessTelemetryLine(line);
+                        }
+                    }
+                }
+                catch (SocketException)
+                {
+                    if (!telemetryListenerRunning) break;
+                }
+                catch (Exception ex)
+                {
+                    AddDebugLog($"[TCP ERROR] {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Process a single telemetry line (shared by UDP and TCP).
+        /// </summary>
+        private void ProcessTelemetryLine(string line)
+        {
+            string[] parts = line.Split(',');
+
+            // Parse header row if we haven't yet
+            if (csvColumnIndices.Count == 0)
+            {
+                string firstField = parts[0].Trim().ToLowerInvariant();
+                bool isHeader = firstField == "timestamp" || firstField == "playername" ||
+                                !firstField.Contains("-");
+
+                if (isHeader)
+                {
+                    for (int i = 0; i < parts.Length; i++)
+                    {
+                        csvColumnIndices[parts[i].Trim().ToLowerInvariant()] = i;
+                    }
+                    int posxIdx = csvColumnIndices.ContainsKey("posx") ? csvColumnIndices["posx"] : -1;
+                    int posyIdx = csvColumnIndices.ContainsKey("posy") ? csvColumnIndices["posy"] : -1;
+                    int poszIdx = csvColumnIndices.ContainsKey("posz") ? csvColumnIndices["posz"] : -1;
+                    AddDebugLog($"[HEADER] {csvColumnIndices.Count} cols, posx={posxIdx} posy={posyIdx} posz={poszIdx}");
+                    return;
+                }
+                else
+                {
+                    SetDefaultColumnOrder();
+                    AddDebugLog($"[AUTO] Using default column order ({csvColumnIndices.Count} columns)");
+                }
+            }
+
+            // Debug: show first columns and total count to detect offset issues
+            if (parts.Length > 3)
+            {
+                AddDebugLog($"[ROW] [0]={parts[0]} [1]={parts[1]} [2]={parts[2]} total={parts.Length}");
+            }
+
+            // Parse data row
+            PlayerTelemetry telemetry = ParseTelemetryLine(parts, csvColumnIndices);
+            if (telemetry != null)
+            {
+                lock (livePlayersLock)
+                {
+                    livePlayers[telemetry.PlayerName] = telemetry;
+                }
+                // Update dropdowns if player list changed
+                UpdateLivePlayerDropdowns();
+            }
+        }
+
+        private void AddDebugLog(string message)
+        {
+            lock (telemetryDebugLogLock)
+            {
+                telemetryDebugLog.Add($"{DateTime.Now:HH:mm:ss.fff} {message}");
+                while (telemetryDebugLog.Count > MaxDebugLogEntries)
+                {
+                    telemetryDebugLog.RemoveAt(0);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets up default column order matching the expected CSV format.
+        /// </summary>
+        private void SetDefaultColumnOrder()
+        {
+            csvColumnIndices.Clear();
+            // Matches actual telemetry sender format (36 columns):
+            // 1-5: Timestamp, PlayerName, Team, XboxId, MachineId
+            // 6-11: EmblemFg, EmblemBg, ColorPrimary, ColorSecondary, ColorTertiary, ColorQuaternary
+            // 12-18: PosX, PosY, PosZ, VelX, VelY, VelZ, Speed
+            // 19-22: Yaw, Pitch, YawDeg, PitchDeg
+            // 23-28: IsDead, RespawnTimer, IsCrouching, CrouchBlend, IsAirborne, AirborneTicks
+            // 29-32: WeaponSlot, CurrentWeapon, FragGrenades, PlasmaGrenades
+            // 33-36: Kills, Deaths, Assists, Event
+            string[] columns = {
+                "timestamp", "playername", "team", "xboxid", "machineid",
+                "emblemfg", "emblembg", "colorprimary", "colorsecondary", "colortertiary", "colorquaternary",
+                "posx", "posy", "posz", "velx", "vely", "velz", "speed",
+                "yaw", "pitch", "yawdeg", "pitchdeg",
+                "isdead", "respawntimer", "iscrouching", "crouchblend", "isairborne", "airborneticks",
+                "weaponslot", "currentweapon", "fraggrenades", "plasmagrenades",
+                "kills", "deaths", "assists", "event"
+            };
+            for (int i = 0; i < columns.Length; i++)
+            {
+                csvColumnIndices[columns[i]] = i;
+            }
+        }
+
+        /// <summary>
+        /// Parses a telemetry CSV line into a PlayerTelemetry object.
+        /// </summary>
+        private PlayerTelemetry ParseTelemetryLine(string[] parts, Dictionary<string, int> cols)
+        {
+            try
+            {
+                PlayerTelemetry t = new PlayerTelemetry();
+
+                // Helper to get string value
+                Func<string, string> getStr = (col) => {
+                    if (cols.ContainsKey(col) && parts.Length > cols[col])
+                        return parts[cols[col]].Trim();
+                    return null;
+                };
+
+                // Helper to get float value
+                Func<string, float> getFloat = (col) => {
+                    float val = 0;
+                    if (cols.ContainsKey(col) && parts.Length > cols[col])
+                        float.TryParse(parts[cols[col]].Trim(), System.Globalization.NumberStyles.Float,
+                            System.Globalization.CultureInfo.InvariantCulture, out val);
+                    return val;
+                };
+
+                // Helper to get int value
+                Func<string, int> getInt = (col) => {
+                    int val = 0;
+                    if (cols.ContainsKey(col) && parts.Length > cols[col])
+                        int.TryParse(parts[cols[col]].Trim(), out val);
+                    return val;
+                };
+
+                // Helper to get bool value (handles True/False, 0/1, yes/no)
+                Func<string, bool> getBool = (col) => {
+                    if (cols.ContainsKey(col) && parts.Length > cols[col])
+                    {
+                        string val = parts[cols[col]].Trim().ToLowerInvariant();
+                        return val == "true" || val == "1" || val == "yes";
+                    }
+                    return false;
+                };
+
+                // Required: PlayerName
+                t.PlayerName = getStr("playername");
+                if (string.IsNullOrEmpty(t.PlayerName))
+                    return null;
+
+                // Identity
+                t.XboxId = getStr("xboxid");
+                t.MachineId = getStr("machineid");
+
+                // Team - handle both string names and numeric values
+                string teamStr = getStr("team");
+                if (!string.IsNullOrEmpty(teamStr))
+                {
+                    teamStr = teamStr.ToLowerInvariant();
+                    if (teamStr.Contains("red") || teamStr == "0") t.Team = 0;
+                    else if (teamStr.Contains("blue") || teamStr == "1") t.Team = 1;
+                    else if (teamStr.Contains("green") || teamStr == "2") t.Team = 2;
+                    else if (teamStr.Contains("orange") || teamStr == "3") t.Team = 3;
+                    else int.TryParse(teamStr, out t.Team);
+                }
+
+                // Emblem & Colors
+                t.EmblemFg = getInt("emblemfg");
+                t.EmblemBg = getInt("emblembg");
+                t.ColorPrimary = getInt("colorprimary");
+                t.ColorSecondary = getInt("colorsecondary");
+                t.ColorTertiary = getInt("colortertiary");
+                t.ColorQuaternary = getInt("colorquaternary");
+
+                // Timestamp
+                string tsStr = getStr("timestamp");
+                if (!string.IsNullOrEmpty(tsStr))
+                    DateTime.TryParse(tsStr, out t.Timestamp);
+
+                // Position
+                t.PosX = getFloat("posx");
+                t.PosY = getFloat("posy");
+                t.PosZ = getFloat("posz");
+
+                // Velocity (may not be present in all formats)
+                t.VelX = getFloat("velx");
+                t.VelY = getFloat("vely");
+                t.VelZ = getFloat("velz");
+                t.Speed = getFloat("speed");
+
+                // Orientation (yaw/pitch in radians, yawdeg/pitchdeg in degrees)
+                t.Yaw = getFloat("yaw");
+                t.Pitch = getFloat("pitch");
+                t.YawDeg = getFloat("yawdeg");
+                t.PitchDeg = getFloat("pitchdeg");
+
+                // Movement State
+                t.IsCrouching = getBool("iscrouching");
+                t.CrouchBlend = getFloat("crouchblend");
+                t.IsAirborne = getBool("isairborne");
+                t.AirborneTicks = getInt("airborneticks");
+
+                // Weapons
+                t.WeaponSlot = getInt("weaponslot");
+                t.CurrentWeapon = getStr("currentweapon");
+                t.FragGrenades = getInt("fraggrenades");
+                t.PlasmaGrenades = getInt("plasmagrenades");
+
+                // K/D Stats
+                t.Kills = getInt("kills");
+                t.Deaths = getInt("deaths");
+                t.RespawnTimer = getInt("respawntimer");
+                // Use both IsDead field and RespawnTimer for robust death detection
+                t.IsDead = getBool("isdead") || t.RespawnTimer > 0;
+
+                // Events
+                t.Event = getStr("event");
+
+                return t;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Renders live player telemetry.
+        /// </summary>
+        private void RenderLivePlayers()
+        {
+            if (!showLiveTelemetry)
+                return;
+
+            // Try to load biped model if not already attempted
+            if (!playerBipedModelLoaded)
+            {
+                LoadPlayerBipedModel();
+            }
+
+            List<PlayerTelemetry> players;
+            lock (livePlayersLock)
+            {
+                players = new List<PlayerTelemetry>(livePlayers.Values);
+            }
+
+            foreach (PlayerTelemetry player in players)
+            {
+                // Skip hidden players
+                if (hiddenPlayers.Contains(player.PlayerName))
+                    continue;
+
+                Color teamColor = GetTeamColor(player.Team);
+
+                // Check if player is dead (using IsDead field from telemetry)
+                bool isDead = player.IsDead;
+
+                // Ground offset to align with floor (-0.2 world units)
+                float groundOffset = -0.2f;
+
+                // Adjust Z position for crouching
+                float zOffset = player.IsCrouching ? -0.2f * player.CrouchBlend : 0f;
+                float modelZOffset = zOffset + groundOffset;
+
+                // Calculate circle Z - stays on ground even when jumping
+                // When airborne, estimate ground level by subtracting jump height
+                float circleZ = player.PosZ + groundOffset;
+                if (player.IsAirborne)
+                {
+                    // Keep circle lower when jumping (approximate ground level)
+                    circleZ = player.PosZ + groundOffset - (player.AirborneTicks * 0.02f);
+                }
+
+                // Only draw model and circle if alive
+                if (!isDead)
+                {
+                    // Draw team color circle at ground level
+                    DrawTeamCircle(player.PosX, player.PosY, circleZ, teamColor);
+
+                    // Draw ground shadow when airborne
+                    if (player.IsAirborne && player.AirborneTicks > 5)
+                    {
+                        DrawGroundShadow(player.PosX, player.PosY, player.PosZ, teamColor);
+                    }
+
+                    // Draw velocity trail when moving fast
+                    if (player.Speed > 2f)
+                    {
+                        DrawVelocityTrail(player, teamColor);
+                    }
+
+                    // Use biped model if available
+                    if (playerBipedModel != null)
+                    {
+                        // Use Yaw (radians) directly if available, otherwise convert YawDeg
+                        float yawRadians = player.Yaw != 0 ? player.Yaw : player.YawDeg * (float)(Math.PI / 180.0);
+                        Matrix rotation = Matrix.RotationZ(yawRadians);
+                        Matrix translation = Matrix.Translation(player.PosX, player.PosY, player.PosZ + modelZOffset);
+
+                        // Apply rotation then translation (model rotates around its own origin, then moves to position)
+                        render.device.Transform.World = Matrix.Multiply(rotation, translation);
+
+                        Material teamMaterial = new Material();
+                        teamMaterial.Diffuse = teamColor;
+                        teamMaterial.Ambient = teamColor;
+                        teamMaterial.Emissive = Color.FromArgb(teamColor.R / 3, teamColor.G / 3, teamColor.B / 3);
+
+                        render.device.RenderState.Lighting = true;
+                        render.device.Material = teamMaterial;
+                        ParsedModel.DisplayedInfo.Draw(ref render.device, playerBipedModel);
+                    }
+                    else
+                    {
+                        // Fall back to cylinder marker
+                        if (playerMarkerMesh == null || playerMarkerMesh.Disposed)
+                        {
+                            playerMarkerMesh = Mesh.Cylinder(render.device, 0.2f, 0.1f, 0.7f, 8, 1);
+                        }
+
+                        Material mat = new Material();
+                        mat.Diffuse = teamColor;
+                        mat.Ambient = teamColor;
+                        mat.Emissive = Color.FromArgb(teamColor.R / 2, teamColor.G / 2, teamColor.B / 2);
+
+                        // Apply yaw rotation and position
+                        // Use Yaw (radians) directly if available, otherwise convert YawDeg
+                        float yawRadians = player.Yaw != 0 ? player.Yaw : player.YawDeg * (float)(Math.PI / 180.0);
+                        Matrix yawRotation = Matrix.RotationZ(yawRadians);
+                        Matrix tiltRotation = Matrix.RotationX((float)(Math.PI / 2));
+                        Matrix translation = Matrix.Translation(player.PosX, player.PosY, player.PosZ + 0.35f + modelZOffset);
+                        // Tilt to stand upright, rotate by yaw, then translate to position
+                        render.device.Transform.World = Matrix.Multiply(Matrix.Multiply(tiltRotation, yawRotation), translation);
+                        render.device.Material = mat;
+                        render.device.SetTexture(0, null);
+                        render.device.RenderState.FillMode = FillMode.Solid;
+                        playerMarkerMesh.DrawSubset(0);
+                    }
+                }
+
+                // Draw player name/emblem above head (passes isDead to show X when dead)
+                DrawPlayerName(player, isDead);
+            }
+        }
+
+        /// <summary>
+        /// Draws a team color circle at player's feet.
+        /// </summary>
+        private void DrawTeamCircle(float x, float y, float z, Color teamColor)
+        {
+            // Create or reuse circle mesh - flat disc on XY plane
+            if (teamCircleMesh == null || teamCircleMesh.Disposed)
+            {
+                // Create a flat cylinder (disc) - height is along Z axis by default
+                // Radius 0.125 (4x smaller than original 0.5)
+                teamCircleMesh = Mesh.Cylinder(render.device, 0.125f, 0.125f, 0.02f, 24, 1);
+            }
+
+            Material circleMat = new Material();
+            circleMat.Diffuse = teamColor;
+            circleMat.Ambient = teamColor;
+            circleMat.Emissive = Color.FromArgb(teamColor.R / 2, teamColor.G / 2, teamColor.B / 2);
+
+            // Position circle flat at player's feet (no rotation needed - cylinder Z is up)
+            // Lower it so the disc sits at ground level
+            render.device.Transform.World = Matrix.Translation(x, y, z - 0.15f);
+            render.device.Material = circleMat;
+            render.device.SetTexture(0, null);
+            render.device.RenderState.Lighting = true;
+            render.device.RenderState.AlphaBlendEnable = true;
+            render.device.RenderState.SourceBlend = Blend.SourceAlpha;
+            render.device.RenderState.DestinationBlend = Blend.InvSourceAlpha;
+            teamCircleMesh.DrawSubset(0);
+            render.device.RenderState.AlphaBlendEnable = false;
+        }
+
+        /// <summary>
+        /// Draws the player name and emblem above their head.
+        /// </summary>
+        private void DrawPlayerName(PlayerTelemetry player, bool isDead = false)
+        {
+            try
+            {
+                // Create font if needed
+                if (playerNameFont == null || playerNameFont.Disposed)
+                {
+                    // Try Highway Gothic first (Halo's UI font), then fallbacks
+                    string[] fontNames = { "Highway Gothic", "Conduit ITC", "Eurostile", "Arial" };
+                    System.Drawing.Font drawFont = null;
+                    foreach (string fontName in fontNames)
+                    {
+                        try
+                        {
+                            drawFont = new System.Drawing.Font(fontName, 14, FontStyle.Bold);
+                            if (drawFont.Name.Equals(fontName, StringComparison.OrdinalIgnoreCase) ||
+                                drawFont.OriginalFontName.Equals(fontName, StringComparison.OrdinalIgnoreCase))
+                            {
+                                break; // Found the font
+                            }
+                            drawFont.Dispose();
+                            drawFont = null;
+                        }
+                        catch { }
+                    }
+                    if (drawFont == null)
+                        drawFont = new System.Drawing.Font("Arial", 14, FontStyle.Bold);
+                    playerNameFont = new Microsoft.DirectX.Direct3D.Font(render.device, drawFont);
+                }
+
+                // Create sprite if needed
+                if (emblemSprite == null || emblemSprite.Disposed)
+                {
+                    emblemSprite = new Sprite(render.device);
+                }
+
+                // Project 3D position to screen coordinates
+                Vector3 worldPos = new Vector3(player.PosX, player.PosY, player.PosZ + 0.6f); // Above head
+                Vector3 screenPos = Vector3.Project(worldPos,
+                    render.device.Viewport,
+                    render.device.Transform.Projection,
+                    render.device.Transform.View,
+                    Matrix.Identity);
+
+                // Only draw if in front of camera
+                if (screenPos.Z > 0 && screenPos.Z < 1)
+                {
+                    Color teamColor = GetTeamColor(player.Team);
+                    int centerX = (int)screenPos.X;
+                    int topY = (int)screenPos.Y;
+
+                    // Determine border color based on events
+                    Color borderColor = Color.White; // Default
+                    if (!string.IsNullOrEmpty(player.Event))
+                    {
+                        string evt = player.Event.ToLowerInvariant();
+                        if (evt.Contains("fire") || evt.Contains("shot") || evt.Contains("shoot"))
+                        {
+                            borderColor = Color.Yellow; // Shooting
+                        }
+                        else if (evt.Contains("damage") || evt.Contains("hit") || evt.Contains("hurt"))
+                        {
+                            borderColor = Color.Red; // Taking damage
+                        }
+                    }
+
+                    // Get emblem texture (load async if not cached)
+                    string emblemKey = GetEmblemKey(player);
+                    Texture emblemTexture = GetOrLoadEmblemTexture(player, emblemKey);
+
+                    int emblemSize = 32;
+                    int emblemX = centerX - emblemSize / 2;
+                    int emblemY = topY - emblemSize - 8;
+
+                    if (isDead)
+                    {
+                        // Draw bold red X for dead players (replaces emblem)
+                        playerNameFont.DrawText(null, "X",
+                            new System.Drawing.Rectangle(emblemX, emblemY, emblemSize, emblemSize),
+                            DrawTextFormat.Center | DrawTextFormat.VerticalCenter | DrawTextFormat.NoClip, Color.Red);
+                    }
+                    else
+                    {
+                        // Draw border rectangle using Line (filled box)
+                        using (Line line = new Line(render.device))
+                        {
+                            line.Width = emblemSize + 8;
+                            line.Begin();
+                            // Draw border
+                            Vector2[] borderPts = {
+                                new Vector2(emblemX - 4 + (emblemSize + 8) / 2, emblemY - 4),
+                                new Vector2(emblemX - 4 + (emblemSize + 8) / 2, emblemY + emblemSize + 4)
+                            };
+                            line.Draw(borderPts, borderColor);
+                            line.End();
+
+                            // Draw inner fill
+                            line.Width = emblemSize;
+                            line.Begin();
+                            Vector2[] innerPts = {
+                                new Vector2(centerX, emblemY),
+                                new Vector2(centerX, emblemY + emblemSize)
+                            };
+                            line.Draw(innerPts, teamColor);
+                            line.End();
+                        }
+
+                        // Draw emblem texture if available (scale to fit emblemSize)
+                        if (emblemTexture != null && !emblemTexture.Disposed)
+                        {
+                            float emblemScale = emblemSize / 256.0f; // Scale to 25% of current
+                            emblemSprite.Begin(SpriteFlags.AlphaBlend);
+                            emblemSprite.Transform = Matrix.Scaling(emblemScale, emblemScale, 1f) * Matrix.Translation(emblemX, emblemY, 0);
+                            emblemSprite.Draw(emblemTexture, Vector3.Empty, Vector3.Empty, Color.White.ToArgb());
+                            emblemSprite.Transform = Matrix.Identity;
+                            emblemSprite.End();
+                        }
+                    }
+
+                    // Draw player name
+                    int nameY = topY;
+                    playerNameFont.DrawText(null, player.PlayerName,
+                        new System.Drawing.Rectangle(centerX - 80, nameY, 160, 24),
+                        DrawTextFormat.Center | DrawTextFormat.NoClip, teamColor);
+
+                    // Draw weapon icon after player name (scaled to 16px)
+                    Texture weaponTexture = GetOrLoadWeaponTexture(player.CurrentWeapon);
+                    if (weaponTexture != null && !weaponTexture.Disposed)
+                    {
+                        float scale = 0.25f; // Scale down weapon icons
+                        emblemSprite.Begin(SpriteFlags.AlphaBlend);
+                        emblemSprite.Transform = Matrix.Scaling(scale, scale, 1f) * Matrix.Translation(centerX + 50, nameY - 4, 0);
+                        emblemSprite.Draw(weaponTexture, Vector3.Empty, Vector3.Empty, Color.White.ToArgb());
+                        emblemSprite.Transform = Matrix.Identity; // Reset
+                        emblemSprite.End();
+                    }
+
+                    // Draw blue waypoint arrow below name pointing down at player
+                    int arrowY = nameY + 20;
+                    playerNameFont.DrawText(null, "â–¼",
+                        new System.Drawing.Rectangle(centerX - 20, arrowY, 40, 20),
+                        DrawTextFormat.Center | DrawTextFormat.NoClip, Color.CornflowerBlue);
+                }
+            }
+            catch
+            {
+                // Rendering failed, ignore
+            }
+        }
+
+        /// <summary>
+        /// Draws HUD overlay elements (FPS counter, mode indicator, etc.)
+        /// </summary>
+        private void DrawHUD()
+        {
+            // Update FPS counter
+            fpsFrameCount++;
+            double elapsed = (DateTime.Now - fpsLastUpdate).TotalSeconds;
+            if (elapsed >= 1.0)
+            {
+                currentFps = (float)(fpsFrameCount / elapsed);
+                fpsFrameCount = 0;
+                fpsLastUpdate = DateTime.Now;
+            }
+
+            // Create font if needed
+            if (fpsFont == null || fpsFont.Disposed)
+            {
+                fpsFont = new Microsoft.DirectX.Direct3D.Font(render.device, new System.Drawing.Font("Segoe UI", 14, FontStyle.Bold));
+            }
+
+            // Halo blue color scheme
+            Color haloBlue = Color.FromArgb(0, 170, 255);
+            Color haloCyan = Color.FromArgb(0, 220, 255);
+
+            int screenWidth = render.device.Viewport.Width;
+            int screenHeight = render.device.Viewport.Height;
+
+            // Draw FPS in top right
+            string fpsText = $"{currentFps:F0} FPS";
+            Rectangle fpsRect = new Rectangle(screenWidth - 120, 10, 110, 30);
+            fpsFont.DrawText(null, fpsText, fpsRect, DrawTextFormat.Right | DrawTextFormat.Top, haloBlue);
+
+            // Draw mode indicator in top left
+            string modeText = showLiveTelemetry ? "â— LIVE" : (playerPath.Count > 0 ? "â–¶ REPLAY" : "");
+            if (!string.IsNullOrEmpty(modeText))
+            {
+                Rectangle modeRect = new Rectangle(10, 10, 150, 30);
+                Color modeColor = showLiveTelemetry ? Color.FromArgb(255, 80, 80) : haloCyan;
+                fpsFont.DrawText(null, modeText, modeRect, DrawTextFormat.Left | DrawTextFormat.Top, modeColor);
+            }
+
+            // Draw playback info when in replay mode
+            if (!showLiveTelemetry && playerPath.Count > 0)
+            {
+                string timeText = FormatTime(pathCurrentTimestamp - pathMinTimestamp) + " / " + FormatTime(pathMaxTimestamp - pathMinTimestamp);
+                string speedText = $"{pathPlaybackSpeed:F2}x";
+                Rectangle timeRect = new Rectangle(10, screenHeight - 60, 200, 25);
+                Rectangle speedRect = new Rectangle(screenWidth - 80, screenHeight - 60, 70, 25);
+                fpsFont.DrawText(null, timeText, timeRect, DrawTextFormat.Left, haloCyan);
+                fpsFont.DrawText(null, speedText, speedRect, DrawTextFormat.Right, haloBlue);
+            }
+
+            // Draw player count
+            int playerCount = showLiveTelemetry ? livePlayerNames.Count : pathPlayerNames.Count;
+            if (playerCount > 0)
+            {
+                string playerText = $"ðŸ‘¥ {playerCount}";
+                Rectangle playerRect = new Rectangle(screenWidth - 80, 40, 70, 25);
+                fpsFont.DrawText(null, playerText, playerRect, DrawTextFormat.Right, haloCyan);
+            }
+        }
+
+        /// <summary>
+        /// Formats a timestamp as MM:SS.
+        /// </summary>
+        private string FormatTime(float seconds)
+        {
+            int mins = (int)(seconds / 60);
+            int secs = (int)(seconds % 60);
+            return $"{mins}:{secs:D2}";
+        }
+
+        /// <summary>
+        /// Gets a unique key for an emblem based on player colors.
+        /// </summary>
+        private string GetEmblemKey(PlayerTelemetry player)
+        {
+            return $"{player.EmblemFg}_{player.EmblemBg}_{player.ColorPrimary}_{player.ColorSecondary}";
+        }
+
+        /// <summary>
+        /// Gets the Carnage Report emblem URL for a player.
+        /// </summary>
+        private string GetEmblemUrl(PlayerTelemetry player)
+        {
+            // P=primary armor, S=secondary armor, EP=emblem primary (tertiary), ES=emblem secondary (quaternary)
+            return $"https://h2emblem.carnagereport.workers.dev/P{player.ColorPrimary}-S{player.ColorSecondary}-EP{player.ColorTertiary}-ES{player.ColorQuaternary}-EF{player.EmblemFg}-EB{player.EmblemBg}-ET0.png";
+        }
+
+        /// <summary>
+        /// Gets or loads an emblem texture, caching it for reuse.
+        /// </summary>
+        private Texture GetOrLoadEmblemTexture(PlayerTelemetry player, string emblemKey)
+        {
+            // Return cached texture if available
+            if (emblemTextureCache.ContainsKey(emblemKey))
+            {
+                return emblemTextureCache[emblemKey];
+            }
+
+            // Start async load if not already loading
+            if (!emblemLoadingSet.Contains(emblemKey))
+            {
+                emblemLoadingSet.Add(emblemKey);
+                string url = GetEmblemUrl(player);
+                AddDebugLog($"[EMBLEM] Loading: {url}");
+
+                // Load emblem in background thread
+                System.Threading.ThreadPool.QueueUserWorkItem(_ =>
+                {
+                    try
+                    {
+                        using (var webClient = new System.Net.WebClient())
+                        {
+                            byte[] imageData = webClient.DownloadData(url);
+                            AddDebugLog($"[EMBLEM] Downloaded {imageData.Length} bytes for {player.PlayerName}");
+                            // Must create texture on main thread
+                            this.BeginInvoke(new System.Action(() =>
+                            {
+                                try
+                                {
+                                    using (var ms = new System.IO.MemoryStream(imageData))
+                                    {
+                                        Texture tex = TextureLoader.FromStream(render.device, ms);
+                                        emblemTextureCache[emblemKey] = tex;
+                                        AddDebugLog($"[EMBLEM] Texture created for {player.PlayerName}");
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    AddDebugLog($"[EMBLEM] Texture error: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    emblemLoadingSet.Remove(emblemKey);
+                                }
+                            }));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        AddDebugLog($"[EMBLEM] Download error: {ex.Message}");
+                        emblemLoadingSet.Remove(emblemKey);
+                    }
+                });
+            }
+
+            return null; // Not loaded yet
+        }
+
+        /// <summary>
+        /// Maps a weapon name from telemetry to a GitHub image filename.
+        /// </summary>
+        private string GetWeaponImageName(string weaponName)
+        {
+            if (string.IsNullOrEmpty(weaponName))
+                return null;
+
+            // Map common weapon names to image filenames
+            string name = weaponName.ToLowerInvariant().Trim();
+
+            if (name.Contains("battle") || name.Contains("br")) return "BattleRifle";
+            if (name.Contains("sniper")) return "SniperRifle";
+            if (name.Contains("rocket")) return "RocketLauncher";
+            if (name.Contains("shotgun")) return "Shotgun";
+            if (name.Contains("smg") || name.Contains("sub")) return "SmG";
+            if (name.Contains("magnum") || name.Contains("pistol") && !name.Contains("plasma")) return "Magnum";
+            if (name.Contains("sword") || name.Contains("energy")) return "EnergySword";
+            if (name.Contains("needler")) return "Needler";
+            if (name.Contains("carbine")) return "Carbine";
+            if (name.Contains("beam") && name.Contains("rifle")) return "BeamRifle";
+            if (name.Contains("brute") && name.Contains("shot")) return "BruteShot";
+            if (name.Contains("brute") && name.Contains("plasma")) return "BrutePlasmaRifle";
+            if (name.Contains("plasma") && name.Contains("pistol")) return "PlasmaPistol";
+            if (name.Contains("plasma") && name.Contains("rifle")) return "PlasmaRifle";
+            if (name.Contains("fuel") || name.Contains("rod")) return "FuelRod";
+            if (name.Contains("sentinel")) return "SentinelBeam";
+            if (name.Contains("flag")) return "Flag";
+            if (name.Contains("ball") || name.Contains("odd")) return "OddBall";
+            if (name.Contains("bomb")) return "AssaultBomb";
+            if (name.Contains("frag") || name.Contains("grenade")) return "H2-M9HEDPFragmentationGrenade";
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets or loads a weapon texture from GitHub.
+        /// </summary>
+        private Texture GetOrLoadWeaponTexture(string weaponName)
+        {
+            string imageName = GetWeaponImageName(weaponName);
+            if (imageName == null)
+                return null;
+
+            // Return cached texture if available
+            if (weaponTextureCache.ContainsKey(imageName))
+            {
+                return weaponTextureCache[imageName];
+            }
+
+            // Start async load if not already loading
+            if (!weaponLoadingSet.Contains(imageName))
+            {
+                weaponLoadingSet.Add(imageName);
+                string url = $"https://raw.githubusercontent.com/i2aMpAnT/CarnageReport.com/main/assets/weapons/{imageName}.png";
+
+                System.Threading.ThreadPool.QueueUserWorkItem(_ =>
+                {
+                    try
+                    {
+                        using (var webClient = new System.Net.WebClient())
+                        {
+                            byte[] imageData = webClient.DownloadData(url);
+                            this.BeginInvoke(new System.Action(() =>
+                            {
+                                try
+                                {
+                                    using (var ms = new System.IO.MemoryStream(imageData))
+                                    {
+                                        Texture tex = TextureLoader.FromStream(render.device, ms);
+                                        weaponTextureCache[imageName] = tex;
+                                    }
+                                }
+                                catch { }
+                                finally
+                                {
+                                    weaponLoadingSet.Remove(imageName);
+                                }
+                            }));
+                        }
+                    }
+                    catch
+                    {
+                        weaponLoadingSet.Remove(imageName);
+                    }
+                });
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Draws a ground shadow circle when player is airborne.
+        /// </summary>
+        private void DrawGroundShadow(float x, float y, float z, Color teamColor)
+        {
+            // Create a flat disc for shadow
+            Mesh shadowMesh = Mesh.Cylinder(render.device, 0.3f, 0.3f, 0.01f, 16, 1);
+
+            Material shadowMat = new Material();
+            shadowMat.Diffuse = Color.FromArgb(100, 0, 0, 0); // Semi-transparent black
+            shadowMat.Ambient = Color.FromArgb(100, 0, 0, 0);
+
+            // Position shadow on ground (assume Z=0 or find ground level)
+            render.device.Transform.World = Matrix.RotationX((float)(Math.PI / 2)) * Matrix.Translation(x, y, 0.01f);
+            render.device.Material = shadowMat;
+            render.device.SetTexture(0, null);
+            render.device.RenderState.AlphaBlendEnable = true;
+            render.device.RenderState.SourceBlend = Blend.SourceAlpha;
+            render.device.RenderState.DestinationBlend = Blend.InvSourceAlpha;
+            shadowMesh.DrawSubset(0);
+            render.device.RenderState.AlphaBlendEnable = false;
+            shadowMesh.Dispose();
+        }
+
+        /// <summary>
+        /// Draws a velocity trail behind moving players.
+        /// </summary>
+        private void DrawVelocityTrail(PlayerTelemetry player, Color teamColor)
+        {
+            // Draw a line from current position backwards along velocity
+            float trailLength = Math.Min(player.Speed * 0.3f, 2f);
+            float vx = player.VelX / Math.Max(player.Speed, 0.1f);
+            float vy = player.VelY / Math.Max(player.Speed, 0.1f);
+
+            // Create trail points
+            CustomVertex.PositionColored[] trailVerts = new CustomVertex.PositionColored[4];
+            Color trailColor = Color.FromArgb(150, teamColor.R, teamColor.G, teamColor.B);
+
+            // Trail start (behind player)
+            float startX = player.PosX - vx * trailLength;
+            float startY = player.PosY - vy * trailLength;
+
+            trailVerts[0] = new CustomVertex.PositionColored(startX - vy * 0.1f, startY + vx * 0.1f, player.PosZ + 0.3f, trailColor.ToArgb());
+            trailVerts[1] = new CustomVertex.PositionColored(startX + vy * 0.1f, startY - vx * 0.1f, player.PosZ + 0.3f, trailColor.ToArgb());
+            trailVerts[2] = new CustomVertex.PositionColored(player.PosX - vy * 0.05f, player.PosY + vx * 0.05f, player.PosZ + 0.3f, teamColor.ToArgb());
+            trailVerts[3] = new CustomVertex.PositionColored(player.PosX + vy * 0.05f, player.PosY - vx * 0.05f, player.PosZ + 0.3f, teamColor.ToArgb());
+
+            render.device.Transform.World = Matrix.Identity;
+            render.device.SetTexture(0, null);
+            render.device.VertexFormat = CustomVertex.PositionColored.Format;
+            render.device.RenderState.Lighting = false;
+            render.device.RenderState.AlphaBlendEnable = true;
+            render.device.RenderState.SourceBlend = Blend.SourceAlpha;
+            render.device.RenderState.DestinationBlend = Blend.InvSourceAlpha;
+            render.device.DrawUserPrimitives(PrimitiveType.TriangleStrip, 2, trailVerts);
+            render.device.RenderState.AlphaBlendEnable = false;
+            render.device.RenderState.Lighting = true;
+        }
+
+        /// <summary>
+        /// Draws an event indicator (weapon fire, melee, grenade, etc.)
+        /// </summary>
+        private void DrawEventIndicator(PlayerTelemetry player, Color teamColor)
+        {
+            string evt = player.Event.ToLowerInvariant();
+            Color eventColor = Color.White;
+            float size = 0.2f;
+
+            // Determine event type and color
+            if (evt.Contains("fire") || evt.Contains("shot"))
+            {
+                eventColor = Color.Yellow; // Muzzle flash
+                size = 0.3f;
+            }
+            else if (evt.Contains("melee"))
+            {
+                eventColor = Color.Orange;
+                size = 0.25f;
+            }
+            else if (evt.Contains("grenade") || evt.Contains("frag") || evt.Contains("plasma"))
+            {
+                eventColor = Color.Lime;
+                size = 0.35f;
+            }
+            else if (evt.Contains("damage") || evt.Contains("hit"))
+            {
+                eventColor = Color.Red;
+                size = 0.2f;
+            }
+            else if (evt.Contains("death") || evt.Contains("kill"))
+            {
+                eventColor = Color.DarkRed;
+                size = 0.5f;
+            }
+            else if (evt.Contains("reload"))
+            {
+                eventColor = Color.Cyan;
+                size = 0.15f;
+            }
+
+            // Draw a sphere at player position + offset in facing direction
+            Mesh eventMesh = Mesh.Sphere(render.device, size, 8, 8);
+
+            Material eventMat = new Material();
+            eventMat.Diffuse = eventColor;
+            eventMat.Ambient = eventColor;
+            eventMat.Emissive = eventColor; // Make it glow
+
+            // Position in front of player at weapon height
+            float offsetDist = 0.5f;
+            float fx = player.PosX + (float)Math.Cos(player.Yaw) * offsetDist;
+            float fy = player.PosY + (float)Math.Sin(player.Yaw) * offsetDist;
+
+            render.device.Transform.World = Matrix.Translation(fx, fy, player.PosZ + 0.5f);
+            render.device.Material = eventMat;
+            render.device.SetTexture(0, null);
+            render.device.RenderState.Lighting = true;
+            eventMesh.DrawSubset(0);
+            eventMesh.Dispose();
+        }
+
+        /// <summary>
+        /// Event handler for Listen button click.
+        /// </summary>
+        private void btnListen_Click(object sender, EventArgs e)
+        {
+            if (telemetryListenerRunning)
+            {
+                StopTelemetryListener();
+                if (sender is ToolStripButton btn)
+                    btn.Text = "Listen";
+            }
+            else
+            {
+                StartTelemetryListener();
+                if (sender is ToolStripButton btn)
+                    btn.Text = "Stop";
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Event handler for Load Path button click.
+        /// </summary>
+        private void btnLoadPath_Click(object sender, EventArgs e)
+        {
+            LoadPlayerPathDialog();
+        }
+
+        /// <summary>
+        /// Event handler for Play/Pause button click.
+        /// </summary>
+        private void btnPlayPausePath_Click(object sender, EventArgs e)
+        {
+            TogglePathPlayback();
+        }
+
+        /// <summary>
+        /// Event handler for Reset button click.
+        /// </summary>
+        private void btnResetPath_Click(object sender, EventArgs e)
+        {
+            ResetPathAnimation();
+        }
+
+        /// <summary>
+        /// Event handler for path speed trackbar change.
+        /// </summary>
+        private void trackBarPathSpeed_ValueChanged(object sender, EventArgs e)
+        {
+            if (sender is TrackBar tb)
+            {
+                pathPlaybackSpeed = tb.Value / 10.0f; // 0.1x to 5.0x speed
+            }
+        }
+
+        /// <summary>
+        /// Event handler for timeline trackbar scroll.
+        /// </summary>
+        private void PathTimelineTrackBar_Scroll(object sender, EventArgs e)
+        {
+            if (pathTimelineTrackBar == null || pathMaxTimestamp <= pathMinTimestamp)
+                return;
+
+            // Calculate timestamp from trackbar position
+            float t = pathTimelineTrackBar.Value / 1000.0f;
+            pathCurrentTimestamp = pathMinTimestamp + t * (pathMaxTimestamp - pathMinTimestamp);
+            pathTimeAccumulator = pathCurrentTimestamp;
+
+            // Update path index for legacy single-player path
+            if (playerPath.Count > 0)
+            {
+                pathCurrentIndex = 0;
+                for (int i = 0; i < playerPath.Count - 1; i++)
+                {
+                    if (playerPath[i + 1].Timestamp > pathCurrentTimestamp)
+                        break;
+                    pathCurrentIndex = i + 1;
+                }
+            }
+
+            UpdateTimelineLabel();
+        }
+
+        /// <summary>
+        /// Paints kill markers and bookmark on the timeline panel.
+        /// </summary>
+        private void TimelinePanel_Paint(object sender, PaintEventArgs e)
+        {
+            if (pathTimelineTrackBar == null)
+                return;
+
+            float timeRange = pathMaxTimestamp - pathMinTimestamp;
+            if (timeRange <= 0) return;
+
+            // Get trackbar bounds for positioning markers
+            int trackLeft = pathTimelineTrackBar.Left + 10;
+            int trackWidth = pathTimelineTrackBar.Width - 20;
+            int markerY = 4;
+            int markerHeight = 12;
+
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            // Draw kill markers
+            foreach (var kill in killEvents)
+            {
+                // Calculate X position based on timestamp
+                float t = (kill.Timestamp - pathMinTimestamp) / timeRange;
+                int x = trackLeft + (int)(t * trackWidth);
+
+                // Halo-style team colors (brighter, more saturated)
+                Color teamColor;
+                switch (kill.Team)
+                {
+                    case 0: teamColor = Color.FromArgb(255, 60, 60); break;    // Red team
+                    case 1: teamColor = Color.FromArgb(60, 140, 255); break;   // Blue team
+                    case 2: teamColor = Color.FromArgb(60, 255, 120); break;   // Green team
+                    case 3: teamColor = Color.FromArgb(255, 180, 60); break;   // Orange team
+                    default: teamColor = Color.FromArgb(0, 200, 255); break;   // FFA - cyan
+                }
+
+                // Draw glowing marker line
+                using (Pen glowPen = new Pen(Color.FromArgb(80, teamColor), 4))
+                {
+                    e.Graphics.DrawLine(glowPen, x, markerY, x, markerY + markerHeight);
+                }
+                using (Pen pen = new Pen(teamColor, 2))
+                {
+                    e.Graphics.DrawLine(pen, x, markerY, x, markerY + markerHeight);
+                }
+
+                // Draw diamond marker
+                Point[] diamond = {
+                    new Point(x, markerY - 2),
+                    new Point(x + 4, markerY + 3),
+                    new Point(x, markerY + 8),
+                    new Point(x - 4, markerY + 3)
+                };
+                using (SolidBrush brush = new SolidBrush(teamColor))
+                {
+                    e.Graphics.FillPolygon(brush, diamond);
+                }
+                using (Pen outlinePen = new Pen(Color.FromArgb(180, 255, 255, 255), 1))
+                {
+                    e.Graphics.DrawPolygon(outlinePen, diamond);
+                }
+            }
+
+            // Draw bookmark marker if set
+            if (bookmarkTimestamp >= 0 && pathMaxTimestamp > pathMinTimestamp)
+            {
+                float t = (bookmarkTimestamp - pathMinTimestamp) / timeRange;
+                int bx = trackLeft + (int)(t * trackWidth);
+
+                Color bookmarkColor = bookmarkLoopEnabled
+                    ? Color.FromArgb(255, 215, 0)
+                    : Color.FromArgb(255, 255, 100);
+
+                using (Pen glowPen = new Pen(Color.FromArgb(100, bookmarkColor), 6))
+                {
+                    e.Graphics.DrawLine(glowPen, bx, 2, bx, 40);
+                }
+                using (Pen pen = new Pen(bookmarkColor, 2))
+                {
+                    e.Graphics.DrawLine(pen, bx, 2, bx, 40);
+                }
+
+                Point[] flag = {
+                    new Point(bx, 2),
+                    new Point(bx + 10, 7),
+                    new Point(bx, 12),
+                    new Point(bx, 2)
+                };
+                using (SolidBrush brush = new SolidBrush(bookmarkColor))
+                {
+                    e.Graphics.FillPolygon(brush, flag);
+                }
+                using (Pen outlinePen = new Pen(Color.FromArgb(200, 0, 0, 0), 1))
+                {
+                    e.Graphics.DrawPolygon(outlinePen, flag);
+                }
+
+                if (bookmarkLoopEnabled)
+                {
+                    using (System.Drawing.Font font = new System.Drawing.Font("Segoe UI", 7, FontStyle.Bold))
+                    using (SolidBrush textBrush = new SolidBrush(Color.Black))
+                    {
+                        e.Graphics.DrawString("â†º", font, textBrush, bx - 4, 24);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the bookmark button appearance.
+        /// </summary>
+        private void UpdateBookmarkButton()
+        {
+            if (bookmarkButton == null) return;
+
+            if (bookmarkTimestamp >= 0)
+            {
+                bookmarkButton.Text = "ðŸ”– Clear";
+                bookmarkButton.BackColor = Color.FromArgb(60, 80, 40);
+                bookmarkButton.ForeColor = Color.FromArgb(255, 215, 0);
+            }
+            else
+            {
+                bookmarkButton.Text = "ðŸ”– Set";
+                bookmarkButton.BackColor = Color.FromArgb(30, 45, 60);
+                bookmarkButton.ForeColor = Color.FromArgb(0, 200, 255);
+            }
+        }
+
+        /// <summary>
+        /// Updates the loop button appearance.
+        /// </summary>
+        private void UpdateLoopButton()
+        {
+            if (loopButton == null) return;
+
+            if (bookmarkLoopEnabled && bookmarkTimestamp >= 0)
+            {
+                loopButton.BackColor = Color.FromArgb(60, 80, 40);
+                loopButton.ForeColor = Color.FromArgb(255, 215, 0);
+            }
+            else
+            {
+                loopButton.BackColor = Color.FromArgb(30, 45, 60);
+                loopButton.ForeColor = bookmarkTimestamp >= 0 ? Color.FromArgb(0, 200, 255) : Color.Gray;
+            }
+        }
+
+        /// <summary>
+        /// Jumps playback to the bookmark position.
+        /// </summary>
+        private void JumpToBookmark()
+        {
+            if (bookmarkTimestamp < 0 || pathMaxTimestamp <= pathMinTimestamp) return;
+
+            pathCurrentTimestamp = bookmarkTimestamp;
+            pathTimeAccumulator = bookmarkTimestamp;
+
+            for (int i = 0; i < playerPath.Count - 1; i++)
+            {
+                if (playerPath[i + 1].Timestamp > pathCurrentTimestamp)
+                {
+                    pathCurrentIndex = i;
+                    break;
+                }
+            }
+
+            UpdateTimelineLabel();
+        }
+
+        /// <summary>
+        /// Updates the timeline label with current/total time.
+        /// </summary>
+        private void UpdateTimelineLabel()
+        {
+            if (pathTimeLabel == null) return;
+
+            float currentSecs = pathCurrentTimestamp - pathMinTimestamp;
+            float totalSecs = pathMaxTimestamp - pathMinTimestamp;
+
+            int curMins = (int)(currentSecs / 60);
+            int curSecs = (int)(currentSecs % 60);
+            int totMins = (int)(totalSecs / 60);
+            int totSecs = (int)(totalSecs % 60);
+
+            pathTimeLabel.Text = $"{curMins}:{curSecs:D2} / {totMins}:{totSecs:D2}";
+
+            // Update trackbar position if not being dragged
+            if (pathTimelineTrackBar != null && !pathTimelineTrackBar.Focused && pathMaxTimestamp > pathMinTimestamp)
+            {
+                float t = (pathCurrentTimestamp - pathMinTimestamp) / (pathMaxTimestamp - pathMinTimestamp);
+                pathTimelineTrackBar.Value = Math.Max(0, Math.Min(1000, (int)(t * 1000)));
+            }
+        }
 
         /// <summary>
         /// The ts combo box.

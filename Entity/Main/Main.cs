@@ -727,19 +727,26 @@ namespace entity.Main
         {
             if (
                 MessageBox.Show(
-                    "Are you sure you would like to set Entity as your default editor?", 
-                    "Set As Default Editor", 
+                    "Are you sure you would like to set Entity as your default editor?",
+                    "Set As Default Editor",
                     MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                RegistryKey regKey;
-                regKey = Registry.ClassesRoot.CreateSubKey("Entity\\");
-                regKey.SetValue(string.Empty, "Halo Map File");
-                regKey = Registry.ClassesRoot.CreateSubKey("Entity\\shell\\open\\command");
-                regKey.SetValue(string.Empty, Application.ExecutablePath + " %1");
-                regKey = Registry.ClassesRoot.CreateSubKey(".map");
-                regKey.SetValue(string.Empty, "Entity");
-                regKey.Close();
-                MessageBox.Show("Entity is now your default map editor.", "Set Default Editor");
+                try
+                {
+                    RegistryKey regKey;
+                    regKey = Registry.ClassesRoot.CreateSubKey("Entity\\");
+                    regKey.SetValue(string.Empty, "Halo Map File");
+                    regKey = Registry.ClassesRoot.CreateSubKey("Entity\\shell\\open\\command");
+                    regKey.SetValue(string.Empty, Application.ExecutablePath + " %1");
+                    regKey = Registry.ClassesRoot.CreateSubKey(".map");
+                    regKey.SetValue(string.Empty, "Entity");
+                    regKey.Close();
+                    MessageBox.Show("Entity is now your default map editor.", "Set Default Editor");
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    MessageBox.Show("Access denied. Please run Entity as Administrator to set it as the default editor.", "Permission Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 

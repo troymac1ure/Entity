@@ -414,7 +414,6 @@ namespace entity.MetaEditor2
                                 panelMetaEditor.Controls[0].Controls[2].GotFocus += new EventHandler(MetaEditorControlPage_GotFocus);
                                 tempident.ContextMenuStrip = cmIdent;
                                 break;
-                                break;
                             }
                         case IFPIO.ObjectEnum.TagType:
                             continue;

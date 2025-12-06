@@ -1,11 +1,13 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ReflexiveControl.cs" company="">
-//   
+//
 // </copyright>
 // <summary>
 //   The reflexive control.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
+
+#pragma warning disable 1690  // Accessing a member on a marshal-by-reference class field
 
 namespace MetaEditor.Components
 {

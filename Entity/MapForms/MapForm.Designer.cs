@@ -124,6 +124,8 @@ namespace entity.MapForms
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripButton toolStripBSPEditor;
         private ToolStripDropDownButton toolStripBSPEditorDropDown;
+        private ToolStripButton toolStripTheaterMode;
+        private ToolStripDropDownButton toolStripTheaterModeDropDown;
         private SplitContainer splitContainer3;
         private TextBox searchTextBox;
         private ComboBox searchComboBox;
@@ -280,6 +282,7 @@ namespace entity.MapForms
             this.toolStripFolderView = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripBSPEditor = new System.Windows.Forms.ToolStripButton();
+            this.toolStripTheaterMode = new System.Windows.Forms.ToolStripButton();
             this.toolStripInfoView = new System.Windows.Forms.ToolStripButton();
             this.toolStripHistoryList = new System.Windows.Forms.ToolStripDropDownButton();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
@@ -295,6 +298,7 @@ namespace entity.MapForms
             this.metaEditor1 = new MetaEditor.MetaEditor();
             this.LibraryPanel = new System.Windows.Forms.Panel();
             this.toolStripBSPEditorDropDown = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStripTheaterModeDropDown = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.saveBitmapDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.ModelContextStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -1333,6 +1337,7 @@ namespace entity.MapForms
             this.toolStripFolderView,
             this.toolStripSeparator1,
             this.toolStripBSPEditor,
+            this.toolStripTheaterMode,
             this.toolStripInfoView,
             this.toolStripHistoryList});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
@@ -1383,9 +1388,20 @@ namespace entity.MapForms
             this.toolStripBSPEditor.Text = "Visual Editor";
             this.toolStripBSPEditor.ToolTipText = "BSP Visual Editor";
             this.toolStripBSPEditor.Click += new System.EventHandler(this.toolStripBSPEditor_Click);
-            // 
+            //
+            // toolStripTheaterMode
+            //
+            this.toolStripTheaterMode.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripTheaterMode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripTheaterMode.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripTheaterMode.Name = "toolStripTheaterMode";
+            this.toolStripTheaterMode.Size = new System.Drawing.Size(78, 20);
+            this.toolStripTheaterMode.Text = "Theater Mode";
+            this.toolStripTheaterMode.ToolTipText = "Open Theater Mode for replay and live telemetry";
+            this.toolStripTheaterMode.Click += new System.EventHandler(this.toolStripTheaterMode_Click);
+            //
             // toolStripInfoView
-            // 
+            //
             this.toolStripInfoView.CheckOnClick = true;
             this.toolStripInfoView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripInfoView.Image = ((System.Drawing.Image)(resources.GetObject("toolStripInfoView.Image")));
@@ -1572,7 +1588,18 @@ namespace entity.MapForms
             this.toolStripBSPEditorDropDown.Text = "Visual Editor";
             this.toolStripBSPEditorDropDown.ToolTipText = "BSP Visual Editor";
             this.toolStripBSPEditorDropDown.Click += new System.EventHandler(this.toolStripBSPEditor_Click);
-            // 
+            //
+            // toolStripTheaterModeDropDown
+            //
+            this.toolStripTheaterModeDropDown.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripTheaterModeDropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripTheaterModeDropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripTheaterModeDropDown.Name = "toolStripTheaterModeDropDown";
+            this.toolStripTheaterModeDropDown.Size = new System.Drawing.Size(29, 20);
+            this.toolStripTheaterModeDropDown.Text = "Theater Mode";
+            this.toolStripTheaterModeDropDown.ToolTipText = "Open Theater Mode for replay and live telemetry";
+            this.toolStripTheaterModeDropDown.Click += new System.EventHandler(this.toolStripTheaterMode_Click);
+            //
             // toolStripProgressBar1
             // 
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";

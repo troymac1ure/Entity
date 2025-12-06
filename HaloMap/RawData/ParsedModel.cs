@@ -141,7 +141,7 @@ namespace HaloMap.RawData
             int b = Convert.ToInt32(bbb);
             if (negx)
             {
-                b = -b + 1 | 0x400;
+                b = (int)((uint)(-b + 1) | 0x400);
             }
 
             bool negy = false;
@@ -155,7 +155,7 @@ namespace HaloMap.RawData
             int b2 = Convert.ToInt32(bbb2);
             if (negy)
             {
-                b2 = -b2 + 1 | 0x400;
+                b2 = (int)((uint)(-b2 + 1) | 0x400);
             }
 
             b2 <<= 11;
@@ -171,7 +171,7 @@ namespace HaloMap.RawData
             int b3 = Convert.ToInt32(bbb3);
             if (negz)
             {
-                b3 = -b3 + 1 | 0x200;
+                b3 = (int)((uint)(-b3 + 1) | 0x200);
             }
 
             b3 <<= 22;

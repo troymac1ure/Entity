@@ -1108,7 +1108,9 @@
         private System.Windows.Forms.Label lblTBLeft;
         private System.Windows.Forms.Label lblTBBottom;
         private System.Windows.Forms.TextBox tbTBLeft;
+#pragma warning disable CS0169 // Field is never used
         private entity.MetaEditor2.SID SIDTBStringID;
+#pragma warning restore CS0169
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button btnTBStringID;
         private System.Windows.Forms.ListBox lbTBTextBlocks;

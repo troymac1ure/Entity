@@ -234,9 +234,8 @@ namespace HaloMap.Meta
                     Map.OpenMap(MapTypes.Internal);
                     this.ReadMetaFromMap(this.TagIndex, false);
 
-                    if (manual)
+                    if (manual && this.type != "sbsp")
                     {
-                        // {&&meta.type!="sbsp")
                         IFPHashMap.RemoveIfp(this.type, Map);
 
                         IFPIO io = IFPHashMap.GetIfp(this.type, Map.HaloVersion);

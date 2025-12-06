@@ -403,7 +403,6 @@ namespace entity.Forms.MetaEditor
                         }
                     case IFPIO.ObjectEnum.TagType:
                         continue;
-                        break;
                 }
 
                 if (!(tempbase is IFPIO.Reflexive))

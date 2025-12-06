@@ -31,8 +31,10 @@ namespace entity.MetaEditor2
         public string tagName;
         public bool HasTagType { get { return doesHaveTagType; } }
         private bool doesHaveTagType;
+#pragma warning disable CS0414 // Field is assigned but never used
         private bool AddEvents = true;
         private int tagComboBoxIndexer = 0;
+#pragma warning restore CS0414
         private bool isNulledOutReflexive = true;
         private int longestName = -1;
         #endregion

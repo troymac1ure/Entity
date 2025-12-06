@@ -55,7 +55,9 @@ namespace MetaEditor.Components
         /// <summary>
         /// The item type.
         /// </summary>
+        #pragma warning disable 0414  // Field assigned but never used
         private IFPIO.ObjectEnum ItemType;
+        #pragma warning restore 0414
 
         /// <summary>
         /// The indexed reflexive chunk count.

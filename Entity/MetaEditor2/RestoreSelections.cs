@@ -32,7 +32,9 @@ namespace entity.MetaEditor2
         {
             public int size;
             public int chunkCount;
+#pragma warning disable CS0649 // Field is never assigned
             public int chunkSelection;
+#pragma warning restore CS0649
             public int offset;
 
             public tagInfo(int Size)
@@ -57,11 +59,13 @@ namespace entity.MetaEditor2
         /// <summary>
         /// Contains the lesser of the source or dest amounts (amounts must match for restore)
         /// </summary>
+#pragma warning disable CS0649, CS0169 // Fields never assigned/used
         private int MaxSelections;
         /// <summary>
         /// Keeps a copy of all tree nodes for rebuilding tree structures (aka when reflexives are changed)
         /// </summary>
         private TreeNode baseTree;
+#pragma warning restore CS0649, CS0169
         
         #endregion
 
@@ -606,9 +610,7 @@ namespace entity.MetaEditor2
 
             #region source data
             int baseOffsetS = 0;
-            int baseOffsetD = 0;
             int chunkCountS = 0;
-            int chunkCountD = 0;
             for (int x = 0; x < offsets.Length; x++)
             {
                 tagInfo ti = ((tagInfo)tn[x].Tag);

@@ -278,7 +278,9 @@ namespace HaloMap.Meta
             /// <summary>
             /// The meta offset.
             /// </summary>
+            #pragma warning disable 0649  // Field is never assigned
             internal int metaOffset;
+            #pragma warning restore 0649
 
             /// <summary>
             /// The name.

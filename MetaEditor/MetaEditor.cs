@@ -1,11 +1,13 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="MetaEditor.cs" company="">
-//   
+//
 // </copyright>
 // <summary>
 //   The meta editor.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
+
+#pragma warning disable 1690  // Accessing a member on a marshal-by-reference class field
 
 namespace MetaEditor
 {

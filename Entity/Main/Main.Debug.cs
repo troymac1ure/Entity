@@ -20,7 +20,9 @@ namespace entity.Main
 
         class MapHeader
         {
+#pragma warning disable CS0414 // Field is assigned but never used
             bool mapLoaded;
+#pragma warning restore CS0414
             string head;
             uint version;
             uint fileSize;

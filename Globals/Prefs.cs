@@ -66,7 +66,7 @@ namespace Globals
         /// <summary>
         /// The maximum # of recently used maps allowed in out list
         /// </summary>
-        public const int MaxRecentFiles = 4;
+        public const int MaxRecentFiles = 5;
 
         /// <summary>
         /// The path mainmenu.
@@ -624,6 +624,7 @@ namespace Globals
                             {
                                 RegistryAccess ra = new RegistryAccess(Microsoft.Win32.Registry.CurrentUser, RegistryAccess.RegPaths.Halo2 + @"Entity\ME\Tags\");
                                 string[] tags = ra.getKeys();
+                                if (tags == null) tags = new string[0];
                                 foreach (string tagType in tags)
                                 {
                                     QuickAccessTagType qatt = new QuickAccessTagType();

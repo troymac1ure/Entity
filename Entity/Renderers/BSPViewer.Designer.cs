@@ -527,7 +527,7 @@ namespace entity.Renderers
             this.speedBar.Size = new System.Drawing.Size(45, 200);
             this.speedBar.TabIndex = 18;
             this.speedBar.TickFrequency = 5;
-            this.speedBar.Value = 1;
+            this.speedBar.Value = 25;
             this.speedBar.ValueChanged += new System.EventHandler(this.speedBar_ValueChanged);
             this.speedBar.Scroll += new System.EventHandler(this.speedBar_Scroll);
             this.speedBar.KeyDown += new System.Windows.Forms.KeyEventHandler(this.speedBar_KeyDown);

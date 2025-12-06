@@ -222,6 +222,21 @@ namespace entity.MapForms
                     tsMenuItem.Click += this.toolStripBSPEditor_Click;
                     toolStripBSPEditorDropDown.DropDownItems.Add(tsMenuItem);
                 }
+
+                // Update the "Theater Mode" button to support multiple BSPs
+                int theaterIndex = toolStrip2.Items.IndexOf(toolStripTheaterMode);
+                toolStrip2.Items.RemoveAt(theaterIndex);
+                toolStrip2.Items.Insert(theaterIndex, toolStripTheaterModeDropDown);
+
+                toolStripTheaterModeDropDown.DropDownItems.Clear();
+                for (int x = 0; x < map.BSP.bspcount; x++)
+                {
+                    ToolStripMenuItem tsMenuItem = new ToolStripMenuItem();
+                    tsMenuItem.Name = "theaterMenuItem" + x;
+                    tsMenuItem.Text = map.FileNames.Name[map.BSP.sbsp[x].TagIndex];
+                    tsMenuItem.Click += this.toolStripTheaterMode_Click;
+                    toolStripTheaterModeDropDown.DropDownItems.Add(tsMenuItem);
+                }
             }
 
             foreach (Prefs.CustomPluginMask mask in Prefs .CustomPluginMasks)
@@ -3062,6 +3077,30 @@ namespace entity.MapForms
         }
 
         /// <summary>
+        /// Loads the Theater viewer for the given BSP.
+        /// </summary>
+        /// <param name="BSPId">The BSP id.</param>
+        /// <remarks></remarks>
+        private void loadTheater(int BSPId)
+        {
+            this.Cursor = Cursors.WaitCursor;
+            Meta meta = new Meta(map);
+            meta.TagIndex = BSPId;
+            meta.ScanMetaItems(true, false);
+            BSPModel bsp = new BSPModel(ref meta);
+            this.Cursor = Cursors.Arrow;
+            if (bsp.BspNumber != -1)
+            {
+                BSPViewer bv = new BSPViewer(bsp, map, theaterMode: true);
+                bv.Dispose();
+                bv = null;
+            }
+
+            meta.Dispose();
+            GC.Collect();
+        }
+
+        /// <summary>
         /// The load meta button_ click_1.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -4135,6 +4174,27 @@ namespace entity.MapForms
                 int i = toolStripBSPEditorDropDown.DropDownItems.IndexOf((ToolStripMenuItem)sender);
                 int BSPId = map.Functions.ForMeta.FindMetaByID(map.BSP.sbsp[i].ident);
                 loadBSP(BSPId);
+            }
+        }
+
+        /// <summary>
+        /// The tool strip theater mode_ click.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
+        /// <remarks></remarks>
+        private void toolStripTheaterMode_Click(object sender, EventArgs e)
+        {
+            if (map.BSP.bspcount == 1)
+            {
+                int BSPId = map.Functions.ForMeta.FindMetaByID(map.BSP.sbsp[0].ident);
+                loadTheater(BSPId);
+            }
+            else if (((ToolStripItem)sender).Name != "toolStripTheaterModeDropDown")
+            {
+                int i = toolStripTheaterModeDropDown.DropDownItems.IndexOf((ToolStripMenuItem)sender);
+                int BSPId = map.Functions.ForMeta.FindMetaByID(map.BSP.sbsp[i].ident);
+                loadTheater(BSPId);
             }
         }
 
@@ -5444,7 +5504,6 @@ namespace entity.MapForms
             else
             #region 2D Sequenced Images
             {
-                int sprites = 1;
                 BinaryReader br = new BinaryReader(map.SelectedMeta.MS);
                 br.BaseStream.Seek(60, SeekOrigin.Begin);
                 int seqCount = br.ReadInt32();

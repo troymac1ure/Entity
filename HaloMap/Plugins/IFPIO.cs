@@ -3071,7 +3071,7 @@ namespace HaloMap.Plugins
             /// <summary>
             /// Extended option descriptions
             /// </summary>
-            public string description;
+            public new string description;
 
             #endregion
 

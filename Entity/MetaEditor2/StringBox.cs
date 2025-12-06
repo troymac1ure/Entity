@@ -23,7 +23,9 @@ namespace entity.MetaEditor2
 
         public int sidIndexer;
         const short WM_PAINT = 0x00f;
+#pragma warning disable CS0414 // Field is assigned but never used
         private bool AddEvents = true;
+#pragma warning restore CS0414
         private bool isNulledOutReflexive = true;
         List<int> sidIndexerList = new List<int>(0);
         #endregion
